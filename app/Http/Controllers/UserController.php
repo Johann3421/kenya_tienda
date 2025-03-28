@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\User;
 use DB;
 use Auth;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class UserController extends Controller
 {
@@ -71,7 +72,7 @@ class UserController extends Controller
 
         try {
 
-            DB::beginTransaction();
+            FacadesDB::beginTransaction();
 
             $user = new User();
             $user->dni = $request->dni;
@@ -86,7 +87,7 @@ class UserController extends Controller
 
             $user->assignRole($request->perfil);
 
-            DB::commit();
+            FacadesDB::commit();
     
             return [
                 'type'     =>  'success',
@@ -95,7 +96,7 @@ class UserController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            DB::rollBack();
+            FacadesDB::rollBack();
 
             return [
                 'type'     =>  'danger',
@@ -120,7 +121,7 @@ class UserController extends Controller
 
         try {
 
-            DB::beginTransaction();
+            FacadesDB::beginTransaction();
 
             $user = User::findOrFail($request->id);
             $user->dni = $request->dni;
@@ -143,7 +144,7 @@ class UserController extends Controller
                 $user->assignRole($request->perfil);
             }
             
-            DB::commit();
+            FacadesDB::commit();
 
             return [
                 'type'     =>  'success',
@@ -152,7 +153,7 @@ class UserController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            DB::rollBack();
+            FacadesDB::rollBack();
 
             return [
                 'type'     =>  'danger',
@@ -166,12 +167,12 @@ class UserController extends Controller
     {
         try {
 
-            DB::beginTransaction();
+            FacadesDB::beginTransaction();
 
             $user = User::findOrFail($request->id);
             $user->delete();
             
-            DB::commit();
+            FacadesDB::commit();
 
             return [
                 'type'     =>  'success',
@@ -180,7 +181,7 @@ class UserController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            DB::rollBack();
+            FacadesDB::rollBack();
 
             return [
                 'type'     =>  'danger',

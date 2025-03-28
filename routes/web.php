@@ -40,11 +40,11 @@ Route::get('/api/ruc/{numero}', 'ApiController@ruc');
 Route::get('/api/proveedor/{numero}', 'ApiController@proveedor');
 
 // --------------------- INICIO --------------------------------
-Route::group(['middleware' => ['can:inicio']], function () {
+Route::middleware('auth')->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
-
     Route::get('/perfil', 'HomeController@index')->name('perfil');
 });
+
 
 // --------------------- SOPORTE --------------------------------
 Route::group(['middleware' => ['can:servicio_tecnico']], function () {

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\DB as FacadesDB;
 
 class PermisoController extends Controller
 {
@@ -45,11 +46,11 @@ class PermisoController extends Controller
 
         try {
 
-            DB::beginTransaction();
+            FacadesDB::beginTransaction();
 
             $permiso = Permission::create(['name' => strtolower($request->name)]);
                 
-            DB::commit();
+            FacadesDB::commit();
     
             return [
                 'type'     =>  'success',
@@ -58,7 +59,7 @@ class PermisoController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            DB::rollBack();
+            FacadesDB::rollBack();
 
             return [
                 'type'     =>  'danger',
@@ -76,13 +77,13 @@ class PermisoController extends Controller
 
         try {
 
-            DB::beginTransaction();
+            FacadesDB::beginTransaction();
 
             $permiso = Permission::findOrFail($request->id);
             $permiso->name = strtolower($request->name);
             $permiso->save();
             
-            DB::commit();
+            FacadesDB::commit();
 
             return [
                 'type'     =>  'success',
@@ -91,7 +92,7 @@ class PermisoController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            DB::rollBack();
+            FacadesDB::rollBack();
 
             return [
                 'type'     =>  'danger',
@@ -105,12 +106,12 @@ class PermisoController extends Controller
     {
         try {
 
-            DB::beginTransaction();
+            FacadesDB::beginTransaction();
 
             $permiso = Permission::findOrFail($request->id);
             $permiso->delete();
             
-            DB::commit();
+            FacadesDB::commit();
 
             return [
                 'type'     =>  'success',
@@ -119,7 +120,7 @@ class PermisoController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            DB::rollBack();
+            FacadesDB::rollBack();
 
             return [
                 'type'     =>  'danger',

@@ -12,7 +12,7 @@ class LoginController extends Controller
     /**
      * Where to redirect users after login.
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -36,20 +36,19 @@ class LoginController extends Controller
     public function login(Request $request)
 {
     $credentials = $request->validate([
-        'email' => 'required|email',
+        'username' => 'required|string',
         'password' => 'required'
     ]);
 
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
-
-        dd('Usuario autenticado. Redirigiendo a:', redirect()->intended($this->redirectTo)->getTargetUrl());
-
-        return redirect()->intended($this->redirectTo);
+        
+        // Redirección directa sin intended (para pruebas)
+        return redirect('/home');
     }
 
     return back()->withErrors([
-        'email' => 'Las credenciales no coinciden con nuestros registros.',
+        'username' => 'Las credenciales no coinciden con nuestros registros.',
     ]);
 }
 
@@ -66,4 +65,9 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect('/');
     }
+
+protected function authenticated(Request $request, $user)
+{
+    return redirect('/home'); // Redirección forzada
+}
 }

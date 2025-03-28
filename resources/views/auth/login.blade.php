@@ -40,18 +40,20 @@
                                 <h4 class="mb-3 f-w-400">Iniciar Sesión</h4>
                                 <form method="POST" action="{{ route('login') }}">
                                 @csrf
-                                    <div class="mb-3">
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text"><i class="feather icon-user"></i></span>
-                                            </div>
-                                            <input type="username" placeholder="Nombre de Usuario" name="username" value="{{ old('username') }}"
-                                            class="form-control @error('username') is-invalid @enderror" autocomplete="username" autofocus>
-                                            @error('username')
-                                                <small class="form-text invalid-feedback" role="alert">{{ $message }} </small>
-                                            @enderror
-                                        </div>
-                                    </div>
+                                <input type="text" name="hidden_username" autocomplete="username" style="display:none">
+    
+    <div class="mb-3">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="feather icon-user"></i></span>
+            </div>
+            <input type="text" placeholder="Nombre de Usuario" name="username" value="{{ old('username') }}"
+                   class="form-control @error('username') is-invalid @enderror" autocomplete="username" autofocus>
+            @error('username')
+                <small class="form-text invalid-feedback" role="alert">{{ $message }} </small>
+            @enderror
+        </div>
+    </div>
                                     <div class="mb-4">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
