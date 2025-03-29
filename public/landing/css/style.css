@@ -1334,154 +1334,194 @@ section {
   }
 }
 
-#footer {
-  background: #212121;
-  padding: 0 0 30px 0;
-  color: #fff;
-  font-size: 14px;
-}
+/*---------------ESTILOS PARA EL FOOTER KENYA------------------*/
 
-#footer .footer-top {
-  /*background: #5c768d;*/
-  background-attachment: fixed;
-  background-position: center center;
-  border-top: 1px solid #768fa6;
-  /*border-bottom: 1px solid #67839c;*/
-  padding: 60px 0 30px 0;
-}
+/* Estilos del Footer KENYA */
+.kenya-final-footer {
+    background-color: #212121;
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 40px 0 20px;
+    border-top: 2px solid #ee7c31;
+    width: 100%;
+  }
 
-#footer .footer-top .footer-info {
-  margin-bottom: 30px;
-}
+  .kenya-footer-fullwidth {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 20px;
+  }
 
-#footer .footer-top .footer-info h3 {
-  font-size: 24px;
-  margin: 0 0 20px 0;
-  padding: 2px 0 2px 0;
-  line-height: 1;
-  font-weight: 700;
-}
+  .kenya-footer-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-#footer .footer-top .footer-info p {
-  font-size: 14px;
-  line-height: 24px;
-  margin-bottom: 0;
-  font-family: "Raleway", sans-serif;
-  color: #fff;
-}
+  .kenya-footer-col {
+    padding: 0 10px;
+  }
 
-#footer .footer-top .social-links a {
-  font-size: 18px;
-  display: inline-block;
-  background: #768fa6;
-  color: #fff;
-  line-height: 1;
-  padding: 8px 0;
-  margin-right: 4px;
-  border-radius: 50%;
-  text-align: center;
-  width: 36px;
-  height: 36px;
-  transition: 0.3s;
-}
+  .kenya-footer-heading {
+    color: #ffffff;
+    font-size: 18px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #ee7c31;
+    font-weight: 600;
+  }
 
-#footer .footer-top .social-links a:hover {
-  background: #428bca;
-  color: #fff;
-  text-decoration: none;
-}
+  .kenya-footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-#footer .footer-top h4 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  position: relative;
-  padding-bottom: 12px;
-}
+  .kenya-footer-list li {
+    margin-bottom: 12px;
+  }
 
-#footer .footer-top .footer-links {
-  margin-bottom: 30px;
-}
+  .kenya-footer-list a {
+    color: #bdbdbd;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
 
-#footer .footer-top .footer-links ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+  .kenya-footer-list a:hover {
+    color: #ee7c31;
+    transform: translateX(5px);
+  }
 
-#footer .footer-top .footer-links ul i {
-  padding-right: 2px;
-  color: #9eccf4;
-  font-size: 18px;
-  line-height: 1;
-}
+  .kenya-contact-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
 
-#footer .footer-top .footer-links ul li {
-  padding: 10px 0;
-  display: flex;
-  align-items: center;
-}
+  .kenya-icon {
+    color: #ee7c31;
+    width: 20px;
+    text-align: center;
+  }
 
-#footer .footer-top .footer-links ul li:first-child {
-  padding-top: 0;
-}
+  .kenya-footer-bottom {
+    border-top: 1px solid #424242;
+    padding-top: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
-#footer .footer-top .footer-links ul a {
-  color: #fff;
-  transition: 0.3s;
-  display: inline-block;
-  line-height: 1;
-}
+  .kenya-footer-bottom-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
 
-#footer .footer-top .footer-links ul a:hover {
-  color: #9eccf4;
-}
+  .kenya-copyright {
+    color: #bdbdbd;
+    font-size: 14px;
+  }
 
-#footer .footer-top .footer-newsletter form {
-  margin-top: 30px;
-  background: #fff;
-  padding: 6px 10px;
-  position: relative;
-  border-radius: 4;
-}
+  .kenya-right-section {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
 
-#footer .footer-top .footer-newsletter form input[type="email"] {
-  border: 0;
-  padding: 4px;
-  width: calc(100% - 110px);
-}
+  .kenya-complaint-book {
+    color: #bdbdbd;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+  }
 
-#footer .footer-top .footer-newsletter form input[type="submit"] {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  border: 0;
-  background: none;
-  font-size: 16px;
-  padding: 0 20px;
-  background: #428bca;
-  color: #fff;
-  transition: 0.3s;
-  border-radius: 4;
-}
+  .kenya-complaint-book:hover {
+    color: #ee7c31;
+  }
 
-#footer .footer-top .footer-newsletter form input[type="submit"]:hover {
-  background: #5295ce;
-}
+  .kenya-complaint-book i {
+    color: #ee7c31;
+  }
 
-#footer .copyright {
-  text-align: center;
-  padding-top: 30px;
-}
+  .kenya-social-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
 
-#footer .credits {
-  padding-top: 10px;
-  text-align: center;
-  font-size: 13px;
-  color: #fff;
-}
+  .kenya-social-text {
+    color: #bdbdbd;
+    font-size: 14px;
+  }
 
-#footer .credits a {
-  color: #9eccf4;
-}
+  .kenya-social-icons {
+    display: flex;
+    gap: 15px;
+  }
+
+  .kenya-social-icons a {
+    color: #ffffff;
+    background-color: #424242;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+
+  .kenya-social-icons a:hover {
+    background-color: #ee7c31;
+    transform: translateY(-3px);
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .kenya-footer-columns {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .kenya-footer-bottom-content {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .kenya-right-section {
+      width: 100%;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .kenya-footer-columns {
+      grid-template-columns: 1fr;
+    }
+
+    .kenya-right-section {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .kenya-social-section {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+
+  /*-------------------FIN DE ESTILOS PARA EL FOOTER KENYA------------------*/

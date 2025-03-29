@@ -114,97 +114,90 @@
 
     @yield('content')
 
-    <!-- ======= Footer ======= -->
-    <footer id="footer">
-        <div class="footer-top">
-        <div class="container">
-            <div class="row">
-
-            <div class="col-lg-3 col-md-6 footer-info">
-                <h3>Contáctenos</h3>
-                <p>
-                    ¿Tiene problemas técnicos con sus equipos de cómputo?.<br><br>
-                    Jr. Huallayco #1135 Huanuco <br>
-                    Huánuco, Perú<br><br>
-                    <strong>Telefono:</strong> +51 958 021 778<br>
-                    <strong>Email:</strong> acuerdos.marco@kenya.com.pe<br>
-                </p>
-            </div>
-
-            <div class="col-lg-2 col-md-6 footer-links">
-                <h4>Navegar</h4>
-                <ul>
-                    <li><i class="bx bx-chevron-right"></i> <a href="{{url('/')}}">Inicio</a></li>
-                    <li><i class="bx bx-chevron-right"></i> <a href="#productos">Productos</a></li>
-                    <li><i class="bx bx-chevron-right"></i> <a href="#ofertas">Ofertas</a></li>
-                    <li><i class="bx bx-chevron-right"></i> <a href="#novedades">Novedades</a></li>
-                    <li><i class="bx bx-chevron-right"></i> <a href="#catalogo">Catálogo</a></li>
-                </ul>
-            </div>
-
-            <div class="col-lg-3 col-md-6 footer-links">
-                <h4>Algunos de nuestros servicios</h4>
-                <ul>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">Limpieza y mantenimiento de Pc's</a></li>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">Instalación de Programs</a></li>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">Formateo de equipos</a></li>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">Reportenciado de equipos</a></li>
-                <li><i class="bx bx-chevron-right"></i> <a href="#">Cambio de Disco Duro</a></li>
-                </ul>
-            </div>
-
-            <div class="col-lg-4 col-md-6 footer-newsletter">
-                <h4>KENYA</h4>
-                <p>Somos especialistas en soporte técnico integral. En KENYA nos preocupamos en brindarle un servicio eficiente con la misma calidad y seguridad que nos gustaría tener.</p>
-                <div class="input-group mb-3" id="whatsapp">
-                    <input type="text" v-model="mensaje" class="form-control" placeholder="Consultenos x Whatsapp" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <a target="_blank" :href="'https://wa.me/+51958021778?text=Buenos días GRUPO KENYA E.I.R.L,quiero consultarte por lo siguiente:*'+mensaje+'*'" class="btn btn-success" type="button"><i class="bx bxl-whatsapp"></i> Encribanos</a>
-                    </div>
-                </div>
-            </div>
-
-            </div>
-        </div>
+    <!-- ======= Footer Kenya ======= -->
+<!-- Footer KENYA - Versión mejorada -->
+<footer class="kenya-final-footer">
+    <div class="kenya-footer-fullwidth">
+      <div class="kenya-footer-columns">
+        <!-- Columna 1: Información -->
+        <div class="kenya-footer-col">
+          <h3 class="kenya-footer-heading">Información</h3>
+          <ul class="kenya-footer-list">
+            <li><a href="#">Quiénes somos</a></li>
+            <li><a href="#">Misión y Visión</a></li>
+            <li><a href="#">Historia</a></li>
+          </ul>
         </div>
 
-        <div class="container">
-            <div class="copyright">
-                &copy; Copyright <strong><span>KENYA</span></strong>. Todos los derechos reservados
-                <div class="contact-info float-left">
-            @php
-                $email = App\Models\Configuracion::where('nombre', 'contacto_email')->first();
-                $telefono = App\Models\Configuracion::where('nombre', 'contacto_telefono')->first();
-                $whatsapp = App\Models\Configuracion::where('nombre', 'contacto_whatsapp')->first();
-            @endphp
-            @if ($email)
-                <i class="icofont-envelope"></i> <a href="mailto:contact@example.com">{{$email->descripcion}}</a>
-                <br>
-            @else
-                <i class="icofont-envelope"></i> <a href="mailto:contact@example.com">contact@example.com</a>
-                <br>
-            @endif
-            @if ($telefono)
-                <i class="icofont-phone"></i> +51 {{$telefono->descripcion}}
-            @else
-                <i class="icofont-phone"></i> +51 953 708 979
-            @endif
+        <!-- Columna 2: Atención al cliente -->
+        <div class="kenya-footer-col">
+          <h3 class="kenya-footer-heading">Atención al cliente</h3>
+          <ul class="kenya-footer-list">
+            <li><a href="#">Soporte técnico</a></li>
+            <li><a href="#">Consulta el estado de tu Producto</a></li>
+            <li><a href="#">Preguntas frecuentes</a></li>
+            <li><a href="#">Términos y condiciones de garantía</a></li>
+          </ul>
         </div>
-        <div class="social-links float-right">
-            <a href="#" class="twitter"><i class="icofont-twitter"></i></a>
-            <a href="https://www.facebook.com/KENYA" class="facebook"><i class="icofont-facebook"></i></a>
-            <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
-            <a href="#" class="skype"><i class="icofont-skype"></i></a>
-            @auth
-                <a href="{{ url('/home') }}" title="Inicio de Sistema"><i class="bx bxs-dashboard"></i></i></a>
-            @else
-                <a href="{{ route('login') }}" title="Iniciar Sesión"><i class="icofont-login"></i></i></a>
-            @endauth
-        </div>
-            </div>
 
+        <!-- Columna 3: Videos tutoriales -->
+        <div class="kenya-footer-col">
+          <h3 class="kenya-footer-heading">Videos tutoriales</h3>
+          <ul class="kenya-footer-list">
+            <li><a href="#">Descargar controladores</a></li>
+            <li><a href="#">Estado de la garantía</a></li>
+            <li><a href="#">Problemas con la activación</a></li>
+          </ul>
         </div>
-    </footer><!-- End Footer -->
+
+        <!-- Columna 4: Contáctanos -->
+        <div class="kenya-footer-col">
+          <h3 class="kenya-footer-heading">Contáctanos</h3>
+          <ul class="kenya-footer-list kenya-contact-list">
+            <li>
+              <i class="kenya-icon fas fa-map-marker-alt"></i>
+              <span>Jr. Huallayco 1135 - Huánuco</span>
+            </li>
+            <li>
+              <i class="kenya-icon fas fa-envelope"></i>
+              <span>acuerdos.marco@kenya.com.pe</span>
+            </li>
+            <li>
+              <i class="kenya-icon fas fa-envelope"></i>
+              <span>soporte@kenya.com.pe</span>
+            </li>
+            <li>
+              <i class="kenya-icon fab fa-whatsapp"></i>
+              <span>958 021778</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer inferior -->
+      <div class="kenya-footer-bottom">
+        <div class="kenya-footer-bottom-content">
+          <div class="kenya-copyright">
+            © Copyright Kenya - Todos los derechos reservados
+          </div>
+          <div class="kenya-right-section">
+            <a href="#" class="kenya-complaint-book">
+                <i class="fas fa-book-open"></i> Libro de reclamaciones
+              </a>
+
+            <div class="kenya-social-section">
+              <span class="kenya-social-text">Síguenos en:</span>
+              <div class="kenya-social-icons">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
 
     <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
