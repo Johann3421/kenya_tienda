@@ -89,28 +89,26 @@
     </section> -->
 
     <!-- ======= Header ======= -->
-    <header id="header">
-        <div class="container">
+    <header class="kenya-main-header">
+        <div class="kenya-header-container">
+          <div class="kenya-logo-wrapper">
+            <h1 class="kenya-logo-title">
+              <a href="{{url('/')}}" class="kenya-logo-link">
+                @php
+                  $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
+                @endphp
+                @if ($logo_sistema->archivo)
+                  <img src="{{asset('storage/'.$logo_sistema->archivo_ruta.'/'.$logo_sistema->archivo)}}" alt="KENYA Logo" class="kenya-logo-img">
+                @else
+                  <img src="{{asset('theme/images/kenya.png')}}" alt="KENYA" class="kenya-logo-img">
+                @endif
+              </a>
+            </h1>
+          </div>
 
-            <div class="logo float-left">
-                <h1 class="text-light"><a href="{{url('/')}}">
-                    @php
-                        $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
-                    @endphp
-                    @if ($logo_sistema->archivo)
-                        <img src="{{asset('storage/'.$logo_sistema->archivo_ruta.'/'.$logo_sistema->archivo)}}" alt="" class="logo" style="width: 140px;">
-                    @else
-                        <img src="{{asset('theme/images/kenya.png')}}" alt="KENYA" class="img-fluid">
-                    @endif
-                </a></h1>
-                <!-- Uncomment below if you prefer to use an image logo -->
-                <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-            </div>
-
-            @yield('menu')
-
+          @yield('kenya-menu')
         </div>
-    </header><!-- End Header -->
+      </header><!-- End Header -->
 
     @yield('content')
 

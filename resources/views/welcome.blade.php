@@ -1,17 +1,18 @@
 @extends('layouts.landing')
-@section('menu')
-            <nav class="nav-menu float-right d-none d-lg-block">
-                <ul>
-                    <li class="active"><a href="{{url('/')}}"><i class="bx bx-home"></i> Inicio</a></li>
-                    <li><a href="#productos">Productos</a></li>
-                    <li><a href="#ofertas">Ofertas</a></li>
-                    <li><a href="#novedades">Novedades</a></li>
-                    <li><a href="#contact">Contáctenos</a></li>
-                    <!-- <li class="activo"><a href="{{ url('catalogo') }}">Catálogo</a></li> -->
-                    <li><a href="{{ route('consultar.garantia') }}">Soporte</a></li>
-                </ul>
-            </nav>
+@section('kenya-menu')
+<nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
+  <ul class="kenya-nav-list">
+    <li class="kenya-active"><a href="{{url('/')}}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
+    <li><a href="#" class="kenya-nav-link">Quienes Somos</a></li>
+    <li><a href="#" class="kenya-nav-link">Catalogo</a></li>
+    <li><a href="#ofertas" class="kenya-nav-link">Ofertas</a></li>
+    <li><a href="#novedades" class="kenya-nav-link">Novedades</a></li>
+    <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
+    <li><a href="#contact" class="kenya-nav-link">Contáctenos</a></li>
+  </ul>
+</nav>
 @endsection
+
 
 @section('css')
     <style>
@@ -131,22 +132,38 @@
                 <div class="carousel-inner" role="listbox" style="text-align: center;">
 
                     @foreach ($banners as $banner)
-                        @if ($banner->imagen)
-                            <div class="carousel-item @if($loop->index == 0) active @endif" style="background-image: url('storage/{{$banner->imagen}}');">
-                        @else
-                            <div class="carousel-item @if($loop->index == 0) active @endif" style="background-image: url('landing/img/slide/slide-{{$loop->index+1}}.jpg');">
-                        @endif
-                            <div class="carousel-container" style="text-align: center;">
-                                <div class="carousel-content container">
-                                    <h2 style="text-align: center;" class="animate__animated animate__fadeInDown"><span style="color: {{$banner->titulo_color}};">{{$banner->titulo}}</span><br><span style="font-weight: 100;">{{$banner->descripcion}}</span></h2>
-                                    <h2 style="text-align: center; font-size:25px;    font-weight:100" class="animate__animated animate__fadeInDown">{{$banner->contenido}}</h2>
-                                    @if ($banner->link)
-                                        <a href="{{$banner->link}}" class="btn-get-started animate__animated animate__fadeInUp scrollto">{{$banner->link_nombre}}</a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+    @if ($banner->imagen)
+        <div class="carousel-item @if($loop->index == 0) active @endif" style="background-image: url('storage/{{$banner->imagen}}');">
+    @else
+        <div class="carousel-item @if($loop->index == 0) active @endif" style="background-image: url('landing/img/slide/slide-{{$loop->index+1}}.jpg');">
+    @endif
+        <div class="carousel-container" style="text-align: center;">
+            <div class="carousel-content container">
+                <!-- Título PRINCIPAL (Enorme y destacado) -->
+                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px;" class="animate__animated animate__fadeInDown">
+                    <span style="color: {{$banner->titulo_color}};">{{$banner->titulo}}</span>
+                </h2>
+
+                <!-- Subtítulo (Blanco y muy legible) -->
+                <h3 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: #ffffff; margin-top: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); letter-spacing: 0.8px;" class="animate__animated animate__fadeInDown">
+                    {{$banner->descripcion}}
+                </h3>
+
+                <!-- Descripción (Texto grande y claro) -->
+                <p style="text-align: center; font-size: 1.8rem; font-weight: 400; color: #f8f8f8; margin-top: 25px; max-width: 900px; margin-left: auto; margin-right: auto; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); line-height: 1.4;" class="animate__animated animate__fadeInDown">
+                    {{$banner->contenido}}
+                </p>
+
+                @if ($banner->link)
+                    <!-- Botón (Naranja vibrante y llamativo) -->
+                    <a href="{{$banner->link}}" class="btn-get-started animate__animated animate__fadeInUp scrollto" style="background-color: #ee7c31; border: none; padding: 15px 40px; font-size: 1.3rem; margin-top: 35px; font-weight: 700; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: all 0.3s ease; display: inline-block;">
+                        {{$banner->link_nombre}}
+                    </a>
+                @endif
+            </div>
+        </div>
+    </div>
+@endforeach
 
                     {{-- <div class="carousel-item" style="background-image: url('landing/img/slide/slide-2.jpg');">
                         <div class="carousel-container">
