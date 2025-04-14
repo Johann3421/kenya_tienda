@@ -1,1 +1,0 @@
-$(document).ready(function(){setTimeout(function(){$('#base-style').DataTable();$('#no-style').DataTable();$('#compact').DataTable();$('#table-style-hover').DataTable();},350);});

@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/kenyacom/public_html/
-    - /bin/rsync -av public/ $DEPLOYPATH
