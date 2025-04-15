@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use App\Modelo;
+use App\Producto;
 use Illuminate\Database\Eloquent\Model;
 
 class Aside extends Model
@@ -19,6 +20,15 @@ protected $casts = [
     {
         return $this->belongsTo(Modelo::class);
     }
+    // En el modelo Aside.php
+// App\Models\Aside.php
+public function productos()
+{
+    return $this->belongsToMany(\App\Producto::class, 'producto_filtros', 'aside_id', 'producto_id')
+                ->withPivot('opcion')
+                ->withTimestamps();
+}
+
 }
 
 

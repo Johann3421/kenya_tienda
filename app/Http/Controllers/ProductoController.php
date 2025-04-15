@@ -771,6 +771,34 @@ public function actualizarEspecificacion(Request $request, $id)
     return response()->json(['success' => true]);
 }
 
+public function asignarFiltrosGenerico(Request $request)
+{
+    $request->validate([
+        'producto_id' => 'required|exists:productos,id',
+        'filtros' => 'sometimes|array',
+        'filtros.*' => 'array'
+    ]);
+
+    $producto = Producto::findOrFail($request->producto_id);
+
+    $filtrosParaSincronizar = [];
+
+    foreach ($request->input('filtros', []) as $asideId => $opciones) {
+        foreach ($opciones as $opcion) {
+            $filtrosParaSincronizar[] = [
+                'aside_id' => $asideId,
+                'opcion' => $opcion
+            ];
+        }
+    }
+
+    $producto->filtros()->sync($filtrosParaSincronizar);
+    $producto->filtros_ids = $producto->filtros->pluck('id')->unique()->toArray();
+    $producto->save();
+
+    return redirect()->back()->with('success', 'Filtros asignados correctamente.');
+}
+
 
 }
 

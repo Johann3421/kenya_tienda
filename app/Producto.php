@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Aside;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Categoria;
 use App\Models\Especificacion;
@@ -67,6 +68,20 @@ public function esToner()
 public function especificaciones()
 {
     return $this->hasMany(Especificacion::class, 'producto_id'); // Especifica la clave foránea
+}
+// En el modelo Producto.php
+public function filtros()
+{
+    return $this->belongsToMany(Aside::class, 'producto_filtros')
+                ->withPivot('opcion')
+                ->withTimestamps();
+}
+public function getOpcionesFiltro($asideId)
+{
+    return $this->filtros()
+        ->where('asides.id', $asideId)
+        ->pluck('opcion')
+        ->toArray();
 }
 
 }
