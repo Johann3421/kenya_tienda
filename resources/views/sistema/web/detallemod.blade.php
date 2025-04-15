@@ -79,58 +79,72 @@
                             </template>
                         </template>
                     </div>
-
-                    <div id="list-paginator" style="display: none;" class="row">
+                    <div id="list-paginator" style="display: none;" class="row align-items-center">
+                        <!-- Contador izquierda -->
                         <div class="col-sm-4 text-left">
-                            <div style="margin: 7px; font-size: 15px;">@{{ pagination.current_page + ' de ' + pagination.to + ' Páginas ' }}</div>
+                            <div class="pagination-info" style="margin: 7px; font-size: 15px;">
+                                @{{ pagination.current_page + ' de ' + pagination.last_page + ' Páginas ' }}
+                            </div>
                         </div>
-                        <div class="col-sm-4">
-                            <nav class="text-center" aria-label="...">
-                                <ul class="pagination" style="justify-content: center;">
-                                    <a href="#" v-if="pagination.current_page > 1" class="pag-inicio-fin"
-                                        title="Página inicio" v-on:click.prevent="changePage(1)"><i
-                                            class="fas fa-step-backward"></i></a>
-                                    <a href="#" v-else class="pag-inicio-fin desabilitado" title="Página inicio"><i
-                                            class="fas fa-step-backward"></i></a>
 
-                                    <li class="page-item" v-if="pagination.current_page > 1">
-                                        <a href="#" class="page-link"
-                                            style="padding: 6px 10px 4px 10px; font-size: 18px;" title="Anterior"
-                                            v-on:click.prevent="changePage(pagination.current_page - 1)">
+                        <!-- Centro: Botones -->
+                        <div class="col-sm-4 position-relative" style="z-index: 10;">
+                            <nav class="text-center bg-white rounded shadow" style="position: relative; z-index: 10;">
+                                <ul class="pagination justify-content-center m-0 position-relative" style="z-index: 10;">
+                                    <!-- Primera página -->
+                                    <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
+                                        <a class="page-link" href="#" @click.prevent="changePage(1)"
+                                            title="Primera página">
+                                            <i class="fas fa-step-backward"></i>
+                                        </a>
+                                    </li>
+
+                                    <!-- Página anterior -->
+                                    <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
+                                        <a class="page-link" href="#"
+                                            @click.prevent="changePage(pagination.current_page - 1)" title="Anterior">
                                             <i class="fas fa-angle-left"></i>
                                         </a>
                                     </li>
-                                    <li class="page-item disabled" title="Anterior" v-else style="cursor: no-drop;"><a
-                                            href="#" class="page-link"
-                                            style="padding: 6px 10px 4px 10px; font-size: 18px;"><i
-                                                class="fas fa-angle-left"></i></a></li>
+
+                                    <!-- Números -->
                                     <li class="page-item" v-for="page in pagesNumber"
-                                        :class="[page == isActive ? 'active' : '']"><a href="#" class="page-link"
-                                            v-on:click.prevent="changePage(page)">@{{ page }}</a></li>
-                                    <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                        <a href="#" class="page-link"
-                                            style="padding: 6px 10px 4px 10px; font-size: 18px;" title="Siguiente"
-                                            v-on:click.prevent="changePage(pagination.current_page + 1)">
+                                        :class="{ active: page === pagination.current_page }">
+                                        <a class="page-link" href="#" @click.prevent="changePage(page)">
+                                            @{{ page }}
+                                        </a>
+                                    </li>
+
+                                    <!-- Página siguiente -->
+                                    <li class="page-item"
+                                        :class="{ disabled: pagination.current_page >= pagination.last_page }">
+                                        <a class="page-link" href="#"
+                                            @click.prevent="changePage(pagination.current_page + 1)" title="Siguiente">
                                             <i class="fas fa-angle-right"></i>
                                         </a>
                                     </li>
-                                    <li class="page-item disabled" title="Siguiente" v-else style="cursor: no-drop;"><a
-                                            href="#" class="page-link"
-                                            style="padding: 6px 10px 4px 10px; font-size: 18px;"><i
-                                                class="fas fa-angle-right"></i></a></li>
 
-                                    <a href="#" v-if="pagination.current_page < pagination.last_page"
-                                        class="pag-inicio-fin" title="Página final"
-                                        v-on:click.prevent="changePage(pagination.last_page)"><i
-                                            class="fas fa-step-forward"></i></a>
-                                    <a href="#" v-else class="pag-inicio-fin desabilitado" title="Página final"><i
-                                            class="fas fa-step-forward"></i></a>
+                                    <!-- Última página -->
+                                    <li class="page-item"
+                                        :class="{ disabled: pagination.current_page >= pagination.last_page }">
+                                        <a class="page-link" href="#"
+                                            @click.prevent="changePage(pagination.last_page)" title="Última página">
+                                            <i class="fas fa-step-forward"></i>
+                                        </a>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-sm-4 text-right">
-                            <div style="margin: 7px; font-size: 15px;" v-if="to_pagination">@{{ to_pagination + ' de ' + pagination.total + ' Registros' }}</div>
-                            <div style="margin: 7px; font-size: 15px;" v-else>0 de 0 Registros</div>
+
+
+                        <!-- Derecha: Total -->
+                        <div class="col-sm-4 text-right" style="max-width: 240px; overflow: hidden;">
+                            <div style="margin: 7px; font-size: 15px;" v-if="to_pagination">
+                                @{{ to_pagination + ' de ' + pagination.total + ' Registros' }}
+                            </div>
+                            <div style="margin: 7px; font-size: 15px;" v-else>
+                                0 de 0 Registros
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -486,7 +500,15 @@
                         }
                         this.listaRequest = response.data.productos.data;
                         this.to_pagination = response.data.productos.to;
-                        this.pagination = response.data.pagination;
+                        this.pagination = {
+                            total: response.data.productos.total,
+                            current_page: response.data.productos.current_page,
+                            per_page: response.data.productos.per_page,
+                            last_page: response.data.productos.last_page,
+                            from: response.data.productos.from,
+                            to: response.data.productos.to
+                        };
+
 
                         $(".focus_this").focus();
                     }).catch(error => {
@@ -510,5 +532,4 @@
             },
         });
     </script>
-
 @endsection

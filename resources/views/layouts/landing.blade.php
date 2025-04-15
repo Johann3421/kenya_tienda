@@ -54,40 +54,6 @@
 
 <body>
 
-    <!-- ======= Top Bar ======= -->
-    <!-- <section id="topbar" class="d-none d-lg-block">
-        <div class="container clearfix">
-        <div class="contact-info float-left">
-            @php
-                $email = App\Models\Configuracion::where('nombre', 'contacto_email')->first();
-                $telefono = App\Models\Configuracion::where('nombre', 'contacto_telefono')->first();
-                $whatsapp = App\Models\Configuracion::where('nombre', 'contacto_whatsapp')->first();
-            @endphp
-            @if ($email)
-                <i class="icofont-envelope"></i><a href="mailto:contact@example.com">{{$email->descripcion}}</a>
-            @else
-                <i class="icofont-envelope"></i><a href="mailto:contact@example.com">contact@example.com</a>
-            @endif
-            @if ($telefono)
-                <i class="icofont-phone"></i> +51 {{$telefono->descripcion}}
-            @else
-                <i class="icofont-phone"></i> +51 953 708 979
-            @endif
-        </div>
-        <div class="social-links float-right">
-            <a href="#" class="twitter"><i class="icofont-twitter"></i></a>
-            <a href="https://www.facebook.com/GRUPOVASCOEIRL" class="facebook"><i class="icofont-facebook"></i></a>
-            <a href="#" class="instagram"><i class="icofont-instagram"></i></a>
-            <a href="#" class="skype"><i class="icofont-skype"></i></a>
-            @auth
-                <a href="{{ url('/home') }}" title="Inicio de Sistema"><i class="bx bxs-dashboard"></i></i></a>
-            @else
-                <a href="{{ route('login') }}" title="Iniciar Sesión"><i class="icofont-login"></i></i></a>
-            @endauth
-        </div>
-        </div>
-    </section> -->
-
     <!-- ======= Header ======= -->
     <header class="kenya-main-header">
         <div class="kenya-header-container">
