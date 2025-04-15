@@ -88,8 +88,8 @@
                         </div>
 
                         <!-- Centro: Botones -->
-                        <div class="col-sm-4 position-relative" style="z-index: 10;">
-                            <nav class="text-center bg-white rounded shadow" style="position: relative; z-index: 10;">
+                        <div class="col-sm-4 position-relative" style="z-index: 10; ">
+                            <nav class="text-center bg-white rounded shadow" style="position: relative; z-index: 10; box-shadow: 0 0 0px rgba(0, 0, 0, 0.1) !important;">
                                 <ul class="pagination justify-content-center m-0 position-relative" style="z-index: 10;">
                                     <!-- Primera página -->
                                     <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
