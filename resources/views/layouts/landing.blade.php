@@ -140,7 +140,7 @@
 
         <!-- Columna 3: Videos tutoriales -->
         <div class="kenya-footer-col">
-          <h3 class="kenya-footer-heading">Videos tutoriales</h3>
+          <h3 class="kenya-footer-heading">CONTROLADORES</h3>
           <ul class="kenya-footer-list">
             <li><a href="#">Descargar controladores</a></li>
             <li><a href="#">Estado de la garantía</a></li>

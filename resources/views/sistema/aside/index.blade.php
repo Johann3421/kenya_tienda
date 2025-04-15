@@ -117,7 +117,6 @@
     </div>
 </div>
 
-@section('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Configuración para el modal de nuevo
@@ -248,5 +247,4 @@
         });
     }
 </script>
-@endsection
 @endsection
