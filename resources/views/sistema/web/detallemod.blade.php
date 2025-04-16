@@ -15,6 +15,36 @@
     </nav>
 @endsection
 @section('content')
+@php
+use App\Modelo;
+use Illuminate\Support\Str;
+
+$modeloId = request()->route('id') ?? request()->route('modelo');
+$modelo = Modelo::with(['productos.filtros', 'productos.modelo'])->findOrFail($modeloId);
+
+$filtrosActivos = collect(request()->except('page'));
+
+// Consulta base con paginación
+$productosQuery = $modelo->productos()
+                ->where('pagina_web', 'SI')
+                ->with(['modelo', 'filtros']);
+
+// Aplicar filtros si existen
+if ($filtrosActivos->isNotEmpty()) {
+    foreach ($filtrosActivos as $filtroNombre => $valores) {
+        $valores = is_array($valores) ? $valores : explode(',', $valores);
+
+        $productosQuery->whereHas('filtros', function ($q) use ($filtroNombre, $valores) {
+            $q->whereIn('opcion', $valores)
+              ->whereRaw('LOWER(nombre_aside) = ?', [strtolower($filtroNombre)]);
+        });
+    }
+}
+
+
+$productos = $productosQuery->paginate(9)->appends(request()->query());
+@endphp
+
     <div style="background-color: #f1f1f1; height: 50px; margin-top: 72px;">
         <div class="container">
             <div class="pt-2">
@@ -40,113 +70,121 @@
                     <aside>
                         @include('partials.aside-normal')
                     </aside>
+
                 </div>
 
                 <div class="col-lg-9">
                     <div class="row listTable">
-                        <template v-if="listTable">
-                            <template v-if="listaRequest.length != 0">
-                                <div class="productoItem" v-for="prod in listaRequest">
-                                    <div v-if="prod.pagina_web == 'SI'">
-                                        <div class="contorno">
-                                            @foreach ($productos->unique('modelo_id') as $prod)
-                                                <div class="portfolio-wrap" style="margin: 0 auto;">
-                                                    @php
-                                                        $img =
-                                                            $prod->modelo && $prod->modelo->img_mod
-                                                                ? asset('storage/' . $prod->modelo->img_mod)
-                                                                : asset('producto.jpg');
-                                                    @endphp
+                        @forelse ($productos as $prod)
+                            <div class="productoItem">
+                                <div class="contorno">
+                                    <div class="portfolio-wrap" style="margin: 0 auto;">
+                                        @php
+                                            $img = $prod->modelo && $prod->modelo->img_mod
+                                                ? asset('storage/' . $prod->modelo->img_mod)
+                                                : asset('producto.jpg');
+                                        @endphp
 
-                                                    <img src="{{ $img }}" class="img-fluid"
-                                                        alt="Imagen del modelo de {{ $prod->nombre }}">
-                                                </div>
-                                            @endforeach
+                                        <img src="{{ $img }}" class="img-fluid"
+                                             alt="Imagen del modelo de {{ $prod->nombre }}">
+                                    </div>
 
-
-                                            <div class="descripcion">
-                                                <div class="text-center">
-                                                    <h6>@{{ (prod.nombre).substring(0, 100) }}</h6>
-                                                </div>
-                                            </div>
-                                            <div class="botones">
-                                                <a :href="'../../producto/' + prod.id + '/detalle'"><i
-                                                        class="fa-solid fa-plus"></i> Detalles</a>
-                                            </div>
+                                    <div class="descripcion">
+                                        <div class="text-center">
+                                            <h6>{{ Str::limit($prod->nombre, 100) }}</h6>
                                         </div>
                                     </div>
+
+                                    <div class="botones">
+                                        <a href="{{ url('producto/' . $prod->id . '/detalle') }}">
+                                            <i class="fa-solid fa-plus"></i> Detalles
+                                        </a>
+                                    </div>
                                 </div>
-                            </template>
-                        </template>
+                            </div>
+                        @empty
+                            <div class="col-12 text-center">
+                                <p>No se encontraron productos con esos filtros.</p>
+                            </div>
+                        @endforelse
                     </div>
-                    <div id="list-paginator" style="display: none;" class="row align-items-center">
-                        <!-- Contador izquierda -->
-                        <div class="col-sm-4 text-left">
-                            <div class="pagination-info" style="margin: 7px; font-size: 15px;">
-                                @{{ pagination.current_page + ' de ' + pagination.last_page + ' Páginas ' }}
-                            </div>
-                        </div>
 
-                        <!-- Centro: Botones -->
-                        <div class="col-sm-4 position-relative" style="z-index: 10; ">
-                            <nav class="text-center bg-white rounded shadow" style="position: relative; z-index: 10; box-shadow: 0 0 0px rgba(0, 0, 0, 0.1) !important;">
-                                <ul class="pagination justify-content-center m-0 position-relative" style="z-index: 10;">
-                                    <!-- Primera página -->
-                                    <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
-                                        <a class="page-link" href="#" @click.prevent="changePage(1)"
-                                            title="Primera página">
-                                            <i class="fas fa-step-backward"></i>
-                                        </a>
-                                    </li>
+                    @if($productos->hasPages())
+<div class="row align-items-center mt-3">
+    <!-- Izquierda: Página actual -->
+    <div class="col-md-4 text-left">
+        <div class="pagination-info" style="margin: 7px; font-size: 14px;">
+            Página {{ $productos->currentPage() }} de {{ $productos->lastPage() }}
+        </div>
+    </div>
 
-                                    <!-- Página anterior -->
-                                    <li class="page-item" :class="{ disabled: pagination.current_page <= 1 }">
-                                        <a class="page-link" href="#"
-                                            @click.prevent="changePage(pagination.current_page - 1)" title="Anterior">
-                                            <i class="fas fa-angle-left"></i>
-                                        </a>
-                                    </li>
+    <!-- Centro: Botones numerados -->
+    <div class="col-md-4">
+        <nav aria-label="Page navigation">
+            <ul class="pagination pagination-sm justify-content-center m-0">
+                <!-- Primera -->
+                <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $productos->url(1) }}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
 
-                                    <!-- Números -->
-                                    <li class="page-item" v-for="page in pagesNumber"
-                                        :class="{ active: page === pagination.current_page }">
-                                        <a class="page-link" href="#" @click.prevent="changePage(page)">
-                                            @{{ page }}
-                                        </a>
-                                    </li>
+                <!-- Anterior -->
+                <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $productos->previousPageUrl() }}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
 
-                                    <!-- Página siguiente -->
-                                    <li class="page-item"
-                                        :class="{ disabled: pagination.current_page >= pagination.last_page }">
-                                        <a class="page-link" href="#"
-                                            @click.prevent="changePage(pagination.current_page + 1)" title="Siguiente">
-                                            <i class="fas fa-angle-right"></i>
-                                        </a>
-                                    </li>
+                @php
+                    $start = max($productos->currentPage() - 2, 1);
+                    $end = min($productos->lastPage(), $start + 3);
+                    if ($start > 1) {
+                        echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                    }
+                @endphp
 
-                                    <!-- Última página -->
-                                    <li class="page-item"
-                                        :class="{ disabled: pagination.current_page >= pagination.last_page }">
-                                        <a class="page-link" href="#"
-                                            @click.prevent="changePage(pagination.last_page)" title="Última página">
-                                            <i class="fas fa-step-forward"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
+                @for ($i = $start; $i <= $end; $i++)
+                    <li class="page-item {{ $i == $productos->currentPage() ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $productos->url($i) }}">{{ $i }}</a>
+                    </li>
+                @endfor
 
+                @if ($end < $productos->lastPage())
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">
+                            {{ $productos->lastPage() }}
+                        </a>
+                    </li>
+                @endif
 
-                        <!-- Derecha: Total -->
-                        <div class="col-sm-4 text-right" style="max-width: 240px; overflow: hidden;">
-                            <div style="margin: 7px; font-size: 15px;" v-if="to_pagination">
-                                @{{ to_pagination + ' de ' + pagination.total + ' Registros' }}
-                            </div>
-                            <div style="margin: 7px; font-size: 15px;" v-else>
-                                0 de 0 Registros
-                            </div>
-                        </div>
-                    </div>
+                <!-- Siguiente -->
+                <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $productos->nextPageUrl() }}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+
+                <!-- Última -->
+                <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Derecha: Cantidad total -->
+    <div class="col-md-4 text-right">
+        <div class="pagination-info" style="margin: 7px; font-size: 14px;">
+            Mostrando {{ $productos->firstItem() }}-{{ $productos->lastItem() }} de {{ $productos->total() }} productos
+        </div>
+    </div>
+</div>
+@endif
+
                 </div>
             </div>
             @include('components.novedades', ['novedades' => $novedades])
@@ -266,6 +304,7 @@
                 teclados_filtro: producto_teclados,
                 mouses_filtro: producto_mouses,
                 suites_filtro: producto_suites,
+
             },
             created() {
                 this.Buscar({
@@ -316,54 +355,7 @@
                 }
             },
             methods: {
-                limpiarFiltros() {
-                    // 1. Resetear todos los arrays de filtros
-                    const filtrosParaResetear = [
-                        'marcas', 'procesadores', 'ram', 'sistema_operativo',
-                        'almacenamiento', 'conectividad', 'conectividad_wlan',
-                        'conectividad_usb', 'video_vga', 'video_hdmi',
-                        'unidades_opticas', 'teclados', 'mouses', 'suites'
-                    ];
 
-                    filtrosParaResetear.forEach(filtro => {
-                        this.filtros[filtro] = [];
-                    });
-
-                    // 2. Desmarcar checkboxes visualmente
-                    document.querySelectorAll('.seccion_filtro input[type="checkbox"]').forEach(checkbox => {
-                        checkbox.checked = false;
-                    });
-
-                    // 3. Cerrar todas las secciones desplegadas
-                    Object.keys(this.desplegar).forEach(key => {
-                        this.desplegar[key] = false;
-                        this.boolean[key] = false;
-                    });
-
-                    // 4. Resetear búsqueda
-                    this.filtros.nombre = '';
-
-                    // 5. Recargar datos sin filtros
-                    this.Buscar({
-                        modelo_id: $modelo_id,
-                        nombre: '',
-                        marcas: [],
-                        procesadores: [],
-                        ram: [],
-                        sistema_operativo: [],
-                        almacenamiento: [],
-                        conectividad: [],
-                        conectividad_wlan: [],
-                        conectividad_usb: [],
-                        video_vga: [],
-                        video_hdmi: [],
-                        unidades_opticas: [],
-                        teclados: [],
-                        mouses: [],
-                        suites: [],
-                        categoria_id: this.filtros.categoria_id // Mantener categoría si es necesario
-                    }, 1); // Volver a página 1
-                },
                 changePage(page) {
                     this.page = page;
                     this.pagination.current_page = page;
@@ -388,62 +380,6 @@
                         suites: this.filtros.suites,
                         categoria_id: this.filtros.categoria_id,
                     }, page);
-                },
-                Filtrar(value, campo, elemento) {
-
-                    if (campo === 'nombre') {
-                        this.filtros.nombre = value;
-                        this.Buscar({
-                            modelo_id: $modelo_id,
-                            nombre: this.filtros.nombre,
-                            marcas: this.filtros.marcas,
-                            procesadores: this.filtros.procesadores,
-                            ram: this.filtros.ram,
-                            sistema_operativo: this.filtros.sistema_operativo,
-                            almacenamiento: this.filtros.almacenamiento,
-                            conectividad: this.filtros.conectividad,
-                            conectividad_wlan: this.filtros.conectividad_wlan,
-                            conectividad_usb: this.filtros.conectividad_usb,
-                            video_vga: this.filtros.video_vga,
-                            video_hdmi: this.filtros.video_hdmi,
-                            unidades_opticas: this.filtros.unidades_opticas,
-                            teclados: this.filtros.teclados,
-                            mouses: this.filtros.mouses,
-                            suites: this.filtros.suites,
-                        })
-                    } else if (campo !== 'nombre' && campo !== " ") {
-                        if (elemento.target.checked) {
-                            this.filtros[campo].push(value);
-                        } else {
-                            let index = this.filtros[campo].findIndex(e => e === value)
-
-                            this.filtros[campo][index] = undefined
-
-                            this.filtros[campo] = this.filtros[campo].filter(Boolean)
-                        }
-
-                        this.Buscar({
-                            modelo_id: $modelo_id,
-                            marcas: this.filtros.marcas,
-                            procesadores: this.filtros.procesadores,
-                            ram: this.filtros.ram,
-                            sistema_operativo: this.filtros.sistema_operativo,
-                            almacenamiento: this.filtros.almacenamiento,
-                            conectividad: this.filtros.conectividad,
-                            conectividad_wlan: this.filtros.conectividad_wlan,
-                            conectividad_usb: this.filtros.conectividad_usb,
-                            video_vga: this.filtros.video_vga,
-                            video_hdmi: this.filtros.video_hdmi,
-                            unidades_opticas: this.filtros.unidades_opticas,
-                            teclados: this.filtros.teclados,
-                            mouses: this.filtros.mouses,
-                            suites: this.filtros.suites,
-                        })
-                    }
-                },
-                Soles(num) {
-                    $soles = Number.parseFloat(num).toFixed(2)
-                    return $soles;
                 },
                 Buscar({
                     modelo_id,
@@ -531,5 +467,6 @@
                 },
             },
         });
+
     </script>
 @endsection

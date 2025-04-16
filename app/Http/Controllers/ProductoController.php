@@ -798,7 +798,33 @@ public function asignarFiltrosGenerico(Request $request)
 
     return redirect()->back()->with('success', 'Filtros asignados correctamente.');
 }
+public function filtrarAjax(Request $request)
+{
+    $modeloId = $request->input('modelo_id');
+    $modelo = Modelo::with(['productos.filtros'])->findOrFail($modeloId);
 
+    $productos = $modelo->productos;
+
+    if ($request->query()) {
+        $productos = $productos->filter(function ($producto) use ($request) {
+            foreach ($request->query() as $key => $valores) {
+                if ($key === 'modelo_id') continue;
+
+                $valores = explode(',', $valores);
+
+                $filtroValido = $producto->filtros->contains(function ($filtro) use ($key, $valores) {
+                    return Str::slug($filtro->nombre_aside) === $key
+                        && in_array($filtro->pivot->opcion, $valores);
+                });
+
+                if (!$filtroValido) return false;
+            }
+            return true;
+        })->values();
+    }
+
+    return response()->json($productos);
+}
 
 }
 

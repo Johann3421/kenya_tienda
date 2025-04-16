@@ -124,162 +124,179 @@
     </div>
 
     @php
-    use App\Producto;
-    use App\Models\Aside;
+        use App\Producto;
+        use App\Models\Aside;
 
-    $productos = Producto::with(['modelo', 'filtros'])
-        ->get()
-        ->groupBy('modelo.descripcion');
+        $productos = Producto::with(['modelo', 'filtros'])
+            ->get()
+            ->groupBy('modelo.descripcion');
 
-    $asides = Aside::with(['modelo', 'productos'])->get();
+        $asides = Aside::with(['modelo', 'productos'])->get();
 
-    // Mapeo de nombres de modelo a IDs para el filtrado
-    $modelosMap = App\Modelo::where('activo', 'Si')
-        ->pluck('id', 'descripcion')
-        ->toArray();
-@endphp
+        // Mapeo de nombres de modelo a IDs para el filtrado
+        $modelosMap = App\Modelo::where('activo', 'Si')->pluck('id', 'descripcion')->toArray();
+    @endphp
 
-<!-- Modal Asignar Filtros -->
-<div class="modal fade" id="modalAsignarFiltros" tabindex="-1" aria-labelledby="modalAsignarFiltrosLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <form action="{{ route('productos.asignar-filtros.generico') }}" method="POST">
-                @csrf
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Asignar Filtros al Producto</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-
-                <div class="modal-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label">Seleccionar Modelo</label>
-                            <select class="form-select" id="modeloSelector">
-                                <option value="">-- Todos --</option>
-                                @foreach ($productos->keys() as $modelo)
-                                    <option value="{{ $modelosMap[$modelo] ?? '' }}">{{ $modelo }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+    <!-- Modal Asignar Filtros -->
+    <div class="modal fade" id="modalAsignarFiltros" tabindex="-1" aria-labelledby="modalAsignarFiltrosLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <form action="{{ route('productos.asignar-filtros.generico') }}" method="POST">
+                    @csrf
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Asignar Filtros al Producto</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                     </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label">Seleccionar Producto</label>
-                            <select name="producto_id" class="form-select" required id="productoSelector">
-                                @foreach ($productos as $modelo => $grupo)
-                                    <optgroup label="{{ $modelo ?? 'Sin modelo' }}">
-                                        @foreach ($grupo as $producto)
-                                            <option value="{{ $producto->id }}" data-modelo="{{ $modelo }}" data-modelo-id="{{ $producto->modelo_id }}">{{ $producto->nombre }}</option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
 
-                    <div id="filtrosContainer">
-                        @foreach ($asides as $aside)
-                            @if ($aside->opciones)
-                                <div class="card mb-3 filtro-card" data-modelo-id="{{ $aside->modelo_id }}">
-                                    <div class="card-header bg-light">
-                                        <strong>{{ $aside->nombre_aside }}</strong>
-                                        <small class="text-muted float-end">{{ $aside->modelo->descripcion ?? 'Todos' }}</small>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            @foreach ($aside->opciones as $opcion)
-                                                <div class="col-md-4 mb-2">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input filtro-option" type="checkbox"
-                                                            name="filtros[{{ $aside->id }}][]"
-                                                            value="{{ $opcion }}"
-                                                            id="filtro_{{ $aside->id }}_{{ Str::slug($opcion) }}"
-                                                            data-aside="{{ $aside->id }}"
-                                                            data-opcion="{{ $opcion }}">
-                                                        <label class="form-check-label"
-                                                            for="filtro_{{ $aside->id }}_{{ Str::slug($opcion) }}">
-                                                            {{ $opcion }}
-                                                        </label>
-                                                    </div>
-                                                </div>
+                        <!-- Filtro por modelo y producto -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Buscar Modelo</label>
+                                <!-- Después -->
+<select class="form-select" id="selectorModelo">
+    <option value="">-- Seleccionar Modelo --</option>
+    @foreach ($productos->keys() as $modelo)
+        <option value="{{ $modelo }}">{{ $modelo }}</option>
+    @endforeach
+</select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Buscar Producto</label>
+                                <input type="text" class="form-control" id="buscarProducto"
+                                    placeholder="Ej. Laptop X, Monitor 27...">
+                            </div>
+                        </div>
+
+                        <!-- Select producto -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <label class="form-label">Seleccionar Producto</label>
+                                <select name="producto_id" class="form-select" required id="productoSelector"
+                                    size="8">
+                                    @foreach ($productos as $modelo => $grupo)
+                                    <optgroup label="{{ $modelo ?? 'Sin modelo' }}" data-modelo="{{ $modelo }}">
+                                            @foreach ($grupo as $producto)
+                                                <option value="{{ $producto->id }}" data-modelo="{{ $modelo }}"
+                                                    data-modelo-id="{{ $producto->modelo_id }}">
+                                                    {{ $producto->nombre }}
+                                                </option>
                                             @endforeach
+                                        </optgroup>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Filtros -->
+                        <div id="filtrosContainer">
+                            @foreach ($asides as $aside)
+                                @if ($aside->opciones)
+                                    <div class="card mb-3 filtro-card" data-modelo-id="{{ $aside->modelo_id }}">
+                                        <div
+                                            class="card-header bg-light d-flex justify-content-between align-items-center">
+                                            <strong>{{ $aside->nombre_aside }}</strong>
+                                            <small class="badge bg-info text-dark ms-2">
+                                                {{ $aside->modelo->descripcion ?? 'Sin modelo' }}
+                                            </small>
+                                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#collapseAside{{ $aside->id }}">
+                                                Ver/Ocultar
+                                            </button>
+                                        </div>
+                                        <div class="card-body collapse show" id="collapseAside{{ $aside->id }}">
+                                            <div class="row">
+                                                @foreach ($aside->opciones as $opcion)
+                                                    <div class="col-md-4 mb-2">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input filtro-option" type="checkbox"
+                                                                name="filtros[{{ $aside->id }}][]"
+                                                                value="{{ $opcion }}"
+                                                                id="filtro_{{ $aside->id }}_{{ Str::slug($opcion) }}"
+                                                                data-aside="{{ $aside->id }}"
+                                                                data-opcion="{{ $opcion }}">
+                                                            <label class="form-check-label"
+                                                                for="filtro_{{ $aside->id }}_{{ Str::slug($opcion) }}">
+                                                                {{ $opcion }}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            @endif
-                        @endforeach
+                                @endif
+                            @endforeach
+                        </div>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Filtros</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar Filtros</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectorModelo = document.getElementById('selectorModelo');
+            const productoSelector = document.getElementById('productoSelector');
 
-<script>
-    const filtrosAsignados = @json(
-        Producto::with('filtros')->get()->mapWithKeys(function ($p) {
-            return [$p->id => $p->filtros->groupBy('pivot.aside_id')->map->pluck('pivot.opcion')];
-        }));
+            const filtrosAsignados = @json(
+                \App\Producto::with('filtros')->get()->mapWithKeys(function ($p) {
+                    return [$p->id => $p->filtros->groupBy('pivot.aside_id')->map->pluck('pivot.opcion')];
+                })
+            );
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const productoSelector = document.getElementById('productoSelector');
-        const modeloSelector = document.getElementById('modeloSelector');
-        const filtrosContainer = document.getElementById('filtrosContainer');
+            const checkAsignados = () => {
+                const prodId = productoSelector.value;
+                const asignados = filtrosAsignados[prodId] || {};
 
-        const checkAsignados = () => {
-            const prodId = productoSelector.value;
-            const asignados = filtrosAsignados[prodId] || {};
+                document.querySelectorAll('.filtro-option').forEach(input => {
+                    const aside = input.dataset.aside;
+                    const opcion = input.dataset.opcion;
+                    input.checked = asignados[aside]?.includes(opcion) ?? false;
+                });
+            };
 
-            document.querySelectorAll('.filtro-option').forEach(input => {
-                const aside = input.dataset.aside;
-                const opcion = input.dataset.opcion;
-                input.checked = asignados[aside]?.includes(opcion) ?? false;
-            });
-        };
+            const actualizarProductosYFiltros = () => {
+                const modelo = selectorModelo.value;
 
-        const filtrarElementos = () => {
-            const modeloIdSeleccionado = modeloSelector.value;
+                // Mostrar productos del modelo
+                Array.from(productoSelector.options).forEach(opt => {
+                    opt.hidden = !(opt.dataset.modelo === modelo);
+                });
 
-            // Filtrar productos
-            Array.from(productoSelector.options).forEach(option => {
-                if (!modeloIdSeleccionado || option.dataset.modeloId === modeloIdSeleccionado) {
-                    option.hidden = false;
-                } else {
-                    option.hidden = true;
+                const visible = Array.from(productoSelector.options).find(opt => !opt.hidden);
+                if (visible) {
+                    productoSelector.value = visible.value;
+                    checkAsignados();
                 }
-            });
 
-            // Filtrar filtros
-            document.querySelectorAll('.filtro-card').forEach(card => {
-                const cardModeloId = card.dataset.modeloId;
-                if (!modeloIdSeleccionado || cardModeloId == modeloIdSeleccionado) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+                // Mostrar solo filtros del modelo
+                document.querySelectorAll('.filtro-card').forEach(card => {
+                    const cardModeloId = card.dataset.modeloId;
+                    const selectedModeloId = visible?.dataset.modeloId;
+                    card.style.display = (cardModeloId === selectedModeloId) ? '' : 'none';
+                });
+            };
 
-            // Seleccionar el primer producto visible y actualizar checks
-            const visibleOptions = Array.from(productoSelector.options).filter(opt => !opt.hidden);
-            if (visibleOptions.length > 0) {
-                productoSelector.value = visibleOptions[0].value;
-                checkAsignados();
+            selectorModelo.addEventListener('change', actualizarProductosYFiltros);
+            productoSelector.addEventListener('change', checkAsignados);
+
+            // inicial
+            if (selectorModelo.value) {
+                actualizarProductosYFiltros();
             }
-        };
+        });
+        </script>
 
-        modeloSelector.addEventListener('change', filtrarElementos);
-        productoSelector.addEventListener('change', checkAsignados);
 
-        // Inicializar
-        filtrarElementos();
-    });
-</script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
