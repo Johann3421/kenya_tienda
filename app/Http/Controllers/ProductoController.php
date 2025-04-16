@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -773,30 +774,53 @@ public function actualizarEspecificacion(Request $request, $id)
 
 public function asignarFiltrosGenerico(Request $request)
 {
-    $request->validate([
-        'producto_id' => 'required|exists:productos,id',
-        'filtros' => 'sometimes|array',
-        'filtros.*' => 'array'
+    $validator = Validator::make($request->all(), [
+        'productos' => 'required|array',
+        'productos.*' => ['required', 'json', function ($attribute, $value, $fail) {
+            $decoded = json_decode($value, true);
+            if (!is_array($decoded)) {
+                $fail('El formato de los filtros no es válido.');
+            }
+        }],
     ]);
 
-    $producto = Producto::findOrFail($request->producto_id);
-
-    $filtrosParaSincronizar = [];
-
-    foreach ($request->input('filtros', []) as $asideId => $opciones) {
-        foreach ($opciones as $opcion) {
-            $filtrosParaSincronizar[] = [
-                'aside_id' => $asideId,
-                'opcion' => $opcion
-            ];
-        }
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput();
     }
 
-    $producto->filtros()->sync($filtrosParaSincronizar);
-    $producto->filtros_ids = $producto->filtros->pluck('id')->unique()->toArray();
-    $producto->save();
+    try {
+        DB::beginTransaction();
 
-    return redirect()->back()->with('success', 'Filtros asignados correctamente.');
+        foreach ($request->productos as $productoId => $filtrosJson) {
+            $filtros = json_decode($filtrosJson, true);
+            $producto = Producto::findOrFail($productoId);
+
+            // Eliminar relaciones existentes
+            $producto->filtros()->detach();
+
+            // Crear nuevas relaciones
+            foreach ($filtros as $asideId => $opciones) {
+                foreach ($opciones as $opcion) {
+                    $producto->filtros()->attach($asideId, ['opcion' => $opcion]);
+                }
+            }
+
+            // Actualizar filtros_ids especificando la tabla correcta
+            $producto->filtros_ids = $producto->filtros()
+                ->pluck('asides.id') // Especificamos la tabla para el campo id
+                ->unique()
+                ->toArray();
+
+            $producto->save();
+        }
+
+        DB::commit();
+
+        return back()->with('success', 'Filtros actualizados correctamente para todos los productos modificados.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Error al guardar los filtros: ' . $e->getMessage());
+    }
 }
 public function filtrarAjax(Request $request)
 {
