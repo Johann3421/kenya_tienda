@@ -390,15 +390,11 @@
 
         /* Responsive Design */
         @media (max-width: 992px) {
-            .promo-banner-track {
-
-            }
+            .promo-banner-track {}
         }
 
         @media (max-width: 768px) {
-            .promo-banner-track {
-
-            }
+            .promo-banner-track {}
 
             .promo-banner-content {
                 font-size: 1.5rem;
@@ -406,8 +402,7 @@
         }
 
         @media (max-width: 576px) {
-            .promo-banner-track {
-            }
+            .promo-banner-track {}
 
             .promo-banner-nav {
                 width: 30px;
@@ -694,8 +689,7 @@
 
                                 @if ($banner->link)
                                     <!-- Botón (Naranja vibrante y llamativo) -->
-                                    <a href="#"
-                                        class="btn-get-started animate__animated animate__fadeInUp scrollto"
+                                    <a href="#" class="btn-get-started animate__animated animate__fadeInUp scrollto"
                                         style="background-color: #ee7c31; border: none; padding: 15px 40px; font-size: 1.3rem; margin-top: 35px; font-weight: 700; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: all 0.3s ease; display: inline-block;">
                                         {{ $banner->link_nombre }}
                                     </a>
@@ -799,36 +793,38 @@
             </div>
         </section>
         <!-- ======= Carrusel de Banners ======= -->
-<section class="promo-banner-section">
-    <div class="promo-banner-container">
-        <div class="promo-banner-track">
-            @foreach(\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $banner)
-            <div class="promo-banner-slide">
-                <div class="promo-banner-content">
-                    <a href="{{ $banner->url_destino }}" target="_blank">
-                        <img src="{{ asset($banner->imagen_path) }}" alt="{{ $banner->titulo ?? 'Banner promocional' }}" class="img-fluid">
-                    </a>
+        <section class="promo-banner-section">
+            <div class="promo-banner-container">
+                <div class="promo-banner-track">
+                    @foreach (\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $banner)
+                        <div class="promo-banner-slide">
+                            <div class="promo-banner-content">
+                                <a href="{{ $banner->url_destino }}" target="_blank">
+                                    <img src="{{ asset($banner->imagen_path) }}"
+                                        alt="{{ $banner->titulo ?? 'Banner promocional' }}" class="img-fluid">
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <!-- Controles de navegación -->
+                <button class="promo-banner-nav promo-banner-prev">
+                    <i class='bx bx-chevron-left'></i>
+                </button>
+                <button class="promo-banner-nav promo-banner-next">
+                    <i class='bx bx-chevron-right'></i>
+                </button>
+
+                <!-- Indicadores -->
+                <div class="promo-banner-dots">
+                    @foreach (\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $index => $banner)
+                        <button class="promo-banner-dot {{ $index === 0 ? 'active' : '' }}"
+                            data-slide="{{ $index }}"></button>
+                    @endforeach
                 </div>
             </div>
-            @endforeach
-        </div>
-
-        <!-- Controles de navegación -->
-        <button class="promo-banner-nav promo-banner-prev">
-            <i class='bx bx-chevron-left'></i>
-        </button>
-        <button class="promo-banner-nav promo-banner-next">
-            <i class='bx bx-chevron-right'></i>
-        </button>
-
-        <!-- Indicadores -->
-        <div class="promo-banner-dots">
-            @foreach(\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $index => $banner)
-            <button class="promo-banner-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></button>
-            @endforeach
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- ======= Novedades Section ======= -->
         @include('components.novedades', ['novedades' => $novedades])
@@ -1105,13 +1101,17 @@
                 track.addEventListener('touchstart', (e) => {
                     touchStartX = e.changedTouches[0].screenX;
                     stopAutoSlide();
-                }, { passive: true });
+                }, {
+                    passive: true
+                });
 
                 track.addEventListener('touchend', (e) => {
                     touchEndX = e.changedTouches[0].screenX;
                     handleSwipe();
                     startAutoSlide();
-                }, { passive: true });
+                }, {
+                    passive: true
+                });
 
                 function handleSwipe() {
                     const diff = touchStartX - touchEndX;
@@ -1132,4 +1132,3 @@
     <!-- FIN DEL SCRIPT DEL CARRUSEL DE NOVEDADES -->
 @endsection
 <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
-

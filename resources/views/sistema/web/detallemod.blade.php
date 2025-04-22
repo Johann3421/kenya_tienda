@@ -15,35 +15,34 @@
     </nav>
 @endsection
 @section('content')
-@php
-use App\Modelo;
-use Illuminate\Support\Str;
+    @php
+        use App\Modelo;
+        use Illuminate\Support\Str;
 
-$modeloId = request()->route('id') ?? request()->route('modelo');
-$modelo = Modelo::with(['productos.filtros', 'productos.modelo'])->findOrFail($modeloId);
+        $modeloId = request()->route('id') ?? request()->route('modelo');
+        $modelo = Modelo::with(['productos.filtros', 'productos.modelo'])->findOrFail($modeloId);
 
-$filtrosActivos = collect(request()->except('page'));
+        $filtrosActivos = collect(request()->except('page'));
 
-// Consulta base con paginación
-$productosQuery = $modelo->productos()
-                ->where('pagina_web', 'SI')
-                ->with(['modelo', 'filtros']);
+        // Consulta base con paginación
+        $productosQuery = $modelo
+            ->productos()
+            ->where('pagina_web', 'SI')
+            ->with(['modelo', 'filtros']);
 
-// Aplicar filtros si existen
-if ($filtrosActivos->isNotEmpty()) {
-    foreach ($filtrosActivos as $filtroNombre => $valores) {
-        $valores = is_array($valores) ? $valores : explode(',', $valores);
+        // Aplicar filtros si existen
+        if ($filtrosActivos->isNotEmpty()) {
+            foreach ($filtrosActivos as $filtroNombre => $valores) {
+                $valores = is_array($valores) ? $valores : explode(',', $valores);
 
-        $productosQuery->whereHas('filtros', function ($q) use ($filtroNombre, $valores) {
-            $q->whereIn('opcion', $valores)
-              ->whereRaw('LOWER(nombre_aside) = ?', [strtolower($filtroNombre)]);
-        });
-    }
-}
+                $productosQuery->whereHas('filtros', function ($q) use ($filtroNombre, $valores) {
+                    $q->whereIn('opcion', $valores)->whereRaw('LOWER(nombre_aside) = ?', [strtolower($filtroNombre)]);
+                });
+            }
+        }
 
-
-$productos = $productosQuery->paginate(9)->appends(request()->query());
-@endphp
+        $productos = $productosQuery->paginate(9)->appends(request()->query());
+    @endphp
 
     <div style="background-color: #f1f1f1; height: 50px; margin-top: 72px;">
         <div class="container">
@@ -80,13 +79,14 @@ $productos = $productosQuery->paginate(9)->appends(request()->query());
                                 <div class="contorno">
                                     <div class="portfolio-wrap" style="margin: 0 auto;">
                                         @php
-                                            $img = $prod->modelo && $prod->modelo->img_mod
-                                                ? asset('storage/' . $prod->modelo->img_mod)
-                                                : asset('producto.jpg');
+                                            $img =
+                                                $prod->modelo && $prod->modelo->img_mod
+                                                    ? asset('storage/' . $prod->modelo->img_mod)
+                                                    : asset('producto.jpg');
                                         @endphp
 
                                         <img src="{{ $img }}" class="img-fluid"
-                                             alt="Imagen del modelo de {{ $prod->nombre }}">
+                                            alt="Imagen del modelo de {{ $prod->nombre }}">
                                     </div>
 
                                     <div class="descripcion">
@@ -109,81 +109,83 @@ $productos = $productosQuery->paginate(9)->appends(request()->query());
                         @endforelse
                     </div>
 
-                    @if($productos->hasPages())
-<div class="row align-items-center mt-3">
-    <!-- Izquierda: Página actual -->
-    <div class="col-md-4 text-left">
-        <div class="pagination-info" style="margin: 7px; font-size: 14px;">
-            Página {{ $productos->currentPage() }} de {{ $productos->lastPage() }}
-        </div>
-    </div>
+                    @if ($productos->hasPages())
+                        <div class="row align-items-center mt-3">
+                            <!-- Izquierda: Página actual -->
+                            <div class="col-md-4 text-left">
+                                <div class="pagination-info" style="margin: 7px; font-size: 14px;">
+                                    Página {{ $productos->currentPage() }} de {{ $productos->lastPage() }}
+                                </div>
+                            </div>
 
-    <!-- Centro: Botones numerados -->
-    <div class="col-md-4">
-        <nav aria-label="Page navigation">
-            <ul class="pagination pagination-sm justify-content-center m-0">
-                <!-- Primera -->
-                <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $productos->url(1) }}">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
+                            <!-- Centro: Botones numerados -->
+                            <div class="col-md-4">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm justify-content-center m-0">
+                                        <!-- Primera -->
+                                        <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $productos->url(1) }}">
+                                                <i class="fas fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
 
-                <!-- Anterior -->
-                <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $productos->previousPageUrl() }}">
-                        <i class="fas fa-angle-left"></i>
-                    </a>
-                </li>
+                                        <!-- Anterior -->
+                                        <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $productos->previousPageUrl() }}">
+                                                <i class="fas fa-angle-left"></i>
+                                            </a>
+                                        </li>
 
-                @php
-                    $start = max($productos->currentPage() - 2, 1);
-                    $end = min($productos->lastPage(), $start + 3);
-                    if ($start > 1) {
-                        echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                    }
-                @endphp
+                                        @php
+                                            $start = max($productos->currentPage() - 2, 1);
+                                            $end = min($productos->lastPage(), $start + 3);
+                                            if ($start > 1) {
+                                                echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                            }
+                                        @endphp
 
-                @for ($i = $start; $i <= $end; $i++)
-                    <li class="page-item {{ $i == $productos->currentPage() ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $productos->url($i) }}">{{ $i }}</a>
-                    </li>
-                @endfor
+                                        @for ($i = $start; $i <= $end; $i++)
+                                            <li class="page-item {{ $i == $productos->currentPage() ? 'active' : '' }}">
+                                                <a class="page-link"
+                                                    href="{{ $productos->url($i) }}">{{ $i }}</a>
+                                            </li>
+                                        @endfor
 
-                @if ($end < $productos->lastPage())
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                    <li class="page-item">
-                        <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">
-                            {{ $productos->lastPage() }}
-                        </a>
-                    </li>
-                @endif
+                                        @if ($end < $productos->lastPage())
+                                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">
+                                                    {{ $productos->lastPage() }}
+                                                </a>
+                                            </li>
+                                        @endif
 
-                <!-- Siguiente -->
-                <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $productos->nextPageUrl() }}">
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </li>
+                                        <!-- Siguiente -->
+                                        <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $productos->nextPageUrl() }}">
+                                                <i class="fas fa-angle-right"></i>
+                                            </a>
+                                        </li>
 
-                <!-- Última -->
-                <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+                                        <!-- Última -->
+                                        <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">
+                                                <i class="fas fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
 
-    <!-- Derecha: Cantidad total -->
-    <div class="col-md-4 text-right">
-        <div class="pagination-info" style="margin: 7px; font-size: 14px;">
-            Mostrando {{ $productos->firstItem() }}-{{ $productos->lastItem() }} de {{ $productos->total() }} productos
-        </div>
-    </div>
-</div>
-@endif
+                            <!-- Derecha: Cantidad total -->
+                            <div class="col-md-4 text-right">
+                                <div class="pagination-info" style="margin: 7px; font-size: 14px;">
+                                    Mostrando {{ $productos->firstItem() }}-{{ $productos->lastItem() }} de
+                                    {{ $productos->total() }} productos
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                 </div>
             </div>
@@ -467,6 +469,5 @@ $productos = $productosQuery->paginate(9)->appends(request()->query());
                 },
             },
         });
-
     </script>
 @endsection

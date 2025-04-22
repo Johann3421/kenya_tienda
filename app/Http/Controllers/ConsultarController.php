@@ -77,23 +77,24 @@ class ConsultarController extends Controller {
         $dato = strtoupper($request->search);
         $numserie = substr($dato, 0, 7);
         $id = substr($dato, -1, 4);
-        $garantia = Garantia::where('serie', 'LIKE', "%{$request->search}%")
-            ->with(['getProductos', 'getManuales.getManual', 'getDriversprod.getDrivers'])->first();
 
-        //$garantia= Garantia::with('getManuales')->get();
-        //return ($garantia);
+        $garantia = Garantia::where('serie', 'LIKE', "%{$request->search}%")
+            ->with([
+                'getProductos.modelo', // Asegúrate de cargar la relación modelo
+                'getManuales.getManual',
+                'getDriversprod.getDrivers'
+            ])->first();
+
         if ($garantia) {
             return [
                 'state' => 'success',
                 'garantia' => $garantia,
-                //'prod'   => $prod,
             ];
         } else {
             return [
                 'state' => 'error',
             ];
         }
-        $garantia = $garantia->with(['getProductos'])->get();
     }
 
     public function buscar_serie($serie) {
@@ -104,4 +105,5 @@ class ConsultarController extends Controller {
 
         return view('consultar.garantiaQR', compact('whatsapp', 'garantia', 'prod'));
     }
+
 }

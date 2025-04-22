@@ -7,12 +7,14 @@ new Vue({
         errors: [],
         state: null,
         whatsapp: my_whatsapp,
-        vencido:mi_fecha,
+        vencido: mi_fecha,
+        tabsEnabled: false // Nueva variable para controlar las pestañas
     },
     methods: {
         Buscar() {
             this.errors = [];
             this.garantia = [];
+            this.tabsEnabled = false; // Resetear estado de pestañas al iniciar búsqueda
 
             if (this.search.length == 14) {
                 this.loading = true;
@@ -23,12 +25,23 @@ new Vue({
                     this.loading = false;
                     this.state = response.data.state;
                     this.garantia = response.data.garantia;
+
+                    // Habilitar pestañas solo si la búsqueda fue exitosa
+                    if(this.state == 'success') {
+                        this.tabsEnabled = true;
+                    }
                 }).catch(error => {
                     this.loading = false;
-                    alert("Ocurrio un error al buscar, por favor intente nuevamente.");
+                    this.tabsEnabled = false;
+                    if (error.response && error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        alert("Ocurrió un error al buscar, por favor intente nuevamente.");
+                    }
                 });
             } else {
-                this.errors['search'] = ['El codigo debe ser de 11 caracteres.'];
+                this.errors['search'] = ['El código debe ser de 14 caracteres.'];
+                this.tabsEnabled = false;
             }
         },
         Fecha(doc) {
