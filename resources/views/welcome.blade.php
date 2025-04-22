@@ -289,7 +289,6 @@
         /* Estilos para el carrusel de banners */
         .promo-banner-section {
             width: 100%;
-            margin: 0 auto 40px;
             position: relative;
             overflow: hidden;
         }
@@ -302,7 +301,7 @@
         .promo-banner-track {
             display: flex;
             transition: transform 0.5s ease;
-            height: 580px;
+
         }
 
         .promo-banner-slide {
@@ -392,13 +391,13 @@
         /* Responsive Design */
         @media (max-width: 992px) {
             .promo-banner-track {
-                height: 250px;
+
             }
         }
 
         @media (max-width: 768px) {
             .promo-banner-track {
-                height: 200px;
+
             }
 
             .promo-banner-content {
@@ -408,7 +407,6 @@
 
         @media (max-width: 576px) {
             .promo-banner-track {
-                height: 230px;
             }
 
             .promo-banner-nav {
@@ -798,81 +796,39 @@
                     <h2>Ofertas</h2>
                     <p>Productos con super promociones y descuentos.</p>
                 </div>
-                <div class="row portfolio-container">
-                    @foreach ($ofertas as $prod)
-                        <div class="col-lg-3 col-md-4 portfolio-item filter-{{ $prod->categoria_id }}">
-                            <div class="contorno">
-                                <div class="portfolio-wrap" style="margin: 0 auto;">
-                                    @if ($prod->imagen_1)
-                                        <img src="{{ asset('storage/' . $prod->imagen_1) }}" class="img-fluid"
-                                            alt="">
-                                    @else
-                                        <img src="{{ asset('producto.jpg') }}" class="img-fluid" alt="">
-                                    @endif
-                                    <div class="portfolio-info">
-                                        @if ($prod->categoria_id)
-                                            <h6 style="color: #fff;">{{ $prod->getCategoria->nombre }}</h6>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="descripcion">
-                                    <div class="text-center" style="height: 25px;"><b>{{ $prod->codigo_interno }}</b>
-                                    </div>
-                                    <div class="text-center" style="height: 85px;">
-                                        <h6><a href="{{ route('producto_detalle', $prod->id) }}"
-                                                class="p-nombre">{{ Str::limit($prod->nombre, 100) }}</a></h6>
-                                    </div>
-                                    <div class="text-center">
-                                        <b class="p-precio">S/.
-                                            {{ number_format($prod->precio_unitario, 2, '.', ' ') }}</b>
-                                        @if ($prod->precio_anterior)
-                                            <b class="p-precio-old">
-                                                S/.{{ number_format($prod->precio_anterior, 2, '.', ' ') }}</b>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
             </div>
         </section>
         <!-- ======= Carrusel de Banners ======= -->
-        <section class="promo-banner-section">
-            <div class="promo-banner-container">
-                <div class="promo-banner-track">
-                    <!-- Banner 1 -->
-                    <div class="promo-banner-slide">
-                        <div class="promo-banner-content">
-                            <span class="promo-banner-placeholder">Banner 1</span>
-                        </div>
-                    </div>
-                    <!-- Banner 2 -->
-                    <div class="promo-banner-slide">
-                        <div class="promo-banner-content">
-                            <span class="promo-banner-placeholder">Banner 2</span>
-                        </div>
-                    </div>
-                    <!-- Banner 3 -->
-                    <div class="promo-banner-slide">
-                        <div class="promo-banner-content">
-                            <span class="promo-banner-placeholder">Banner 3</span>
-                        </div>
-                    </div>
+<section class="promo-banner-section">
+    <div class="promo-banner-container">
+        <div class="promo-banner-track">
+            @foreach(\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $banner)
+            <div class="promo-banner-slide">
+                <div class="promo-banner-content">
+                    <a href="{{ $banner->url_destino }}" target="_blank">
+                        <img src="{{ asset($banner->imagen_path) }}" alt="{{ $banner->titulo ?? 'Banner promocional' }}" class="img-fluid">
+                    </a>
                 </div>
-
-                <!-- Controles de navegación -->
-                <button class="promo-banner-nav promo-banner-prev">
-                    <i class='bx bx-chevron-left'></i>
-                </button>
-                <button class="promo-banner-nav promo-banner-next">
-                    <i class='bx bx-chevron-right'></i>
-                </button>
-
-                <!-- Indicadores -->
-                <div class="promo-banner-dots"></div>
             </div>
-        </section>
+            @endforeach
+        </div>
+
+        <!-- Controles de navegación -->
+        <button class="promo-banner-nav promo-banner-prev">
+            <i class='bx bx-chevron-left'></i>
+        </button>
+        <button class="promo-banner-nav promo-banner-next">
+            <i class='bx bx-chevron-right'></i>
+        </button>
+
+        <!-- Indicadores -->
+        <div class="promo-banner-dots">
+            @foreach(\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $index => $banner)
+            <button class="promo-banner-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></button>
+            @endforeach
+        </div>
+    </div>
+</section>
 
         <!-- ======= Novedades Section ======= -->
         @include('components.novedades', ['novedades' => $novedades])
@@ -1043,42 +999,36 @@
     </script>
     <!-- FIN DEL SCRIPT DEL CARRUSEL DE BANNERS -->
 
-    <!-- SCRIPT DEL CARRUSEL DE NOVEDADES -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const track = document.querySelector('.novedades-carousel-track');
-            const items = document.querySelectorAll('.novedades-carousel-item');
-            const prevBtn = document.querySelector('.novedades-carousel-prev');
-            const nextBtn = document.querySelector('.novedades-carousel-next');
-            const dotsContainer = document.querySelector('.novedades-carousel-dots');
+            const track = document.querySelector('.promo-banner-track');
+            const items = document.querySelectorAll('.promo-banner-slide'); // Cambiado a promo-banner-slide
+            const prevBtn = document.querySelector('.promo-banner-prev'); // Cambiado a promo-banner-prev
+            const nextBtn = document.querySelector('.promo-banner-next'); // Cambiado a promo-banner-next
+            const dotsContainer = document.querySelector('.promo-banner-dots'); // Cambiado a promo-banner-dots
 
             let currentIndex = 0;
-            let visibleItems = 4; // Valor por defecto para desktop
+            let visibleItems = 1; // Mostrar solo 1 banner a la vez
             let totalSlides = items.length;
 
             // Calcular items visibles según el ancho de pantalla
             function updateVisibleItems() {
-                if (window.innerWidth <= 576) {
-                    visibleItems = 1;
-                } else if (window.innerWidth <= 992) {
-                    visibleItems = 2;
-                } else {
-                    visibleItems = 4;
-                }
+                // Mantenemos siempre 1 banner visible (carrusel clásico)
+                visibleItems = 1;
                 updateTrackPosition();
                 createDots();
             }
 
-            // Crear indicadores
+            // Crear indicadores - MODIFICADO PARA MOSTRAR 1 DOT POR BANNER
             function createDots() {
                 dotsContainer.innerHTML = '';
-                const dotCount = Math.ceil(totalSlides / visibleItems);
+                const dotCount = totalSlides; // Un dot por cada banner
 
                 for (let i = 0; i < dotCount; i++) {
-                    const dot = document.createElement('div');
-                    dot.classList.add('novedades-carousel-dot');
-                    if (i === 0) dot.classList.add('active');
-                    dot.addEventListener('click', () => goToSlide(i * visibleItems));
+                    const dot = document.createElement('button'); // Cambiado a button para mejor accesibilidad
+                    dot.classList.add('promo-banner-dot');
+                    if (i === currentIndex) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i));
                     dotsContainer.appendChild(dot);
                 }
             }
@@ -1086,16 +1036,14 @@
             // Actualizar posición del track
             function updateTrackPosition() {
                 const itemWidth = items[0].offsetWidth;
-                const gap = 20;
+                const gap = 0; // Sin gap entre banners
                 const newPosition = -(currentIndex * (itemWidth + gap));
 
                 track.style.transform = `translateX(${newPosition}px)`;
 
-                // Actualizar dots activos
-                document.querySelectorAll('.novedades-carousel-dot').forEach((dot, i) => {
-                    const dotPosition = i * visibleItems;
-                    dot.classList.toggle('active', currentIndex >= dotPosition && currentIndex <
-                        dotPosition + visibleItems);
+                // Actualizar dots activos - MODIFICADO PARA SELECCIONAR SOLO EL DOT ACTUAL
+                document.querySelectorAll('.promo-banner-dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
                 });
             }
 
@@ -1118,9 +1066,9 @@
                 updateTrackPosition();
             }
 
-            // Ir a slide específico
+            // Ir a slide específico - MODIFICADO PARA IR DIRECTAMENTE AL BANNER
             function goToSlide(index) {
-                currentIndex = Math.min(Math.max(index, 0), totalSlides - visibleItems);
+                currentIndex = index;
                 updateTrackPosition();
             }
 
@@ -1157,17 +1105,13 @@
                 track.addEventListener('touchstart', (e) => {
                     touchStartX = e.changedTouches[0].screenX;
                     stopAutoSlide();
-                }, {
-                    passive: true
-                });
+                }, { passive: true });
 
                 track.addEventListener('touchend', (e) => {
                     touchEndX = e.changedTouches[0].screenX;
                     handleSwipe();
                     startAutoSlide();
-                }, {
-                    passive: true
-                });
+                }, { passive: true });
 
                 function handleSwipe() {
                     const diff = touchStartX - touchEndX;

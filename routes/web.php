@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerMedioController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\Sistema\AsideController;
 use Illuminate\Support\Facades\Log;
@@ -357,4 +358,18 @@ Route::get('/test', function() {
         'asides_count' => $modelo ? $modelo->asides->count() : 0,
         'asides' => $modelo ? $modelo->asides->toArray() : []
     ];
+});
+Route::post('/banners', [BannerMedioController::class, 'store'])->name('banners.store');
+Route::prefix('admin')->name('admin.')->group(function() {
+    // Listar banners (GET)
+    Route::get('banners', [BannerMedioController::class, 'index'])->name('banners.index');
+
+    // Crear banner (POST)
+    Route::post('banners', [BannerMedioController::class, 'store'])->name('banners.store');
+
+    // Actualizar banner (PUT/PATCH)
+    Route::put('banners/{bannerMedio}', [BannerMedioController::class, 'update'])->name('banners.update');
+
+    // Eliminar banner (DELETE)
+    Route::delete('banners/{bannerMedio}', [BannerMedioController::class, 'destroy'])->name('banners.destroy');
 });

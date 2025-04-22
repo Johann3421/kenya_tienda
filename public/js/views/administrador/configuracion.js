@@ -38,6 +38,10 @@ new Vue({
         fileName: null,
         fileContent: null,
         ruta: null,
+        banners: [],
+            loadingBanners: true,
+            currentBanner: null,
+
     },
     created() {
         this.Buscar();
@@ -69,7 +73,59 @@ new Vue({
             return pagesArray;
         }
     },
+    mounted() {
+        this.loadBanners(); // Cargar banners al iniciar
+
+        // Recargar cuando se cambie de pestaña
+        $('a[data-toggle="tab"]').on('shown.bs.tab', (e) => {
+            if (e.target.getAttribute('href') === '#bannersTab') {
+                this.loadBanners();
+            }
+        });
+    },
     methods: {
+        loadBanners() {
+            this.loadingBanners = true;
+            axios.get('/admin/banners')
+                .then(response => {
+                    this.banners = response.data;
+                })
+                .catch(error => {
+                    console.error('Error al cargar banners:', error);
+                    toastr.error('Error al cargar la lista de banners');
+                })
+                .finally(() => {
+                    this.loadingBanners = false;
+                });
+        },
+
+        viewBannerImage(banner) {
+            this.currentBanner = banner;
+            $('#bannerImageModal').modal('show');
+        },
+
+        editBanner(banner) {
+            this.currentBanner = {...banner};
+            $('#bannerModal').modal('show');
+        },
+
+        confirmDeleteBanner(id) {
+            if (confirm('¿Estás seguro de eliminar este banner?')) {
+                this.deleteBanner(id);
+            }
+        },
+
+        deleteBanner(id) {
+            axios.delete(`/admin/banners/${id}`)
+                .then(() => {
+                    toastr.success('Banner eliminado correctamente');
+                    this.loadBanners(); // Recargar la lista
+                })
+                .catch(error => {
+                    console.error('Error al eliminar banner:', error);
+                    toastr.error('Error al eliminar el banner');
+                });
+        },
         changePage(page) {
             this.page = page;
             this.pagination.current_page = page;
@@ -135,31 +191,31 @@ new Vue({
                 case 'delete':
                     this.nombre = seleccion;
                     break;
-                
+
                 case 'image':
                     this.archivo = this.my_ruta+'/storage/'+seleccion.archivo_ruta+'/'+seleccion.archivo;
-                    break;
+                                    break;
             }
         },
         Store() {
             this.errors = [];
             this.loading = true;
-            
+
             axios.post('configuracion/store', {
                 nombre: this.nombre,
                 descripcion: this.descripcion,
-                ruta: this.ruta,
+                            ruta: this.ruta,
                 archivo: this.archivo,
                 archivo_nombre: this.fileName,
             }).then(response => {
                 this.loading = false;
                 this.state = response.data.type;
                 this.Alert(response.data.type, response.data.title, response.data.message);
-                
+
                 if (response.data.type == 'success') {
                     this.nombre = null,
                     this.Buscar(this.page);
-                    this.closeModal();
+                                    this.closeModal();
                 }
             }).catch(error => {
                 this.loading = false;
@@ -173,12 +229,12 @@ new Vue({
         Update() {
             this.errors = [];
             this.loading = true;
-            
+
             axios.post('configuracion/update', {
                 id: this.id,
                 descripcion: this.descripcion,
                 ruta: this.ruta,
-                archivo: this.archivo,
+                            archivo: this.archivo,
                 archivo_nombre: this.fileName,
             }).then(response => {
                 this.loading = false;
@@ -200,13 +256,13 @@ new Vue({
         },
         Delete() {
             this.loading = true;
-            
+
             axios.post('configuracion/delete', {
                 id: this.id,
             }).then(response => {
                 this.loading = false;
                 this.state = response.data.type;
-                this.Alert(response.data.type, response.data.title, response.data.message);
+                            this.Alert(response.data.type, response.data.title, response.data.message);
 
                 if (response.data.type == 'success') {
                     this.Buscar(this.page);
@@ -218,12 +274,12 @@ new Vue({
                 alert('Algo salio mal, por favor intente nuevamente.');
             });
         },
-        deleteFile() {    
+        deleteFile() {
             var r = confirm("¿La imagen se Eliminara de los registros, desea continuar?");
-            if (r == true) {        
+            if (r == true) {
                 axios.post('configuracion/delete_file', {
                     id: this.id,
-                }).then(response => {
+                    }).then(response => {
                     if (response.data.estado == 'success') {
                         this.archivo_anterior = null;
                     }

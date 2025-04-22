@@ -22,8 +22,5 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-        define('CATEGORIA_TONER', 10); // Cambia 10 por el ID real de tu categoría de tóner
-    }
+    
 }
