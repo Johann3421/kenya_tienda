@@ -5,9 +5,8 @@
             <li class="kenya-active"><a href="{{ url('/') }}" class="kenya-nav-link"><i
                         class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
             <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
-            <li><a href="#" class="kenya-nav-link">Catalogo</a></li>
-            <li><a href="#ofertas" class="kenya-nav-link">Ofertas</a></li>
-            <li><a href="#novedades" class="kenya-nav-link">Novedades</a></li>
+            <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catalogo</a></li>
+            <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
             <li><a href="#contact" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
@@ -419,7 +418,6 @@
         /* Estilo de la sección de novedades */
         /* Estilos generales del carrusel */
         .novedades-section {
-            padding: 60px 0;
             background-color: #f8f9fa;
         }
 
@@ -891,108 +889,7 @@
     </script>
     <!-- FIN DEL SCRIPT DE LAS CATEGORIAS -->
 
-    <!-- SCRIPT DEL CARRUSEL DE BANNERS -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Seleccionar elementos del carrusel
-            const track = document.querySelector('.promo-banner-track');
-            const slides = document.querySelectorAll('.promo-banner-slide');
-            const prevBtn = document.querySelector('.promo-banner-prev');
-            const nextBtn = document.querySelector('.promo-banner-next');
-            const dotsContainer = document.querySelector('.promo-banner-dots');
 
-            let currentIndex = 0;
-            let slideInterval;
-            const slideCount = slides.length;
-
-            // Crear indicadores
-            slides.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.classList.add('promo-banner-dot');
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(index));
-                dotsContainer.appendChild(dot);
-            });
-
-            const dots = document.querySelectorAll('.promo-banner-dot');
-
-            // Función para mover el carrusel
-            function goToSlide(index) {
-                currentIndex = (index + slideCount) % slideCount;
-                track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-                // Actualizar indicadores
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('active', i === currentIndex);
-                });
-
-                // Reiniciar el intervalo
-                resetInterval();
-            }
-
-            // Navegación
-            function nextSlide() {
-                goToSlide(currentIndex + 1);
-            }
-
-            function prevSlide() {
-                goToSlide(currentIndex - 1);
-            }
-
-            // Event listeners
-            nextBtn.addEventListener('click', nextSlide);
-            prevBtn.addEventListener('click', prevSlide);
-
-            // Auto-desplazamiento
-            function startInterval() {
-                slideInterval = setInterval(nextSlide, 5000);
-            }
-
-            function resetInterval() {
-                clearInterval(slideInterval);
-                startInterval();
-            }
-
-            // Iniciar el carrusel
-            function initCarousel() {
-                startInterval();
-
-                // Pausar al hacer hover
-                track.addEventListener('mouseenter', () => {
-                    clearInterval(slideInterval);
-                });
-
-                track.addEventListener('mouseleave', startInterval);
-            }
-
-            initCarousel();
-
-            // Touch events para móviles
-            let touchStartX = 0;
-            let touchEndX = 0;
-
-            track.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-                clearInterval(slideInterval);
-            }, {
-                passive: true
-            });
-
-            track.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-                startInterval();
-            }, {
-                passive: true
-            });
-
-            function handleSwipe() {
-                const diff = touchStartX - touchEndX;
-                if (diff > 50) nextSlide(); // Swipe izquierda
-                if (diff < -50) prevSlide(); // Swipe derecha
-            }
-        });
-    </script>
     <!-- FIN DEL SCRIPT DEL CARRUSEL DE BANNERS -->
 
     <script>

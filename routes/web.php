@@ -130,6 +130,8 @@ Route::group(['middleware' => ['auth', 'can:productos']], function () {
 });
 
 Route::view('/quienes-somos', 'quienes-somos')->name('quienes.somos');
+Route::view('/Catalogo', 'Catalogo')->name('catalogo');
+Route::view('/Novedades', 'Novedades')->name('novedades');
 Route::post('/productos/asignar-filtros', [ProductoController::class, 'asignarFiltrosGenerico'])
     ->name('productos.asignar-filtros.generico');
     Route::get('/filtrar-productos', [ProductoController::class, 'filtrarAjax'])->name('productos.filtrar');

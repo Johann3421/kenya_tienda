@@ -14,14 +14,8 @@ class CatalogoController extends Controller
 {
     public function index()
     {
-        $categorias = Categoria::where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
-        $productos = Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->take(15)->get();
-        //PRODUCTOS-FILTROS
-        $productos_marcas = Producto::select('marca')->distinct()->whereNotNull('marca')->orderBy('marca')->get();
-
-
-
-        return view('sistema.web.catalogo', compact('categorias', 'productos', 'productos_marcas'));
+        $productos = Producto::all(); // O con cualquier filtro que necesites
+        return view('Catalogo', compact('productos'));
     }
     public function categoria(Request $request)
     {
