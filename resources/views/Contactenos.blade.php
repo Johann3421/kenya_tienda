@@ -109,9 +109,10 @@
                         class="fa-brands fa-youtube" aria-hidden="true"></i></a>
             </div>
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.083526356705!2d-76.24403712405402!3d-9.927001706064734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c31de5e95145%3A0xde402ab99234baf0!2sJir%C3%B3n%20Huallayco%201153%2C%20Hu%C3%A1nuco%2010001!5e0!3m2!1ses!2spe!4v1745429184971!5m2!1ses!2spe"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.0809981423886!2d-76.24414302405405!3d-9.927212306067894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c31de50fed27%3A0x67e578d3599ef726!2sJir%C3%B3n%20Huallayco%201135%2C%20Hu%C3%A1nuco%2010001!5e0!3m2!1ses!2spe!4v1745447241939!5m2!1ses!2spe"
                 width="500" height="250" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
+
         </div>
     </section>
     <style>

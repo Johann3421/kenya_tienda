@@ -191,10 +191,15 @@
 
                                                     <div class="product-image-container">
                                                         <img v-for="producto in garantia.get_productos"
-                                                            :src="producto.modelo && producto.modelo.img_mod ?
-                                                                '/storage/' + producto.modelo.img_mod :
-                                                                '/producto.jpg'"
-                                                            class="product-image">
+                                                            :src="(producto.modelo && (producto.modelo.id == 10 ||
+                                                                    (producto.modelo.descripcion &&
+                                                                     producto.modelo.descripcion.toLowerCase().includes('tonner')))) ?
+                                                                (producto.imagen_1 ? '/storage/' + producto.imagen_1 : '/producto.jpg') :
+                                                                (producto.modelo && producto.modelo.img_mod ?
+                                                                    '/storage/' + producto.modelo.img_mod :
+                                                                    '/producto.jpg')"
+                                                            class="product-image"
+                                                            :alt="'Imagen de ' + producto.nombre">
                                                     </div>
 
                                                     <div class="warranty-progress">

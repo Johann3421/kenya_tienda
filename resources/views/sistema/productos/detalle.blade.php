@@ -116,20 +116,34 @@
     <div class="row">
         <div class="col-lg-4 mb-5">
             @php
-                // Determinar la imagen a mostrar (prioridad: imagen del modelo, luego imagen del producto, luego imagen por defecto)
-                $imagen = $producto->modelo && $producto->modelo->img_mod
-                    ? asset('storage/' . $producto->modelo->img_mod)
-                    : ($producto->imagen_1
-                        ? asset('storage/' . $producto->imagen_1)
-                        : asset('producto.jpg'));
+                // Detección de modelos tonner (ID 10 o descripción contiene 'tonner')
+                $isTonner = $producto->modelo && (
+                    $producto->modelo->id == 10 ||
+                    stripos($producto->modelo->descripcion ?? '', 'tonner') !== false
+                );
 
-                $altText = $producto->modelo
-                    ? "Imagen del modelo " . ($producto->modelo->nombre ?? '')
-                    : "Imagen del producto " . $producto->nombre;
+                // Lógica de imágenes priorizada
+                $imagen = $isTonner
+                    ? ($producto->imagen_1
+                        ? asset('storage/' . $producto->imagen_1)
+                        : asset('producto.jpg'))
+                    : ($producto->modelo && $producto->modelo->img_mod
+                        ? asset('storage/' . $producto->modelo->img_mod)
+                        : ($producto->imagen_1
+                            ? asset('storage/' . $producto->imagen_1)
+                            : asset('producto.jpg')));
+
+                // Texto alt mejorado
+                $altText = $isTonner
+                    ? "Imagen del producto " . $producto->nombre
+                    : ($producto->modelo
+                        ? "Imagen del modelo " . ($producto->modelo->nombre ?? '')
+                        : "Imagen del producto " . $producto->nombre);
             @endphp
 
             <div class="product-image-container">
-                <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}">
+                <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}"
+                     onerror="this.src='{{ asset('producto.jpg') }}'">
             </div>
         </div>
 

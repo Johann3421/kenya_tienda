@@ -130,13 +130,21 @@
 
                                 <div class="product-image">
                                     @php
-                                        $img =
-                                            $producto->modelo && $producto->modelo->img_mod
-                                                ? asset('storage/' . $producto->modelo->img_mod)
-                                                : asset('images/products/default.jpg');
+                                        // Verificar si es modelo tonner (ID 10 o descripción contiene 'tonner')
+                                        $isTonner = $producto->modelo && (
+                                            $producto->modelo->id == 10 ||
+                                            (isset($producto->modelo->descripcion) && stripos($producto->modelo->descripcion, 'tonner') !== false)
+                                        );
+
+                                        // Lógica de imágenes
+                                        $img = $isTonner
+                                            ? ($producto->imagen_1 ? asset('storage/'.$producto->imagen_1) : asset('images/products/default.jpg'))
+                                            : ($producto->modelo && $producto->modelo->img_mod
+                                                ? asset('storage/'.$producto->modelo->img_mod)
+                                                : asset('images/products/default.jpg'));
                                     @endphp
-                                    <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}"
-                                        class="img-fluid">
+
+                                    <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}" class="img-fluid">
 
                                     <div class="product-actions">
                                         <button class="quick-view" data-id="{{ $producto->id }}">

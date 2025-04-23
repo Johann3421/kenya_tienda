@@ -78,15 +78,20 @@
                                 <div class="contorno">
                                     <div class="portfolio-wrap" style="margin: 0 auto;">
                                         @php
-                                            $img =
-                                                $prod->modelo && $prod->modelo->img_mod
+                                            $isModelo10 = $prod->modelo && $prod->modelo->id == 10;
+                                            $isTonner = $prod->modelo && stripos($prod->modelo->descripcion ?? '', 'tonner') !== false;
+
+                                            $img = ($isModelo10 || $isTonner)
+                                                ? ($prod->imagen_1 ? asset('storage/' . $prod->imagen_1) : asset('producto.jpg'))
+                                                : ($prod->modelo && $prod->modelo->img_mod
                                                     ? asset('storage/' . $prod->modelo->img_mod)
-                                                    : asset('producto.jpg');
+                                                    : asset('producto.jpg'));
                                         @endphp
 
                                         <img src="{{ $img }}" class="img-fluid"
-                                            alt="Imagen del modelo de {{ $prod->nombre }}">
+                                             alt="Imagen de {{ $prod->nombre }}">
                                     </div>
+
 
                                     <div class="descripcion">
                                         <div class="text-center">
