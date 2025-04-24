@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'Catálogo')
+@section('title', 'Contáctenos')
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">

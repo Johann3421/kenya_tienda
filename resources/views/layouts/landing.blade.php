@@ -152,7 +152,7 @@
                         © Copyright Kenya - Todos los derechos reservados
                     </div>
                     <div class="kenya-right-section">
-                        <a href="#" class="kenya-complaint-book">
+                        <a href="{{ route('reclamaciones') }}" class="kenya-complaint-book">
                             <i class="fas fa-book-open"></i> Libro de reclamaciones
                         </a>
 
@@ -169,7 +169,7 @@
             </div>
         </div>
     </footer><!-- End Footer -->
-    
+
 
     <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
 
