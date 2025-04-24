@@ -55,6 +55,25 @@
         }
     </style>
 
+<style>
+    /* Versión oculta solo para imprimir PDF */
+    #print-pdf-container {
+        width: 210mm;
+        min-height: 297mm;
+        background: white;
+        padding: 20mm;
+        box-sizing: border-box;
+        color: black;
+        font-family: 'Arial', sans-serif;
+        display: none;
+    }
+
+    /* Mostramos solo en modo PDF */
+    #print-pdf-container.printing {
+        display: block;
+    }
+    </style>
+
     @yield('css')
 </head>
 

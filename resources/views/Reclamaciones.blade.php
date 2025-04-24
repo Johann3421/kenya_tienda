@@ -22,16 +22,19 @@
         <h2>Libro de reclamaciones - Kenya</h2>
         <p class="form-instruction">Por favor complete el formulario sin caracteres especiales.</p>
 
-        <form class="reclamaciones-form" id="formReclamaciones">
+        <form class="reclamaciones-form" id="formReclamaciones" method="POST" action="/reclamaciones/enviar"
+            enctype="multipart/form-data">
+            @csrf
+
             <!-- Sección de información básica -->
             <div class="form-row">
                 <div class="form-group">
                     <label for="fecha">Fecha:</label>
-                    <input type="text" id="fecha" required readonly>
+                    <input type="text" id="fecha" name="fecha" required readonly>
                 </div>
                 <div class="form-group">
                     <label for="reclamo_num">N° de reclamo</label>
-                    <input type="text" id="reclamo_num" required readonly>
+                    <input type="text" id="reclamo_num" name="reclamo_num" required readonly>
                 </div>
             </div>
 
@@ -46,28 +49,28 @@
 
             <div class="form-group">
                 <label for="nombre">Nombre / Razón social:</label>
-                <input type="text" id="nombre" required>
+                <input type="text" id="nombre" name="nombre" required>
             </div>
 
             <div class="form-group">
                 <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" required>
+                <input type="text" id="direccion" name="direccion" required>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="documento">DNI / RUC:</label>
-                    <input type="text" id="documento" required>
+                    <input type="text" id="documento" name="documento" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" required>
+                    <input type="email" id="email" name="email" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono" required>
+                <input type="tel" id="telefono" name="telefono" required>
             </div>
 
             <!-- Sección 2 -->
@@ -94,7 +97,7 @@
 
             <div class="form-group">
                 <label for="descripcion_bien">Descripción:</label>
-                <textarea id="descripcion_bien" required></textarea>
+                <textarea id="descripcion_bien" name="descripcion_bien" required></textarea>
             </div>
 
             <!-- Sección 3 -->
@@ -121,12 +124,12 @@
 
             <div class="form-group">
                 <label for="descripcion_reclamo">Descripción:</label>
-                <textarea id="descripcion_reclamo" required></textarea>
+                <textarea id="descripcion_reclamo" name="descripcion_reclamo" required></textarea>
             </div>
 
             <div class="form-check">
                 <label class="checkbox-container">
-                    <input type="checkbox" id="terms" required>
+                    <input type="checkbox" id="terms" name="terms" required>
                     <span class="checkmark"></span>
                     Estoy conforme con los términos de mi queja o reclamo.
                 </label>
@@ -143,15 +146,17 @@
         </form>
     </div>
 
+
     <style>
         .reclamaciones-container {
             max-width: 1200px;
             margin: 4rem auto;
             background: white;
-            padding: 2rem;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             font-family: 'Arial', sans-serif;
+            color: black;
         }
 
         .reclamaciones-container h2 {
@@ -347,170 +352,178 @@
         }
     </style>
     <!-- Incluir las librerías necesarias -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
-<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<style>
-    /* Estilos para el ícono de calendario */
-    .input-with-icon {
-        position: relative;
-    }
-
-    .calendar-icon {
-        position: absolute;
-        left: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #f68c1f;
-        pointer-events: none;
-    }
-
-    #fecha {
-        padding-left: 35px !important;
-    }
-
-    .loading {
-        display: none;
-        margin-top: 1rem;
-        color: #f68c1f;
-        font-weight: bold;
-    }
-</style>
-
-<script>
-    // Configuración del correo destino (EDITABLE AQUÍ)
-    const CORREO_DESTINO = "loritox3421@gmail.com"; // <-- Cambia este correo por el tuyo
-
-    // Configuración inicial
-    document.addEventListener('DOMContentLoaded', function() {
-        // Configurar fecha automática con calendario e ícono
-        const fechaInput = document.getElementById('fecha');
-        fechaInput.parentElement.classList.add('input-with-icon');
-        fechaInput.insertAdjacentHTML('afterend', '<i class="calendar-icon bx bx-calendar"></i>');
-
-        flatpickr("#fecha", {
-            dateFormat: "d/m/Y",
-            defaultDate: new Date(),
-            allowInput: true
-        });
-
-        // Generar número de reclamo automático (formato: 000001-2024)
-        const hoy = new Date();
-        const numero = Math.floor(Math.random() * 900000) + 100000;
-        document.getElementById('reclamo_num').value = `${numero}-${hoy.getFullYear()}`;
-    });
-
-    // Envío del formulario
-    document.getElementById('formReclamaciones').addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        // Validación
-        if (!document.getElementById('terms').checked) {
-            alert('Debe aceptar los términos para enviar el formulario');
-            return;
+    <style>
+        /* Estilos para el ícono de calendario */
+        .input-with-icon {
+            position: relative;
         }
 
-        // Mostrar estado de carga
-        const submitBtn = document.querySelector('.submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-
-        // Crear elemento de carga
-        const loading = document.createElement('div');
-        loading.className = 'loading';
-        loading.textContent = 'Generando y enviando PDF...';
-        this.appendChild(loading);
-        loading.style.display = 'block';
-
-        try {
-            // Generar PDF
-            const pdfBlob = await generarPDF();
-
-            // Enviar al backend (simulación)
-            const formData = new FormData();
-            formData.append('pdf', pdfBlob, `reclamacion_${document.getElementById('reclamo_num').value}.pdf`);
-            formData.append('email', CORREO_DESTINO);
-            formData.append('datos', JSON.stringify(obtenerDatosFormulario()));
-
-            // SIMULACIÓN - En producción reemplazar con llamada real al backend
-            const respuesta = await enviarABackend(formData);
-
-            alert('Reclamación enviada correctamente a ' + CORREO_DESTINO + '. N°: ' +
-                 document.getElementById('reclamo_num').value);
-            this.reset();
-
-        } catch (error) {
-            alert('Error al enviar: ' + error.message);
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Enviar';
-            if(loading) loading.style.display = 'none';
+        .calendar-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #f68c1f;
+            pointer-events: none;
         }
-    });
 
-    // Función para generar PDF (devuelve Blob)
-    function generarPDF() {
-        return new Promise((resolve, reject) => {
-            const { jsPDF } = window.jspdf;
+        #fecha {
+            padding-left: 35px !important;
+        }
 
-            html2canvas(document.querySelector('.reclamaciones-container')).then(canvas => {
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const imgProps = pdf.getImageProperties(imgData);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        .loading {
+            display: none;
+            margin-top: 1rem;
+            color: #f68c1f;
+            font-weight: bold;
+        }
+    </style>
 
-                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    <script>
+        const CORREO_DESTINO = "ftrinidadrosas121@gmail.com";
 
-                // Convertir a Blob
-                const pdfBlob = pdf.output('blob');
-                resolve(pdfBlob);
-            }).catch(reject);
+        document.addEventListener('DOMContentLoaded', function() {
+            const fechaInput = document.getElementById('fecha');
+            fechaInput.parentElement.classList.add('input-with-icon');
+            fechaInput.insertAdjacentHTML('afterend', '<i class="calendar-icon bx bx-calendar"></i>');
+
+            flatpickr("#fecha", {
+                dateFormat: "d/m/Y",
+                defaultDate: new Date(),
+                allowInput: true
+            });
+
+            const hoy = new Date();
+            const numero = Math.floor(Math.random() * 900000) + 100000;
+            document.getElementById('reclamo_num').value = `${numero}-${hoy.getFullYear()}`;
         });
-    }
 
-    // Función simulada de envío al backend (REEMPLAZAR CON LLAMADA REAL)
-    function enviarABackend(formData) {
-        return new Promise((resolve, reject) => {
-            // SIMULACIÓN - En producción usar:
-            /*
-            fetch('/api/enviar-reclamacion', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(resolve)
-            .catch(reject);
-            */
+        document.getElementById('formReclamaciones').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-            // Simulamos un retraso de red
-            setTimeout(() => {
-                console.log('Simulando envío a:', CORREO_DESTINO);
-                console.log('Datos del formulario:', Object.fromEntries(formData));
-                resolve({ status: 'success', message: 'PDF enviado al servidor' });
-            }, 1500);
+            if (!document.getElementById('terms').checked) {
+                alert('Debe aceptar los términos para enviar el formulario');
+                return;
+            }
+
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            const loading = document.createElement('div');
+            loading.className = 'loading';
+            loading.textContent = 'Generando y enviando PDF...';
+            this.appendChild(loading);
+            loading.style.display = 'block';
+
+            try {
+                const pdfBlob = await generarPDF();
+
+                const formData = new FormData();
+                formData.append('pdf', pdfBlob,
+                    `reclamacion_${document.getElementById('reclamo_num').value}.pdf`);
+                formData.append('email', CORREO_DESTINO);
+
+                const datos = obtenerDatosFormulario();
+for (const key in datos) {
+    if (key === 'email') continue; // ← NO sobreescribir el destinatario real
+    formData.append(key, datos[key]);
+}
+
+                const response = await enviarABackend(formData);
+
+                alert('Reclamación enviada correctamente. Nº: ' + document.getElementById('reclamo_num').value);
+                this.reset();
+
+            } catch (error) {
+                alert('Error al enviar: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar';
+                loading.remove();
+            }
         });
-    }
 
-    // Obtener datos del formulario como objeto
-    function obtenerDatosFormulario() {
-        return {
-            numero: document.getElementById('reclamo_num').value,
-            fecha: document.getElementById('fecha').value,
-            nombre: document.getElementById('nombre').value,
-            direccion: document.getElementById('direccion').value,
-            documento: document.getElementById('documento').value,
-            email: document.getElementById('email').value,
-            telefono: document.getElementById('telefono').value,
-            tipo_bien: document.querySelector('input[name="tipo_bien"]:checked')?.value,
-            tipo_reclamo: document.querySelector('input[name="tipo_reclamo"]:checked')?.value,
-            descripcion_bien: document.getElementById('descripcion_bien').value,
-            descripcion_reclamo: document.getElementById('descripcion_reclamo').value
+        function generarPDF() {
+    return new Promise((resolve, reject) => {
+        const original = document.querySelector('.reclamaciones-container');
+        const clone = original.cloneNode(true);
+
+        // Preparar versión optimizada
+        const container = document.createElement('div');
+        container.id = 'print-pdf-container';
+        container.classList.add('printing');
+        container.appendChild(clone);
+        document.body.appendChild(container);
+
+        const opt = {
+            margin: [10, 10, 10, 10],
+            filename: 'reclamo.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                scrollY: 0,
+                backgroundColor: '#fff'
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait'
+            },
+            pagebreak: { mode: ['css', 'legacy'] }
         };
-    }
-</script>
+
+        html2pdf().from(container).set(opt).outputPdf('blob').then(blob => {
+            document.body.removeChild(container);
+            resolve(blob);
+        }).catch(error => {
+            document.body.removeChild(container);
+            reject(error);
+        });
+    });
+}
+
+
+
+
+        function enviarABackend(formData) {
+            return fetch('/reclamaciones/enviar', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Fallo al enviar el formulario');
+                    return response.json();
+                });
+        }
+
+        function obtenerDatosFormulario() {
+            return {
+                reclamo_num: document.getElementById('reclamo_num').value,
+                fecha: document.getElementById('fecha').value,
+                nombre: document.getElementById('nombre').value,
+                direccion: document.getElementById('direccion').value,
+                documento: document.getElementById('documento').value,
+                email: document.getElementById('email').value,
+                telefono: document.getElementById('telefono').value,
+                tipo_bien: document.querySelector('input[name="tipo_bien"]:checked')?.value || '',
+                tipo_reclamo: document.querySelector('input[name="tipo_reclamo"]:checked')?.value || '',
+                descripcion_bien: document.getElementById('descripcion_bien').value,
+                descripcion_reclamo: document.getElementById('descripcion_reclamo').value,
+            };
+        }
+    </script>
+
 
 @endsection

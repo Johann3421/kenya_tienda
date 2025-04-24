@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BannerMedioController;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\ReclamacionController;
 use App\Http\Controllers\Sistema\AsideController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -134,6 +135,10 @@ Route::view('/Catalogo', 'Catalogo')->name('catalogo');
 Route::view('/Novedades', 'Novedades')->name('novedades');
 Route::view('/Contactenos', 'Contactenos')->name('contactenos');
 Route::view('/Reclamaciones', 'Reclamaciones')->name('reclamaciones');
+
+Route::post('/reclamaciones/enviar', [ReclamacionController::class, 'enviar']);
+
+
 Route::post('/productos/asignar-filtros', [ProductoController::class, 'asignarFiltrosGenerico'])
     ->name('productos.asignar-filtros.generico');
     Route::get('/filtrar-productos', [ProductoController::class, 'filtrarAjax'])->name('productos.filtrar');
