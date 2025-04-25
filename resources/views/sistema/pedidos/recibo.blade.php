@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 <head>
     <title>PEDIDO N° {{$pedido->codigo_barras.str_pad($pedido->id, 4, '0', STR_PAD_LEFT)}}</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -15,17 +16,13 @@
             font-size: 10px;
             padding: 0;
             margin: 0;
-            /*padding: 5px 10px;
-            border: 1px solid #a7a7a7;
-            border-radius: 5px;*/
         }
         table {
             font-size: 11px;
         }
-        @page { margin: 90px 50px; } 
-        #header { position: fixed; left: 0px; top: -70px; right: 0px; height: 50px; text-align: center; } 
-        #footer { position: fixed; left: 0px; bottom: -20px; right: 0px; height: 50px;} 
-        /* #footer .page:after { content: counter(page) }  */
+        @page { margin: 90px 50px; }
+        #header { position: fixed; left: 0px; top: -70px; right: 0px; height: 50px; text-align: center; }
+        #footer { position: fixed; left: 0px; bottom: -20px; right: 0px; height: 50px;}
 
         .text-center {
             text-align: center !important;
@@ -44,28 +41,8 @@
             float: left !important;
         }
         .text-justify {
-            text-align: justify !important;   
+            text-align: justify !important;
         }
-        /*.my-table {
-            border-collapse: collapse;
-        }
-        .my-table > tbody > tr > td {
-            border-bottom: 1px solid #a7a7a7;
-            text-align: center;
-            padding: 2px 5px;
-        }
-        .my-table > thead > tr > th {
-            border-bottom: 2px solid #a7a7a7;
-            border-right: 0px;
-            text-align: center;
-            padding: 2px 5px;
-        }
-        .my-table > tfoot > tr > td {
-            border-top: 2px solid #a7a7a7;
-            border-right: 0px;
-            text-align: center;
-            padding: 2px 5px;
-        }*/
         .tabla-reporte {
             width: 100%;
         }
@@ -97,26 +74,35 @@
 </head>
 <body>
     @php
-        $email = App\Models\Configuracion::where('nombre', 'contacto_email')->first();
-        $telefono = App\Models\Configuracion::where('nombre', 'contacto_telefono')->first();
-        $direccion = App\Models\Configuracion::where('nombre', 'contacto_direccion')->first();
-        $titulo = App\Models\Configuracion::where('nombre', 'boleta_titulo')->first();
-        $ruc = App\Models\Configuracion::where('nombre', 'ruc_empresa')->first();
+        // Consulta optimizada para obtener todas las configuraciones necesarias
+        $configuraciones = App\Models\Configuracion::whereIn('nombre', [
+            'contacto_email',
+            'contacto_telefono',
+            'contacto_direccion',
+            'boleta_titulo',
+            'ruc_empresa'
+        ])->get()->keyBy('nombre');
+
+        // Convertir fechas a Carbon si son strings
+        $fechaRegistro = is_string($pedido->fecha_registro)
+            ? \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $pedido->fecha_registro)
+            : $pedido->fecha_registro;
+
+        $fechaEntrega = is_string($pedido->fecha_entrega)
+            ? \Carbon\Carbon::createFromFormat('Y-m-d', $pedido->fecha_entrega)
+            : $pedido->fecha_entrega;
     @endphp
+
     <div class="mi_plantilla">
         <div id="header">
             <table width="100%">
                 <tr>
                     <td class="text-left" style="width: 65%;">
-                        <img src="{{asset('theme/images/membrete.png')}}" alt="recibo-logo"  style="width: 95%;">
+                        <img src="{{asset('theme/images/membrete.png')}}" alt="recibo-logo" style="width: 95%;">
                     </td>
                     <td class="text-right" style="width: 35%;">
-                        {{-- <div class="text-center" style="border: 1px solid #000; font-size: 13px; height: 50px; padding-top: 10px">
-                            PEDIDO<br>
-                            N° {{$pedido->codigo_barras}}
-                        </div> --}}
                         <div class="text-center" style="border: 2px solid #000; border-radius: 7px; font-size: 14px; height: 90px; padding-top: 0px;">
-                            <div style="padding: 3px 0;">RUC &nbsp; @if ($ruc) {{$ruc->descripcion}} @endif</div>
+                            <div style="padding: 3px 0;">RUC &nbsp; {{ $configuraciones['ruc_empresa']->descripcion ?? '' }}</div>
                             <h3 style="background-color: #218825; color: #fff; margin: 2px 0 0 0; padding: 5px 15px;">PEDIDO</h3>
                             <div>N° {{str_pad($pedido->id, 4, '0', STR_PAD_LEFT)}}</div>
                         </div>
@@ -124,17 +110,9 @@
                 </tr>
             </table>
         </div>
-        
+
         <div id="content" style="margin-top: 40px;">
             <div class="text-center" style="margin-bottom: 30px; font-weight: 700;">
-                {{-- @if ($email && $telefono && $direccion)
-                    {{$direccion->descripcion}}<br>
-                    Central telefónica: {{$telefono->descripcion}}, Email: {{$email->descripcion}}<br>
-                @endif
-
-                @if ($titulo)
-                    <h2>{{$titulo->descripcion}}</h2>
-                @endif --}}
                 <h2>SOPORTE TÉCNICO ESPECIALIZADO<br>DE EQUIPOS DE COMPUTO Y SUMINISTROS EN GENERAL</h2>
             </div>
 
@@ -143,16 +121,17 @@
                     <tr>
                         <td width="15%" class="text-center">
                             <strong>FECHA PEDIDO</strong><br>
-                            {{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $pedido->fecha_registro)->format('d/m/Y H:i') }}
+                            {{ $fechaRegistro->format('d/m/Y H:i') }}
                         </td>
                         <td width="15%" class="text-center">
                             <strong>FECHA ENTREGA</strong><br>
-                            {{ \Carbon\Carbon::createFromFormat('Y-m-d', $pedido->fecha_entrega)->format('d/m/Y') }}
+                            {{ $fechaEntrega->format('d/m/Y') }}
                         </td>
                     </tr>
                 </table>
             </div>
 
+            <!-- Resto del contenido se mantiene exactamente igual -->
             <div style="border: 1px solid #000; border-radius: 7px;">
                 <table class="tabla-reporte" cellspacing="0">
                     <tr>
@@ -214,14 +193,13 @@
                 <table class="tabla-reporte" cellspacing="0">
                     <tr>
                         <td>
-                            <strong>TIPO DE ENTREGA DEL PEDIDO:</strong> 
-
+                            <strong>TIPO DE ENTREGA DEL PEDIDO:</strong>
                             @if ($pedido->tipo_entrega == 'LOCAL')
-                            ENTREGA EN LOCAL
+                                ENTREGA EN LOCAL
                             @elseif($pedido->tipo_entrega == 'DOMICILIO')
-                            ENTREGA EN DOMICILIO
+                                ENTREGA EN DOMICILIO
                             @elseif($pedido->tipo_entrega == 'AGENCIA')
-                            ENTREGA ENVIAR POR AGENCIA
+                                ENTREGA ENVIAR POR AGENCIA
                             @endif
 
                             @if ($pedido->detalle_envio)
@@ -233,8 +211,6 @@
             </div>
         </div>
         <div id="footer">
-            {{-- <hr>
-            <div class="text-center">Jr. Aguilar #560 - Telf. (062) 62-2985 - (062) 62-2993</div> --}}
             <div style="border: 1px solid #000; border-radius: 7px;">
                 <table class="tabla-reporte" cellspacing="0" style="font-size: 8px !important;">
                     <tr>

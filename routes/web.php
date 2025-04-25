@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\BannerMedioController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ReclamacionController;
 use App\Http\Controllers\Sistema\AsideController;
+use App\Http\Controllers\SoporteController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -58,7 +60,8 @@ Route::group(['middleware' => ['can:servicio_tecnico']], function () {
     Route::post('/soporte/store', 'SoporteController@store');
     Route::post('/soporte/update', 'SoporteController@update');
     Route::post('/soporte/delete', 'SoporteController@delete');
-    Route::get('/soporte/recibo/{numero}', 'SoporteController@recibo');
+    Route::get('/soporte/recibo/{numero}', [SoporteController::class, 'recibo'])
+     ->name('soporte.recibo');
     Route::post('/soporte/detalle/add', 'SoporteController@detalleAdd');
     Route::post('/soporte/detalle/delete', 'SoporteController@detalleDelete');
     Route::get('/soporte/codigo-barra', 'SoporteController@codigoBarra');
@@ -82,7 +85,8 @@ Route::group(['middleware' => ['can:pedidos']], function () {
     Route::post('/pedidos/delete', 'PedidoController@delete');
     Route::post('/pedidos/detalle/add', 'PedidoController@detalle_add');
     Route::post('/pedidos/detalle/delete', 'PedidoController@detalle_delete');
-    Route::get('/pedidos/recibo/{numero}', 'PedidoController@recibo');
+    Route::get('/pedidos/recibo/{numero}', [PedidoController::class, 'recibo'])
+     ->name('pedidos.recibo');
 
     Route::post('/pedidos/proveedor/delete', 'PedidoController@proveedor_delete');
     // Route::get('/nuevo', 'PedidoController@nuevo')->name('pedidos.nuevo');

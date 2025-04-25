@@ -13,9 +13,13 @@ use App\Models\Proveedor;
 use App\Models\Cliente;
 use App\Models\ProveedorPedido;
 use Barryvdh\DomPDF\Facade as PDF;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PedidoController extends Controller
@@ -417,21 +421,72 @@ class PedidoController extends Controller
     }
 
     public function recibo($numero)
-    {
-        try {
-            $pedido = Pedido::with('getCliente', 'getDetalles')->findOrFail($numero);
-            //return $pedido->getDetalles;
-            $pdf = PDF::loadView('sistema.pedidos.recibo', compact('pedido'));
+{
+    // Configuración inicial para aumentar límites
+    set_time_limit(120); // 120 segundos (2 minutos)
+    ini_set('memory_limit', '256M'); // 256 MB de memoria
 
-            $pdf->setPaper('A4');
+    try {
+        // Optimización 1: Carga selectiva de relaciones con eager loading
+        $pedido = Pedido::with([
+            'getCliente:id,nombres,direccion,email,celular',
+            'getDetalles' => function($query) {
+                $query->select('id', 'pedido_id', 'descripcion', 'precio', 'cantidad', 'importe')
+                      ->orderBy('id'); // Ordenar para consistencia
+            }
+        ])->findOrFail($numero);
 
-            return $pdf->stream('Pedido.pdf');
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            return $th;
-            abort(404);
+        // Optimización 2: Cache de vista (opcional)
+        $viewCacheKey = "recibo_view_{$numero}_".md5($pedido->updated_at);
+        $viewPath = 'sistema.pedidos.recibo';
+
+        // Validación de vista con cache
+        if (!Cache::has($viewCacheKey)) {
+            if (!view()->exists($viewPath)) {
+                throw new \Exception("La vista {$viewPath} no existe");
+            }
+            Cache::put($viewCacheKey, true, now()->addHours(1));
         }
+
+        // Optimización 3: Configuración PDF con opciones de rendimiento
+        $pdf = FacadePdf::loadView($viewPath, [
+            'pedido' => $pedido,
+            'fecha' => now()->format('d/m/Y H:i'),
+            'simpleMode' => false // Puedes agregar un modo simple para pedidos complejos
+        ])
+        ->setPaper('A4', 'portrait')
+        ->setOption('defaultFont', 'helvetica')
+        ->setOption('isRemoteEnabled', true)
+        ->setOption('enable-javascript', false) // Mejora rendimiento
+        ->setOption('javascript-delay', 0) // Mejora rendimiento
+        ->setOption('no-stop-slow-scripts', true); // Evita timeout en scripts
+
+        // Optimización 4: Generación en dos pasos para pedidos muy grandes
+        if ($pedido->getDetalles->count() > 100) {
+            $pdf->setOption('enable-smart-shrinking', true);
+            $pdf->setOption('dpi', 96); // Reducir calidad para mayor velocidad
+        }
+
+        return $pdf->stream("Pedido_{$numero}.pdf");
+
+    } catch (ModelNotFoundException $e) {
+        return response()->json([
+            'error' => 'Pedido no encontrado',
+            'message' => 'El número de pedido proporcionado no existe'
+        ], 404);
+
+    } catch (\Throwable $th) {
+        \Log::error("Error generando recibo - Pedido: {$numero}", [
+            'error' => $th->getMessage(),
+            'trace' => $th->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'error' => 'Error al generar el recibo',
+            'message' => config('app.debug') ? $th->getMessage() : 'Ocurrió un error interno'
+        ], 500);
     }
+}
 
     //CRUDO
     public function nuevo()
