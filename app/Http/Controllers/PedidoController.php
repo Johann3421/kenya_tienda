@@ -35,7 +35,14 @@ class PedidoController extends Controller
 
     public function buscar(Request $request)
     {
-        $estados = ViewPedido::first();
+        $estados = DB::table('pedidos')
+        ->selectRaw('COUNT(CASE WHEN estado_entrega = "realizado" THEN 1 END) as realizado')
+        ->selectRaw('COUNT(CASE WHEN estado_entrega = "transito" THEN 1 END) as transito')
+        ->selectRaw('COUNT(CASE WHEN estado_entrega = "tienda" THEN 1 END) as tienda')
+        ->selectRaw('COUNT(CASE WHEN estado_entrega = "entregado" THEN 1 END) as entregado')
+        ->selectRaw('COUNT(CASE WHEN estado_entrega = "cancelado" THEN 1 END) as cancelado')
+        ->where('activo', 'SI')
+        ->first();
 
         $pedidos = Pedido::where('activo', 'SI')
         ->with('getCliente', 'getDetalles', 'getProveedorPedido')

@@ -63,8 +63,8 @@
 
                 @can('garantia')
                 <li class="nav-item"><a href="{{route('producto/garantias')}}" class="nav-link ">
-                    <span class="pcoded-micon"><i class="fas fa-solid fa-stamp"></i></span>
-                    <span class="pcoded-mtext">Soporte</span></a>
+                    <span class="pcoded-micon"><i class="fas fa-receipt"></i></span>
+                    <span class="pcoded-mtext">Fichas Vendidas</span></a>
                 </li>
                 @endcan
 

@@ -12,12 +12,12 @@ new Vue({
         Buscar() {
             this.errors = [];
             this.soporte = [];
-            
+
             if (this.search.length == 11) {
                 this.loading = true;
-    
+
                 urlBuscar = 'soporte/buscar';
-                axios.post(urlBuscar, {
+                axios.get(urlBuscar, {
                     search: this.search,
                 }).then(response => {
                     console.log(response.data)
@@ -39,7 +39,7 @@ new Vue({
             let year = date.getFullYear()
             let hour = date.getHours()
             let min = this.zeroFill(date.getMinutes(), 2);
-            
+
             hour = this.zeroFill(hour, 2);
 
             if (month < 10) {

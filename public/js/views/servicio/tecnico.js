@@ -152,7 +152,7 @@ new Vue({
             this.page = page;
             this.active = 0;
             urlBuscar = 'soporte/buscar?page=' + page;
-            axios.post(urlBuscar, {
+            axios.get(urlBuscar, {
                 search: this.search,
                 search_por: this.search_por,
             }).then(response => {
@@ -246,18 +246,18 @@ new Vue({
 
                 case 'facturar':
                     this.factura.codigo = seleccion.codigo_barras + this.zeroFill(seleccion.id, 4);
-                    var cadena = new String(seleccion.cliente_id);   
+                    var cadena = new String(seleccion.cliente_id);
                     if (cadena.length == 11) {
                         this.factura.tipo_documento = 6;
                     } else if (cadena.length == 8) {
                         this.factura.tipo_documento = 1;
                     }
-                    this.factura.numero_documento = seleccion.cliente_id;             
+                    this.factura.numero_documento = seleccion.cliente_id;
                     this.factura.denominacion = seleccion.get_cliente.nombres;
                     this.factura.direccion = seleccion.get_cliente.direccion;
 
                     this.factura.monto = seleccion.costo_servicio;
-                    
+
                     this.Ubigeo();
                     break;
             }
@@ -267,7 +267,7 @@ new Vue({
                 this.acuenta = 0;
                 this.costo_servicio += (this.detalle_cantidad*this.detalle_precio) - this.detalle_descuento;
                 this.saldo_total = this.costo_servicio;
-    
+
                 this.listDetalles.push(
                     {
                         'descripcion': (this.detalle_descripcion).toUpperCase(),
@@ -356,7 +356,7 @@ new Vue({
                     this.loading = false;
                 }
             }
-            
+
             if (Object.keys(this.errors).length === 0) {
                 axios.post('soporte/store', {
                     fecha_registro: this.fecha_registro,
@@ -423,7 +423,7 @@ new Vue({
                     this.loading = false;
                 }
             }
-            
+
             if (Object.keys(this.errors).length === 0) {
                 axios.post('soporte/update', {
                     id: this.id,
@@ -476,7 +476,7 @@ new Vue({
         },
         Delete() {
             this.loading = true;
-            
+
             axios.post('soporte/delete', {
                 id: this.id,
             }).then(response => {
@@ -495,7 +495,7 @@ new Vue({
             });
         },
         Facturar() {
-            
+
         },
         resetDatos() {
             this.nombre = null;
@@ -525,12 +525,12 @@ new Vue({
                         'sub_total': null,
                         'igv': null,
                         'total': null,
-                    };                 
+                    };
                     break;
 
-                case 'delete':                    
+                case 'delete':
                     break;
-            
+
                 default:
                     this.fecha_registro = new Date().toISOString().slice(0, 10);
                     this.fecha_entrega = new Date().toISOString().slice(0, 10) + 'T20:00';
@@ -582,7 +582,7 @@ new Vue({
             this.errors = [];
             $('#formularioModal').modal('hide');
         },
-        
+
         Documento() {
             if (this.numero_documento.length <= 8) {
                 this.Reniec();
@@ -607,7 +607,7 @@ new Vue({
                             this.email = response.data.cliente.email;
                             this.celular = response.data.cliente.celular;
                         } else if (response.data.data) {
-                            this.nombres = response.data.data.nombres+' '+response.data.data.apellido_paterno+' '+response.data.data.apellido_materno;                            
+                            this.nombres = response.data.data.nombres+' '+response.data.data.apellido_paterno+' '+response.data.data.apellido_materno;
                         } else {
                             this.nombres = null;
                         }
@@ -616,7 +616,7 @@ new Vue({
                         alert('No se pudo obtener los datos de Reniec, por favor intente nuevamente.');
                     });
                 } else {
-                    this.errors['numero_documento'] = ['El campo debe de ser de 8 caracteres.'];    
+                    this.errors['numero_documento'] = ['El campo debe de ser de 8 caracteres.'];
                 }
             } else {
                 this.errors['numero_documento'] = ['El campo es requerido.'];
@@ -654,7 +654,7 @@ new Vue({
                         alert('No se pudo obtener los datos de Sunat, por favor intente nuevamente.');
                     });
                 } else {
-                    this.errors['numero_documento'] = ['El campo debe de ser de 11 caracteres.'];    
+                    this.errors['numero_documento'] = ['El campo debe de ser de 11 caracteres.'];
                 }
             } else {
                 this.errors['numero_documento'] = ['El campo es requerido.'];
@@ -725,7 +725,7 @@ new Vue({
             let year = date.getFullYear()
             let hour = date.getHours()
             let min = this.zeroFill(date.getMinutes(), 2);
-            
+
             hour = this.zeroFill(hour, 2);
 
             if (month < 10) {
@@ -800,7 +800,7 @@ new Vue({
         selSerie() {
             var str = event.target.value;
             var serie = str.split("/");
-            
+
             this.factura.serie = serie[0];
             if (serie[1] == 10) {
                 this.factura.sub_total = ((this.factura.monto)/(1.18)).toFixed(2);
@@ -820,5 +820,5 @@ new Vue({
         acuenta() {
             this.saldo_total = this.costo_servicio - this.acuenta;
         }
-    } 
+    }
 });

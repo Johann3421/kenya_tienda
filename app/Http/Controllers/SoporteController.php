@@ -31,7 +31,13 @@ class SoporteController extends Controller
 
     public function buscar(Request $request)
     {
-        $estados = ViewSoporte::first();
+        $estados = DB::table('soportes')
+    ->selectRaw('COUNT(CASE WHEN estado = "realizado" THEN 1 END) as realizado')
+    ->selectRaw('COUNT(CASE WHEN estado = "transito" THEN 1 END) as transito')
+    ->selectRaw('COUNT(CASE WHEN estado = "tienda" THEN 1 END) as tienda')
+    ->selectRaw('COUNT(CASE WHEN estado = "entregado" THEN 1 END) as entregado')
+    ->selectRaw('COUNT(CASE WHEN estado = "cancelado" THEN 1 END) as cancelado')
+    ->first();
 
         $soportes = Soporte::where('activo', 'SI')
         ->orderBy('id', 'DESC')

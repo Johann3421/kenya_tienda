@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
 // --------------------- SOPORTE --------------------------------
 Route::group(['middleware' => ['can:servicio_tecnico']], function () {
     Route::get('/soporte', 'SoporteController@index')->name('soporte');
-    Route::post('/soporte/buscar', 'SoporteController@buscar');
+    Route::get('/soporte/buscar', 'SoporteController@buscar');
     Route::post('/soporte/store', 'SoporteController@store');
     Route::post('/soporte/update', 'SoporteController@update');
     Route::post('/soporte/delete', 'SoporteController@delete');
@@ -76,7 +76,7 @@ Route::get('/consultar/garantia/{serie}', 'ConsultarController@buscar_serie');
 //-------------------------------- PEDIDOS -------------------------------
 Route::group(['middleware' => ['can:pedidos']], function () {
     Route::get('/pedidos', 'PedidoController@inicio')->name('pedidos');
-    Route::post('/pedidos/buscar', 'PedidoController@buscar');
+    Route::get('/pedidos/buscar', 'PedidoController@buscar');
     Route::post('/pedidos/store', 'PedidoController@store');
     Route::post('/pedidos/update', 'PedidoController@update');
     Route::post('/pedidos/delete', 'PedidoController@delete');

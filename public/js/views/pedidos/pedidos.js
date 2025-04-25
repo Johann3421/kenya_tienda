@@ -31,7 +31,7 @@ var variableVue = new Vue({
 
         pedido: {
             fecha_registro: new Date().toISOString().slice(0, 10),
-            fecha_entrega: new Date().toISOString().slice(0, 10), 
+            fecha_entrega: new Date().toISOString().slice(0, 10),
             tipo_entrega: 'LOCAL',
             detalle_envio: null,
             forma_envio: 'AGENCIA',
@@ -62,7 +62,7 @@ var variableVue = new Vue({
         detalle_precio: null,
         detalle_cantidad: null,
         nombre: null,
-        
+
         estados: [],
         detalle_proveedor: [],
         listPedido: [],
@@ -120,7 +120,7 @@ var variableVue = new Vue({
             this.page = page;
             this.active = 0;
             urlBuscar = 'pedidos/buscar?page=' + page;
-            axios.post(urlBuscar, {
+            axios.get(urlBuscar, {
                 search: this.search,
                 search_por: this.search_por,
             }).then(response => {
@@ -205,7 +205,7 @@ var variableVue = new Vue({
                 this.pedido.acuenta = 0;
                 this.pedido.costo_total += (this.detalle_cantidad*this.detalle_precio);
                 this.pedido.saldo_total = this.pedido.costo_total;
-    
+
                 this.listDetalles.push(
                     {
                         'descripcion': (this.detalle_descripcion).toUpperCase(),
@@ -287,7 +287,7 @@ var variableVue = new Vue({
         Store() {
             this.errors = [];
             this.loading = true;
-            
+
             axios.post('pedidos/store', {
                 fecha_registro: this.pedido.fecha_registro,
                 fecha_entrega: this.pedido.fecha_entrega,
@@ -308,7 +308,7 @@ var variableVue = new Vue({
                 this.loading = false;
                 this.state = response.data.type;
                 this.Alert(response.data.type, response.data.title, response.data.message);
-                
+
                 if (response.data.type == 'success') {
                     this.Buscar(this.page);
                     this.result_id = response.data.pedido_id;
@@ -327,7 +327,7 @@ var variableVue = new Vue({
             console.log(this.detalle_proveedor);
             this.errors = [];
             this.loading = true;
-            
+
             axios.post('pedidos/update', {
                 id: this.id,
                 fecha_registro: this.pedido.fecha_registro,
@@ -368,7 +368,7 @@ var variableVue = new Vue({
         },
         Delete() {
             this.loading = true;
-            
+
             axios.post('pedidos/delete', {
                 id: this.id,
             }).then(response => {
@@ -389,7 +389,7 @@ var variableVue = new Vue({
         closeModal() {
             this.pedido = {
                 fecha_registro: new Date().toISOString().slice(0, 10),
-                fecha_entrega: new Date().toISOString().slice(0, 10), 
+                fecha_entrega: new Date().toISOString().slice(0, 10),
                 tipo_entrega: 'LOCAL',
                 detalle_envio: null,
                 forma_envio: 'AGENCIA',
@@ -421,7 +421,7 @@ var variableVue = new Vue({
             this.detalle_precio = null;
             this.detalle_cantidad = null;
             this.nombre = null;
-            
+
             this.estados = [];
             this.detalle_proveedor = [];
             this.listPedido = [];
@@ -468,7 +468,7 @@ var variableVue = new Vue({
                             this.pedido.email = response.data.cliente.email;
                             this.pedido.celular = response.data.cliente.celular;
                         } else if (response.data.data) {
-                            this.pedido.nombres = response.data.data.nombres+' '+response.data.data.apellido_paterno+' '+response.data.data.apellido_materno;                            
+                            this.pedido.nombres = response.data.data.nombres+' '+response.data.data.apellido_paterno+' '+response.data.data.apellido_materno;
                         } else {
                             this.pedido.nombres = null;
                         }
@@ -477,7 +477,7 @@ var variableVue = new Vue({
                         alert('No se pudo obtener los datos de Reniec, por favor intente nuevamente.');
                     });
                 } else {
-                    this.errors['numero_documento'] = ['El campo debe de ser de 8 caracteres.'];    
+                    this.errors['numero_documento'] = ['El campo debe de ser de 8 caracteres.'];
                 }
             } else {
                 this.errors['numero_documento'] = ['El campo es requerido.'];
@@ -515,7 +515,7 @@ var variableVue = new Vue({
                         alert('No se pudo obtener los datos de Sunat, por favor intente nuevamente.');
                     });
                 } else {
-                    this.errors['numero_documento'] = ['El campo debe de ser de 11 caracteres.'];    
+                    this.errors['numero_documento'] = ['El campo debe de ser de 11 caracteres.'];
                 }
             } else {
                 this.errors['numero_documento'] = ['El campo es requerido.'];
@@ -553,7 +553,7 @@ var variableVue = new Vue({
                         alert('No se pudo obtener los datos del Proveedor, por favor intente nuevamente.');
                     });
                 } else {
-                    this.errors['ruc_proveedor'] = ['El campo debe de ser de 11 caracteres.'];    
+                    this.errors['ruc_proveedor'] = ['El campo debe de ser de 11 caracteres.'];
                 }
             } else {
                 this.errors['ruc_proveedor'] = ['El campo es requerido.'];
@@ -605,7 +605,7 @@ var variableVue = new Vue({
             let year = date.getFullYear()
             let hour = date.getHours()
             let min = this.zeroFill(date.getMinutes(), 2);
-            
+
             hour = this.zeroFill(hour, 2);
 
             if (month < 10) {
@@ -720,7 +720,7 @@ var variableVue = new Vue({
                         if (response.data.state == 'ok') {
                             this.detalle_proveedor.splice(index, 1);
                         } else {
-                            alert(response.data.error);    
+                            alert(response.data.error);
                         }
                     }).catch(error => {
                         alert(error + ". Ocurrio un error al intentar eliminar el Proveedor, actualice la página.");
