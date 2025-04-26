@@ -95,6 +95,10 @@ new Vue({
         },
         listaDistritos: [],
         estados: [],
+        pdf_file: null,
+        pdf_link: null,
+        pdf_file_edit: null,
+        original_pdf_link: null, // Para guardar el valor original del PDF
     },
     created() {
         this.Buscar();
@@ -127,6 +131,29 @@ new Vue({
         }
     },
     methods: {
+        handlePdfUpload(event) {
+            this.pdf_file = event.target.files[0];
+        },
+
+        async uploadPdf() {
+            if (!this.pdf_file) return null;
+
+            const formData = new FormData();
+            formData.append('pdf', this.pdf_file);
+
+            try {
+                const response = await axios.post('/api/upload-pdf', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                });
+
+                return response.data.path;
+            } catch (error) {
+                console.error('Error uploading PDF:', error);
+                return null;
+            }
+        },
         changePage(page) {
             this.page = page;
             this.pagination.current_page = page;
@@ -358,43 +385,56 @@ new Vue({
             }
 
             if (Object.keys(this.errors).length === 0) {
-                axios.post('soporte/store', {
-                    fecha_registro: this.fecha_registro,
-                    fecha_entrega: this.fecha_entrega,
-                    tipo_servicio: this.tipo_servicio,
-                    estado_servicio: this.estado_servicio,
-                    numero_documento: this.numero_documento,
-                    tipo_documento: this.tipo_documento,
-                    nombres: this.nombres,
-                    direccion: this.direccion,
-                    email: this.email,
-                    celular: this.celular,
-                    equipo: this.equipo,
-                    marca: this.marca,
-                    modelo: this.modelo,
-                    serie: this.serie,
-                    descripcion: this.descripcion,
-                    cargador: this.cargador,
-                    cable_usb: this.cable_usb,
-                    cable_poder: this.cable_poder,
-                    sin_accesorios: this.sin_accesorios,
-                    otros: this.otros,
-                    acuenta: this.acuenta,
-                    costo_servicio: this.costo_servicio,
-                    saldo_total: this.saldo_total,
-                    observacion: this.observacion,
-                    reporte_tecnico: this.reporte_tecnico,
-                    confirmar_reparacion: this.confirmar_reparacion,
-                    solo_diagnostico: this.solo_diagnostico,
-                    detalles: this.listDetalles,
+                // Crear FormData para enviar archivos
+                const formData = new FormData();
+
+                // Añadir todos los campos existentes al FormData
+                formData.append('fecha_registro', this.fecha_registro);
+                formData.append('fecha_entrega', this.fecha_entrega);
+                formData.append('tipo_servicio', this.tipo_servicio);
+                formData.append('estado_servicio', this.estado_servicio);
+                formData.append('numero_documento', this.numero_documento);
+                formData.append('tipo_documento', this.tipo_documento);
+                formData.append('nombres', this.nombres);
+                formData.append('direccion', this.direccion);
+                formData.append('email', this.email);
+                formData.append('celular', this.celular);
+                formData.append('equipo', this.equipo);
+                formData.append('marca', this.marca);
+                formData.append('modelo', this.modelo);
+                formData.append('serie', this.serie);
+                formData.append('descripcion', this.descripcion);
+                formData.append('cargador', this.cargador);
+                formData.append('cable_usb', this.cable_usb);
+                formData.append('cable_poder', this.cable_poder);
+                formData.append('sin_accesorios', this.sin_accesorios);
+                formData.append('otros', this.otros);
+                formData.append('acuenta', this.acuenta);
+                formData.append('costo_servicio', this.costo_servicio);
+                formData.append('saldo_total', this.saldo_total);
+                formData.append('observacion', this.observacion);
+                formData.append('reporte_tecnico', this.reporte_tecnico);
+                formData.append('confirmar_reparacion', this.confirmar_reparacion);
+                formData.append('solo_diagnostico', this.solo_diagnostico);
+
+                // Añadir PDF si existe
+                if (this.pdf_file) {
+                    formData.append('pdf_file', this.pdf_file);
+                }
+
+                // Añadir detalles como JSON
+                formData.append('detalles', JSON.stringify(this.listDetalles));
+
+                axios.post('soporte/store', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 }).then(response => {
                     this.loading = false;
                     this.state = response.data.type;
                     if (response.data.type == 'success') {
                         this.resetDatos();
                         this.Buscar(this.page);
-                        // this.result_id = response.data.soporte_id;
-                        // this.result_barra = response.data.soporte_barra;
                         $('#formularioModal').modal('hide');
                         this.closeModal('delete');
                     }
@@ -425,41 +465,54 @@ new Vue({
             }
 
             if (Object.keys(this.errors).length === 0) {
-                axios.post('soporte/update', {
-                    id: this.id,
-                    fecha_registro: this.fecha_registro,
-                    fecha_entrega: this.fecha_entrega,
-                    tipo_servicio: this.tipo_servicio,
-                    estado_servicio: this.estado_servicio,
-                    numero_documento: this.numero_documento,
-                    tipo_documento: this.tipo_documento,
-                    nombres: this.nombres,
-                    direccion: this.direccion,
-                    email: this.email,
-                    celular: this.celular,
-                    equipo: this.equipo,
-                    marca: this.marca,
-                    modelo: this.modelo,
-                    serie: this.serie,
-                    descripcion: this.descripcion,
-                    cargador: this.cargador,
-                    cable_usb: this.cable_usb,
-                    cable_poder: this.cable_poder,
-                    sin_accesorios: this.sin_accesorios,
-                    otros: this.otros,
-                    acuenta: this.acuenta,
-                    costo_servicio: this.costo_servicio,
-                    saldo_total: this.saldo_total,
-                    observacion: this.observacion,
-                    reporte_tecnico: this.reporte_tecnico,
-                    confirmar_reparacion: this.confirmar_reparacion,
-                    solo_diagnostico: this.solo_diagnostico,
+                // Crear FormData para manejar el archivo PDF
+                const formData = new FormData();
+
+                // Añadir todos los campos al FormData
+                formData.append('id', this.id);
+                formData.append('fecha_registro', this.fecha_registro);
+                formData.append('fecha_entrega', this.fecha_entrega);
+                formData.append('tipo_servicio', this.tipo_servicio);
+                formData.append('estado_servicio', this.estado_servicio);
+                formData.append('numero_documento', this.numero_documento);
+                formData.append('tipo_documento', this.tipo_documento);
+                formData.append('nombres', this.nombres);
+                formData.append('direccion', this.direccion);
+                formData.append('email', this.email);
+                formData.append('celular', this.celular);
+                formData.append('equipo', this.equipo);
+                formData.append('marca', this.marca);
+                formData.append('modelo', this.modelo);
+                formData.append('serie', this.serie);
+                formData.append('descripcion', this.descripcion);
+                formData.append('cargador', this.cargador);
+                formData.append('cable_usb', this.cable_usb);
+                formData.append('cable_poder', this.cable_poder);
+                formData.append('sin_accesorios', this.sin_accesorios);
+                formData.append('otros', this.otros);
+                formData.append('acuenta', this.acuenta);
+                formData.append('costo_servicio', this.costo_servicio);
+                formData.append('saldo_total', this.saldo_total);
+                formData.append('observacion', this.observacion);
+                formData.append('reporte_tecnico', this.reporte_tecnico);
+                formData.append('confirmar_reparacion', this.confirmar_reparacion);
+                formData.append('solo_diagnostico', this.solo_diagnostico);
+
+                // Añadir PDF si existe
+                if (this.pdf_file) {
+                    formData.append('pdf_file', this.pdf_file);
+                }
+
+                // Usar POST con FormData
+                axios.post('soporte/update', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 }).then(response => {
                     this.loading = false;
                     this.state = response.data.type;
                     if (response.data.type == 'success') {
                         this.Buscar(this.page);
-
                         $('#formularioModal').modal('hide');
                         this.closeModal();
                     }
@@ -822,3 +875,4 @@ new Vue({
         }
     }
 });
+

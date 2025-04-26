@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class SoporteController extends Controller
@@ -103,194 +104,237 @@ class SoporteController extends Controller
         ];
     }
 
-    public function store(Request $request)
-    {
-        $this->validate($request, [
-            'fecha_registro'   => 'required',
-            'fecha_entrega'    => 'required',
-            'tipo_servicio'    => 'required',
-            'estado_servicio'  => 'required',
-            'numero_documento' => 'required|digits_between:8,11',
-            'nombres'          => 'required',
-            //'direccion'         => 'required',
-            //'email'             => 'required|email',
-            'celular'          => 'required|digits:9',
-            'equipo'           => 'required',
-            'marca'            => 'required',
-            'modelo'           => 'required',
-            'serie'            => 'required',
-            'descripcion'      => 'required',
-            'acuenta'          => 'required|numeric',
-            'costo_servicio'   => 'required|numeric',
-            'saldo_total'      => 'required|numeric',
+    public function uploadPdf(Request $request)
+{
+    $request->validate([
+        'pdf' => 'required|file|mimes:pdf|max:5120', // 5MB máximo
+    ]);
+
+    if ($request->hasFile('pdf')) {
+        $file = $request->file('pdf');
+        $fileName = 'soporte_' . time() . '_' . Str::random(10) . '.pdf';
+        $path = $file->storeAs('pdfs', $fileName, 'public');
+
+        return response()->json([
+            'path' => '/storage/' . $path,
         ]);
-
-        try {
-
-            DB::beginTransaction();
-
-            if (! $cliente = Cliente::find($request->numero_documento)) {
-                $cliente       = new Cliente();
-                $cliente->id   = $request->numero_documento;
-                $cliente->tipo = $request->tipo_documento;
-                if ($request->tipo_documento == 'RUC') { //6=RUC, 1=DNI
-                    $cliente->codigo_sunat = 6;
-                } else {
-                    $cliente->codigo_sunat = 1;
-                }
-            }
-            $cliente->nombres   = Str::upper($request->nombres);
-            $cliente->direccion = Str::upper($request->direccion);
-            $cliente->email     = Str::upper($request->email);
-            $cliente->celular   = $request->celular;
-            $cliente->user_id   = Auth::user()->id;
-            $cliente->save();
-
-            $datos = '{"cargador":"' . $request->cargador . '","cable_usb":"' . $request->cable_usb . '","cable_poder":"' . $request->cable_poder . '","sin_accesorios":"' . $request->sin_accesorios . '","otros":"' . $request->otros . '"}';
-            $date  = Carbon::now();
-
-            $soporte                       = new Soporte();
-            $soporte->user_id              = Auth::user()->id;
-            $soporte->cliente_id           = $request->numero_documento;
-            $soporte->servicio             = $request->tipo_servicio;
-            $soporte->estado               = $request->estado_servicio;
-            $soporte->equipo               = Str::upper($request->equipo);
-            $soporte->marca                = Str::upper($request->marca);
-            $soporte->modelo               = Str::upper($request->modelo);
-            $soporte->serie                = Str::upper($request->serie);
-            $soporte->descripcion          = Str::upper($request->descripcion);
-            $soporte->accesorios           = $datos;
-            $soporte->acuenta              = $request->acuenta;
-            $soporte->costo_servicio       = $request->costo_servicio;
-            $soporte->saldo_total          = $request->saldo_total;
-            $soporte->fecha_registro       = $date->format('Y-m-d H:i:s');
-            $soporte->fecha_entrega        = $request->fecha_entrega;
-            $soporte->confirmar_reparacion = $request->confirmar_reparacion;
-            $soporte->solo_diagnostico     = $request->solo_diagnostico;
-            $soporte->observacion          = Str::upper($request->observacion);
-            $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
-            $soporte->save();
-
-            $soporte->codigo_barras = 'VASCO' . $date->format('y') . Str::padLeft($soporte->id, 4, '0');
-            $soporte->save();
-
-            foreach ($request->detalles as $value) {
-                $detalle              = new DetallesSoporte();
-                $detalle->soporte_id  = $soporte->id;
-                $detalle->descripcion = $value['descripcion'];
-                $detalle->precio      = $value['precio'];
-                $detalle->descuento   = $value['descuento'];
-                $detalle->cantidad    = $value['cantidad'];
-                $detalle->importe     = $value['importe'];
-                $detalle->save();
-            }
-
-            DB::commit();
-
-            return [
-                'type'          => 'success',
-                'title'         => 'CORRECTO: ',
-                'message'       => 'El Soporte Técnico se guardo correctamente.',
-                'soporte_id'    => $soporte->id,
-                'soporte_barra' => $soporte->codigo_barras,
-            ];
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return [
-                'type'    => 'danger',
-                'title'   => 'ERROR: ',
-                'message' => $th . 'Ocurrio un error al guardar el Soporte Técnico, intente nuevamente o contacte al Administrador del Sistema.',
-            ];
-        }
     }
 
-    public function update(Request $request)
-    {
-        $this->validate($request, [
-            'fecha_registro'   => 'required',
-            'fecha_entrega'    => 'required',
-            'tipo_servicio'    => 'required',
-            'estado_servicio'  => 'required',
-            'numero_documento' => 'required|Integer|digits_between:8,11',
-            'nombres'          => 'required',
-            //'direccion'         => 'required',
-            //'email'             => 'required|email',
-            'celular'          => 'required|Integer|Min:9',
-            'equipo'           => 'required',
-            'marca'            => 'required',
-            'modelo'           => 'required',
-            'serie'            => 'required',
-            'descripcion'      => 'required',
-            'acuenta'          => 'required|integer',
-            'costo_servicio'   => 'required|integer',
-            'saldo_total'      => 'required|integer',
-        ]);
+    return response()->json(['error' => 'No se pudo subir el PDF'], 400);
+}
 
-        try {
+public function store(Request $request)
+{
+    $this->validate($request, [
+        'fecha_registro'   => 'required',
+        'fecha_entrega'    => 'required',
+        'tipo_servicio'    => 'required',
+        'estado_servicio'  => 'required',
+        'numero_documento' => 'required|digits_between:8,11',
+        'nombres'          => 'required',
+        'celular'          => 'required|digits:9',
+        'equipo'           => 'required',
+        'marca'            => 'required',
+        'modelo'           => 'required',
+        'serie'           => 'required',
+        'descripcion'      => 'required',
+        'acuenta'         => 'required|numeric',
+        'costo_servicio'   => 'required|numeric',
+        'saldo_total'      => 'required|numeric',
+        'pdf_file'         => 'nullable|file|mimes:pdf|max:5120', // 5MB máximo
+    ]);
 
-            DB::beginTransaction();
+    try {
+        DB::beginTransaction();
 
-            if (! $cliente = Cliente::find($request->numero_documento)) {
-                $cliente       = new Cliente();
-                $cliente->id   = $request->numero_documento;
-                $cliente->tipo = $request->tipo_documento;
-                if ($request->tipo_documento == 'RUC') { //6=RUC, 1=DNI
-                    $cliente->codigo_sunat = 6;
-                } else {
-                    $cliente->codigo_sunat = 1;
-                }
+        if (! $cliente = Cliente::find($request->numero_documento)) {
+            $cliente       = new Cliente();
+            $cliente->id   = $request->numero_documento;
+            $cliente->tipo = $request->tipo_documento;
+            if ($request->tipo_documento == 'RUC') {
+                $cliente->codigo_sunat = 6;
+            } else {
+                $cliente->codigo_sunat = 1;
             }
-            $cliente->nombres   = Str::upper($request->nombres);
-            $cliente->direccion = Str::upper($request->direccion);
-            $cliente->email     = Str::upper($request->email);
-            $cliente->celular   = $request->celular;
-            $cliente->user_id   = Auth::user()->id;
-            $cliente->save();
-
-            $datos = '{"cargador":"' . $request->cargador . '","cable_usb":"' . $request->cable_usb . '","cable_poder":"' . $request->cable_poder . '","sin_accesorios":"' . $request->sin_accesorios . '","otros":"' . $request->otros . '"}';
-            $date  = Carbon::now();
-
-            $soporte                       = Soporte::findOrFail($request->id);
-            $soporte->user_id              = Auth::user()->id;
-            $soporte->cliente_id           = $request->numero_documento;
-            $soporte->servicio             = $request->tipo_servicio;
-            $soporte->estado               = $request->estado_servicio;
-            $soporte->equipo               = Str::upper($request->equipo);
-            $soporte->marca                = Str::upper($request->marca);
-            $soporte->modelo               = Str::upper($request->modelo);
-            $soporte->serie                = Str::upper($request->serie);
-            $soporte->descripcion          = Str::upper($request->descripcion);
-            $soporte->accesorios           = $datos;
-            $soporte->acuenta              = $request->acuenta;
-            $soporte->costo_servicio       = $request->costo_servicio;
-            $soporte->saldo_total          = $request->saldo_total;
-            $soporte->fecha_entrega        = $request->fecha_entrega;
-            $soporte->confirmar_reparacion = $request->confirmar_reparacion;
-            $soporte->solo_diagnostico     = $request->solo_diagnostico;
-            $soporte->observacion          = Str::upper($request->observacion);
-            $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
-            $soporte->save();
-
-            DB::commit();
-
-            return [
-                'type'    => 'success',
-                'title'   => 'CORRECTO: ',
-                'message' => 'El Soporte Técnico se actualizo correctamente.',
-            ];
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return [
-                'type'    => 'danger',
-                'title'   => 'ERROR: ',
-                'message' => $th . 'Ocurrio un error al actualizar el Soporte Técnico, intente nuevamente o contacte al Administrador del Sistema.',
-            ];
         }
+
+        $cliente->nombres   = Str::upper($request->nombres);
+        $cliente->direccion = Str::upper($request->direccion);
+        $cliente->email     = Str::upper($request->email);
+        $cliente->celular   = $request->celular;
+        $cliente->user_id   = Auth::user()->id;
+        $cliente->save();
+
+        $datos = '{"cargador":"' . $request->cargador . '","cable_usb":"' . $request->cable_usb . '","cable_poder":"' . $request->cable_poder . '","sin_accesorios":"' . $request->sin_accesorios . '","otros":"' . $request->otros . '"}';
+        $date  = Carbon::now();
+
+        $soporte                       = new Soporte();
+        $soporte->user_id              = Auth::user()->id;
+        $soporte->cliente_id           = $request->numero_documento;
+        $soporte->servicio             = $request->tipo_servicio;
+        $soporte->estado               = $request->estado_servicio;
+        $soporte->equipo               = Str::upper($request->equipo);
+        $soporte->marca                = Str::upper($request->marca);
+        $soporte->modelo               = Str::upper($request->modelo);
+        $soporte->serie                = Str::upper($request->serie);
+        $soporte->descripcion          = Str::upper($request->descripcion);
+        $soporte->accesorios           = $datos;
+        $soporte->acuenta              = $request->acuenta;
+        $soporte->costo_servicio       = $request->costo_servicio;
+        $soporte->saldo_total          = $request->saldo_total;
+        $soporte->fecha_registro       = $date->format('Y-m-d H:i:s');
+        $soporte->fecha_entrega        = $request->fecha_entrega;
+        $soporte->confirmar_reparacion = $request->confirmar_reparacion;
+        $soporte->solo_diagnostico     = $request->solo_diagnostico;
+        $soporte->observacion          = Str::upper($request->observacion);
+        $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
+
+        // Guardar PDF si existe
+        if ($request->hasFile('pdf_file')) {
+            $file = $request->file('pdf_file');
+            $fileName = 'soporte_' . time() . '_' . Str::random(10) . '.pdf';
+            $path = $file->storeAs('pdfs', $fileName, 'public');
+            $soporte->pdf_link = '/storage/' . $path;
+        }
+
+        $soporte->save();
+
+        $soporte->codigo_barras = 'VASCO' . $date->format('y') . Str::padLeft($soporte->id, 4, '0');
+        $soporte->save();
+
+        $detalles = json_decode($request->detalles, true);
+        foreach ($detalles as $value) {
+            $detalle              = new DetallesSoporte();
+            $detalle->soporte_id  = $soporte->id;
+            $detalle->descripcion = $value['descripcion'];
+            $detalle->precio      = $value['precio'];
+            $detalle->descuento   = $value['descuento'];
+            $detalle->cantidad    = $value['cantidad'];
+            $detalle->importe     = $value['importe'];
+            $detalle->save();
+        }
+
+        DB::commit();
+
+        return [
+            'type'          => 'success',
+            'title'         => 'CORRECTO: ',
+            'message'       => 'El Soporte Técnico se guardo correctamente.',
+            'soporte_id'    => $soporte->id,
+            'soporte_barra' => $soporte->codigo_barras,
+        ];
+
+    } catch (\Throwable $th) {
+        DB::rollBack();
+
+        return [
+            'type'    => 'danger',
+            'title'   => 'ERROR: ',
+            'message' => $th . 'Ocurrio un error al guardar el Soporte Técnico, intente nuevamente o contacte al Administrador del Sistema.',
+        ];
     }
+}
+
+public function update(Request $request)
+{
+    $this->validate($request, [
+        'fecha_registro'   => 'required',
+        'fecha_entrega'    => 'required',
+        'tipo_servicio'    => 'required',
+        'estado_servicio'  => 'required',
+        'numero_documento' => 'required|integer|digits_between:8,11',
+        'nombres'          => 'required',
+        'celular'          => 'required|integer|min:9',
+        'equipo'           => 'required',
+        'marca'            => 'required',
+        'modelo'           => 'required',
+        'serie'            => 'required',
+        'descripcion'      => 'required',
+        'acuenta'          => 'required|integer',
+        'costo_servicio'   => 'required|integer',
+        'saldo_total'      => 'required|integer',
+        'pdf_file'         => 'nullable|file|mimes:pdf|max:5120', // 5MB máximo
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        if (! $cliente = Cliente::find($request->numero_documento)) {
+            $cliente       = new Cliente();
+            $cliente->id   = $request->numero_documento;
+            $cliente->tipo = $request->tipo_documento;
+            if ($request->tipo_documento == 'RUC') {
+                $cliente->codigo_sunat = 6;
+            } else {
+                $cliente->codigo_sunat = 1;
+            }
+        }
+
+        $cliente->nombres   = Str::upper($request->nombres);
+        $cliente->direccion = Str::upper($request->direccion);
+        $cliente->email     = Str::upper($request->email);
+        $cliente->celular   = $request->celular;
+        $cliente->user_id   = Auth::user()->id;
+        $cliente->save();
+
+        $datos = '{"cargador":"' . $request->cargador . '","cable_usb":"' . $request->cable_usb . '","cable_poder":"' . $request->cable_poder . '","sin_accesorios":"' . $request->sin_accesorios . '","otros":"' . $request->otros . '"}';
+
+        $soporte = Soporte::findOrFail($request->id);
+
+        // Eliminar PDF anterior si se sube uno nuevo
+        if ($request->hasFile('pdf_file')) {
+            // Eliminar el archivo anterior si existe
+            if ($soporte->pdf_link) {
+                $oldPath = str_replace('/storage/', '', $soporte->pdf_link);
+                Storage::disk('public')->delete($oldPath);
+            }
+
+            // Guardar el nuevo archivo
+            $file = $request->file('pdf_file');
+            $fileName = 'soporte_' . time() . '_' . Str::random(10) . '.pdf';
+            $path = $file->storeAs('pdfs', $fileName, 'public');
+            $soporte->pdf_link = '/storage/' . $path;
+        }
+
+        // Actualizar el resto de campos
+        $soporte->user_id              = Auth::user()->id;
+        $soporte->cliente_id           = $request->numero_documento;
+        $soporte->servicio             = $request->tipo_servicio;
+        $soporte->estado               = $request->estado_servicio;
+        $soporte->equipo               = Str::upper($request->equipo);
+        $soporte->marca                = Str::upper($request->marca);
+        $soporte->modelo               = Str::upper($request->modelo);
+        $soporte->serie                = Str::upper($request->serie);
+        $soporte->descripcion          = Str::upper($request->descripcion);
+        $soporte->accesorios           = $datos;
+        $soporte->acuenta              = $request->acuenta;
+        $soporte->costo_servicio       = $request->costo_servicio;
+        $soporte->saldo_total          = $request->saldo_total;
+        $soporte->fecha_entrega        = $request->fecha_entrega;
+        $soporte->confirmar_reparacion = $request->confirmar_reparacion;
+        $soporte->solo_diagnostico     = $request->solo_diagnostico;
+        $soporte->observacion          = Str::upper($request->observacion);
+        $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
+        $soporte->save();
+
+        DB::commit();
+
+        return [
+            'type'    => 'success',
+            'title'   => 'CORRECTO: ',
+            'message' => 'El Soporte Técnico se actualizó correctamente.',
+        ];
+
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return [
+            'type'    => 'danger',
+            'title'   => 'ERROR: ',
+            'message' => 'Ocurrió un error al actualizar el Soporte Técnico: ' . $th->getMessage(),
+        ];
+    }
+}
+
 
     public function delete(Request $request)
     {
@@ -430,3 +474,4 @@ class SoporteController extends Controller
         return Soporte::find($request->id);
     }
 }
+

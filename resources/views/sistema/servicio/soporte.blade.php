@@ -376,6 +376,17 @@
                                                         </div>
                                                     </div>
                                                     <div class="row m-t-10">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group m-b-0">
+                                                                <label class="m-b-0" for="pdf_file"><i class="fas fa-file-pdf"></i> Documento PDF</label>
+                                                                <input type="file" id="pdf_file" @change="handlePdfUpload" class="form-control-file"
+                                                                       accept=".pdf" :disabled="loading">
+                                                                <small class="text-muted">Tamaño máximo: 5MB</small>
+                                                                <small class="form-text error-color" v-if="errors.pdf_link">@{{ errors.pdf_link[0] }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row m-t-10">
                                                         <div class="col-md-6"></div>
                                                         <div class="col-md-2">
                                                             <div class="form-group m-b-0">
@@ -818,6 +829,25 @@
                                                     </div>
                                                 </div>
                                                 <div class="row m-t-10">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group m-b-0">
+                                                            <label class="m-b-0" for="pdf_file"><i class="fas fa-file-pdf"></i> Documento PDF</label>
+                                                            <input type="file" id="pdf_file" @change="pdf_file = $event.target.files[0]"
+                                                                   class="form-control-file" accept=".pdf" :disabled="loading">
+                                                            <small class="text-muted">Tamaño máximo: 5MB</small>
+                                                            <div v-if="pdf_link" class="mt-2">
+                                                                <a :href="pdf_link" target="_blank" class="btn btn-sm btn-info">
+                                                                    <i class="fas fa-eye"></i> Ver PDF actual
+                                                                </a>
+                                                                <button @click="pdf_link = null; pdf_file = null" class="btn btn-sm btn-danger ml-2">
+                                                                    <i class="fas fa-trash"></i> Eliminar
+                                                                </button>
+                                                            </div>
+                                                            <small class="form-text error-color" v-if="errors.pdf_link">@{{ errors.pdf_link[0] }}</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row m-t-10">
                                                     <div class="col-md-6"></div>
                                                     <div class="col-md-2">
                                                         <div class="form-group m-b-0">
@@ -1088,26 +1118,6 @@
                             <div>Nuevo</div>
                         </button>
 
-                        {{-- <button type="button" class="btn btn-icon btn-info mr-2" style="min-width: 88px;" v-if="active != 0"
-                        data-toggle="modal" data-target="#formularioModal" v-on:click="formularioModal('modal-lg', active, 'edit', seleccion)">
-                            <div style="font-size: 30px;"><i class="fas fa-edit"></i></div>
-                            <div>Editar</div>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-info disabled mr-2" style="min-width: 88px;" v-else>
-                            <div style="font-size: 30px;"><i class="fas fa-edit"></i></div>
-                            <div>Editar</div>
-                        </button> --}}
-
-                        {{-- <button type="button" class="btn btn-icon btn-danger mr-2" style="min-width: 88px;" v-if="active != 0"
-                        data-toggle="modal" data-target="#formularioModal" v-on:click="formularioModal('modal-sm', active, 'delete', seleccion.id)">
-                            <div style="font-size: 30px;"><i class="fas fa-trash-alt"></i></div>
-                            <div>Eliminar</div>
-                        </button>
-                        <button type="button" class="btn btn-icon btn-danger disabled mr-2" style="min-width: 88px;" v-else>
-                            <div style="font-size: 30px;"><i class="fas fa-trash-alt"></i></div>
-                            <div>Eliminar</div>
-                        </button> --}}
-
                         <button type="button" class="btn btn-icon btn-warning mr-2" style="min-width: 88px;" v-if="active != 0" v-on:click="Recibo(active)">
                             <div style="font-size: 30px;"><i class="fas fa-print"></i></div>
                             <div>Recibo</div>
@@ -1300,3 +1310,4 @@
     <script type="text/javascript" src="{{asset('js/jquery.printarea.js')}}"></script>
     <script src="{{asset('js/views/servicio/tecnico.js')}}"></script>
 @endsection
+

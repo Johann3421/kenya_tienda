@@ -66,6 +66,8 @@ Route::group(['middleware' => ['can:servicio_tecnico']], function () {
     Route::post('/soporte/detalle/delete', 'SoporteController@detalleDelete');
     Route::get('/soporte/codigo-barra', 'SoporteController@codigoBarra');
 });
+
+
 Route::post('/consultar/soporte', 'ConsultarController@soporte')->name('consultar.soporte');
 Route::post('/consultar/soporte/buscar', 'ConsultarController@soporte_buscar');
 Route::post('/consultar/pedido', 'ConsultarController@pedido')->name('consultar.pedido');

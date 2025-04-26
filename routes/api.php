@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\SoporteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 // routes/web.php o mejor: routes/api.php
 
+Route::post('/upload-pdf', [SoporteController::class, 'uploadPdf'])->middleware('auth:sanctum');
