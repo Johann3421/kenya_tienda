@@ -113,9 +113,9 @@
                 <div class="kenya-footer-col">
                     <h3 class="kenya-footer-heading">Información</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="#">Quiénes somos</a></li>
-                        <li><a href="#">Misión y Visión</a></li>
-                        <li><a href="#">Historia</a></li>
+                        <li><a href="{{ route('quienes.somos') }}">Quiénes somos</a></li>
+                        <li><a href="{{ route('quienes.somos') }}">Misión y Visión</a></li>
+                        <li><a href="{{ route('quienes.somos') }}">Historia</a></li>
                     </ul>
                 </div>
 
@@ -123,10 +123,10 @@
                 <div class="kenya-footer-col">
                     <h3 class="kenya-footer-heading">Atención al cliente</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="#">Soporte técnico</a></li>
-                        <li><a href="#">Consulta el estado de tu Producto</a></li>
-                        <li><a href="#">Preguntas frecuentes</a></li>
-                        <li><a href="#">Términos y condiciones de garantía</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}">Soporte técnico</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}">Consulta el estado de tu Producto</a></li>
+                        <li><a href="{{ route('contactenos') }}">Preguntas frecuentes</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}">Términos y condiciones de garantía</a></li>
                     </ul>
                 </div>
 
@@ -134,9 +134,9 @@
                 <div class="kenya-footer-col">
                     <h3 class="kenya-footer-heading">CONTROLADORES</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="#">Descargar controladores</a></li>
-                        <li><a href="#">Estado de la garantía</a></li>
-                        <li><a href="#">Problemas con la activación</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}">Descargar controladores</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}">Estado de la garantía</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}">Problemas con la activación</a></li>
                     </ul>
                 </div>
 
@@ -235,3 +235,4 @@
 </body>
 
 </html>
+
