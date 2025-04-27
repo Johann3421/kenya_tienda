@@ -265,6 +265,10 @@ new Vue({
                     this.otros = accesorio.otros;
                     //DETALLES
                     this.listDetalles = seleccion.get_detalles;
+                    // Cargar PDF actual si existe
+this.pdf_link = seleccion.pdf_link;
+this.pdf_file = null;
+
                     break;
 
                 case 'delete':
