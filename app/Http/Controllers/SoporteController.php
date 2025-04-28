@@ -142,6 +142,8 @@ public function store(Request $request)
         'costo_servicio'   => 'required|numeric',
         'saldo_total'      => 'required|numeric',
         'pdf_file'         => 'nullable|file|mimes:pdf|max:5120', // 5MB máximo
+        'numero_caso' => 'nullable|string|max:255',
+
     ]);
 
     try {
@@ -188,6 +190,8 @@ public function store(Request $request)
         $soporte->solo_diagnostico     = $request->solo_diagnostico;
         $soporte->observacion          = Str::upper($request->observacion);
         $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
+        $soporte->numero_caso = $request->numero_caso;
+
 
         // Guardar PDF si existe
         if ($request->hasFile('pdf_file')) {
@@ -254,6 +258,8 @@ public function update(Request $request)
         'costo_servicio'   => 'required|integer',
         'saldo_total'      => 'required|integer',
         'pdf_file'         => 'nullable|file|mimes:pdf|max:5120', // 5MB máximo
+        'numero_caso' => 'nullable|string|max:255',
+
     ]);
 
     try {
@@ -315,6 +321,7 @@ public function update(Request $request)
         $soporte->solo_diagnostico     = $request->solo_diagnostico;
         $soporte->observacion          = Str::upper($request->observacion);
         $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
+        $soporte->numero_caso = $request->numero_caso;
         $soporte->save();
 
         DB::commit();

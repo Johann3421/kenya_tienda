@@ -99,6 +99,7 @@ new Vue({
         pdf_link: null,
         pdf_file_edit: null,
         original_pdf_link: null, // Para guardar el valor original del PDF
+        numero_caso: null,
     },
     created() {
         this.Buscar();
@@ -268,6 +269,8 @@ new Vue({
                     // Cargar PDF actual si existe
 this.pdf_link = seleccion.pdf_link;
 this.pdf_file = null;
+this.numero_caso = seleccion.numero_caso;
+
 
                     break;
 
@@ -420,6 +423,8 @@ this.pdf_file = null;
                 formData.append('reporte_tecnico', this.reporte_tecnico);
                 formData.append('confirmar_reparacion', this.confirmar_reparacion);
                 formData.append('solo_diagnostico', this.solo_diagnostico);
+                formData.append('numero_caso', this.numero_caso);
+
 
                 // Añadir PDF si existe
                 if (this.pdf_file) {
@@ -501,6 +506,8 @@ this.pdf_file = null;
                 formData.append('reporte_tecnico', this.reporte_tecnico);
                 formData.append('confirmar_reparacion', this.confirmar_reparacion);
                 formData.append('solo_diagnostico', this.solo_diagnostico);
+                formData.append('numero_caso', this.numero_caso);
+
 
                 // Añadir PDF si existe
                 if (this.pdf_file) {
@@ -879,4 +886,5 @@ this.pdf_file = null;
         }
     }
 });
+
 

@@ -130,3 +130,6 @@ textarea {
     font-size: 11px;
     float: right;
 }
+.text-uppercase {
+    text-transform: uppercase;
+}

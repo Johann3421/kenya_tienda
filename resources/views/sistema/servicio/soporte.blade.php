@@ -80,6 +80,19 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <!-- NUEVO CAMPO: Número de Caso -->
+<div class="col-md-4">
+    <div class="form-group row m-b-0">
+        <span style="font-size: 11px; padding-right: 0; padding-top: 3px;" class="col-sm-4">N° CASO :</span>
+        <div class="col-sm-8">
+            <input type="text" id="numero_caso" v-model="numero_caso" :readonly="loading"
+                   class="form-control form-control-sm" :class="[errors.numero_caso ? 'is-invalid' : '']"
+                   placeholder="Ingrese N° Caso">
+            <small class="form-text error-color" v-if="errors.numero_caso">@{{ errors.numero_caso[0] }}</small>
+        </div>
+    </div>
+</div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -527,6 +540,19 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <!-- NUEVO CAMPO: Número de Caso -->
+<div class="col-md-4">
+    <div class="form-group row m-b-0">
+        <span style="font-size: 11px; padding-right: 0; padding-top: 3px;" class="col-sm-4">N° CASO :</span>
+        <div class="col-sm-8">
+            <input type="text" id="numero_caso" v-model="numero_caso" :readonly="loading"
+                   class="form-control form-control-sm" :class="[errors.numero_caso ? 'is-invalid' : '']"
+                   placeholder="Ingrese N° Caso">
+            <small class="form-text error-color" v-if="errors.numero_caso">@{{ errors.numero_caso[0] }}</small>
+        </div>
+    </div>
+</div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -1193,7 +1219,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center cell-1">#</th>
-                                    <th class="cell-2 text-center">Código</th>
+                                    <th class="cell-2 text-center">N° Caso</th>
                                     <th class="cell-3 text-center">Estado</th>
                                     <th class="cell-4">Cliente</th>
                                     <th class="cell-5 text-center">Fecha Registro</th>
@@ -1216,7 +1242,7 @@
                                     <template v-if="listaRequest.length != 0">
                                         <tr v-for="(soporte, index) in listaRequest" :class="{ activado : active == soporte.id }" v-on:dblclick="formEditar(soporte)" v-on:click="Fila(soporte.id, soporte)" style="cursor: pointer;">
                                             <td class="text-center">@{{(index + pagination.index + 1)}}</td>
-                                            <td class="text-center">@{{soporte.codigo_barras}}</td>
+                                            <td class="text-center text-uppercase">@{{ soporte.numero_caso ?? '' }}</td>
                                             <td><div :class="soporte.estado">@{{Estado(soporte.estado)}}</div></td>
                                             <td>@{{soporte.get_cliente.nombres}}</td>
                                             <td class="text-center">@{{Fecha2(soporte.fecha_registro)+' '+Hora(soporte.fecha_registro)}}</td>

@@ -171,7 +171,7 @@
                             <div class="modal-body" style="padding: 15px 15px;">
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <label for="nombre_driver" class="label-sm">NOMBRE DE LA DRIVER</label>
+                                        <label for="nombre_driver" class="label-sm">NOMBRE DEL DRIVER</label>
                                         <input type="text" id="nombre_driver" v-model="nombre_driver" class="form-control" :class="[errors.rute ? 'is-invalid' : '']" :readonly="loading">
                                         <small class="form-text error-color" v-if="errors.nombre_driver">@{{ errors.nombre_driver[0] }}</small>
                                     </div>
