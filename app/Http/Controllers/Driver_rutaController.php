@@ -43,97 +43,99 @@ class Driver_rutaController extends Controller
         ];
     }
     public function store(Request $request)
-    {
-        $request->validate([
-            // 'pdf_driver' => 'required|file|mimes:zip|max:1000000000',
-            'nombre_driver'  => 'required',
-        ]);
+{
 
-        try {
-            DB::beginTransaction();
+    $request->validate([
+        'nombre_driver' => 'required',
+        'pdf_driver' => 'required|file|mimes:zip|max:2048000', // 2GB en KB
+    ], [
+        'pdf_driver.max' => 'El archivo es demasiado grande. El tamaño máximo permitido es de 2 GB.',
+    ]);
 
-            $driver_ruta = new Ruta();
-            //$driver_ruta ->  rute = $request->rute;
-            $driver_ruta ->  nombre_driver = $request->nombre_driver;
+    try {
+        DB::beginTransaction();
 
-            $driver_ruta ->  save();
-            $route = 'DRIVERS/'.$driver_ruta->id;
-            if ($request->hasFile('pdf_driver')) {
-                $file = $request->file('pdf_driver');
-                $extension = $file->extension();
-                $file_name = 'KENYA_'.Str::random(10).'.'.$extension;
-                Storage::putFileAs('public/'.$route, $file, $file_name);
-                $driver_ruta->rute = $route.'/'.$file_name;
-                $driver_ruta ->  save();
-            }
+        $driver_ruta = new Ruta();
+        $driver_ruta->nombre_driver = $request->nombre_driver;
+        $driver_ruta->save();
 
-            DB::commit();
+        $route = 'DRIVERS/'.$driver_ruta->id;
 
-            return [
-                'type'     =>  'success',
-                'title'    =>  'CORRECTO: ',
-                'message'  =>  'La ruta se guardo correctamente.'
-            ];
-        } catch (\Throwable $th) {
-            DB::rollBack();
+        if ($request->hasFile('pdf_driver')) {
+            $file = $request->file('pdf_driver');
+            $file_name = 'KENYA_'.Str::random(10).'.zip';
 
-            return [
-                'type'     =>  'danger',
-                'title'    =>  'ERROR: ',
-                'message'  =>  'Ocurrio un error al guardar la ruta, intente nuevamente o contacte al Administrador del Sistema.'
-            ];
+            $file->storeAs('public/'.$route, $file_name);
+
+            $driver_ruta->rute = $route.'/'.$file_name;
+            $driver_ruta->save();
         }
-    }
-    public function update(Request $request, Ruta  $drivers_ruta)
-    {
 
-        $request->validate([
-            'id'            => 'required|int',
-            //'rute'          => 'required',
-            'nombre_driver' => 'required',
+        DB::commit();
+
+        return response()->json([
+            'type' => 'success',
+            'title' => 'CORRECTO:',
+            'message' => 'La ruta se guardó correctamente.',
         ]);
+    } catch (\Throwable $th) {
+        DB::rollBack();
 
-        try {
+        return response()->json([
+            'type' => 'danger',
+            'title' => 'ERROR:',
+            'message' => 'Error al guardar la ruta: '.$th->getMessage(),
+        ], 500);
+    }
+}
 
-            DB::beginTransaction();
+// update
+public function update(Request $request)
+{
+    $request->validate([
+        'id' => 'required|integer|exists:rutas,id',
+        'nombre_driver' => 'required',
+        'pdf_driver' => 'required|file|mimes:zip',
+    ]);
 
-            $driver_ruta = Ruta::findOrFail($request->id);
-            //$driver_ruta -> rute = $request->rute;
-            $driver_ruta ->  nombre_driver = $request->nombre_driver;
+    try {
+        DB::beginTransaction();
 
-            $route = 'DRIVERS/'.$driver_ruta->id;
+        $driver_ruta = Ruta::findOrFail($request->id);
+        $driver_ruta->nombre_driver = $request->nombre_driver;
 
-            if ($request->hasFile('pdf_driver')) {
+        $route = 'DRIVERS/'.$driver_ruta->id;
+
+        if ($request->hasFile('pdf_driver')) {
+            if ($driver_ruta->rute) {
                 Storage::delete('public/'.$driver_ruta->rute);
-
-                $file = $request->file('pdf_driver');
-                $extension = $file->extension();
-                $file_name = 'KENYA_'.Str::random(10).'.'.$extension;
-
-                Storage::putFileAs('public/'.$route, $file, $file_name);
-                $driver_ruta->rute = $route.'/'.$file_name;
             }
 
-            $driver_ruta -> update();
+            $file = $request->file('pdf_driver');
+            $file_name = 'KENYA_'.Str::random(10).'.zip';
+            $file->storeAs('public/'.$route, $file_name);
 
-            DB::commit();
-
-            return [
-                'type'     =>  'success',
-                'title'    =>  'CORRECTO: ',
-                'message'  =>  'Los datos del Garantia se actualizaron correctamente.'
-            ];
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return [
-                'type'     =>  'danger',
-                'title'    =>  'ERROR: ',
-                'message'  =>  'Ocurrio un error al actualizar los datos del Garantia, intente nuevamente o contacte al Administrador del Sistema.'
-            ];
+            $driver_ruta->rute = $route.'/'.$file_name;
         }
+
+        $driver_ruta->save();
+        DB::commit();
+
+        return response()->json([
+            'type' => 'success',
+            'title' => 'CORRECTO:',
+            'message' => 'La ruta fue actualizada correctamente.',
+        ]);
+    } catch (\Throwable $th) {
+        DB::rollBack();
+
+        return response()->json([
+            'type' => 'danger',
+            'title' => 'ERROR:',
+            'message' => 'Error al actualizar: '.$th->getMessage(),
+        ], 500);
     }
+}
 
     public function delete(Request $request, Ruta  $drivers_ruta)
     {

@@ -196,6 +196,14 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="progress mt-2" v-if="uploading">
+                            <div
+                                class="progress-bar progress-bar-striped progress-bar-animated"
+                                role="progressbar"
+                                :style="{ width: uploadProgress + '%' }"
+                                v-text="uploadProgress + '%'">
+                            </div>
+                        </div>
                         {{-- NUEVO --}}
 
                         {{-- EDITAR --}}

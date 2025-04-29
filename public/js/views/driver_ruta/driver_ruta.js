@@ -32,6 +32,11 @@ new Vue({
         kenya: null,
         nombre_driver: null,
         pdf_driver: null,
+        uploading: false,
+        uploadProgress: 0,
+        rute: '',
+        nombre_driver: '',
+        pdf_driver: null,
     },
     created() {
         this.Buscar();
@@ -122,11 +127,14 @@ new Vue({
 
                 case "edit":
                     this.resetDatos();
-                    (this.nombre_driver = seleccion.nombre_driver),
-                    this.pdf_driver = seleccion.rute;
+                    if (seleccion) {
+                        this.nombre_driver = seleccion.nombre_driver;
+                        this.pdf_driver = seleccion.rute;
+                    }
                     break;
+
                 case "delete":
-                    this.nombre_driver = seleccion;
+                    this.nombre_driver = seleccion ? seleccion.nombre_driver : null;
                     break;
             }
         },
@@ -139,89 +147,86 @@ new Vue({
                 this.seleccion = driver_ruta;
             }
         },
-        Store() {
+        async Store() {
             this.errors = [];
             this.loading = true;
-            
+            this.uploading = true;
+            this.uploadProgress = 0;
+
             const formData = new FormData();
             formData.append("nombre_driver", this.nombre_driver);
             formData.append("pdf_driver", this.pdf_driver);
-            
-            axios.post("../drivers_ruta/store", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }).then((response) => {
+
+            try {
+                const response = await axios.post("../drivers_ruta/store", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    onUploadProgress: (e) => {
+                        this.uploadProgress = Math.round((e.loaded * 100) / e.total);
+                    }
+                });
+
                 this.loading = false;
-                this.state = response.data.type;
-                this.Alert(
-                    response.data.type,
-                    response.data.title,
-                    response.data.message
-                );
-                if (response.data.type == "success") {
+                this.uploading = false;
+                this.Alert(response.data.type, response.data.title, response.data.message);
+
+                if (response.data.type === "success") {
                     this.resetDatos();
                     this.Buscar(this.page);
                 } else {
                     this.errors = response.data.errors;
-                    console.log("el error es: ",errors)
                 }
-                console.log("el response es: ",response)
-                
-            }).catch((error) => {
+            } catch (error) {
                 this.loading = false;
-                console.log("Este es el error",error);
-                if (error.response.status == 422) {
+                this.uploading = false;
+
+                if (error.response?.status === 422) {
                     this.errors = error.response.data.errors;
                 } else {
-                    console.log(error.response)
-                    console.log([this.descripcion, this.estado, this.categoria])
-                    alert(
-                        "Algo salio mal, por favor intente nuevamente."
-                    );
+                    alert("Algo salió mal, por favor intente nuevamente.");
                 }
-                console.log("el response es: ",response)
-            });
+                console.error("Store error:", error);
+            }
         },
-        
-        Update() {
+
+        async Update() {
             this.errors = [];
             this.loading = true;
+            this.uploading = true;
+            this.uploadProgress = 0;
 
             const formData = new FormData();
             formData.append("id", this.id);
             formData.append("nombre_driver", this.nombre_driver);
             formData.append("pdf_driver", this.pdf_driver);
-            axios
-                .post("../drivers_ruta/update", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                })
-                .then((response) => {
-                    this.loading = false;
-                    this.state = response.data.type;
-                    this.Alert(
-                        response.data.type,
-                        response.data.title,
-                        response.data.message
-                    );
 
-                    if (response.data.type == "success") {
-                        this.Buscar(this.page);
-                    } else {
-                        this.errors = response.data.errors;
+            try {
+                const response = await axios.post("../drivers_ruta/update", formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    onUploadProgress: (e) => {
+                        this.uploadProgress = Math.round((e.loaded * 100) / e.total);
                     }
-                })
-                .catch((error) => {
-                    this.loading = false;
-                    if (error.response.status == 422) {
-                        this.errors = error.response.data.errors;
-                    } else {
-                        alert("Algo salio mal, por favor intente nuevamente.");
-                    }
-                    console.log(error)
                 });
+
+                this.loading = false;
+                this.uploading = false;
+                this.Alert(response.data.type, response.data.title, response.data.message);
+
+                if (response.data.type === "success") {
+                    this.Buscar(this.page);
+                } else {
+                    this.errors = response.data.errors;
+                }
+            } catch (error) {
+                this.loading = false;
+                this.uploading = false;
+
+                if (error.response?.status === 422) {
+                    this.errors = error.response.data.errors;
+                } else {
+                    alert("Algo salió mal, por favor intente nuevamente.");
+                }
+                console.error("Update error:", error);
+            }
         },
         Delete() {
             this.loading = true;
@@ -291,34 +296,16 @@ new Vue({
         changeZip($event) {
             let files = $event.target.files;
             if (/\.(zip)$/i.test(files[0].name)) {
-                if (files[0].size <= 1000 * Math.pow(2, 1000)) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(files[0]);
-                    reader.onload = function () {
-                    };
-                    console.log(files[0].size)
+                if (files[0].size <= 2 * 1024 * 1024 * 1024) { // 2GB
+                    this.pdf_driver = files[0];
                 } else {
                     $("#file").val("");
-                    $("#file_edit").val("");
-                    files = [""];
-                    this.Alert(
-                        "warning",
-                        "Incorrecto",
-                        "El pdf debe tener un tamaño máximo de 2MB"
-                    );
+                    this.Alert("warning", "Archivo demasiado grande", "Máximo permitido: 2GB.");
                 }
             } else {
                 $("#file").val("");
-                $("#file_edit").val("");
-                files = [""];
-                this.Alert(
-                    "warning",
-                    "Incorrecto",
-                    "Solo se aceptan formatos de texto son zip."
-                );
+                this.Alert("warning", "Formato inválido", "Solo se aceptan archivos .zip.");
             }
-
-            this.pdf_driver = files[0];
         },
     },
 });
