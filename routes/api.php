@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\BannerMedioApiController;
+use App\Http\Controllers\Api\EspecificacionApiController;
+use App\Http\Controllers\Api\ModeloApiController;
+use App\Http\Controllers\Api\ProductoApiController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\SoporteController;
 use Illuminate\Http\Request;
@@ -22,3 +26,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // routes/web.php o mejor: routes/api.php
 
 Route::post('/upload-pdf', [SoporteController::class, 'uploadPdf'])->middleware('auth:sanctum');
+
+Route::get('productos', [ProductoApiController::class, 'index']);
+Route::get('productos/{id}', [ProductoApiController::class, 'show']);
+Route::get('modelos', [ModeloApiController::class, 'index']);
+Route::get('modelos/{id}', [ModeloApiController::class, 'show']);
+Route::get('modelos/categoria/{categoria_id}', [ModeloApiController::class, 'porCategoria']);
+
+Route::get('especificaciones', [EspecificacionApiController::class, 'index']);
+Route::get('especificaciones/{id}', [EspecificacionApiController::class, 'show']);
+Route::get('especificaciones/producto/{producto_id}', [EspecificacionApiController::class, 'porProducto']);
+
+Route::get('banners', [BannerMedioApiController::class, 'index']);
+Route::get('banners/{id}', [BannerMedioApiController::class, 'show']);
+Route::get('banners/posicion/{posicion}', [BannerMedioApiController::class, 'porPosicion']);
