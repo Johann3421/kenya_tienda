@@ -69,7 +69,7 @@ new Vue({
         listDetalles: [],
         detalle_descripcion: null,
         detalle_precio: null,
-        detalle_descuento: 0,
+        detalle_descuento: "",
         detalle_cantidad: null,
 
         //FACTURACION
@@ -297,35 +297,35 @@ this.numero_caso = seleccion.numero_caso;
             }
         },
         addDetalles() {
-            if (this.detalle_descripcion && this.detalle_precio && this.detalle_cantidad) {
+            if (this.detalle_descripcion && this.detalle_precio && this.detalle_cantidad && this.detalle_descuento) {
                 this.acuenta = 0;
-                this.costo_servicio += (this.detalle_cantidad*this.detalle_precio) - this.detalle_descuento;
+                this.costo_servicio += (this.detalle_cantidad * this.detalle_precio);
                 this.saldo_total = this.costo_servicio;
 
-                this.listDetalles.push(
-                    {
-                        'descripcion': (this.detalle_descripcion).toUpperCase(),
-                        'precio': this.detalle_precio,
-                        'descuento': this.detalle_descuento,
-                        'cantidad': this.detalle_cantidad,
-                        'importe': (this.detalle_cantidad*this.detalle_precio) - this.detalle_descuento,
-                    }
-                );
+                this.listDetalles.push({
+                    'descripcion': (this.detalle_descripcion).toUpperCase(),
+                    'precio': this.detalle_precio,
+                    'descuento': this.detalle_descuento.trim(), // Asegúrate de eliminar espacios innecesarios
+                    'cantidad': this.detalle_cantidad,
+                    'importe': (this.detalle_cantidad * this.detalle_precio),
+                });
                 this.cleanDetalles();
+            } else {
+                alert("Por favor, complete todos los campos antes de agregar un detalle.");
             }
             $('#detalle_descripcion').focus();
         },
         addDetallesEdit() {
             let aceptar = confirm("¿ Realmente desea agregar un Detalle nuevo ?");
             if (aceptar) {
-                var importe = (this.detalle_cantidad*this.detalle_precio) - this.detalle_descuento;
+                var importe = (this.detalle_cantidad * this.detalle_precio);
                 var costo = this.costo_servicio + importe;
                 var saldo = this.saldo_total + importe;
                 axios.post('soporte/detalle/add', {
                     id: this.id,
                     descripcion: this.detalle_descripcion,
                     precio: this.detalle_precio,
-                    descuento: this.detalle_descuento,
+                    descuento: this.detalle_descuento, // Ahora es varchar
                     cantidad: this.detalle_cantidad,
                     importe: importe,
                     costo: costo,
@@ -338,7 +338,7 @@ this.numero_caso = seleccion.numero_caso;
                 }).catch(error => {
                     this.costo_servicio = seleccion.costo_servicio;
                     this.saldo_total = seleccion.saldo_total;
-                    alert('Ocurrio un error al agregar el detalle, intente nuevamente.')
+                    alert('Ocurrio un error al agregar el detalle, intente nuevamente.');
                 });
             }
             $('#detalle_descripcion').focus();
@@ -374,7 +374,7 @@ this.numero_caso = seleccion.numero_caso;
         cleanDetalles() {
             this.detalle_descripcion = null;
             this.detalle_precio = null;
-            this.detalle_descuento = 0;
+            this.detalle_descuento = ""; // Reinicia como una cadena vacía
             this.detalle_cantidad = null;
         },
         Store() {
