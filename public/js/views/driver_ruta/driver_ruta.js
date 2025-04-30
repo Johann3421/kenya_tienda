@@ -153,38 +153,62 @@ new Vue({
             this.uploading = true;
             this.uploadProgress = 0;
 
-            const formData = new FormData();
-            formData.append("nombre_driver", this.nombre_driver);
-            formData.append("pdf_driver", this.pdf_driver);
+            const file = this.pdf_driver;
+
+            if (!file) {
+                this.Alert("warning", "Archivo no seleccionado", "Por favor selecciona un archivo.");
+                this.loading = false;
+                this.uploading = false;
+                return;
+            }
+
+            const chunkSize = 20 * 1024 * 1024; // Tamaño de cada fragmento (20 MB)
+            const totalChunks = Math.ceil(file.size / chunkSize);
+            const parallelUploads = 3; // Número de fragmentos que se subirán en paralelo
+            let uploadedChunks = 0;
 
             try {
-                const response = await axios.post("../drivers_ruta/store", formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
-                    onUploadProgress: (e) => {
-                        this.uploadProgress = Math.round((e.loaded * 100) / e.total);
+                const uploadChunk = async (chunkIndex) => {
+                    const start = chunkIndex * chunkSize;
+                    const end = Math.min(start + chunkSize, file.size);
+                    const chunk = file.slice(start, end);
+
+                    const formData = new FormData();
+                    formData.append("nombre_driver", this.nombre_driver);
+                    formData.append("pdf_driver", chunk);
+                    formData.append("chunkIndex", chunkIndex);
+                    formData.append("totalChunks", totalChunks);
+                    formData.append("fileName", file.name);
+
+                    await axios.post("../drivers_ruta/store", formData, {
+                        headers: { "Content-Type": "multipart/form-data" },
+                        onUploadProgress: (e) => {
+                            const progress = Math.round(((uploadedChunks + e.loaded / e.total) / totalChunks) * 100);
+                            this.uploadProgress = progress;
+                        },
+                    });
+
+                    uploadedChunks++;
+                };
+
+                const uploadPromises = [];
+                for (let i = 0; i < totalChunks; i += parallelUploads) {
+                    const chunkGroup = [];
+                    for (let j = 0; j < parallelUploads && i + j < totalChunks; j++) {
+                        chunkGroup.push(uploadChunk(i + j));
                     }
-                });
-
-                this.loading = false;
-                this.uploading = false;
-                this.Alert(response.data.type, response.data.title, response.data.message);
-
-                if (response.data.type === "success") {
-                    this.resetDatos();
-                    this.Buscar(this.page);
-                } else {
-                    this.errors = response.data.errors;
+                    await Promise.all(chunkGroup); // Espera a que se suban los fragmentos en paralelo
                 }
+
+                this.Alert("success", "Éxito", "El archivo se subió correctamente.");
+                this.resetDatos();
+                this.Buscar(this.page);
             } catch (error) {
+                console.error("Store error:", error);
+                this.Alert("danger", "Error", "Error al guardar los datos. Intente nuevamente.");
+            } finally {
                 this.loading = false;
                 this.uploading = false;
-
-                if (error.response?.status === 422) {
-                    this.errors = error.response.data.errors;
-                } else {
-                    alert("Algo salió mal, por favor intente nuevamente.");
-                }
-                console.error("Store error:", error);
             }
         },
 

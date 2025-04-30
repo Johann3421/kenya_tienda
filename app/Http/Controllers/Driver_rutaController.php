@@ -44,47 +44,70 @@ class Driver_rutaController extends Controller
     }
     public function store(Request $request)
 {
-
     $request->validate([
         'nombre_driver' => 'required',
-        'pdf_driver' => 'required|file|mimes:zip|max:2048000', // 2GB en KB
-    ], [
-        'pdf_driver.max' => 'El archivo es demasiado grande. El tamaño máximo permitido es de 2 GB.',
+        'pdf_driver' => 'required|file',
+        'chunkIndex' => 'required|integer',
+        'totalChunks' => 'required|integer',
+        'fileName' => 'required|string',
     ]);
 
     try {
-        DB::beginTransaction();
+        $tempDir = storage_path('app/temp/' . $request->fileName);
 
-        $driver_ruta = new Ruta();
-        $driver_ruta->nombre_driver = $request->nombre_driver;
-        $driver_ruta->save();
-
-        $route = 'DRIVERS/'.$driver_ruta->id;
-
-        if ($request->hasFile('pdf_driver')) {
-            $file = $request->file('pdf_driver');
-            $file_name = 'KENYA_'.Str::random(10).'.zip';
-
-            $file->storeAs('public/'.$route, $file_name);
-
-            $driver_ruta->rute = $route.'/'.$file_name;
-            $driver_ruta->save();
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0777, true);
         }
 
-        DB::commit();
+        // Guardar el fragmento en el directorio temporal
+        $chunkPath = $tempDir . '/' . $request->chunkIndex;
+        file_put_contents($chunkPath, file_get_contents($request->file('pdf_driver')->getRealPath()));
+
+        // Si es el último fragmento, combinar todos los fragmentos
+
+// Si es el último fragmento, combinar todos los fragmentos
+if ($request->chunkIndex + 1 == $request->totalChunks) {
+    // Crear el registro en la base de datos para obtener el ID
+    $driver_ruta = new Ruta();
+    $driver_ruta->nombre_driver = $request->nombre_driver;
+    $driver_ruta->save();
+
+    // Crear la carpeta con el ID del registro
+    $route = 'DRIVERS/' . $driver_ruta->id;
+    $finalDir = storage_path('app/public/' . $route);
+
+    if (!file_exists($finalDir)) {
+        mkdir($finalDir, 0777, true);
+    }
+
+    // Ruta final del archivo combinado
+    $finalPath = $finalDir . '/' . $request->fileName;
+    $outputFile = fopen($finalPath, 'wb');
+
+    for ($i = 0; $i < $request->totalChunks; $i++) {
+        $chunkPath = $tempDir . '/' . $i;
+        fwrite($outputFile, file_get_contents($chunkPath));
+        unlink($chunkPath); // Eliminar el fragmento después de combinarlo
+    }
+
+    fclose($outputFile);
+    rmdir($tempDir); // Eliminar el directorio temporal
+
+    // Actualizar la ruta del archivo en la base de datos
+    $driver_ruta->rute = $route . '/' . $request->fileName;
+    $driver_ruta->save();
+}
 
         return response()->json([
             'type' => 'success',
             'title' => 'CORRECTO:',
-            'message' => 'La ruta se guardó correctamente.',
+            'message' => 'Fragmento subido correctamente.',
         ]);
     } catch (\Throwable $th) {
-        DB::rollBack();
-
         return response()->json([
             'type' => 'danger',
             'title' => 'ERROR:',
-            'message' => 'Error al guardar la ruta: '.$th->getMessage(),
+            'message' => 'Error al guardar el fragmento: ' . $th->getMessage(),
         ], 500);
     }
 }

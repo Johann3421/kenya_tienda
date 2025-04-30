@@ -171,7 +171,7 @@
                             <div class="modal-body" style="padding: 15px 15px;">
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <label for="nombre_driver" class="label-sm">NOMBRE DEL DRIVER</label>
+                                        <label for="nombre_driver" class="label-sm">NOMBRE DE LA DRIVER</label>
                                         <input type="text" id="nombre_driver" v-model="nombre_driver" class="form-control" :class="[errors.rute ? 'is-invalid' : '']" :readonly="loading">
                                         <small class="form-text error-color" v-if="errors.nombre_driver">@{{ errors.nombre_driver[0] }}</small>
                                     </div>
@@ -188,20 +188,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="form-group col-md-12" v-if="uploading">
+        <div class="progress mt-2">
+            <div
+                class="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                :style="{ width: uploadProgress + '%' }"
+                v-text="uploadProgress + '%'">
+            </div>
+        </div>
+    </div>
                             <div class="modal-footer" style="padding: 10px 15px;">
                                 <button class="btn btn-primary btn-block event-btn" v-on:click="Store" :disabled="loading">
                                     <span class="spinner-grow spinner-grow-sm" role="status" v-if="loading"></span>
                                     <span class="load-text" v-if="loading">Guardando...</span>
                                     <span class="btn-text" v-if="!loading" style=""><i class="feather icon-times"></i> Guardar</span>
                                 </button>
-                            </div>
-                        </div>
-                        <div class="progress mt-2" v-if="uploading">
-                            <div
-                                class="progress-bar progress-bar-striped progress-bar-animated"
-                                role="progressbar"
-                                :style="{ width: uploadProgress + '%' }"
-                                v-text="uploadProgress + '%'">
                             </div>
                         </div>
                         {{-- NUEVO --}}
@@ -235,6 +237,17 @@
                                     </div>
                                 </div>
                             </div>
+<!-- Dentro de modal-content edit, después de modal-body -->
+<div class="form-group col-md-12" v-if="uploading">
+    <div class="progress mt-2">
+        <div
+            class="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            :style="{ width: uploadProgress + '%' }"
+            v-text="uploadProgress + '%'">
+        </div>
+    </div>
+</div>
 
                             <div class="modal-footer" style="padding: 10px 15px;">
                                 <button class="btn btn-info btn-block event-btn" v-on:click="Update" :disabled="loading">
@@ -394,5 +407,5 @@
 @section('js')
 <script src="{{ asset('moment.min.js') }}"></script>
 <script src="{{ asset('js/views/driver_ruta/driver_ruta.js') }}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/tus-js-client/dist/tus.min.js"></script>
 @endsection
