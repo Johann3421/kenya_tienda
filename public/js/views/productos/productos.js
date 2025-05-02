@@ -5,7 +5,7 @@ new Vue({
         page: null,
         listTable: false,
         search: '',
-        search_por: 'codigo_interno',
+        search_por: 'nombre',
         search_categoria: '',
         search_web: '',
         listaRequest: [],
