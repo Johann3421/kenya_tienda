@@ -27,9 +27,14 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/upload-pdf', [SoporteController::class, 'uploadPdf'])->middleware('auth:sanctum');
 
-Route::get('productos', [ProductoApiController::class, 'index']);
+Route::get('productos', function () {
+    return App\Producto::select('id', 'nombre', 'modelo_id')->get();
+});
+Route::post('productos/especificaciones/import-multiple', [ProductoController::class, 'importMultipleEspecificaciones']);
 Route::get('productos/{id}', [ProductoApiController::class, 'show']);
-Route::get('modelos', [ModeloApiController::class, 'index']);
+Route::get('modelos', function () {
+    return App\Modelo::select('id', 'descripcion')->get();
+});
 Route::get('modelos/{id}', [ModeloApiController::class, 'show']);
 Route::get('modelos/categoria/{categoria_id}', [ModeloApiController::class, 'porCategoria']);
 

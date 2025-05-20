@@ -42,6 +42,36 @@
 
         $productos = $productosQuery->paginate(9)->appends(request()->query());
     @endphp
+    @php
+    $modeloId = request()->route('id') ?? request()->route('modelo');
+    $modelo = Modelo::with(['productos.filtros', 'productos.modelo'])->findOrFail($modeloId);
+
+    $filtrosActivos = collect(request()->except('page', 'nombre')); // Excluir 'nombre' del resto de filtros
+
+    // Consulta base con paginación
+    $productosQuery = $modelo
+        ->productos()
+        ->where('pagina_web', 'SI')
+        ->with(['modelo', 'filtros']);
+
+    // Aplicar filtros si existen
+    if ($filtrosActivos->isNotEmpty()) {
+        foreach ($filtrosActivos as $filtroNombre => $valores) {
+            $valores = is_array($valores) ? $valores : explode(',', $valores);
+
+            $productosQuery->whereHas('filtros', function ($q) use ($filtroNombre, $valores) {
+                $q->whereIn('opcion', $valores)->whereRaw('LOWER(nombre_aside) = ?', [strtolower($filtroNombre)]);
+            });
+        }
+    }
+
+    // Filtro por nombre del producto
+    if (request()->filled('nombre')) {
+        $productosQuery->where('nombre', 'LIKE', '%' . request('nombre') . '%');
+    }
+
+    $productos = $productosQuery->paginate(9)->appends(request()->query());
+@endphp
 
     <div style="background-color: #f1f1f1; height: 50px; margin-top: 72px;">
         <div class="container">
@@ -63,7 +93,7 @@
                 <div class="col-lg-3">
                     <div class="card">
                         <input type="text" id="search" v-model="search" class="form-control"
-                            placeholder="Ingrese el nombre" v-on:keyup="Filtrar(search, 'nombre')">
+    placeholder="Ingrese el nombre" v-on:keyup="Filtrar(search, 'nombre')">
                     </div>
                     <aside>
                         @include('partials.aside-normal')
@@ -203,7 +233,6 @@
 @section('js')
     <script>
         var mis_categorias = {!! json_encode($categorias) !!};
-        // var mis_productos = {!! json_encode($productos) !!};
         const productos_procesador = {!! json_encode($productos_procesador) !!};
         const productos_ram = {!! json_encode($productos_ram) !!};
         const productos_sistema_operativo = {!! json_encode($productos_sistema_operativo) !!};
@@ -246,92 +275,9 @@
                 //Filtros
                 campo: null,
                 search: '',
-                filtros: {
-                    nombre: null,
-                    marcas: [],
-                    procesadores: [],
-                    ram: [],
-                    categoria_id: null,
-                    sistema_operativo: [],
-                    almacenamiento: [],
-                    conectividad: [],
-                    conectividad_wlan: [],
-                    conectividad_usb: [],
-                    video_vga: [],
-                    video_hdmi: [],
-                    unidades_opticas: [],
-                    teclados: [],
-                    mouses: [],
-                    suites: [],
-                },
-                desplegar: {
-                    marcas: false,
-                    procesadores: false,
-                    ram: false,
-                    sistema_operativo: false,
-                    almacenamiento: false,
-                    conectividad: false,
-                    conectividad_wlan: false,
-                    conectividad_usb: false,
-                    video_vga: false,
-                    video_hdmi: false,
-                    unidades_opticas: false,
-                    teclados: false,
-                    mouses: false,
-                    suites: false,
-                },
-                boolean: {
-                    marcas: false,
-                    procesadores: false,
-                    ram: false,
-                    sistema_operativo: false,
-                    almacenamiento: false,
-                    conectividad: false,
-                    conectividad_wlan: false,
-                    conectividad_usb: false,
-                    video_vga: false,
-                    video_hdmi: false,
-                    unidades_opticas: false,
-                    teclados: false,
-                    mouses: false,
-                    suites: false,
-                },
-                //Objetos - Filtros
-                procesadores_filtro: productos_procesador,
-                ram_filtro: productos_ram,
-                sistemas_operativos_filtro: productos_sistema_operativo,
-                almacenamiento_filtro: producto_almacenamiento,
-                producto_lan: producto_lan,
-                producto_wlan: producto_wlan,
-                producto_usb: producto_usb,
-                producto_vga: producto_vga,
-                producto_hdmi: producto_hdmi,
-                unidades_opticas_filtro: producto_unidades_opticas,
-                teclados_filtro: producto_teclados,
-                mouses_filtro: producto_mouses,
-                suites_filtro: producto_suites,
 
             },
             created() {
-                this.Buscar({
-                    modelo_id: $modelo_id,
-                    nombre: '',
-                    marcas: this.filtros.marcas,
-                    procesadores: this.filtros.procesadores,
-                    ram: this.filtros.ram,
-                    sistema_operativo: this.filtros.sistema_operativo,
-                    almacenamiento: this.filtros.almacenamiento,
-                    conectividad: this.filtros.conectividad,
-                    conectividad_wlan: this.filtros.conectividad_wlan,
-                    conectividad_usb: this.filtros.conectividad_usb,
-                    video_vga: this.filtros.video_vga,
-                    video_hdmi: this.filtros.video_hdmi,
-                    unidades_opticas: this.filtros.unidades_opticas,
-                    teclados: this.filtros.teclados,
-                    mouses: this.filtros.mouses,
-                    suites: this.filtros.suites,
-                    categoria_id: null,
-                });
             },
             computed: {
                 isActive: function() {
@@ -361,116 +307,21 @@
                 }
             },
             methods: {
+                Filtrar(search, campo) {
+        const query = new URLSearchParams(window.location.search);
 
-                changePage(page) {
-                    this.page = page;
-                    this.pagination.current_page = page;
-                    this.active = 0;
-                    this.seleccion = null;
-                    this.Buscar({
-                        modelo_id: $modelo_id,
-                        nombre: this.filtros.nombre,
-                        marcas: this.filtros.marcas,
-                        procesadores: this.filtros.procesadores,
-                        ram: this.filtros.ram,
-                        sistema_operativo: this.filtros.sistema_operativo,
-                        almacenamiento: this.filtros.almacenamiento,
-                        conectividad: this.filtros.conectividad,
-                        conectividad_wlan: this.filtros.conectividad_wlan,
-                        conectividad_usb: this.filtros.conectividad_usb,
-                        video_vga: this.filtros.video_vga,
-                        video_hdmi: this.filtros.video_hdmi,
-                        unidades_opticas: this.filtros.unidades_opticas,
-                        teclados: this.filtros.teclados,
-                        mouses: this.filtros.mouses,
-                        suites: this.filtros.suites,
-                        categoria_id: this.filtros.categoria_id,
-                    }, page);
-                },
-                Buscar({
-                    modelo_id,
-                    nombre,
-                    marcas,
-                    procesadores,
-                    ram,
-                    sistema_operativo,
-                    almacenamiento,
-                    conectividad,
-                    conectividad_wlan,
-                    conectividad_usb,
-                    video_vga,
-                    video_hdmi,
-                    unidades_opticas,
-                    teclados,
-                    mouses,
-                    suites,
-                    categoria_id,
-                }, page) {
-                    this.page = page;
-                    this.active = 0;
-                    urlBuscar = '../../catalogo/buscar?page=' + page;
-                    axios.post(urlBuscar, {
-                        modelo_id: modelo_id,
-                        search: this.search,
-                        search_por: this.search_por,
-                        categoria: this.search_categoria,
-                        web: this.search_web,
-                        categoria_id: categoria_id,
+        // Actualiza el parámetro de búsqueda
+        if (search) {
+            query.set(campo, search);
+        } else {
+            query.delete(campo);
+        }
 
-                        nombre: nombre,
-                        marcas: marcas,
-                        procesadores: procesadores,
-                        ram: ram,
-                        sistema_operativo: sistema_operativo,
-                        almacenamiento: almacenamiento,
-                        conectividad: conectividad,
-                        conectividad_wlan: conectividad_wlan,
-                        conectividad_usb: conectividad_usb,
-                        video_vga: video_vga,
-                        video_hdmi: video_hdmi,
-                        unidades_opticas,
-                        teclados,
-                        mouses,
-                        suites,
-                    }).then(response => {
-                        console.log(response)
-                        if (exe == 0) {
-                            $('#list-loading').hide();
-                            this.listTable = true;
-                            $('#list-paginator').show();
-                            exe++;
-                        }
-                        this.listaRequest = response.data.productos.data;
-                        this.to_pagination = response.data.productos.to;
-                        this.pagination = {
-                            total: response.data.productos.total,
-                            current_page: response.data.productos.current_page,
-                            per_page: response.data.productos.per_page,
-                            last_page: response.data.productos.last_page,
-                            from: response.data.productos.from,
-                            to: response.data.productos.to
-                        };
-
-
-                        $(".focus_this").focus();
-                    }).catch(error => {
-                        alert(error + ". Por favor contacte al Administrador del Sistema.");
-                    });
-                },
-                Desplegar(campo) {
-                    if (campo !== 'nombre') {
-                        this.ChangeBoolean(campo)
-                    }
-                },
-                ChangeBoolean(value) {
-                    if (!this.boolean[value]) {
-                        this.desplegar[value] = true;
-                        this.boolean[value] = true;
-                    } else {
-                        this.desplegar[value] = false;
-                        this.boolean[value] = false;
-                    }
-                },
+        // Actualiza la URL y recarga la página
+        const newUrl = `${window.location.pathname}?${query.toString()}`;
+        window.history.pushState({}, '', newUrl);
+        window.location.reload(); // Recargar para que Laravel procese el filtro
+    }
             },
         });
     </script>

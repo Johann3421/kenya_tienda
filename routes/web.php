@@ -203,6 +203,7 @@ Route::group(['middleware' => ['can:garantia']], function () {
     Route::post('/garantias/autobuscar', 'GarantiaController@auto_buscar_producto');
 });
 
+
 // --------------------- CATEGORIAS --------------------------------
 Route::group(['middleware' => ['can:categorias']], function () {
     Route::get('/producto/categorias', 'CategoriaController@index')->name('producto/categorias');

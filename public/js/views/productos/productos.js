@@ -97,9 +97,17 @@ new Vue({
         txt_video: null,
         txt_ram: null,
         txt_ofimatica: null,
+        listaModelos: [], // Lista de modelos cargada desde el backend
+        listaProductos: [], // Lista completa de productos cargada desde el backend
+        productosFiltrados: [], // Productos filtrados por modelo
+        modeloSeleccionado: '', // Modelo seleccionado para filtrar
+        productoSeleccionado: '', // Producto actualmente seleccionado
+        archivosPorProducto: {},
     },
     created() {
         this.Buscar();
+        this.cargarModelos();
+        this.cargarProductos();
     },
     computed: {
         isActive: function () {
@@ -129,7 +137,92 @@ new Vue({
         }
     },
     methods: {
+        cargarModelos() {
+            axios.get('/api/modelos') // Ruta para obtener la lista de modelos
+                .then(response => {
+                    this.listaModelos = response.data;
+                })
+                .catch(error => {
+                    console.error('Error al cargar modelos:', error);
+                });
+        },
+        cargarProductos() {
+            axios.get('/api/productos') // Ruta para obtener la lista de productos
+                .then(response => {
+                    this.listaProductos = response.data;
+                    this.productosFiltrados = this.listaProductos; // Inicialmente, todos los productos
+                })
+                .catch(error => {
+                    console.error('Error al cargar productos:', error);
+                });
+        },
+        filtrarProductos() {
+            if (this.modeloSeleccionado) {
+                this.productosFiltrados = this.listaProductos.filter(producto => producto.modelo_id === this.modeloSeleccionado);
+            } else {
+                this.productosFiltrados = this.listaProductos;
+            }
+        },
+        agregarArchivos(event) {
+            const archivos = Array.from(event.target.files);
 
+            if (!this.archivosPorProducto[this.productoSeleccionado]) {
+                this.$set(this.archivosPorProducto, this.productoSeleccionado, []);
+            }
+
+            // Agregar los archivos seleccionados al producto correspondiente
+            this.archivosPorProducto[this.productoSeleccionado].push(...archivos);
+
+            // Limpiar el campo de entrada para permitir seleccionar los mismos archivos nuevamente
+            event.target.value = null;
+        },
+        eliminarArchivo(productoId, index) {
+            this.archivosPorProducto[productoId].splice(index, 1);
+        },
+        obtenerNombreProducto(productoId) {
+            const producto = this.listaProductos.find(p => p.id === productoId);
+            return producto ? producto.nombre : 'Producto no seleccionado';
+        },
+        importarEspecificaciones() {
+            const formData = new FormData();
+
+            // Agregar los productos seleccionados
+            Object.keys(this.archivosPorProducto).forEach(productoId => {
+                formData.append('productos[]', productoId);
+
+                // Agregar los archivos asociados a cada producto
+                this.archivosPorProducto[productoId].forEach((archivo, index) => {
+                    formData.append(`archivos_excel[${productoId}][]`, archivo);
+                });
+            });
+
+            // Depuración: Imprimir los datos en el FormData
+            for (let pair of formData.entries()) {
+                console.log(pair[0], pair[1]);
+            }
+
+            // Enviar la solicitud al servidor
+            axios.post('http://127.0.0.1:8000/api/productos/especificaciones/import-multiple', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            .then(response => {
+                console.log('Especificaciones importadas correctamente:', response.data);
+                this.Alert('success', 'Importación exitosa', response.data.message);
+                this.archivosPorProducto = {}; // Limpiar los archivos después de importar
+                this.productoSeleccionado = ''; // Limpiar la selección de productos
+                this.closeModal();
+            })
+            .catch(error => {
+                console.error('Error al importar especificaciones:', error.response || error);
+                if (error.response) {
+                    this.Alert('danger', 'Error', error.response.data.message || 'Ocurrió un error en el servidor.');
+                } else {
+                    this.Alert('danger', 'Error', 'No se pudo conectar con el servidor.');
+                }
+            });
+        },
         changePage(page) {
             this.page = page;
             this.pagination.current_page = page;

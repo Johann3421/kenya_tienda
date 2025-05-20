@@ -849,6 +849,31 @@ public function filtrarAjax(Request $request)
 
     return response()->json($productos);
 }
+public function importMultipleEspecificaciones(Request $request)
+{
+    // Depuración: Imprimir los datos recibidos
+\Log::info('Productos:', ['productos' => $request->input('productos')]);
+\Log::info('Archivos Excel:', ['archivos_excel' => $request->file('archivos_excel')]);
+
+$request->validate([
+    'productos' => 'required|array',
+    'productos.*' => 'integer|exists:productos,id',
+    'archivos_excel' => 'required|array',
+    'archivos_excel.*.*' => 'file|mimes:xlsx,xls|max:2048',
+]);
+
+    foreach ($request->input('productos') as $productoId) {
+        $producto = Producto::find($productoId);
+        if ($producto && isset($request->file('archivos_excel')[$productoId])) {
+            foreach ($request->file('archivos_excel')[$productoId] as $file) {
+                // Procesar cada archivo para el producto
+                Excel::import(new EspecificacionesImport($producto), $file);
+            }
+        }
+    }
+
+    return response()->json(['message' => 'Especificaciones importadas correctamente.']);
+}
 
 }
 

@@ -639,7 +639,7 @@
                                 </div>
                             </div>
                             {{-- NUEVO --}}
-                            
+
                             {{-- MODAL PARA AGREGAR/EDITAR ESPECIFICACIONES --}}
                             <div class="modal-content" v-if="methods == 'add_spec'">
                                 <div class="modal-header" style="padding: 10px 15px">
@@ -713,34 +713,59 @@
                             </div>
                             {{-- MODAL PARA EDITAR ESPECIFICACIONES --}}
 
-                            {{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
-                            <div class="modal-content" v-if="methods == 'import_spec'">
-                                <div class="modal-header" style="padding: 10px 15px">
-                                    <h5 class="mb-0">IMPORTAR ESPECIFICACIONES</h5>
-                                    <button type="button" class="btn btn-danger btn-xs float-right" data-dismiss="modal"
-                                        aria-label="Close" v-on:click="closeModal(methods)"
-                                        style="padding: 0px 7px;">X</button>
-                                </div>
-                                <form :action="'/producto/' + seleccion.id + '/especificaciones/import'" method="POST"
-                                    enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="modal-body" style="padding: 15px 15px;">
-                                        <div class="form-group">
-                                            <label>Archivo Excel</label>
-                                            <input type="file" name="archivo_excel" class="form-control" required
-                                                accept=".xlsx,.xls,.csv">
-                                            <small class="text-muted">Formato requerido: Columna A = Campo, Columna B =
-                                                Descripción</small>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer" style="padding: 10px 15px;">
-                                        <button type="submit" class="btn btn-success btn-block">
-                                            <i class="fas fa-file-import"></i> Importar Especificaciones
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                            {{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
+                           {{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
+<div class="modal-content" v-if="methods == 'import_spec'">
+    <div class="modal-header" style="padding: 10px 15px">
+        <h5 class="mb-0">IMPORTAR ESPECIFICACIONES</h5>
+        <button type="button" class="btn btn-danger btn-xs float-right" data-dismiss="modal"
+            aria-label="Close" v-on:click="closeModal(methods)" style="padding: 0px 7px;">X</button>
+    </div>
+    <form @submit.prevent="importarEspecificaciones">
+        <div class="modal-body" style="padding: 15px 15px;">
+            <div class="form-group">
+                <label>Filtrar por Modelo</label>
+                <select v-model="modeloSeleccionado" class="form-control" @change="filtrarProductos">
+                    <option value="">Todos los Modelos</option>
+                    <option v-for="modelo in listaModelos" :value="modelo.id">@{{ modelo.descripcion }}</option>
+                </select>
+                <small class="text-muted">Seleccione un modelo para filtrar los productos.</small>
+            </div>
+            <div class="form-group">
+                <label>Seleccionar Productos</label>
+                <select name="productos[]" v-model="productoSeleccionado" class="form-control" required>
+                    <option v-for="producto in productosFiltrados" :value="producto.id">
+                        @{{ producto.nombre }}
+                    </option>
+                </select>
+                <small class="text-muted">Seleccione un producto para asociar los archivos Excel.</small>
+            </div>
+            <div class="form-group">
+                <label>Archivos Excel</label>
+                <input type="file" ref="archivosExcel" class="form-control" multiple accept=".xlsx,.xls,.csv"
+                    @change="agregarArchivos">
+                <small class="text-muted">Formato requerido: Columna A = Campo, Columna B = Descripción</small>
+            </div>
+            <div class="form-group">
+                <label>Archivos Seleccionados para @{{ obtenerNombreProducto(productoSeleccionado) }}</label>
+                <ul>
+                    <li v-for="(archivo, index) in archivosPorProducto[productoSeleccionado] || []" :key="index">
+                        @{{ archivo.name }}
+                        <button type="button" class="btn btn-sm btn-danger" @click="eliminarArchivo(productoSeleccionado, index)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </li>
+                </ul>
+                <small class="text-muted">Puede agregar más archivos antes de importar.</small>
+            </div>
+        </div>
+        <div class="modal-footer" style="padding: 10px 15px;">
+            <button type="submit" class="btn btn-success btn-block">
+                <i class="fas fa-file-import"></i> Importar Especificaciones
+            </button>
+        </div>
+    </form>
+</div>
+{{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
 
                             {{-- EDITAR --}}
                             <div class="modal-content" v-if="methods == 'edit'">
@@ -1821,13 +1846,13 @@
                                 <div>Especificaciones</div>
                             </button>
 
-                            <button type="button" class="btn btn-icon btn-secondary mr-2" style="min-width: 88px;"
-                                data-toggle="modal" data-target="#formularioModal"
-                                v-on:click="formularioModal('modal-lg', active, 'import_spec', seleccion)"
-                                :disabled="!active">
-                                <div style="font-size: 30px;"><i class="fas fa-file-excel"></i></div>
-                                <div>Importar</div>
-                            </button>
+                            <!-- filepath: c:\xampp\htdocs\kenya_tienda\resources\views\sistema\productos\index.blade.php -->
+<button type="button" class="btn btn-icon btn-secondary mr-2" style="min-width: 88px;"
+data-toggle="modal" data-target="#formularioModal"
+v-on:click="formularioModal('modal-lg', null, 'import_spec', null)">
+<div style="font-size: 30px;"><i class="fas fa-file-excel"></i></div>
+<div>Importar</div>
+</button>
                             <button type="button" class="btn btn-icon btn-info mr-2" style="min-width: 88px;"
                                 v-if="active != 0" data-toggle="modal" data-target="#formularioModal"
                                 v-on:click="formularioModal('modal-lg', active, 'edit', seleccion)">
