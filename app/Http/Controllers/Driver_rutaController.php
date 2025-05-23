@@ -45,7 +45,7 @@ class Driver_rutaController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'nombre_driver' => 'required',
+        'nombre_driver' => 'required|string',
         'pdf_driver' => 'required|file',
         'chunkIndex' => 'required|integer',
         'totalChunks' => 'required|integer',
@@ -53,50 +53,54 @@ class Driver_rutaController extends Controller
     ]);
 
     try {
+        // Directorio temporal para almacenar los fragmentos
         $tempDir = storage_path('app/temp/' . $request->fileName);
 
         if (!file_exists($tempDir)) {
-            mkdir($tempDir, 0777, true);
+            mkdir($tempDir, 0777, true); // Crear el directorio si no existe
         }
 
         // Guardar el fragmento en el directorio temporal
         $chunkPath = $tempDir . '/' . $request->chunkIndex;
         file_put_contents($chunkPath, file_get_contents($request->file('pdf_driver')->getRealPath()));
 
-        // Si es el último fragmento, combinar todos los fragmentos
+        // Verificar si todos los fragmentos han sido subidos
+        $uploadedChunks = array_diff(scandir($tempDir), ['.', '..']);
+        if (count($uploadedChunks) == $request->totalChunks) {
+            // Crear el registro en la base de datos para obtener el ID
+            $driver_ruta = new Ruta();
+            $driver_ruta->nombre_driver = $request->nombre_driver;
+            $driver_ruta->save();
 
-// Si es el último fragmento, combinar todos los fragmentos
-if ($request->chunkIndex + 1 == $request->totalChunks) {
-    // Crear el registro en la base de datos para obtener el ID
-    $driver_ruta = new Ruta();
-    $driver_ruta->nombre_driver = $request->nombre_driver;
-    $driver_ruta->save();
+            // Crear la carpeta con el ID del registro
+            $route = 'DRIVERS/' . $driver_ruta->id;
+            $finalDir = storage_path('app/public/' . $route);
 
-    // Crear la carpeta con el ID del registro
-    $route = 'DRIVERS/' . $driver_ruta->id;
-    $finalDir = storage_path('app/public/' . $route);
+            if (!file_exists($finalDir)) {
+                mkdir($finalDir, 0777, true); // Crear el directorio final si no existe
+            }
 
-    if (!file_exists($finalDir)) {
-        mkdir($finalDir, 0777, true);
-    }
+            // Ruta final del archivo combinado
+            $finalPath = $finalDir . '/' . $request->fileName;
+            $outputFile = fopen($finalPath, 'wb');
 
-    // Ruta final del archivo combinado
-    $finalPath = $finalDir . '/' . $request->fileName;
-    $outputFile = fopen($finalPath, 'wb');
+            // Combinar los fragmentos
+            for ($i = 0; $i < $request->totalChunks; $i++) {
+                $chunkPath = $tempDir . '/' . $i;
+                if (!file_exists($chunkPath)) {
+                    throw new \Exception("El fragmento {$i} no existe.");
+                }
+                fwrite($outputFile, file_get_contents($chunkPath));
+                unlink($chunkPath); // Eliminar el fragmento después de combinarlo
+            }
 
-    for ($i = 0; $i < $request->totalChunks; $i++) {
-        $chunkPath = $tempDir . '/' . $i;
-        fwrite($outputFile, file_get_contents($chunkPath));
-        unlink($chunkPath); // Eliminar el fragmento después de combinarlo
-    }
+            fclose($outputFile);
+            rmdir($tempDir); // Eliminar el directorio temporal
 
-    fclose($outputFile);
-    rmdir($tempDir); // Eliminar el directorio temporal
-
-    // Actualizar la ruta del archivo en la base de datos
-    $driver_ruta->rute = $route . '/' . $request->fileName;
-    $driver_ruta->save();
-}
+            // Actualizar la ruta del archivo en la base de datos
+            $driver_ruta->rute = $route . '/' . $request->fileName;
+            $driver_ruta->save();
+        }
 
         return response()->json([
             'type' => 'success',
