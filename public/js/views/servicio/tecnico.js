@@ -132,6 +132,26 @@ new Vue({
         }
     },
     methods: {
+        confirmarEliminar(soporte) {
+        if (confirm('¿Seguro que desea eliminar este soporte técnico y todos sus datos?')) {
+            this.eliminarSoporte(soporte);
+        }
+    },
+    eliminarSoporte(soporte) {
+        this.loading = true;
+        axios.post('soporte/delete', { id: soporte.id })
+            .then(response => {
+                this.loading = false;
+                this.Alert(response.data.type, response.data.title, response.data.message);
+                if (response.data.type === 'success') {
+                    this.Buscar(this.page);
+                }
+            })
+            .catch(() => {
+                this.loading = false;
+                alert('Algo salió mal, por favor intente nuevamente.');
+            });
+    },
         handlePdfUpload(event) {
             this.pdf_file = event.target.files[0];
         },

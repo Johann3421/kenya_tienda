@@ -1766,59 +1766,45 @@
                     <div class="table-responsive">
                         <table class="table table-sm">
                             <thead>
-                                <tr>
-                                    <th class="text-center cell-1">#</th>
-                                    <th class="cell-2 text-center">N° Caso</th>
-                                    <th class="cell-3 text-center">Estado</th>
-                                    <th class="cell-4">Cliente</th>
-                                    <th class="cell-5 text-center">Fecha Registro</th>
-                                    <th class="cell-6 text-center">Fecha Entrega</th>
-                                    <th class="cell-7">Detalles del Equipo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr id="list-loading">
-                                    <td colspan="7" class="text-center">
-                                        <div>
-                                            <div class="spinner-grow" role="status">
-                                                <span class="sr-only">Loading...</span>
-                                            </div>
-                                            <span style="font-size: 30px; padding: 5px;">Cargando lista espere ...</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <template v-if="listTable">
-                                    <template v-if="listaRequest.length != 0">
-                                        <tr v-for="(soporte, index) in listaRequest"
-                                            :class="{ activado: active == soporte.id }"
-                                            v-on:dblclick="formEditar(soporte)" v-on:click="Fila(soporte.id, soporte)"
-                                            style="cursor: pointer;">
-                                            <td class="text-center">@{{ (index + pagination.index + 1) }}</td>
-                                            <td class="text-center text-uppercase">@{{ soporte.numero_caso ?? '' }}</td>
-                                            <td>
-                                                <div :class="soporte.estado">@{{ Estado(soporte.estado) }}</div>
-                                            </td>
-                                            <td>@{{ soporte.get_cliente.nombres }}</td>
-                                            <td class="text-center">@{{ Fecha2(soporte.fecha_registro) + ' ' + Hora(soporte.fecha_registro) }}</td>
-                                            <td class="text-center">@{{ Fecha2(soporte.fecha_entrega) + ' ' + Hora(soporte.fecha_entrega) }}</td>
-                                            <td>
-                                                <strong style="text-decoration: underline">EQUIPO:
-                                                </strong>@{{ soporte.equipo }}<br>
-                                                <strong style="text-decoration: underline;">MODELO:
-                                                </strong>@{{ soporte.modelo }}<br>
-                                                <strong style="text-decoration: underline;">SERIE:
-                                                </strong>@{{ soporte.serie }}
-                                            </td>
-                                        </tr>
-                                    </template>
-                                    <template v-else>
-                                        <tr>
-                                            <td colspan="7" class="text-center" style="font-size: 20px;">No existe
-                                                ningun registro</td>
-                                        </tr>
-                                    </template>
-                                </template>
-                            </tbody>
+    <tr>
+        <th class="text-center cell-1">#</th>
+        <th class="cell-2 text-center">N° Caso</th>
+        <th class="cell-3 text-center">Estado</th>
+        <th class="cell-4">Cliente</th>
+        <th class="cell-5 text-center">Fecha Registro</th>
+        <th class="cell-6 text-center">Fecha Entrega</th>
+        <th class="cell-7">Detalles del Equipo</th>
+        <th class="cell-8 text-center">Acciones</th> <!-- Nueva columna -->
+    </tr>
+</thead>
+<tbody>
+    <tr v-for="(soporte, index) in listaRequest"
+        :class="{ activado: active == soporte.id }"
+        v-on:dblclick="formEditar(soporte)" v-on:click="Fila(soporte.id, soporte)"
+        style="cursor: pointer;">
+        <td class="text-center">@{{ (index + pagination.index + 1) }}</td>
+        <td class="text-center text-uppercase">@{{ soporte.numero_caso ?? '' }}</td>
+        <td>
+            <div :class="soporte.estado">@{{ Estado(soporte.estado) }}</div>
+        </td>
+        <td>@{{ soporte.get_cliente.nombres }}</td>
+        <td class="text-center">@{{ Fecha2(soporte.fecha_registro) + ' ' + Hora(soporte.fecha_registro) }}</td>
+        <td class="text-center">@{{ Fecha2(soporte.fecha_entrega) + ' ' + Hora(soporte.fecha_entrega) }}</td>
+        <td>
+            <strong style="text-decoration: underline">EQUIPO:</strong> @{{ soporte.equipo }}<br>
+            <strong style="text-decoration: underline;">MODELO:</strong> @{{ soporte.modelo }}<br>
+            <strong style="text-decoration: underline;">SERIE:</strong> @{{ soporte.serie }}
+        </td>
+        <td class="text-center">
+            <button class="btn btn-sm btn-primary" @click.stop="formEditar(soporte)" title="Editar">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" @click.stop="confirmarEliminar(soporte)" title="Eliminar">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+    </tr>
+</tbody>
                         </table>
                     </div>
 
@@ -1919,3 +1905,4 @@
     <script type="text/javascript" src="{{ asset('js/jquery.printarea.js') }}"></script>
     <script src="{{ asset('js/views/servicio/tecnico.js') }}"></script>
 @endsection
+

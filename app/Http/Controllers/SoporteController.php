@@ -344,31 +344,41 @@ public function update(Request $request)
 
 
     public function delete(Request $request)
-    {
-        try {
+{
+    try {
+        DB::beginTransaction();
 
-            DB::beginTransaction();
-
-            Soporte::destroy($request->id);
-
-            DB::commit();
-
-            return [
-                'type'    => 'success',
-                'title'   => 'CORRECTO: ',
-                'message' => 'El Soporte Técnico se elimino correctamente.',
-            ];
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return [
-                'type'    => 'danger',
-                'title'   => 'ERROR: ',
-                'message' => $th . 'Ocurrio un error al eliminar el Soporte Técnico, intente nuevamente o contacte al Administrador del Sistema.',
-            ];
+        $soporte = Soporte::find($request->id);
+        if ($soporte) {
+            // Eliminar PDF si existe
+            if ($soporte->pdf_link) {
+                $path = str_replace('/storage/', '', $soporte->pdf_link);
+                Storage::disk('public')->delete($path);
+            }
+            // Eliminar detalles relacionados
+            $soporte->getDetalles()->delete();
+            // Eliminar el soporte
+            $soporte->delete();
         }
+
+        DB::commit();
+
+        return [
+            'type'    => 'success',
+            'title'   => 'CORRECTO: ',
+            'message' => 'El Soporte Técnico y todos sus datos se eliminaron correctamente.',
+        ];
+
+    } catch (\Throwable $th) {
+        DB::rollBack();
+
+        return [
+            'type'    => 'danger',
+            'title'   => 'ERROR: ',
+            'message' => $th . ' Ocurrió un error al eliminar el Soporte Técnico, intente nuevamente o contacte al Administrador del Sistema.',
+        ];
     }
+}
 
     public function recibo($numero)
 {
@@ -481,4 +491,5 @@ public function update(Request $request)
         return Soporte::find($request->id);
     }
 }
+
 
