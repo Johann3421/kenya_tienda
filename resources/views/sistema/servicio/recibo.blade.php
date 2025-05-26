@@ -1,13 +1,11 @@
+<!-- filepath: c:\xampp\htdocs\kenya_tienda\resources\views\sistema\servicio\recibo.blade.php -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>RECIBO PDF N° {{$soporte->id}}</title>
-    <!-- Precarga optimizada de fuentes -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-
     <style>
-        /* CSS optimizado (mismos estilos, mejor organizados) */
         body, pre { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; }
         body { font-size: 12px; }
         pre { font-size: 10px; white-space: pre-wrap; }
@@ -25,15 +23,22 @@
         .tabla-reporte td { border-bottom: 0.01em solid #000; padding: 3px 10px; }
         .tabla-reporte tr:last-child td { border-bottom: none; }
         .tabla1 { width: 100%; text-align: center; }
-        .tabla1 thead th, .tabla1 tbody td, .tabla1 tfoot td { padding: 4px 10px; }
+        .tabla1 thead th, .tabla1 tbody td { padding: 4px 10px; }
         .tabla1 thead tr th, .tabla1 tbody tr td { border-bottom: 0.01em solid #000; }
         .tabla1 tbody tr td:first-child { border-left: 0.01em solid #000; }
         .tabla1 tbody tr td:last-child { border-right: 0.01em solid #000; }
+        /* Estética para pie de página */
+        #footer .condiciones {
+            border: 1px solid #000;
+            border-radius: 7px;
+            margin-bottom: 10px;
+            padding: 6px 12px;
+            font-size: 9px;
+        }
     </style>
 </head>
 <body>
     @php
-        // Consulta optimizada para configuraciones
         $configs = App\Models\Configuracion::whereIn('nombre', [
             'contacto_email',
             'contacto_telefono',
@@ -41,22 +46,17 @@
             'boleta_titulo',
             'ruc_empresa'
         ])->get()->keyBy('nombre');
-
-        // Convertir fechas a Carbon si son strings
         $fechaRegistro = is_string($soporte->fecha_registro)
             ? \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $soporte->fecha_registro)
             : $soporte->fecha_registro;
-
         $fechaEntrega = is_string($soporte->fecha_entrega)
             ? \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $soporte->fecha_entrega)
             : $soporte->fecha_entrega;
-
-        // Procesamiento de accesorios (igual que original)
         $accesorios = json_decode($soporte->accesorios, true);
     @endphp
 
     <div class="mi_plantilla">
-        <!-- Encabezado idéntico -->
+        <!-- Encabezado -->
         <div id="header">
             <table width="100%">
                 <tr>
@@ -66,7 +66,7 @@
                     <td class="text-right" style="width: 35%;">
                         <div class="text-center" style="border: 2px solid #000; border-radius: 7px; font-size: 14px; height: 90px; padding-top: 0px;">
                             <div style="padding: 3px 0;">RUC &nbsp; {{ $configs['ruc_empresa']->descripcion ?? '' }}</div>
-                            <h3 style="background-color: #006cae; color: #fff; margin: 2px 0 0 0; padding: 5px 15px;">SOPORTE TÉCNICO</h3>
+                            <h3 style="background-color: #ee7c31; color: #fff; margin: 2px 0 0 0; padding: 5px 15px;">SOPORTE TÉCNICO</h3>
                             <div>N° {{str_pad($soporte->id, 4, '0', STR_PAD_LEFT)}}</div>
                         </div>
                     </td>
@@ -74,7 +74,7 @@
             </table>
         </div>
 
-        <!-- Contenido principal (idéntico pero optimizado internamente) -->
+        <!-- Contenido principal -->
         <div id="content" style="margin-top: 40px;">
             <div class="text-center" style="margin-bottom: 30px; font-weight: 700;">
                 <h2>SOPORTE TÉCNICO ESPECIALIZADO<br>DE EQUIPOS DE COMPUTO Y SUMINISTROS EN GENERAL</h2>
@@ -95,7 +95,6 @@
                 </table>
             </div>
 
-            <!-- Resto del contenido se mantiene exactamente igual -->
             <div style="border: 1px solid #000; border-radius: 7px; margin-bottom: 10px;">
                 <table class="tabla-reporte" cellspacing="0">
                     <tr>
@@ -115,7 +114,7 @@
 
             <div style="border: 1px solid #000; border-radius: 7px;">
                 <table class="tabla-reporte" cellspacing="0">
-                    <tr style="background-color: #006cae; color: #fff;">
+                    <tr style="background-color: #ee7c31; color: #fff;">
                         <td style="border-right: 0.01em solid #000;"><strong>EQUIPO</strong></td>
                         <td style="border-right: 0.01em solid #000;"><strong>MARCO</strong></td>
                         <td style="border-right: 0.01em solid #000;"><strong>MODELO</strong></td>
@@ -153,11 +152,11 @@
                 </table>
             </div>
 
-            <!-- Tabla de detalles (idéntica) -->
+            <!-- Tabla de detalles SIN totales -->
             <div style="margin-top: 30px;">
                 <table class="tabla1" style="border-collapse: collapse; border-radius: 1em; overflow: hidden;">
                     <thead>
-                        <tr style="background-color: #006cae;">
+                        <tr style="background-color: #ee7c31;">
                             <th width="10%" style=" color: #fff; border-top: 0.01em solid #000; border-left: 0.01em solid #000">CANT.</th>
                             <th width="60%" style=" color: #fff; border-top: 0.01em solid #000;" class="text-left">DESCRIPCIÓN</th>
                             <th width="15%" style=" color: #fff; border-top: 0.01em solid #000;">PRECIO</th>
@@ -174,27 +173,10 @@
                             </tr>
                         @endforeach
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td style="border: 0.01em solid;"><strong>Total Servicio</strong></td>
-                            <td style="border: 0.01em solid;">{{number_format($soporte->costo_servicio, 2, '.', ' ')}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td style="border: 0.01em solid;"><strong>A cuenta</strong></td>
-                            <td style="border: 0.01em solid;">{{number_format($soporte->acuenta, 2, '.', ' ')}}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td style="border: 0.01em solid;"><strong>Resta</strong></td>
-                            <td style="border: 0.01em solid; border-radius: 5px;">{{number_format($soporte->saldo_total, 2, '.', ' ')}}</td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
 
-            <!-- Sección de reporte técnico (idéntica) -->
+            <!-- Sección de reporte técnico -->
             <div style="margin-top: 50px; border: 1px solid #000; border-radius: 7px; padding: 5px 10px;">
                 <strong>REPORTE TÉCNICO: </strong>
                 @if ($soporte->reporte_tecnico)
@@ -202,7 +184,7 @@
                 @endif
             </div>
 
-            <!-- Firmas (idénticas) -->
+            <!-- Firmas -->
             <div class="row" style="margin-top: 100px;">
                 <table style="width: 100%;">
                     <tr class="column text-center">
@@ -214,37 +196,11 @@
             </div>
         </div>
 
-        <!-- Pie de página (idéntico) -->
+        <!-- Pie de página solo condiciones -->
         <div id="footer">
-            <div style="border: 1px solid #000; border-radius: 7px; margin-bottom: 10px:">
-                <table class="tabla-reporte" cellspacing="0" style="font-size: 8px !important;">
-                    <tr>
-                        <td>
-                            <div>
-                                <strong>CONDICIONES</strong><br>
-                                EQUIPOS CON MAS DE 30 DIAS, SE CONSIDERARA COMO ABANDONO Y PASARA A SER PARTE DE LA EMPRESA Y/O A SER RECICLADO.
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div style="border: 1px solid #000; border-radius: 7px;">
-                <table class="tabla-reporte" cellspacing="0" style="font-size: 8px !important;">
-                    <tr>
-                        <td>USTED PUEDE HACER PAGOS DIRECTAMENTE EN NUESTRAS CUENTAS EN LOS SIGUIENTES BANCOS</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div>
-                                <img src="./theme/images/yape.jpg" alt="YAPE" style="width: 150px; float: right;">
-                                <strong>BANCO:</strong> BANCO DE CREDITO DEL PERU<br>
-                                <strong>TITULAR:</strong> IRRIBARREN VALDIVIA ROBERT LIDER<br>
-                                <strong>NRO CUENTA (SOLES):</strong> 36520627854062<br>
-                                <strong>CCI:</strong> 00236512062785406252<br>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+            <div class="condiciones">
+                <strong>CONDICIONES</strong><br>
+                EQUIPOS CON MAS DE 30 DIAS, SE CONSIDERARA COMO ABANDONO Y PASARA A SER PARTE DE LA EMPRESA Y/O A SER RECICLADO.
             </div>
         </div>
     </div>

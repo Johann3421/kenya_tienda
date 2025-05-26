@@ -164,31 +164,42 @@ public function update(Request $request)
     }
 }
 
-    public function delete(Request $request, Ruta  $drivers_ruta)
-    {
-        try {
+    public function delete(Request $request, Ruta $drivers_ruta)
+{
+    try {
+        DB::beginTransaction();
 
-            DB::beginTransaction();
+        $driver_ruta = Ruta::findOrFail($request->id);
 
-            $driver_ruta = Ruta::findOrFail($request->id);
-            $driver_ruta -> delete();
+        // Eliminar el archivo si existe
+        if ($driver_ruta->rute && Storage::exists('public/' . $driver_ruta->rute)) {
+            Storage::delete('public/' . $driver_ruta->rute);
 
-            DB::commit();
-
-            return [
-                'type'     =>  'success',
-                'title'    =>  'CORRECTO: ',
-                'message'  =>  'La Ruta se elimino correctamente.'
-            ];
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return [
-                'type'     =>  'danger',
-                'title'    =>  'ERROR: ',
-                'message'  =>  'Ocurrio un error al eliminar la Ruta, intente nuevamente o contacte al Administrador del Sistema.'
-            ];
+            // Eliminar la carpeta si está vacía
+            $folder = dirname('public/' . $driver_ruta->rute);
+            if (count(Storage::files($folder)) === 0) {
+                Storage::deleteDirectory($folder);
+            }
         }
+
+        $driver_ruta->delete();
+
+        DB::commit();
+
+        return [
+            'type'    => 'success',
+            'title'   => 'CORRECTO: ',
+            'message' => 'La Ruta y su archivo se eliminaron correctamente.'
+        ];
+    } catch (\Throwable $th) {
+        DB::rollBack();
+
+        return [
+            'type'    => 'danger',
+            'title'   => 'ERROR: ',
+            'message' => 'Ocurrió un error al eliminar la Ruta, intente nuevamente o contacte al Administrador del Sistema.'
+        ];
     }
 }
+}
+
