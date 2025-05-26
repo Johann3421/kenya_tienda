@@ -152,15 +152,13 @@
                 </table>
             </div>
 
-            <!-- Tabla de detalles SIN totales -->
+            <!-- Tabla de detalles SIN precios ni importes -->
             <div style="margin-top: 30px;">
                 <table class="tabla1" style="border-collapse: collapse; border-radius: 1em; overflow: hidden;">
                     <thead>
                         <tr style="background-color: #ee7c31;">
-                            <th width="10%" style=" color: #fff; border-top: 0.01em solid #000; border-left: 0.01em solid #000">CANT.</th>
-                            <th width="60%" style=" color: #fff; border-top: 0.01em solid #000;" class="text-left">DESCRIPCIÓN</th>
-                            <th width="15%" style=" color: #fff; border-top: 0.01em solid #000;">PRECIO</th>
-                            <th width="15%" style=" color: #fff; border-top: 0.01em solid #000; border-right: 0.01em solid #000;">IMPORTE</th>
+                            <th width="15%" style="color: #fff; border-top: 0.01em solid #000; border-left: 0.01em solid #000">CANT.</th>
+                            <th width="85%" style="color: #fff; border-top: 0.01em solid #000; border-right: 0.01em solid #000" class="text-left">DESCRIPCIÓN</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -168,8 +166,6 @@
                             <tr>
                                 <td>{{$detalle->cantidad}}</td>
                                 <td class="text-left">{{$detalle->descripcion}}</td>
-                                <td>{{number_format($detalle->precio, 2, '.', ' ')}}</td>
-                                <td>{{number_format($detalle->importe, 2, '.', ' ')}}</td>
                             </tr>
                         @endforeach
                     </tbody>

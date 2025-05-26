@@ -1718,50 +1718,21 @@
                         </button>
 
                         <div style="display: inline-flex; margin-top: -6px; vertical-align: top;">
-                            <ul class="estados">
-                                <li><a href="#" v-on:click="SearchEstado('E1')">Pendientes <span
-                                            class="estado-numero">@{{ estados.pendiente }}</span></a></li>
-                                <li><a href="#" v-on:click="SearchEstado('E2')">Diagnóstico <span
-                                            class="estado-numero">@{{ estados.diagnostico }}</span></a></li>
-                                <li><a href="#" v-on:click="SearchEstado('E3')">Sin Solución <span
-                                            class="estado-numero">@{{ estados.sinsolucion }}</span></a></li>
-                                <li><a href="#" v-on:click="SearchEstado('E4')">Reparando <span
-                                            class="estado-numero">@{{ estados.reparando }}</span></a></li>
-                                <li><a href="#" v-on:click="SearchEstado('E5')">Listo <span
-                                            class="estado-numero">@{{ estados.listo }}</span></a></li>
-                                <li><a href="#" v-on:click="SearchEstado('E6')">Entregado <span
-                                            class="estado-numero">@{{ estados.entregado }}</span></a></li>
-                            </ul>
+
                         </div>
 
                         <div class="float-right">
-                            <select v-model="search_por" id="search_por" class="form-control fc-new"
-                                style="color: #6f6f6f; font-size: 13px; font-weight: 200 !important;" disabled>
-                                <option value="">---- Buscar por ----</option>
-                                <option value="codigo_barras">Buscar: Código de barras</option>
-                                <option value="id">Buscar: Número de Servicio Técnico</option>
-                                <option value="cliente">Buscar: Cliente</option>
-                                <option value="estado">Buscar: Estado</option>
-                            </select>
-                            <div class="input-group input-group-sm">
-                                <select v-model="search" id="search" class="form-control"
-                                    v-if="search_por == 'estado'">
-                                    <option value="">--- TODOS ----</option>
-                                    <option value="E1">PENDIENTE</option>
-                                    <option value="E2">DIAGNOSTICO</option>
-                                    <option value="E3">SIN SOLUCIÓN</option>
-                                    <option value="E4">REPARANDO</option>
-                                    <option value="E5">LISTO</option>
-                                    <option value="E6">ENTREGADO</option>
-                                </select>
-                                <input type="text" id="search" v-model="search" class="form-control"
-                                    v-on:keyup.enter="Buscar" v-else>
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary" v-on:click="Buscar"><i class="fas fa-search"></i>
-                                        &nbsp; Buscar</button>
-                                </div>
-                            </div>
-                        </div>
+    <div class="input-group input-group-sm">
+        <input type="text" id="search" v-model="search" class="form-control"
+            placeholder="Buscar por número de serie"
+            v-on:keyup.enter="Buscar">
+        <div class="input-group-append">
+            <button class="btn btn-primary" v-on:click="Buscar">
+                <i class="fas fa-search"></i> &nbsp; Buscar
+            </button>
+        </div>
+    </div>
+</div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-sm">
@@ -1773,14 +1744,15 @@
         <th class="cell-4">Cliente</th>
         <th class="cell-5 text-center">Fecha Registro</th>
         <th class="cell-6 text-center">Fecha Entrega</th>
-        <th class="cell-7">Detalles del Equipo</th>
-        <th class="cell-8 text-center">Acciones</th> <!-- Nueva columna -->
+        <th class="cell-7 text-center">Serie</th> <!-- Nueva columna para Serie -->
+        <th class="cell-8">Detalles del Equipo</th>
+        <th class="cell-9 text-center">Acciones</th>
     </tr>
 </thead>
 <tbody>
     <tr v-for="(soporte, index) in listaRequest"
         :class="{ activado: active == soporte.id }"
-        v-on:dblclick="formEditar(soporte)" v-on:click="Fila(soporte.id, soporte)"
+        v-on:click="Fila(soporte.id, soporte)"
         style="cursor: pointer;">
         <td class="text-center">@{{ (index + pagination.index + 1) }}</td>
         <td class="text-center text-uppercase">@{{ soporte.numero_caso ?? '' }}</td>
@@ -1790,10 +1762,10 @@
         <td>@{{ soporte.get_cliente.nombres }}</td>
         <td class="text-center">@{{ Fecha2(soporte.fecha_registro) + ' ' + Hora(soporte.fecha_registro) }}</td>
         <td class="text-center">@{{ Fecha2(soporte.fecha_entrega) + ' ' + Hora(soporte.fecha_entrega) }}</td>
+        <td class="text-center">@{{ soporte.serie }}</td> <!-- Serie en su propia columna -->
         <td>
             <strong style="text-decoration: underline">EQUIPO:</strong> @{{ soporte.equipo }}<br>
-            <strong style="text-decoration: underline;">MODELO:</strong> @{{ soporte.modelo }}<br>
-            <strong style="text-decoration: underline;">SERIE:</strong> @{{ soporte.serie }}
+            <strong style="text-decoration: underline;">MODELO:</strong> @{{ soporte.modelo }}
         </td>
         <td class="text-center">
             <button class="btn btn-sm btn-primary" @click.stop="formEditar(soporte)" title="Editar">

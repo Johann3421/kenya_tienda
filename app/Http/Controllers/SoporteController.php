@@ -31,78 +31,49 @@ class SoporteController extends Controller
     }
 
     public function buscar(Request $request)
-    {
-        $estados = DB::table('soportes')
-            ->selectRaw('COUNT(CASE WHEN estado = "realizado" THEN 1 END) as realizado')
-            ->selectRaw('COUNT(CASE WHEN estado = "transito" THEN 1 END) as transito')
-            ->selectRaw('COUNT(CASE WHEN estado = "tienda" THEN 1 END) as tienda')
-            ->selectRaw('COUNT(CASE WHEN estado = "entregado" THEN 1 END) as entregado')
-            ->selectRaw('COUNT(CASE WHEN estado = "cancelado" THEN 1 END) as cancelado')
-            ->first();
+{
+    $estados = DB::table('soportes')
+        ->selectRaw('COUNT(CASE WHEN estado = "realizado" THEN 1 END) as realizado')
+        ->selectRaw('COUNT(CASE WHEN estado = "transito" THEN 1 END) as transito')
+        ->selectRaw('COUNT(CASE WHEN estado = "tienda" THEN 1 END) as tienda')
+        ->selectRaw('COUNT(CASE WHEN estado = "entregado" THEN 1 END) as entregado')
+        ->selectRaw('COUNT(CASE WHEN estado = "cancelado" THEN 1 END) as cancelado')
+        ->first();
 
-        $soportes = Soporte::where('activo', 'SI')
-            ->orderBy('id', 'DESC')
-            ->with(['getCliente', 'getDetalles']);
+    $soportes = Soporte::where('activo', 'SI')
+        ->orderBy('id', 'DESC')
+        ->with(['getCliente', 'getDetalles']);
 
-        if ($request->search) {
-            /*switch ($request->search_por) {
-                case 'codigo_barras':
-                    $size = strlen($request->search);
-                    if ($size == 11) {
-                        $codigo = substr($request->search, 0, 7);
-                        $id = intval(substr($request->search, 7, 4));
-                    } else {
-                        $id = null;
-                    }
-                    $soportes->where('id', $id);
-                    break;
-                case 'id':
-                    $soportes->where($request->search_por, $request->search);
-                    break;
-                case 'cliente':
-                    $cliente = $request->search;
-                    $soportes->whereHas('getCliente', function ($query) use($cliente) {
-                        $query->where('id', 'like', '%'.$cliente.'%')->orWhere('nombres', 'like', '%'.$cliente.'%');
-                    });
-                    break;
-                case 'estado':
-                    $soportes->where($request->search_por, $request->search);
-                    break;
-            }*/
-            $buscar = $request->search;
-            $soportes->where(function ($query) use ($buscar) {
-                $cliente = $buscar;
-                $query->where('codigo_barras', 'like', '%' . $buscar . '%')
-                    ->orWhereHas('getCliente', function ($q) use ($cliente) {
-                        $q->where('id', 'like', '%' . $cliente . '%')->orWhere('nombres', 'like', '%' . $cliente . '%');
-                    });
-            });
-        }
-        $soportes = $soportes->paginate(10);
-
-        $star  = Carbon::now();
-        $fin   = Carbon::now()->addDay(5);
-        $antes = Carbon::now()->addDay(-5);
-
-        $avencerse = Soporte::whereDate('fecha_entrega', '<=', $fin)->whereDate('fecha_entrega', '>', $star)->get();
-        $vencidos  = Soporte::whereDate('fecha_entrega', '<', $star)->whereDate('fecha_entrega', '>=', $antes)->get();
-
-        return [
-            'pagination' => [
-                'total'        => $soportes->total(),
-                'current_page' => $soportes->currentPage(),
-                'per_page'     => $soportes->perPage(),
-                'last_page'    => $soportes->lastPage(),
-                'from'         => $soportes->firstItem(),
-                'to'           => $soportes->lastPage(),
-                'index'        => ($soportes->currentPage() - 1) * $soportes->perPage(),
-            ],
-            'soportes'   => $soportes,
-            'avencerse'  => $avencerse,
-            'vencidos'   => $vencidos,
-            'estados'    => $estados,
-        ];
+    if ($request->search) {
+        $buscar = $request->search;
+        $soportes->where('serie', 'like', '%' . $buscar . '%');
     }
+
+    $soportes = $soportes->paginate(10);
+
+    $star  = Carbon::now();
+    $fin   = Carbon::now()->addDay(5);
+    $antes = Carbon::now()->addDay(-5);
+
+    $avencerse = Soporte::whereDate('fecha_entrega', '<=', $fin)->whereDate('fecha_entrega', '>', $star)->get();
+    $vencidos  = Soporte::whereDate('fecha_entrega', '<', $star)->whereDate('fecha_entrega', '>=', $antes)->get();
+
+    return [
+        'pagination' => [
+            'total'        => $soportes->total(),
+            'current_page' => $soportes->currentPage(),
+            'per_page'     => $soportes->perPage(),
+            'last_page'    => $soportes->lastPage(),
+            'from'         => $soportes->firstItem(),
+            'to'           => $soportes->lastPage(),
+            'index'        => ($soportes->currentPage() - 1) * $soportes->perPage(),
+        ],
+        'soportes'   => $soportes,
+        'avencerse'  => $avencerse,
+        'vencidos'   => $vencidos,
+        'estados'    => $estados,
+    ];
+}
 
     public function uploadPdf(Request $request)
 {
@@ -490,6 +461,8 @@ public function update(Request $request)
     {
         return Soporte::find($request->id);
     }
+
+
 }
 
 

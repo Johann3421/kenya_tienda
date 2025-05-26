@@ -197,29 +197,30 @@ new Vue({
             this.Buscar();
         },
         Buscar(page) {
-            this.page = page;
-            this.active = 0;
-            urlBuscar = 'soporte/buscar?page=' + page;
-            axios.get(urlBuscar, {
-                search: this.search,
-                search_por: this.search_por,
-            }).then(response => {
-                if (exe == 0) {
-                    $('#list-loading').hide();
-                    this.listTable = true;
-                    $('#list-paginator').show();
-                    exe++;
-                }
-                this.listaRequest = response.data.soportes.data;
-                this.to_pagination = response.data.soportes.to;
-                this.pagination = response.data.pagination;
-                this.listAVencer = response.data.avencerse;
-                this.listVencidos = response.data.vencidos;
-                this.estados = response.data.estados;
-            }).catch(error => {
-                alert(error + ". Por favor contacte al Administrador del Sistema.");
-            });
-        },
+    this.page = page;
+    this.active = 0;
+    urlBuscar = 'soporte/buscar?page=' + page;
+    axios.get(urlBuscar, {
+        params: {
+            search: this.search // Solo enviamos el valor de la serie
+        }
+    }).then(response => {
+        if (exe == 0) {
+            $('#list-loading').hide();
+            this.listTable = true;
+            $('#list-paginator').show();
+            exe++;
+        }
+        this.listaRequest = response.data.soportes.data;
+        this.to_pagination = response.data.soportes.to;
+        this.pagination = response.data.pagination;
+        this.listAVencer = response.data.avencerse;
+        this.listVencidos = response.data.vencidos;
+        this.estados = response.data.estados;
+    }).catch(error => {
+        alert(error + ". Por favor contacte al Administrador del Sistema.");
+    });
+},
         SearchEstado(estado) {
             this.search_por = "estado";
             this.search = estado;
@@ -906,5 +907,6 @@ this.numero_caso = seleccion.numero_caso;
         }
     }
 });
+
 
 
