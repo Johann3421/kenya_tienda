@@ -43,11 +43,16 @@ new Vue({
         mostrar: true,
         search_producto: "",
         producto_id_actualizar: null,
+        filtroEstado: '',
     },
     created() {
         this.Buscar();
     },
     computed: {
+
+        listaRequestFiltrada() {
+        return this.listaRequest;
+    },
         isActive: function () {
             return this.pagination.current_page;
         },
@@ -74,7 +79,44 @@ new Vue({
             return pagesArray;
         },
     },
+    watch: {
+    filtroEstado() {
+        this.Buscar(1); // Siempre vuelve a la página 1 al cambiar filtro
+    }
+},
     methods: {
+        getBarPercent(fechaInicio, fechaFin) {
+        if (!fechaInicio || !fechaFin) return 0;
+        const start = moment(fechaInicio);
+        const end = moment(fechaFin);
+        const now = moment();
+        const total = end.diff(start, 'days');
+        const transcurrido = now.diff(start, 'days');
+        if (now.isBefore(start)) return 100;
+        if (now.isAfter(end)) return 0;
+        return Math.max(0, Math.min(100, 100 - (transcurrido / total) * 100));
+    },
+    getBarColor(fechaInicio, fechaFin) {
+        const percent = this.getBarPercent(fechaInicio, fechaFin);
+        const now = moment();
+        const end = moment(fechaFin);
+        if (end.diff(now, 'months', true) <= 3) {
+            return 'bg-danger'; // rojo últimos 3 meses
+        }
+        if (percent > 66) {
+            return 'bg-success'; // verde
+        } else if (percent > 33) {
+            return 'bg-warning'; // naranja
+        } else {
+            return 'bg-danger'; // rojo
+        }
+    },
+    getBarLabel(fechaInicio, fechaFin) {
+        const percent = this.getBarPercent(fechaInicio, fechaFin);
+        if (percent > 66) return 'Nueva';
+        if (percent > 33) return 'Media';
+        return 'Por vencer';
+    },
         changePage(page) {
             this.page = page;
             this.pagination.current_page = page;
@@ -93,32 +135,32 @@ new Vue({
             );
         },
         Buscar(page) {
-            this.page = page;
-            this.active = 0;
-            urlBuscar = "../garantias/buscar?page=" + page;
-            axios
-                .post(urlBuscar, {
-                    search: this.search,
-                })
-                .then((response) => {
-                    // console.log(response)
-                    if (exe == 0) {
-                        $("#list-loading").hide();
-                        this.listTable = true;
-                        $("#list-paginator").show();
-                        exe++;
-                    }
-                    this.listaRequest = response.data.garantias.data; //Datos
-                    this.to_pagination = response.data.garantias.to; //numero de items
-                    this.pagination = response.data.pagination; //Paginación
-                })
-                .catch((error) => {
-                    alert(
-                        error +
-                            ". Por favor contacte al Administrador del Sistema."
-                    );
-                });
-        },
+    this.page = page;
+    this.active = 0;
+    urlBuscar = "../garantias/buscar?page=" + page;
+    axios
+        .post(urlBuscar, {
+            search: this.search,
+            filtroEstado: this.filtroEstado // <--- agrega esto
+        })
+        .then((response) => {
+            if (exe == 0) {
+                $("#list-loading").hide();
+                this.listTable = true;
+                $("#list-paginator").show();
+                exe++;
+            }
+            this.listaRequest = response.data.garantias.data;
+            this.to_pagination = response.data.garantias.to;
+            this.pagination = response.data.pagination;
+        })
+        .catch((error) => {
+            alert(
+                error +
+                    ". Por favor contacte al Administrador del Sistema."
+            );
+        });
+},
         AutoBuscar() {
             this.active = 0;
             this.mostrar = true;

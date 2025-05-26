@@ -180,16 +180,6 @@
                                             <small class="form-text error-color"
                                                 v-if="errors.garantia">@{{ errors.garantia[0] }}</small>
                                         </div>
-                                        {{-- <div class="form-group col-md-6">
-                                            <label for="fecha" class="label-sm">PERIODO DE TIEMPO</label>
-                                            <select id="fecha" v-model="fecha" class="form-control fc-new">
-                                                <option disabled value="">Seleccione un tipo</option>
-                                                <option>Años</option>
-                                                <option>Meses</option>
-                                                <option>Semanas</option>
-                                                <option>Dias</option>
-                                            </select>
-                                        </div> --}}
                                         <div class="form-group col-md-6">
                                             <label for="fecha_venta" class="label-sm">FECHA DE INICIO</label>
                                             <input type="date" id="fecha_venta" v-model="fecha_venta"
@@ -390,6 +380,37 @@
                             <button class="btn btn-secondary btn-block" v-on:click="Buscar">Buscar</button>
                         </div>
                     </div>
+                    <div class="row mb-3">
+    <div class="col-md-12 d-flex justify-content-between align-items-center flex-wrap">
+        <div class="btn-group" role="group" aria-label="Filtro de estado de garantía">
+            <button type="button" class="btn btn-success"
+                :class="{ active: filtroEstado === 'verde' }"
+                v-on:click="filtroEstado = 'verde'">
+                <i class="fas fa-circle" style="color: #28a745;"></i> Verde (Nueva)
+            </button>
+            <button type="button" class="btn btn-warning"
+                :class="{ active: filtroEstado === 'naranja' }"
+                v-on:click="filtroEstado = 'naranja'">
+                <i class="fas fa-circle" style="color: #ffc107;"></i> Naranja (Media)
+            </button>
+            <button type="button" class="btn btn-danger"
+                :class="{ active: filtroEstado === 'rojo' }"
+                v-on:click="filtroEstado = 'rojo'">
+                <i class="fas fa-circle" style="color: #dc3545;"></i> Rojo (Por vencer)
+            </button>
+            <button type="button" class="btn btn-dark"
+                :class="{ active: filtroEstado === 'vencida' }"
+                v-on:click="filtroEstado = 'vencida'">
+                <i class="fas fa-times-circle" style="color: #343a40;"></i> Vencidas
+            </button>
+            <button type="button" class="btn btn-secondary"
+                :class="{ active: filtroEstado === '' }"
+                v-on:click="filtroEstado = ''">
+                <i class="fas fa-list"></i> Todas
+            </button>
+        </div>
+    </div>
+</div>
 
                     <div class="table-responsive">
                         <table class="table table-sm">
@@ -418,9 +439,9 @@
                                 </tr>
                                 <template v-if="listTable">
                                     <template v-if="listaRequest.length != 0">
-                                        <tr v-for="(garantia, index) in listaRequest"
-                                            :class="{ activado: active == garantia.id }"
-                                            v-on:click="Fila_garantia(garantia.id, garantia)" style="cursor: pointer;">
+                                        <tr v-for="(garantia, index) in listaRequestFiltrada"
+    :class="{ activado: active == garantia.id }"
+    v-on:click="Fila_garantia(garantia.id, garantia)" style="cursor: pointer;">
                                             <td class="text-center">@{{ (index + pagination.index + 1) }}</td>
                                             <td class="displaynone">
                                                 @{{ garantia.producto_id }}
@@ -432,26 +453,29 @@
                                                 @{{ garantia.garantia }}
                                             </td>
                                             <td class="text-center">
-                                                @{{ garantia.fecha_venta }}
-                                            </td>
-                                            <td class="text-center">
-                                                @{{ garantia.fecha_Vencimiento }}
-                                            </td>
+    @{{ garantia.fecha_venta }}
+</td>
+<td class="text-center">
+    <div>
+        @{{ garantia.fecha_Vencimiento }}
+        <div class="progress" style="height: 18px; margin-top: 5px;">
+            <div class="progress-bar"
+                :class="getBarColor(garantia.fecha_venta, garantia.fecha_Vencimiento)"
+                role="progressbar"
+                :style="{ width: getBarPercent(garantia.fecha_venta, garantia.fecha_Vencimiento) + '%' }"
+                :aria-valuenow="getBarPercent(garantia.fecha_venta, garantia.fecha_Vencimiento)"
+                aria-valuemin="0" aria-valuemax="100">
+                @{{ getBarLabel(garantia.fecha_venta, garantia.fecha_Vencimiento) }}
+            </div>
+        </div>
+    </div>
+</td>
                                             <td>
                                                 @{{ garantia.serie }}
                                             </td>
                                             <td class="text-center">
                                                 @{{ garantia.activo }}
                                             </td>
-                                            {{-- <td>
-                                                <div><i class="fas fa-user"></i> @{{ driver.descripcion }}</div>
-                                                <div>
-                                                    <i class="fas fa-phone-square"></i> @{{ driver.estado }} &nbsp;| &nbsp;
-                                                    <i class="fas fa-envelope"></i> @{{ driver.categoria }}
-                                                </div>
-                                            </td> --}}
-                                            {{-- <td class="text-center"><i class="fas fa-check-circle font-green" style="font-size: 15px;"></i></td> --}}
-                                            {{-- <td class="text-center"><i class="fa fa-times-circle" style="color: red; font-size: 16px;"></i></td> --}}
                                         </tr>
                                     </template>
                                     <template v-else>
