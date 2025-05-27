@@ -181,6 +181,9 @@
                                 <a href="#"><i class="fab fa-facebook-f"></i></a>
                                 <a href="#"><i class="fab fa-instagram"></i></a>
                                 <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="{{ url('/login') }}" title="Iniciar sesión" style="margin-left:8px;">
+            <i class="fas fa-user"></i>
+        </a>    
                             </div>
                         </div>
                     </div>
