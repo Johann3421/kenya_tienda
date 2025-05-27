@@ -64,7 +64,7 @@
             top: 58px;
             left: 0;
             /* border-top: 1px solid rgba(0,0,0,.2);
-                        border-radius: 10px; */
+                            border-radius: 10px; */
         }
 
         .item_producto {
@@ -95,6 +95,13 @@
         .displaynone {
             display: none;
         }
+        /* Puedes poner esto en tu sección <style> */
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
     </style>
 @endsection
 @section('content')
@@ -375,42 +382,89 @@
                         <div class="mb-3 mt-3 col-md-3">
                             <div class="p-b-10">
                                 <input type="text" class="form-control" id="seacrh" v-model="search"
-                                    placeholder="Descripcion de Garantia" v-on:keyup.enter="Buscar">
+                                    placeholder="Busca por N°ro de Serie" v-on:keyup.enter="Buscar">
                             </div>
                             <button class="btn btn-secondary btn-block" v-on:click="Buscar">Buscar</button>
                         </div>
                     </div>
                     <div class="row mb-3">
-    <div class="col-md-12 d-flex justify-content-between align-items-center flex-wrap">
-        <div class="btn-group" role="group" aria-label="Filtro de estado de garantía">
-            <button type="button" class="btn btn-success"
-                :class="{ active: filtroEstado === 'verde' }"
-                v-on:click="filtroEstado = 'verde'">
-                <i class="fas fa-circle" style="color: #28a745;"></i> Verde (Nueva)
-            </button>
-            <button type="button" class="btn btn-warning"
-                :class="{ active: filtroEstado === 'naranja' }"
-                v-on:click="filtroEstado = 'naranja'">
-                <i class="fas fa-circle" style="color: #ffc107;"></i> Naranja (Media)
-            </button>
-            <button type="button" class="btn btn-danger"
-                :class="{ active: filtroEstado === 'rojo' }"
-                v-on:click="filtroEstado = 'rojo'">
-                <i class="fas fa-circle" style="color: #dc3545;"></i> Rojo (Por vencer)
-            </button>
-            <button type="button" class="btn btn-dark"
-                :class="{ active: filtroEstado === 'vencida' }"
-                v-on:click="filtroEstado = 'vencida'">
-                <i class="fas fa-times-circle" style="color: #343a40;"></i> Vencidas
-            </button>
-            <button type="button" class="btn btn-secondary"
-                :class="{ active: filtroEstado === '' }"
-                v-on:click="filtroEstado = ''">
-                <i class="fas fa-list"></i> Todas
-            </button>
-        </div>
+                        <div class="col-md-12 d-flex justify-content-between align-items-center flex-wrap">
+                            <div class="btn-group" role="group" aria-label="Filtro de estado de garantía">
+                                <button type="button" class="btn btn-success"
+                                    :class="{ active: filtroEstado === 'verde' }" v-on:click="filtroEstado = 'verde'">
+                                    <i class="fas fa-circle" style="color: #28a745;"></i> Verde (Nueva)
+                                </button>
+                                <button type="button" class="btn btn-warning"
+                                    :class="{ active: filtroEstado === 'naranja' }"
+                                    v-on:click="filtroEstado = 'naranja'">
+                                    <i class="fas fa-circle" style="color: #ffc107;"></i> Naranja (Media)
+                                </button>
+                                <button type="button" class="btn btn-danger"
+                                    :class="{ active: filtroEstado === 'rojo' }" v-on:click="filtroEstado = 'rojo'">
+                                    <i class="fas fa-circle" style="color: #dc3545;"></i> Rojo (Por vencer)
+                                </button>
+                                <button type="button" class="btn btn-dark"
+                                    :class="{ active: filtroEstado === 'vencida' }"
+                                    v-on:click="filtroEstado = 'vencida'">
+                                    <i class="fas fa-times-circle" style="color: #343a40;"></i> Vencidas
+                                </button>
+                                <button type="button" class="btn btn-secondary"
+                                    :class="{ active: filtroEstado === '' }" v-on:click="filtroEstado = ''">
+                                    <i class="fas fa-list"></i> Todas
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2">
+    <div class="d-flex align-items-center">
+        <button class="btn btn-link p-0" v-on:click="mostrarLeyenda = !mostrarLeyenda" style="font-size: 16px;">
+            <i class="fas fa-info-circle"></i> ¿Qué significa cada color?
+        </button>
     </div>
+    <transition name="fade">
+        <div v-if="mostrarLeyenda" class="card mt-2" style="max-width: 600px; background: #f8f9fa;">
+            <div class="card-body p-3">
+                <h6 class="mb-2"><i class="fas fa-question-circle"></i> Significado de los colores de garantía</h6>
+                <ul class="mb-2" style="list-style: none; padding-left: 0;">
+                    <li class="mb-1 d-flex align-items-center">
+                        <span class="badge badge-success mr-2" style="width:20px;height:20px;border-radius:50%;"></span>
+                        <span>
+                            <strong>Verde:</strong> Garantía nueva.<br>
+                            <small>Mes 1 a 8 (si es de 12 meses) &nbsp;|&nbsp; Mes 1 a 24 (si es de 36 meses)</small>
+                        </span>
+                    </li>
+                    <li class="mb-1 d-flex align-items-center">
+                        <span class="badge badge-warning mr-2" style="width:20px;height:20px;border-radius:50%;"></span>
+                        <span>
+                            <strong>Naranja:</strong> Garantía en la segunda etapa.<br>
+                            <small>Mes 9 a 11 (12 meses) &nbsp;|&nbsp; Mes 25 a 33 (36 meses)</small>
+                        </span>
+                    </li>
+                    <li class="mb-1 d-flex align-items-center">
+                        <span class="badge badge-danger mr-2" style="width:20px;height:20px;border-radius:50%;"></span>
+                        <span>
+                            <strong>Rojo:</strong> Garantía por vencer.<br>
+                            <small>Mes 12 (12 meses) &nbsp;|&nbsp; Mes 34 a 36 (36 meses)</small>
+                        </span>
+                    </li>
+                    <li class="mb-1 d-flex align-items-center">
+                        <span class="badge badge-dark mr-2" style="width:20px;height:20px;border-radius:50%;"></span>
+                        <span>
+                            <strong>Vencida:</strong> Garantía finalizada.
+                        </span>
+                    </li>
+                </ul>
+                <div class="alert alert-info p-2 mb-0" style="font-size: 14px;">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>
+                        El color indica en qué etapa está la garantía de tu producto.<br>
+                        <strong>Verde</strong> es nueva, <strong>Naranja</strong> es intermedia, <strong>Rojo</strong> está por vencer y <strong>Vencida</strong> ya expiró.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </transition>
 </div>
+                    </div>
 
                     <div class="table-responsive">
                         <table class="table table-sm">
@@ -440,8 +494,8 @@
                                 <template v-if="listTable">
                                     <template v-if="listaRequest.length != 0">
                                         <tr v-for="(garantia, index) in listaRequestFiltrada"
-    :class="{ activado: active == garantia.id }"
-    v-on:click="Fila_garantia(garantia.id, garantia)" style="cursor: pointer;">
+                                            :class="{ activado: active == garantia.id }"
+                                            v-on:click="Fila_garantia(garantia.id, garantia)" style="cursor: pointer;">
                                             <td class="text-center">@{{ (index + pagination.index + 1) }}</td>
                                             <td class="displaynone">
                                                 @{{ garantia.producto_id }}
@@ -453,23 +507,26 @@
                                                 @{{ garantia.garantia }}
                                             </td>
                                             <td class="text-center">
-    @{{ garantia.fecha_venta }}
-</td>
-<td class="text-center">
-    <div>
-        @{{ garantia.fecha_Vencimiento }}
-        <div class="progress" style="height: 18px; margin-top: 5px;">
-            <div class="progress-bar"
-                :class="getBarColor(garantia.fecha_venta, garantia.fecha_Vencimiento)"
-                role="progressbar"
-                :style="{ width: getBarPercent(garantia.fecha_venta, garantia.fecha_Vencimiento) + '%' }"
-                :aria-valuenow="getBarPercent(garantia.fecha_venta, garantia.fecha_Vencimiento)"
-                aria-valuemin="0" aria-valuemax="100">
-                @{{ getBarLabel(garantia.fecha_venta, garantia.fecha_Vencimiento) }}
-            </div>
-        </div>
-    </div>
-</td>
+                                                @{{ garantia.fecha_venta }}
+                                            </td>
+                                            <td class="text-center">
+                                                <div>
+                                                    @{{ garantia.fecha_Vencimiento }}
+                                                    <div class="progress" style="height: 18px; margin-top: 5px;">
+                                                        <div class="progress-bar"
+                                                            :class="getBarColor(garantia.fecha_venta, garantia
+                                                                .fecha_Vencimiento)"
+                                                            role="progressbar"
+                                                            :style="{ width: getBarPercent(garantia.fecha_venta, garantia
+                                                                    .fecha_Vencimiento) + '%' }"
+                                                            :aria-valuenow="getBarPercent(garantia.fecha_venta, garantia
+                                                                .fecha_Vencimiento)"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                            @{{ getBarLabel(garantia.fecha_venta, garantia.fecha_Vencimiento) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
                                             <td>
                                                 @{{ garantia.serie }}
                                             </td>

@@ -44,6 +44,7 @@ new Vue({
         search_producto: "",
         producto_id_actualizar: null,
         filtroEstado: '',
+        mostrarLeyenda: false,
     },
     created() {
         this.Buscar();
