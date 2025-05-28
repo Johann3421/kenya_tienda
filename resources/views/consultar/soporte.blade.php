@@ -1,6 +1,7 @@
 @extends('layouts.landing')
 @section('css')
     <style>
+        
         .col1 { width: 10%; }
         .col2 { width: 10%; }
         .col3 { width: 20%; }
@@ -73,7 +74,7 @@
                         </div>
                         <span style="font-size: 25px; padding-left: 10px;">Buscando Soporte ....</span>
                     </div>
-                    
+
                     <div v-if="state">
                         <table class="table table-sm table-bordered table-condensed" v-if="state == 'success'">
                             <thead>

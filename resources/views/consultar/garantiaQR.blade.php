@@ -78,6 +78,18 @@
         }
     </style>
 @endsection
+@section('menu')
+    <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
+        <ul class="kenya-nav-list">
+            <li><a href="{{ url('/') }}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
+            <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
+            <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
+            <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
+            <li class="kenya-active"><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
+            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
+        </ul>
+    </nav>
+@endsection
 @section('content')
     <main id="main">
 
@@ -364,3 +376,4 @@
     </script>
     <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
 @endsection
+

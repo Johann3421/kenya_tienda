@@ -130,17 +130,19 @@
         }
 
         /* Sección de contacto */
-        .contactanos {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            max-width: 1200px;
-            margin: 4rem auto;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
+.contactanos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    width: 100%;              /* <-- Añade esto */
+    max-width: 1200px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background-color: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    justify-self: center;     /* <-- Añade esto por si el padre es grid/flex */
+}
 
         /* Títulos */
         .contactanos h2 {

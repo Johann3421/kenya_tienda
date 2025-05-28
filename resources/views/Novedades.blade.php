@@ -212,9 +212,9 @@
 
                                     <!-- Botón con nueva ruta de detalles -->
                                     <button class="view-details"
-                                        onclick="window.location.href='http://127.0.0.1:8000/producto/{{ $producto->id }}/detalle'">
-                                        Ver detalles
-                                    </button>
+    onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
+    Ver detalles
+</button>
                                 </div>
                             </div>
                         </div>
@@ -941,3 +941,4 @@
             });
         </script>
 @endsection
+

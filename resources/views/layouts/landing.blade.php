@@ -56,6 +56,26 @@
     </style>
 
 <style>
+    // Agrega esto al CSS global o en el layout principal
+html, body {
+    height: 100%;
+    min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#main {
+    flex: 1 0 auto;
+}
+
+/* Si tu footer tiene una clase específica, por ejemplo .footer */
+.footer {
+    flex-shrink: 0;
+}
     /* Versión oculta solo para imprimir PDF */
     #print-pdf-container {
         width: 210mm;
@@ -183,7 +203,7 @@
                                 <a href="#"><i class="fab fa-twitter"></i></a>
                                 <a href="{{ url('/login') }}" title="Iniciar sesión" style="margin-left:8px;">
             <i class="fas fa-user"></i>
-        </a>    
+        </a>
                             </div>
                         </div>
                     </div>
