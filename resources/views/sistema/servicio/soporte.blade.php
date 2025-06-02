@@ -130,6 +130,7 @@
                                         </div>
                                         <div class="row m-b-20">
                                             <div class="col-md-3">
+
                                                 <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
                                                     <span class="contorno-texto">Tipo de Servicio</span>
                                                     <div class="custom-control custom-radio custom-control-inline">
@@ -145,6 +146,13 @@
                                                         <label class="form-check-label"
                                                             style="font-size: 11px; margin: 4px;"
                                                             for="garantia">GARANTIA</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input class="form-check-input check-xl" type="radio"
+                                                            v-model="tipo_servicio" id="ingreso" value="INGRESO">
+                                                        <label class="form-check-label"
+                                                            style="font-size: 11px; margin: 4px;"
+                                                            for="ingreso">INGRESO</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -365,20 +373,23 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <div class="form-group row m-b-0">
-                                                                <span
-                                                                    style="font-size: 11px; padding-right: 0;padding-top: 3px;"
-                                                                    class="col-sm-2">DESCRIPCIÓN DE LA FALLA :</span>
-                                                                <div class="col-sm-10 m-b-5">
-                                                                    <textarea id="descripcion" v-model="descripcion" :readonly="loading"
-                                                                        style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;" class="form-control"
-                                                                        :class="[errors.descripcion ? 'is-invalid' : '']"></textarea>
-                                                                    <small class="form-text error-color"
-                                                                        v-if="errors.descripcion">@{{ errors.descripcion[0] }}
-                                                                    </small>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+    <div class="form-group row m-b-0">
+        <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-2">Opciones :</span>
+        <div class="col-sm-10 m-b-5">
+            <div v-for="(item, idx) in descripcion_falla" :key="idx" class="input-group mb-2">
+                <input type="text" v-model="item.titulo" class="form-control form-control-sm" placeholder="Nombre de la opción (ej: Falla principal)">
+                <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
+                <div class="input-group-append">
+                    <button class="btn btn-danger btn-sm" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <button class="btn btn-success btn-sm mt-2" @click="addDescripcion"><i class="fas fa-plus"></i> Opción</button>
+            <small class="form-text error-color" v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
+        </div>
+    </div>
+</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -824,21 +835,32 @@
                                     </div>
                                     <div class="row m-b-20">
                                         <div class="col-md-3">
-                                            <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
-                                                <span class="contorno-texto">Tipo de Servicio</span>
-                                                <div class="custom-control custom-radio custom-control-inline">
-                                                    <input class="form-check-input check-xl" type="radio"
-                                                        v-model="tipo_servicio" id="soporte" value="SOPORTE">
-                                                    <label class="form-check-label" style="font-size: 11px; margin: 4px;"
-                                                        for="soporte">SOPORTE</label>
-                                                </div>
-                                                <div class="custom-control custom-radio custom-control-inline">
-                                                    <input class="form-check-input check-xl" type="radio"
-                                                        v-model="tipo_servicio" id="garantia" value="GARANTIA">
-                                                    <label class="form-check-label" style="font-size: 11px; margin: 4px;"
-                                                        for="garantia">GARANTIA</label>
-                                                </div>
-                                            </div>
+                                            {{-- ...CREAR Y EDITAR... --}}
+
+<div class="contorno-check" style="padding: 5px 0px 3px 8px;">
+    <span class="contorno-texto">Tipo de Servicio</span>
+    <div class="custom-control custom-radio custom-control-inline">
+        <input class="form-check-input check-xl" type="radio"
+            v-model="tipo_servicio" id="soporte" value="SOPORTE">
+        <label class="form-check-label"
+            style="font-size: 11px; margin: 4px;"
+            for="soporte">SOPORTE</label>
+    </div>
+    <div class="custom-control custom-radio custom-control-inline">
+        <input class="form-check-input check-xl" type="radio"
+            v-model="tipo_servicio" id="garantia" value="GARANTIA">
+        <label class="form-check-label"
+            style="font-size: 11px; margin: 4px;"
+            for="garantia">GARANTIA</label>
+    </div>
+    <div class="custom-control custom-radio custom-control-inline">
+        <input class="form-check-input check-xl" type="radio"
+            v-model="tipo_servicio" id="ingreso" value="INGRESO">
+        <label class="form-check-label"
+            style="font-size: 11px; margin: 4px;"
+            for="ingreso">INGRESO</label>
+    </div>
+</div>
                                         </div>
                                         <div class="col-md-9">
                                             <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
@@ -1057,20 +1079,23 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-12">
-                                                        <div class="form-group row m-b-0">
-                                                            <span
-                                                                style="font-size: 11px; padding-right: 0;padding-top: 3px;"
-                                                                class="col-sm-2">DESCRIPCIÓN DE LA FALLA :</span>
-                                                            <div class="col-sm-10 m-b-5">
-                                                                <textarea id="descripcion" v-model="descripcion" :readonly="loading"
-                                                                    style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;" class="form-control"
-                                                                    :class="[errors.descripcion ? 'is-invalid' : '']"></textarea>
-                                                                <small class="form-text error-color"
-                                                                    v-if="errors.descripcion">@{{ errors.descripcion[0] }}
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+    <div class="form-group row m-b-0">
+        <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-2">Opciones  :</span>
+        <div class="col-sm-10 m-b-5">
+            <div v-for="(item, idx) in descripcion_falla" :key="idx" class="input-group mb-2">
+                <input type="text" v-model="item.titulo" class="form-control form-control-sm" placeholder="Nombre de la opción (ej: Falla principal)">
+                <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
+                <div class="input-group-append">
+                    <button class="btn btn-danger btn-sm" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <button class="btn btn-success btn-sm mt-2" @click="addDescripcion"><i class="fas fa-plus"></i> Opción</button>
+            <small class="form-text error-color" v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
+        </div>
+    </div>
+</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1722,61 +1747,63 @@
                         </div>
 
                         <div class="float-right">
-    <div class="input-group input-group-sm">
-        <input type="text" id="search" v-model="search" class="form-control"
-            placeholder="Buscar por número de serie"
-            v-on:keyup.enter="Buscar">
-        <div class="input-group-append">
-            <button class="btn btn-primary" v-on:click="Buscar">
-                <i class="fas fa-search"></i> &nbsp; Buscar
-            </button>
-        </div>
-    </div>
-</div>
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="search" v-model="search" class="form-control"
+                                    placeholder="Buscar por número de serie" v-on:keyup.enter="Buscar">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" v-on:click="Buscar">
+                                        <i class="fas fa-search"></i> &nbsp; Buscar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-sm">
                             <thead>
-    <tr>
-        <th class="text-center cell-1">#</th>
-        <th class="cell-2 text-center">N° Caso</th>
-        <th class="cell-3 text-center">Estado</th>
-        <th class="cell-4">Cliente</th>
-        <th class="cell-5 text-center">Fecha Registro</th>
-        <th class="cell-6 text-center">Fecha Entrega</th>
-        <th class="cell-7 text-center">Serie</th> <!-- Nueva columna para Serie -->
-        <th class="cell-8">Detalles del Equipo</th>
-        <th class="cell-9 text-center">Acciones</th>
-    </tr>
-</thead>
-<tbody>
-    <tr v-for="(soporte, index) in listaRequest"
-        :class="{ activado: active == soporte.id }"
-        v-on:click="Fila(soporte.id, soporte)"
-        style="cursor: pointer;">
-        <td class="text-center">@{{ (index + pagination.index + 1) }}</td>
-        <td class="text-center text-uppercase">@{{ soporte.numero_caso ?? '' }}</td>
-        <td>
-            <div :class="soporte.estado">@{{ Estado(soporte.estado) }}</div>
-        </td>
-        <td>@{{ soporte.get_cliente.nombres }}</td>
-        <td class="text-center">@{{ Fecha2(soporte.fecha_registro) + ' ' + Hora(soporte.fecha_registro) }}</td>
-        <td class="text-center">@{{ Fecha2(soporte.fecha_entrega) + ' ' + Hora(soporte.fecha_entrega) }}</td>
-        <td class="text-center">@{{ soporte.serie }}</td> <!-- Serie en su propia columna -->
-        <td>
-            <strong style="text-decoration: underline">EQUIPO:</strong> @{{ soporte.equipo }}<br>
-            <strong style="text-decoration: underline;">MODELO:</strong> @{{ soporte.modelo }}
-        </td>
-        <td class="text-center">
-            <button class="btn btn-sm btn-primary" @click.stop="formEditar(soporte)" title="Editar">
-                <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn btn-sm btn-danger" @click.stop="confirmarEliminar(soporte)" title="Eliminar">
-                <i class="fas fa-trash"></i>
-            </button>
-        </td>
-    </tr>
-</tbody>
+                                <tr>
+                                    <th class="text-center cell-1">#</th>
+                                    <th class="cell-2 text-center">N° Caso</th>
+                                    <th class="cell-3 text-center">Estado</th>
+                                    <th class="cell-4">Cliente</th>
+                                    <th class="cell-5 text-center">Fecha Registro</th>
+                                    <th class="cell-6 text-center">Fecha Entrega</th>
+                                    <th class="cell-7 text-center">Serie</th> <!-- Nueva columna para Serie -->
+                                    <th class="cell-8">Detalles del Equipo</th>
+                                    <th class="cell-9 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(soporte, index) in listaRequest" :class="{ activado: active == soporte.id }"
+                                    v-on:click="Fila(soporte.id, soporte)" style="cursor: pointer;">
+                                    <td class="text-center">@{{ (index + pagination.index + 1) }}</td>
+                                    <td class="text-center text-uppercase">@{{ soporte.numero_caso ?? '' }}</td>
+                                    <td>
+                                        <div :class="soporte.estado">@{{ Estado(soporte.estado) }}</div>
+                                    </td>
+                                    <td>@{{ soporte.get_cliente.nombres }}</td>
+                                    <td class="text-center">@{{ Fecha2(soporte.fecha_registro) + ' ' + Hora(soporte.fecha_registro) }}</td>
+                                    <td class="text-center">@{{ Fecha2(soporte.fecha_entrega) + ' ' + Hora(soporte.fecha_entrega) }}</td>
+                                    <td class="text-center">@{{ soporte.serie }}</td>
+                                    <!-- Serie en su propia columna -->
+                                    <td>
+                                        <strong style="text-decoration: underline">EQUIPO:</strong>
+                                        @{{ soporte.equipo }}<br>
+                                        <strong style="text-decoration: underline;">MODELO:</strong>
+                                        @{{ soporte.modelo }}
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-primary" @click.stop="formEditar(soporte)"
+                                            title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" @click.stop="confirmarEliminar(soporte)"
+                                            title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
 
@@ -1818,7 +1845,8 @@
                                     <li class="page-item disabled" title="Siguiente" v-else style="cursor: no-drop;">
                                         <a href="#" class="page-link"
                                             style="padding: 6px 10px 4px 10px; font-size: 18px;"><i
-                                                class="fas fa-angle-right"></i></a></li>
+                                                class="fas fa-angle-right"></i></a>
+                                    </li>
 
                                     <a href="#" v-if="pagination.current_page < pagination.last_page"
                                         class="pag-inicio-fin" title="Página final"
@@ -1877,4 +1905,3 @@
     <script type="text/javascript" src="{{ asset('js/jquery.printarea.js') }}"></script>
     <script src="{{ asset('js/views/servicio/tecnico.js') }}"></script>
 @endsection
-

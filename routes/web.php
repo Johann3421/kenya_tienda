@@ -322,6 +322,7 @@ Route::group(['middleware' => ['can:admin_paginas']], function () {
     Route::get('/paginas/admin', [\App\Http\Controllers\Sistema\ControlRutasController::class, 'index'])->name('paginas.admin');
     Route::post('/paginas/admin/cambiar-estado', [\App\Http\Controllers\Sistema\ControlRutasController::class, 'cambiarEstado'])->name('paginas.admin.cambiar_estado');
 });
+Route::post('/sistema/aside/duplicar', [App\Http\Controllers\Sistema\AsideController::class, 'duplicar'])->name('sistema.aside.duplicar');
 
 // routes/web.php o routes/api.php
 

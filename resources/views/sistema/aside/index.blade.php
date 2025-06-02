@@ -62,6 +62,10 @@
                                         data-bs-target="#agregarOpcionModal{{ $aside->id }}" title="Añadir Subfiltro">
                                         <i class="fas fa-plus-circle"></i>
                                     </button>
+                                    <!-- Botón Duplicar Filtro -->
+<button type="button" class="btn btn-sm btn-secondary mx-1" data-bs-toggle="modal" data-bs-target="#duplicarAsideModal" title="Duplicar Filtro">
+    <i class="fas fa-copy"></i>
+</button>
                                 </td>
                             </tr>
                             <!-- Incluir Modales para cada aside -->
@@ -74,6 +78,39 @@
             </div>
         </div>
     </div>
+    <!-- Modal Duplicar Filtro -->
+<div class="modal fade" id="duplicarAsideModal" tabindex="-1" aria-labelledby="duplicarAsideModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="duplicarAsideForm" autocomplete="off">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title" id="duplicarAsideModalLabel">Duplicar Filtro</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <label class="form-label">Selecciona el filtro a duplicar:</label>
+                    <select class="form-select mb-3" name="aside_id" id="selectAsideDuplicar" required>
+                        <option value="">-- Selecciona un filtro --</option>
+                        @foreach ($asides as $aside)
+                            <option value="{{ $aside->id }}">
+                                [{{ $aside->modelo->descripcion ?? 'Sin modelo' }}] {{ $aside->nombre_aside }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <div id="duplicarConfirmMsg" class="alert alert-info d-none">
+                        ¿Seguro que deseas duplicar este filtro? Se creará una copia con el mismo nombre y subfiltros.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-secondary" id="btnConfirmarDuplicar" disabled>
+                        <i class="fas fa-copy"></i> Duplicar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     <!-- Modal Nuevo Filtro -->
     <div class="modal fade" id="nuevoAsideModal" tabindex="-1" aria-labelledby="nuevoAsideModalLabel" aria-hidden="true">
@@ -234,6 +271,62 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const selectAsideDuplicar = document.getElementById('selectAsideDuplicar');
+    const duplicarConfirmMsg = document.getElementById('duplicarConfirmMsg');
+    const btnConfirmarDuplicar = document.getElementById('btnConfirmarDuplicar');
+    const duplicarAsideForm = document.getElementById('duplicarAsideForm');
+    let selectedAside = '';
+
+    // Mostrar mensaje de confirmación solo si hay selección
+    selectAsideDuplicar.addEventListener('change', function() {
+        selectedAside = this.value;
+        if (selectedAside) {
+            duplicarConfirmMsg.classList.remove('d-none');
+            btnConfirmarDuplicar.disabled = false;
+        } else {
+            duplicarConfirmMsg.classList.add('d-none');
+            btnConfirmarDuplicar.disabled = true;
+        }
+    });
+
+    // Enviar duplicado por AJAX
+    duplicarAsideForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (!selectedAside) return;
+
+        btnConfirmarDuplicar.disabled = true;
+        btnConfirmarDuplicar.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Duplicando...';
+
+        fetch("{{ route('sistema.aside.duplicar') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ aside_id: selectedAside })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                btnConfirmarDuplicar.innerHTML = '<i class="fas fa-check"></i> ¡Duplicado!';
+                setTimeout(() => window.location.reload(), 800);
+            } else {
+                btnConfirmarDuplicar.innerHTML = '<i class="fas fa-copy"></i> Duplicar';
+                btnConfirmarDuplicar.disabled = false;
+                alert('No se pudo duplicar el filtro.');
+            }
+        })
+        .catch(() => {
+            btnConfirmarDuplicar.innerHTML = '<i class="fas fa-copy"></i> Duplicar';
+            btnConfirmarDuplicar.disabled = false;
+            alert('Error al duplicar el filtro.');
+        });
+    });
+});
+</script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const selectorModelo = document.getElementById('selectorModelo');

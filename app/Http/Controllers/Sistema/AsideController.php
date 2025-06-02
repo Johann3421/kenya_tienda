@@ -32,8 +32,8 @@ class AsideController extends Controller
 {
     $validated = $request->validate([
         'modelo_id' => 'required|exists:modelos,id',
-        'nombre_aside' => 'required|string|max:100|unique:asides,nombre_aside',
-        'opciones' => 'required|json'
+        'nombre_aside' => 'required|string|max:255', // <-- quitar |unique:asides,nombre_aside
+        'opciones' => 'required|json',
     ]);
 
     $opciones = json_decode($request->opciones, true);
@@ -64,13 +64,8 @@ class AsideController extends Controller
 {
     $validated = $request->validate([
         'modelo_id' => 'required|exists:modelos,id',
-        'nombre_aside' => [
-            'required',
-            'string',
-            'max:100',
-            Rule::unique('asides')->ignore($aside->id)
-        ],
-        'opciones' => 'required|json'
+        'nombre_aside' => 'required|string|max:255', // <-- quitar |unique:asides,nombre_aside,'.$id
+        'opciones' => 'required|json',
     ]);
 
     $aside->update([
@@ -129,4 +124,15 @@ class AsideController extends Controller
         $aside->update(['activo' => !$aside->activo]);
         return back()->with('success', 'Estado del filtro actualizado');
     }
+    public function duplicar(Request $request)
+{
+    $aside = \App\Models\Aside::findOrFail($request->aside_id);
+    $nuevo = $aside->replicate();
+    $nuevo->nombre_aside = $aside->nombre_aside . ' (Copia)';
+    $nuevo->save();
+    // Si tienes relación de opciones como array/JSON, también duplícalas
+    // $nuevo->opciones = $aside->opciones;
+    // $nuevo->save();
+    return response()->json(['success' => true]);
+}
 }

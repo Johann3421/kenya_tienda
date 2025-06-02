@@ -150,7 +150,12 @@ public function store(Request $request)
         $soporte->marca                = Str::upper($request->marca);
         $soporte->modelo               = Str::upper($request->modelo);
         $soporte->serie                = Str::upper($request->serie);
-        $soporte->descripcion          = Str::upper($request->descripcion);
+        if (is_array($request->descripcion)) {
+    $soporte->descripcion = json_encode($request->descripcion, JSON_UNESCAPED_UNICODE);
+} else {
+    // Si ya es JSON string, guárdalo tal cual
+    $soporte->descripcion = $request->descripcion;
+}
         $soporte->accesorios           = $datos;
         $soporte->acuenta              = $request->acuenta;
         $soporte->costo_servicio       = $request->costo_servicio;
@@ -282,7 +287,11 @@ public function update(Request $request)
         $soporte->marca                = Str::upper($request->marca);
         $soporte->modelo               = Str::upper($request->modelo);
         $soporte->serie                = Str::upper($request->serie);
-        $soporte->descripcion          = Str::upper($request->descripcion);
+        if (is_array($request->descripcion)) {
+    $soporte->descripcion = json_encode($request->descripcion, JSON_UNESCAPED_UNICODE);
+} else {
+    $soporte->descripcion = $request->descripcion;
+}
         $soporte->accesorios           = $datos;
         $soporte->acuenta              = $request->acuenta;
         $soporte->costo_servicio       = $request->costo_servicio;

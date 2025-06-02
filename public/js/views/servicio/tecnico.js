@@ -100,6 +100,9 @@ new Vue({
         pdf_file_edit: null,
         original_pdf_link: null, // Para guardar el valor original del PDF
         numero_caso: null,
+        descripcion_falla: [
+    { titulo: 'Falla principal', texto: '' }
+],
     },
     created() {
         this.Buscar();
@@ -132,6 +135,12 @@ new Vue({
         }
     },
     methods: {
+        addDescripcion() {
+        this.descripcion_falla.push({ titulo: 'Otra falla', texto: '' });
+    },
+    removeDescripcion(idx) {
+        this.descripcion_falla.splice(idx, 1);
+    },
         confirmarEliminar(soporte) {
         if (confirm('¿Seguro que desea eliminar este soporte técnico y todos sus datos?')) {
             this.eliminarSoporte(soporte);
@@ -291,7 +300,11 @@ new Vue({
 this.pdf_link = seleccion.pdf_link;
 this.pdf_file = null;
 this.numero_caso = seleccion.numero_caso;
-
+try {
+                this.descripcion_falla = seleccion.descripcion ? JSON.parse(seleccion.descripcion) : [{ titulo: 'Falla principal', texto: '' }];
+            } catch {
+                this.descripcion_falla = [{ titulo: 'Falla principal', texto: '' }];
+            }
 
                     break;
 
@@ -431,7 +444,7 @@ this.numero_caso = seleccion.numero_caso;
                 formData.append('marca', this.marca);
                 formData.append('modelo', this.modelo);
                 formData.append('serie', this.serie);
-                formData.append('descripcion', this.descripcion);
+                formData.append('descripcion', JSON.stringify(this.descripcion_falla));
                 formData.append('cargador', this.cargador);
                 formData.append('cable_usb', this.cable_usb);
                 formData.append('cable_poder', this.cable_poder);
@@ -514,7 +527,7 @@ this.numero_caso = seleccion.numero_caso;
                 formData.append('marca', this.marca);
                 formData.append('modelo', this.modelo);
                 formData.append('serie', this.serie);
-                formData.append('descripcion', this.descripcion);
+                formData.append('descripcion', JSON.stringify(this.descripcion_falla));
                 formData.append('cargador', this.cargador);
                 formData.append('cable_usb', this.cable_usb);
                 formData.append('cable_poder', this.cable_poder);
