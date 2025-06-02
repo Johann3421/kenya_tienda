@@ -129,6 +129,17 @@
                 @can('configuracion')
                 <li class="nav-item"><a href="{{route('configuracion')}}" class="nav-link "><span class="pcoded-micon"><i class="fas fa-cog"></i></span><span class="pcoded-mtext">Configuración</span></a></li>
                 @endcan
+                @if(auth()->user()->can('admin_paginas'))
+    <li class="nav-item pcoded-menu-caption">
+        <label>Administración de Páginas</label>
+    </li>
+    <li class="nav-item">
+        <a href="{{ route('paginas.admin') }}" class="nav-link">
+            <span class="pcoded-micon"><i class="fas fa-toggle-on"></i></span>
+            <span class="pcoded-mtext">Control de Rutas</span>
+        </a>
+    </li>
+@endif
             </ul>
         </div>
     </div>

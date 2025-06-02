@@ -173,15 +173,6 @@ Route::group(['middleware' => ['can:producto_drivers_ruta']], function () {
     Route::post('/drivers_ruta/autobuscar', 'Driver_rutaController@auto_buscar_producto');
 });
 
-// ------------------------ DRIVERS --------------------------------
-// Route::group(['middleware' => ['can:drivers']], function () {
-//     Route::get('/producto/drivers', 'DriversController@index')->name('producto/drivers');
-//     Route::post('/drivers/store', 'DriversController@store');
-//     Route::post('/drivers/buscar', 'DriversController@buscar');
-//     Route::post('/drivers/update', 'DriversController@update');
-//     Route::post('/drivers/delete', 'DriversController@delete');
-//     Route::post('/drivers/autobuscar', 'DriversController@auto_buscar_producto');
-// });
 
 // ------------------------ MANUALES --------------------------------
 Route::group(['middleware' => ['can:manual']], function () {
@@ -325,6 +316,11 @@ Route::group(['middleware' => ['can:configuracion']], function () {
     Route::post('/configuracion/file', 'ConfiguracionController@file');
     Route::post('/configuracion/show_file', 'ConfiguracionController@show_file');
     Route::post('/configuracion/delete_file', 'ConfiguracionController@delete_file');
+});
+
+Route::group(['middleware' => ['can:admin_paginas']], function () {
+    Route::get('/paginas/admin', [\App\Http\Controllers\Sistema\ControlRutasController::class, 'index'])->name('paginas.admin');
+    Route::post('/paginas/admin/cambiar-estado', [\App\Http\Controllers\Sistema\ControlRutasController::class, 'cambiarEstado'])->name('paginas.admin.cambiar_estado');
 });
 
 // routes/web.php o routes/api.php

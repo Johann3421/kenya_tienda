@@ -98,7 +98,9 @@ body {
 </head>
 
 <body>
-
+@hasSection('hide_header_footer')
+        {{-- No mostrar header/footer --}}
+    @else
     <!-- ======= Header ======= -->
     <header class="kenya-main-header">
         <div class="kenya-header-container">
@@ -121,9 +123,12 @@ body {
             @yield('menu')
         </div>
     </header><!-- End Header -->
-
+@endif
     @yield('content')
 
+    @hasSection('hide_header_footer')
+        {{-- No mostrar footer --}}
+    @else
     <!-- ======= Footer Kenya ======= -->
     <!-- Footer KENYA - Versión mejorada -->
     <footer class="kenya-final-footer">
@@ -214,7 +219,7 @@ body {
 
 
     <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>
-
+@endif
     <!-- Vendor JS Files -->
     <script src="{{ asset('landing/vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ asset('landing/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
