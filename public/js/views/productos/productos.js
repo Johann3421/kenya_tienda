@@ -101,8 +101,11 @@ new Vue({
         listaProductos: [], // Lista completa de productos cargada desde el backend
         productosFiltrados: [], // Productos filtrados por modelo
         modeloSeleccionado: '', // Modelo seleccionado para filtrar
-        productoSeleccionado: '', // Producto actualmente seleccionado
         archivosPorProducto: {},
+        busquedaParte: '',
+        resultadosBusqueda: [],
+        productoSeleccionado: null,
+        archivosExcel: [],
     },
     created() {
         this.Buscar();
@@ -137,6 +140,37 @@ new Vue({
         }
     },
     methods: {
+        resetBusqueda() {
+    this.busquedaParte = '';
+    this.resultadosBusqueda = [];
+    this.productoSeleccionado = null;
+    this.archivosExcel = [];
+},
+buscarPorParte() {
+    if (!this.modeloSeleccionado || !this.busquedaParte) {
+        this.resultadosBusqueda = [];
+        return;
+    }
+    axios.get('/producto/buscar-especificaciones', {
+        params: {
+            modelo_id: this.modeloSeleccionado,
+            nro_parte: this.busquedaParte
+        }
+    }).then(res => {
+        this.resultadosBusqueda = res.data;
+    });
+},
+seleccionarProducto(prod) {
+    this.productoSeleccionado = prod;
+    this.resultadosBusqueda = [];
+    this.archivosExcel = [];
+},
+agregarArchivosExcel(e) {
+    this.archivosExcel = Array.from(e.target.files);
+},
+eliminarArchivoExcel(index) {
+    this.archivosExcel.splice(index, 1);
+},
         cargarModelos() {
             axios.get('/api/modelos') // Ruta para obtener la lista de modelos
                 .then(response => {
@@ -184,45 +218,28 @@ new Vue({
             return producto ? producto.nombre : 'Producto no seleccionado';
         },
         importarEspecificaciones() {
-            const formData = new FormData();
+    if (!this.productoSeleccionado || this.archivosExcel.length === 0) {
+        this.Alert('warning', 'Atención', 'Seleccione un producto y al menos un archivo.');
+        return;
+    }
+    const formData = new FormData();
+    formData.append('producto_id', this.productoSeleccionado.id);
+    this.archivosExcel.forEach((archivo, idx) => {
+        formData.append('archivos_excel[]', archivo);
+    });
 
-            // Agregar los productos seleccionados
-            Object.keys(this.archivosPorProducto).forEach(productoId => {
-                formData.append('productos[]', productoId);
-
-                // Agregar los archivos asociados a cada producto
-                this.archivosPorProducto[productoId].forEach((archivo, index) => {
-                    formData.append(`archivos_excel[${productoId}][]`, archivo);
-                });
-            });
-
-            // Depuración: Imprimir los datos en el FormData
-            for (let pair of formData.entries()) {
-                console.log(pair[0], pair[1]);
-            }
-
-            // Enviar la solicitud al servidor
-            axios.post('http://127.0.0.1:8000/api/productos/especificaciones/import-multiple', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            .then(response => {
-                console.log('Especificaciones importadas correctamente:', response.data);
-                this.Alert('success', 'Importación exitosa', response.data.message);
-                this.archivosPorProducto = {}; // Limpiar los archivos después de importar
-                this.productoSeleccionado = ''; // Limpiar la selección de productos
-                this.closeModal();
-            })
-            .catch(error => {
-                console.error('Error al importar especificaciones:', error.response || error);
-                if (error.response) {
-                    this.Alert('danger', 'Error', error.response.data.message || 'Ocurrió un error en el servidor.');
-                } else {
-                    this.Alert('danger', 'Error', 'No se pudo conectar con el servidor.');
-                }
-            });
-        },
+    axios.post('/api/productos/especificaciones/import', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    .then(response => {
+        this.Alert('success', 'Importación exitosa', response.data.message);
+        this.resetBusqueda();
+        this.closeModal();
+    })
+    .catch(error => {
+        this.Alert('danger', 'Error', 'Ocurrió un error al importar.');
+    });
+},
         changePage(page) {
             this.page = page;
             this.pagination.current_page = page;

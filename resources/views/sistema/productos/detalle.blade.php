@@ -165,11 +165,7 @@
                                 </tr>
                                 @endforelse
 
-                                <!-- Campo fijo -->
-                                <tr>
-                                    <td>Número de Parte</td>
-                                    <td>: {{ $producto->nro_parte ?? 'No especificado' }}</td>
-                                </tr>
+                               
                             </tbody>
                         </table>
                     </div>

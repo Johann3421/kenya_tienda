@@ -713,7 +713,8 @@
                             </div>
                             {{-- MODAL PARA EDITAR ESPECIFICACIONES --}}
 
-                           {{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
+
+{{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
 <div class="modal-content" v-if="methods == 'import_spec'">
     <div class="modal-header" style="padding: 10px 15px">
         <h5 class="mb-0">IMPORTAR ESPECIFICACIONES</h5>
@@ -724,33 +725,40 @@
         <div class="modal-body" style="padding: 15px 15px;">
             <div class="form-group">
                 <label>Filtrar por Modelo</label>
-                <select v-model="modeloSeleccionado" class="form-control" @change="filtrarProductos">
+                <select v-model="modeloSeleccionado" class="form-control" @change="resetBusqueda">
                     <option value="">Todos los Modelos</option>
                     <option v-for="modelo in listaModelos" :value="modelo.id">@{{ modelo.descripcion }}</option>
                 </select>
-                <small class="text-muted">Seleccione un modelo para filtrar los productos.</small>
+                <small class="text-muted">Seleccione un modelo para buscar productos.</small>
             </div>
             <div class="form-group">
-                <label>Seleccionar Productos</label>
-                <select name="productos[]" v-model="productoSeleccionado" class="form-control" required>
-                    <option v-for="producto in productosFiltrados" :value="producto.id">
-                        @{{ producto.nombre }}
-                    </option>
-                </select>
-                <small class="text-muted">Seleccione un producto para asociar los archivos Excel.</small>
+                <label>Buscar Producto por N° de Parte</label>
+                <input type="text" v-model="busquedaParte" class="form-control" placeholder="Ingrese N° de parte y presione Enter" @keyup.enter="buscarPorParte">
+                <ul v-if="resultadosBusqueda.length" class="list-group mt-2">
+                    <li class="list-group-item" v-for="prod in resultadosBusqueda" :key="prod.id" @click="seleccionarProducto(prod)" style="cursor:pointer">
+                        <b>@{{ prod.nro_parte }}</b> - @{{ prod.nombre }}
+                    </li>
+                </ul>
+                <small class="text-muted">Escriba el número de parte y presione Enter. Luego seleccione el producto.</small>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="productoSeleccionado">
+                <label>Producto Seleccionado</label>
+                <div class="alert alert-info">
+                    <b>@{{ productoSeleccionado.nro_parte }}</b> - @{{ productoSeleccionado.nombre }}
+                </div>
+            </div>
+            <div class="form-group" v-if="productoSeleccionado">
                 <label>Archivos Excel</label>
-                <input type="file" ref="archivosExcel" class="form-control" multiple accept=".xlsx,.xls,.csv"
-                    @change="agregarArchivos">
+                <input type="file" class="form-control" multiple accept=".xlsx,.xls,.csv"
+                    @change="agregarArchivosExcel">
                 <small class="text-muted">Formato requerido: Columna A = Campo, Columna B = Descripción</small>
             </div>
-            <div class="form-group">
-                <label>Archivos Seleccionados para @{{ obtenerNombreProducto(productoSeleccionado) }}</label>
+            <div class="form-group" v-if="productoSeleccionado && archivosExcel.length">
+                <label>Archivos Seleccionados</label>
                 <ul>
-                    <li v-for="(archivo, index) in archivosPorProducto[productoSeleccionado] || []" :key="index">
+                    <li v-for="(archivo, index) in archivosExcel" :key="index">
                         @{{ archivo.name }}
-                        <button type="button" class="btn btn-sm btn-danger" @click="eliminarArchivo(productoSeleccionado, index)">
+                        <button type="button" class="btn btn-sm btn-danger" @click="eliminarArchivoExcel(index)">
                             <i class="fas fa-trash"></i>
                         </button>
                     </li>
@@ -759,13 +767,14 @@
             </div>
         </div>
         <div class="modal-footer" style="padding: 10px 15px;">
-            <button type="submit" class="btn btn-success btn-block">
+            <button type="submit" class="btn btn-success btn-block" :disabled="!productoSeleccionado || archivosExcel.length == 0">
                 <i class="fas fa-file-import"></i> Importar Especificaciones
             </button>
         </div>
     </form>
 </div>
 {{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
+
 
                             {{-- EDITAR --}}
                             <div class="modal-content" v-if="methods == 'edit'">

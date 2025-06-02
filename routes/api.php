@@ -45,3 +45,4 @@ Route::get('especificaciones/producto/{producto_id}', [EspecificacionApiControll
 Route::get('banners', [BannerMedioApiController::class, 'index']);
 Route::get('banners/{id}', [BannerMedioApiController::class, 'show']);
 Route::get('banners/posicion/{posicion}', [BannerMedioApiController::class, 'porPosicion']);
+Route::post('/productos/especificaciones/import', [ProductoController::class, 'importarEspecificaciones']);

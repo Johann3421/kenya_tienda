@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Http\JsonResponse;
 
 class ProductoController extends Controller
 {
@@ -769,5 +770,40 @@ public function subirFichaTecnica(Request $request, $producto)
 
         return response()->json(['message' => 'Especificaciones importadas correctamente.']);
     }
-    
+
+public function buscarPorModeloONroParte(Request $request)
+{
+    $query = \App\Producto::query();
+
+    if ($request->filled('modelo_id')) {
+        $query->where('modelo_id', $request->modelo_id);
+    }
+
+    if ($request->filled('nro_parte')) {
+        $query->where('nro_parte', 'like', '%' . $request->nro_parte . '%');
+    }
+
+    $productos = $query->select('id', 'nombre', 'nro_parte')->get();
+
+    return response()->json($productos);
+}
+public function importarEspecificaciones(Request $request)
+{
+    $request->validate([
+        'producto_id' => 'required|exists:productos,id',
+        'archivos_excel' => 'required|array',
+        'archivos_excel.*' => 'file|mimes:xlsx,xls,csv|max:2048',
+    ]);
+
+    $producto = Producto::findOrFail($request->producto_id);
+
+    try {
+        foreach ($request->file('archivos_excel') as $archivo) {
+            Excel::import(new EspecificacionesImport($producto), $archivo);
+        }
+        return response()->json(['message' => 'Especificaciones importadas correctamente.'], 200);
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Error al importar: ' . $e->getMessage()], 500);
+    }
+}
 }

@@ -386,3 +386,4 @@ Route::prefix('admin')->name('admin.')->group(function() {
     // Eliminar banner (DELETE)
     Route::delete('banners/{bannerMedio}', [BannerMedioController::class, 'destroy'])->name('banners.destroy');
 });
+Route::get('/producto/buscar-especificaciones', [ProductoController::class, 'buscarPorModeloONroParte']);
