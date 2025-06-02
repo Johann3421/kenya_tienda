@@ -38,14 +38,22 @@ class ProductoController extends Controller
         $ofimatica = Ofimatica::orderBy('id', 'ASC')->get();
         $categorias = Categoria::where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
         $productos = Producto::with('especificaciones')->paginate(10); // Ajusta según necesites
-        return view('sistema.productos.index', compact('marcas', 'categorias','modelos',
-        'procesador','ram','almacenamiento','ofimatica','tarjetavideo','productos'));
-
+        return view('sistema.productos.index', compact(
+            'marcas',
+            'categorias',
+            'modelos',
+            'procesador',
+            'ram',
+            'almacenamiento',
+            'ofimatica',
+            'tarjetavideo',
+            'productos'
+        ));
     }
 
     public function buscar(Request $request)
     {
-        $productos = Producto::with('getCategoria', 'getMarca','getModelo')
+        $productos = Producto::with('getCategoria', 'getMarca', 'getModelo')
             ->orderBy('nombre', 'ASC');
         if ($request->search) {
             switch ($request->search_por) {
@@ -56,7 +64,7 @@ class ProductoController extends Controller
                     $productos->where('codigo_interno', $request->search);
                     break;
                 case 'nombre':
-                    $productos->where('nombre', 'like', '%'.$request->search.'%');
+                    $productos->where('nombre', 'like', '%' . $request->search . '%');
                     break;
             }
         }
@@ -80,306 +88,200 @@ class ProductoController extends Controller
                 'last_page' => $productos->lastPage(),
                 'from'      => $productos->firstItem(),
                 'to'        => $productos->lastPage(),
-                'index'     => ($productos->currentPage()-1)*$productos->perPage(),
+                'index'     => ($productos->currentPage() - 1) * $productos->perPage(),
             ],
             'productos'    => $productos,
         ];
     }
 
-    public function store(Request $request)
-    {
-        $this->validate($request, [
-            'nombre'                => 'required',
-            'modelo_id'             => 'required',
-            //'unidad'                => 'required',
-            //'moneda'                => 'required',
-            //'precio_unitario'       => 'required|numeric',
-            'tipo_afectacion'       => 'required',
-            'nro_parte'       => 'required',
-            //'incluye_igv'           => 'required',
-        ]);
 
-        try {
-            DB::beginTransaction();
+public function store(Request $request)
+{
+    $this->validate($request, [
+        'nombre'                => 'required',
+        'modelo_id'             => 'required',
+        'tipo_afectacion'       => 'required',
+        'nro_parte'             => 'required',
+    ]);
 
-            $producto = new Producto();
-            $producto->nombre = $request->nombre;
-            $producto->nombre_secundario = $request->nombre_secundario;
-            $producto->descripcion = $request->descripcion;
-            $producto->nro_parte = $request->nro_parte;
-            $producto->procesador = $request->procesador;
-            $producto->ram = $request->ram;
-            $producto->almacenamiento = $request->almacenamiento;
-            $producto->conectividad = $request->conectividad;
-            $producto->conectividad_wlan = $request->conectividad_wlan;
-            $producto->conectividad_usb = $request->conectividad_usb;
-            $producto->video_vga = $request->video_vga;
-            $producto->video_hdmi = $request->video_hdmi;
-            $producto->sistema_operativo = $request->sistema_operativo;
-            $producto->unidad_optica = $request->unidad_optica;
-            $producto->teclado = $request->teclado;
-            $producto->tarjetavideo = $request->tarjetavideo;
-            $producto->mouse = $request->mouse;
-            $producto->suite_ofimatica = $request->suite_ofimatica;
-            $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
-            $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
-            $producto->certificacion = $request->certificacion;
-            if ($request->especificaciones) {
-                $producto->especificaciones = $request->especificaciones;
-            }
-            $producto->modelo_id = Str::upper($request->modelo_id);
-            //$producto->unidad = $request->unidad;
-            //$producto->moneda = $request->moneda;
-            //$producto->precio_unitario = $request->precio_unitario;
+    try {
+        DB::beginTransaction();
 
-            $producto->tipo_afectacion = $request->tipo_afectacion;
-
-
-            $producto->codigo_barras = Str::upper($request->codigo_barras);
-            $producto->codigo_interno = Str::upper($request->codigo_interno);
-            $producto->codigo_sunat = Str::upper($request->codigo_sunat);
-            $producto->linea_producto = Str::upper($request->linea_producto);
-            //$producto->incluye_igv = $request->incluye_igv;
-            $producto->categoria_id = $request->categoria;
-            $producto->marca_id = $request->marca;
-
-
-
-            //$producto->ficha_tecnica = $request->ficha_tecnica;
-
-
-            $producto->save();
-
-
-            $route2 = 'pdf/'.$producto->id;
-
-            if ($request->hasFile('pdf_ficha')) {
-                $file = $request->file('pdf_ficha');
-                $extension = $file->extension();
-                $file_name = 'PDF_'.Str::random(10).'.'.$extension;
-
-                Storage::putFileAs('public/'.$route2, $file, $file_name);
-                $producto->ficha_tecnica = $route2.'/'.$file_name;
-
-                $producto->save();
-            }
-
-            if (!$request->codigo_barras) {
-                $producto->codigo_barras = Str::padLeft($producto->id, 7, '0');
-                $producto->save();
-            }
-
-            $route = 'PRODUCTOS/'.$producto->id;
-
-            if ($request->hasFile('imagen_1')) {
-                $file_1 = $request->file('imagen_1');
-                $extension_1 = $file_1->extension();
-                $file_name_1 = 'IMG1_'.Str::random(10).'.'.$extension_1;
-
-                Storage::putFileAs('public/'.$route, $file_1, $file_name_1);
-                $producto->imagen_1 = $route.'/'.$file_name_1;
-            }
-            if ($request->hasFile('imagen_2')) {
-                $file_2 = $request->file('imagen_2');
-                $extension_2 = $file_2->extension();
-                $file_name_2 = 'IMG2_'.Str::random(10).'.'.$extension_2;
-
-                Storage::putFileAs('public/'.$route, $file_2, $file_name_2);
-                $producto->imagen_2 = $route.'/'.$file_name_2;
-            }
-            if ($request->hasFile('imagen_3')) {
-                $file_3 = $request->file('imagen_3');
-                $extension_3 = $file_3->extension();
-                $file_name_3 = 'IMG3_'.Str::random(10).'.'.$extension_3;
-
-                Storage::putFileAs('public/'.$route, $file_3, $file_name_3);
-                $producto->imagen_3 = $route.'/'.$file_name_3;
-            }
-            if ($request->hasFile('imagen_4')) {
-                $file_4 = $request->file('imagen_4');
-                $extension_4 = $file_4->extension();
-                $file_name_4 = 'IMG4_'.Str::random(10).'.'.$extension_4;
-
-                Storage::putFileAs('public/'.$route, $file_4, $file_name_4);
-                $producto->imagen_4 = $route.'/'.$file_name_4;
-            }
-            if ($request->hasFile('imagen_5')) {
-                $file_5 = $request->file('imagen_5');
-                $extension_5 = $file_5->extension();
-                $file_name_5 = 'IMG5_'.Str::random(10).'.'.$extension_5;
-
-                Storage::putFileAs('public/'.$route, $file_5, $file_name_5);
-                $producto->imagen_5 = $route.'/'.$file_name_5;
-            }
-
-            if ($request->hasFile('imagen_1') || $request->hasFile('imagen_2') || $request->hasFile('imagen_3') || $request->hasFile('imagen_4') || $request->hasFile('imagen_5')) {
-                $producto->save();
-            }
-
-            DB::commit();
-
-            return [
-                'type'     =>  'success',
-                'title'    =>  'CORRECTO: ',
-                'message'  =>  'El Producto se guardo correctamente.'
-            ];
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return [
-                'type'     =>  'danger',
-                'title'    =>  'ERROR: ',
-                'message'  =>  $th.' Ocurrio un error al guardar el Producto, intente nuevamente o contacte al Administrador del Sistema.'
-            ];
-        }
-    }
-
-    public function update(Request $request)
-    {
-        //return $request->especificaciones;
-        $this->validate($request, [
-            'nombre'                => 'required',
-            'modelo_id'                => 'required',
-            //'unidad'                => 'required',
-            //'moneda'                => 'required',
-            //'precio_unitario'       => 'required|numeric',
-            'tipo_afectacion'       => 'required',
-            //'incluye_igv'           => 'required',
-        ]);
-
-        try {
-            DB::beginTransaction();
-
-            $producto = Producto::findOrFail($request->id);
-            $producto->nombre = $request->nombre;
-            $producto->nombre_secundario = $request->nombre_secundario;
-            $producto->descripcion = $request->descripcion;
-            $producto->nro_parte = $request->nro_parte;
-            $producto->procesador = $request->procesador;
-            $producto->ram = $request->ram;
-            $producto->almacenamiento = $request->almacenamiento;
-            $producto->conectividad = $request->conectividad;
-            $producto->conectividad_wlan = $request->conectividad_wlan;
-            $producto->conectividad_usb = $request->conectividad_usb;
-            $producto->video_vga = $request->video_vga;
-            $producto->video_hdmi = $request->video_hdmi;
-            $producto->sistema_operativo = $request->sistema_operativo;
-            $producto->unidad_optica = $request->unidad_optica;
-            $producto->teclado = $request->teclado;
-            //$producto->ficha_tecnica = $request->ficha_tecnica;
-            $producto->mouse = $request->mouse;
-            $producto->suite_ofimatica = $request->suite_ofimatica;
-            $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
-            $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
-            $producto->certificacion = $request->certificacion;
+        $producto = new Producto();
+        $producto->nombre = $request->nombre;
+        $producto->nombre_secundario = $request->nombre_secundario;
+        $producto->descripcion = $request->descripcion;
+        $producto->nro_parte = $request->nro_parte;
+        $producto->procesador = $request->procesador;
+        $producto->ram = $request->ram;
+        $producto->almacenamiento = $request->almacenamiento;
+        $producto->conectividad = $request->conectividad;
+        $producto->conectividad_wlan = $request->conectividad_wlan;
+        $producto->conectividad_usb = $request->conectividad_usb;
+        $producto->video_vga = $request->video_vga;
+        $producto->video_hdmi = $request->video_hdmi;
+        $producto->sistema_operativo = $request->sistema_operativo;
+        $producto->unidad_optica = $request->unidad_optica;
+        $producto->teclado = $request->teclado;
+        $producto->tarjetavideo = $request->tarjetavideo;
+        $producto->mouse = $request->mouse;
+        $producto->suite_ofimatica = $request->suite_ofimatica;
+        $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
+        $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
+        $producto->certificacion = $request->certificacion;
+        if ($request->especificaciones) {
             $producto->especificaciones = $request->especificaciones;
-            $producto->modelo_id = $request->modelo_id;
-            $producto->tarjetavideo = $request->tarjetavideo;
-            //$producto->unidad = $request->unidad;
-            //$producto->moneda = $request->moneda;
-            //$producto->precio_unitario = $request->precio_unitario;
-
-            $producto->tipo_afectacion = $request->tipo_afectacion;
-
-
-            $producto->codigo_barras = Str::upper($request->codigo_barras);
-            $producto->codigo_interno = Str::upper($request->codigo_interno);
-            $producto->codigo_sunat = Str::upper($request->codigo_sunat);
-            $producto->linea_producto = Str::upper($request->linea_producto);
-            //$producto->incluye_igv = $request->incluye_igv;
-            $producto->categoria_id = $request->categoria;
-            $producto->marca_id = $request->marca;
-
-
-            $route2 = 'pdf/'.$producto->id;
-
-            if ($request->hasFile('pdf_ficha')) {
-                Storage::delete('public/'.$producto->ficha_tecnica);
-
-                $file = $request->file('pdf_ficha');
-                $extension = $file->extension();
-                $file_name = 'PDF_'.Str::random(10).'.'.$extension;
-
-                Storage::putFileAs('public/'.$route2, $file, $file_name);
-                $producto->ficha_tecnica = $route2.'/'.$file_name;
-            }
-
-
-
-            $route = 'PRODUCTOS/'.$request->id;
-
-            if ($request->hasFile('imagen_1')) {
-                Storage::delete('public/'.$producto->imagen_1);
-
-                $file_1 = $request->file('imagen_1');
-                $extension_1 = $file_1->extension();
-                $file_name_1 = 'IMG1_'.Str::random(10).'.'.$extension_1;
-
-                Storage::putFileAs('public/'.$route, $file_1, $file_name_1);
-                $producto->imagen_1 = $route.'/'.$file_name_1;
-            }
-            if ($request->hasFile('imagen_2')) {
-                Storage::delete('public/'.$producto->imagen_2);
-
-                $file_2 = $request->file('imagen_2');
-                $extension_2 = $file_2->extension();
-                $file_name_2 = 'IMG2_'.Str::random(10).'.'.$extension_2;
-
-                Storage::putFileAs('public/'.$route, $file_2, $file_name_2);
-                $producto->imagen_2 = $route.'/'.$file_name_2;
-            }
-            if ($request->hasFile('imagen_3')) {
-                Storage::delete('public/'.$producto->imagen_3);
-
-                $file_3 = $request->file('imagen_3');
-                $extension_3 = $file_3->extension();
-                $file_name_3 = 'IMG3_'.Str::random(10).'.'.$extension_3;
-
-                Storage::putFileAs('public/'.$route, $file_3, $file_name_3);
-                $producto->imagen_3 = $route.'/'.$file_name_3;
-            }
-            if ($request->hasFile('imagen_4')) {
-                Storage::delete('public/'.$producto->imagen_4);
-
-                $file_4 = $request->file('imagen_4');
-                $extension_4 = $file_4->extension();
-                $file_name_4 = 'IMG4_'.Str::random(10).'.'.$extension_4;
-
-                Storage::putFileAs('public/'.$route, $file_4, $file_name_4);
-                $producto->imagen_4 = $route.'/'.$file_name_4;
-            }
-            if ($request->hasFile('imagen_5')) {
-                Storage::delete('public/'.$producto->imagen_5);
-
-                $file_5 = $request->file('imagen_5');
-                $extension_5 = $file_5->extension();
-                $file_name_5 = 'IMG5_'.Str::random(10).'.'.$extension_5;
-
-                Storage::putFileAs('public/'.$route, $file_5, $file_name_5);
-                $producto->imagen_5 = $route.'/'.$file_name_5;
-            }
-
-            $producto->update();
-
-            DB::commit();
-
-            return [
-                'type'     =>  'success',
-                'title'    =>  'CORRECTO: ',
-                'message'  =>  'El Producto se actualizo correctamente.'
-            ];
-
-        } catch (\Throwable $th) {
-            DB::rollBack();
-
-            return [
-                'type'     =>  'danger',
-                'title'    =>  'ERROR: ',
-                'message'  =>  $th.' Ocurrio un error al actualizar el Producto, intente nuevamente o contacte al Administrador del Sistema.'
-            ];
         }
+        $producto->modelo_id = $request->modelo_id;
+        $producto->tipo_afectacion = $request->tipo_afectacion;
+        $producto->codigo_barras = Str::upper($request->codigo_barras);
+        $producto->codigo_interno = Str::upper($request->codigo_interno);
+        $producto->codigo_sunat = Str::upper($request->codigo_sunat);
+        $producto->linea_producto = Str::upper($request->linea_producto);
+        $producto->categoria_id = $request->categoria;
+        $producto->marca_id = $request->marca;
+
+        $producto->save();
+
+        // Subir PDF de ficha técnica
+        $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
+        $producto->save();
+
+        // Subir imágenes (igual que ya tienes)
+        $route = 'PRODUCTOS/' . $producto->id;
+        for ($i = 1; $i <= 5; $i++) {
+            if ($request->hasFile('imagen_' . $i)) {
+                $file = $request->file('imagen_' . $i);
+                $extension = $file->extension();
+                $file_name = 'IMG' . $i . '_' . Str::random(10) . '.' . $extension;
+                Storage::putFileAs('public/' . $route, $file, $file_name);
+                $producto->{'imagen_' . $i} = $route . '/' . $file_name;
+            }
+        }
+        $producto->save();
+
+        DB::commit();
+
+        return [
+            'type'     =>  'success',
+            'title'    =>  'CORRECTO: ',
+            'message'  =>  'El Producto se guardó correctamente.'
+        ];
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return [
+            'type'     =>  'danger',
+            'title'    =>  'ERROR: ',
+            'message'  =>  $th . ' Ocurrió un error al guardar el Producto, intente nuevamente o contacte al Administrador del Sistema.'
+        ];
     }
+}
+
+public function update(Request $request)
+{
+    $this->validate($request, [
+        'nombre'                => 'required',
+        'modelo_id'             => 'required',
+        'tipo_afectacion'       => 'required',
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        $producto = Producto::findOrFail($request->id);
+        $producto->nombre = $request->nombre;
+        $producto->nombre_secundario = $request->nombre_secundario;
+        $producto->descripcion = $request->descripcion;
+        $producto->nro_parte = $request->nro_parte;
+        $producto->procesador = $request->procesador;
+        $producto->ram = $request->ram;
+        $producto->almacenamiento = $request->almacenamiento;
+        $producto->conectividad = $request->conectividad;
+        $producto->conectividad_wlan = $request->conectividad_wlan;
+        $producto->conectividad_usb = $request->conectividad_usb;
+        $producto->video_vga = $request->video_vga;
+        $producto->video_hdmi = $request->video_hdmi;
+        $producto->sistema_operativo = $request->sistema_operativo;
+        $producto->unidad_optica = $request->unidad_optica;
+        $producto->teclado = $request->teclado;
+        $producto->mouse = $request->mouse;
+        $producto->suite_ofimatica = $request->suite_ofimatica;
+        $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
+        $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
+        $producto->certificacion = $request->certificacion;
+        $producto->especificaciones = $request->especificaciones;
+        $producto->modelo_id = $request->modelo_id;
+        $producto->tarjetavideo = $request->tarjetavideo;
+        $producto->tipo_afectacion = $request->tipo_afectacion;
+        $producto->codigo_barras = Str::upper($request->codigo_barras);
+        $producto->codigo_interno = Str::upper($request->codigo_interno);
+        $producto->codigo_sunat = Str::upper($request->codigo_sunat);
+        $producto->linea_producto = Str::upper($request->linea_producto);
+        $producto->categoria_id = $request->categoria;
+        $producto->marca_id = $request->marca;
+
+        // Subir PDF de ficha técnica
+        $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
+
+        // Subir imágenes (igual que ya tienes)
+        $route = 'PRODUCTOS/' . $producto->id;
+        for ($i = 1; $i <= 5; $i++) {
+            if ($request->hasFile('imagen_' . $i)) {
+                // Elimina la imagen anterior si existe
+                if ($producto->{'imagen_' . $i}) {
+                    Storage::delete('public/' . $producto->{'imagen_' . $i});
+                }
+                $file = $request->file('imagen_' . $i);
+                $extension = $file->extension();
+                $file_name = 'IMG' . $i . '_' . Str::random(10) . '.' . $extension;
+                Storage::putFileAs('public/' . $route, $file, $file_name);
+                $producto->{'imagen_' . $i} = $route . '/' . $file_name;
+            }
+        }
+        $producto->save();
+
+        DB::commit();
+
+        return [
+            'type'     =>  'success',
+            'title'    =>  'CORRECTO: ',
+            'message'  =>  'El Producto se actualizó correctamente.'
+        ];
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return [
+            'type'     =>  'danger',
+            'title'    =>  'ERROR: ',
+            'message'  =>  $th . ' Ocurrió un error al actualizar el Producto, intente nuevamente o contacte al Administrador del Sistema.'
+        ];
+    }
+}
+
+/**
+ * Sube el PDF de ficha técnica a storage/app/public/pdfs/{producto_id}
+ * y retorna la ruta relativa para guardar en la base de datos.
+ */
+
+public function subirFichaTecnica(Request $request, $producto)
+{
+    if ($request->hasFile('pdf_ficha')) {
+        // Elimina el archivo anterior si existe
+        if ($producto->ficha_tecnica && Storage::disk('public')->exists($producto->ficha_tecnica)) {
+            Storage::disk('public')->delete($producto->ficha_tecnica);
+        }
+
+        $file = $request->file('pdf_ficha');
+        $extension = $file->extension();
+        // El nombre será: soporte_{id}_{random}.pdf
+        $file_name = 'soporte_' . $producto->id . '_' . Str::random(10) . '.' . $extension;
+        $folder = 'pdfs';
+
+        Storage::disk('public')->putFileAs($folder, $file, $file_name);
+
+        return $folder . '/' . $file_name;
+    }
+    return $producto->ficha_tecnica; // Si no hay nuevo archivo, retorna el anterior
+}
 
     public function web(Request $request)
     {
@@ -395,15 +297,15 @@ class ProductoController extends Controller
     }
 
     public function detalle($id)
-{
-    $producto = Producto::findOrFail($id);
-    $especificaciones = Especificacion::where('producto_id', $id)->get();
+    {
+        $producto = Producto::findOrFail($id);
+        $especificaciones = Especificacion::where('producto_id', $id)->get();
 
-    return view('sistema.productos.detalle', [
-        'producto' => $producto,
-        'especificaciones' => $especificaciones
-    ]);
-}
+        return view('sistema.productos.detalle', [
+            'producto' => $producto,
+            'especificaciones' => $especificaciones
+        ]);
+    }
     public function guardar(Request $request)
     {
         $validator = \Validator::make($request->all(), [
@@ -440,17 +342,17 @@ class ProductoController extends Controller
             'imagen' => 'required|image'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
 
             return response()->json($validator->errors()->all(), 422);
         }
 
         $imagen_ficha = $request->file('imagen_ficha');
-        $nombre_ficha = preg_replace('([^A-Za-z0-9])', '', $request->nombre_ficha).'.'.$imagen_ficha->extension();
+        $nombre_ficha = preg_replace('([^A-Za-z0-9])', '', $request->nombre_ficha) . '.' . $imagen_ficha->extension();
         $imagen_ficha = $request->file('imagen_ficha')->storeAs('/', $nombre_ficha, 'public');
 
         $imagen = $request->file('imagen');
-        $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre).'.'.$imagen->extension();
+        $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre) . '.' . $imagen->extension();
         $imagen = $request->file('imagen')->storeAs('/', $nombre, 'public');
 
         Producto::create([
@@ -496,11 +398,11 @@ class ProductoController extends Controller
 
     public function todos(Request $request)
     {
-        if($request-> frase){
+        if ($request->frase) {
 
-            return Producto::where('nombre', 'like', '%'.$request->frase.'%')
-                ->orWhere('nombre_secundario', 'like', '%'.$request->frase.'%')
-                ->orWhere('descripcion', 'like', '%'.$request->frase.'%')
+            return Producto::where('nombre', 'like', '%' . $request->frase . '%')
+                ->orWhere('nombre_secundario', 'like', '%' . $request->frase . '%')
+                ->orWhere('descripcion', 'like', '%' . $request->frase . '%')
                 ->paginate(10)
             ;
         }
@@ -511,13 +413,13 @@ class ProductoController extends Controller
     public function ver(Request $request)
     {
         return Producto::select(
-                'productos.*',
-                \DB::raw("case
+            'productos.*',
+            \DB::raw("case
                     when tipo_afectacion = '10' then 'GRAVADO'
                     when tipo_afectacion = '20' then 'EXONERADO'
                     when tipo_afectacion = '30' then 'INAFECTO'
                 end as tipo_afectacion")
-            )
+        )
             ->where('id', $request->id)
             ->first()
         ;
@@ -526,13 +428,13 @@ class ProductoController extends Controller
     public function mdlEditarProducto(Request $request)
     {
         return Producto::select(
-                'productos.*',
-                \DB::raw("case
+            'productos.*',
+            \DB::raw("case
                     when id is not null then ''
                     else ''
                 end as imagen"),
-                'productos.imagen as imagen_actual'
-            )
+            'productos.imagen as imagen_actual'
+        )
             ->where('id', $request->id)
             ->first()
         ;
@@ -574,49 +476,49 @@ class ProductoController extends Controller
             'linea_producto' => 'required'
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
 
             return response()->json($validator->errors()->all(), 422);
         }
 
         $producto = Producto::find($request->id);
-        if($request->hasFile('ficha')){
+        if ($request->hasFile('ficha')) {
             $validator = \Validator::make($request->all(), [
                 'ficha' => 'nullable|ficha_t'
             ]);
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json($validator->errors()->all(), 422);
             }
 
-            if(\Storage::disk('public')->exists($producto->ficha)){
+            if (\Storage::disk('public')->exists($producto->ficha)) {
 
                 \Storage::disk('public')->delete($producto->ficha);
             }
 
             $ficha = $request->file('ficha');
-            $nombre_ficha = preg_replace('([^A-Za-z0-9])', '', $request->nombre_ficha).'.'.$ficha->extension();
+            $nombre_ficha = preg_replace('([^A-Za-z0-9])', '', $request->nombre_ficha) . '.' . $ficha->extension();
             $ficha = $request->file('ficha')->storeAs('/', $nombre_ficha, 'public');
 
             $producto->ficha = $nombre_ficha;
         }
 
-        if($request->hasFile('imagen')){
+        if ($request->hasFile('imagen')) {
 
             $validator = \Validator::make($request->all(), [
                 'imagen' => 'nullable|image'
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json($validator->errors()->all(), 422);
             }
 
-            if(\Storage::disk('public')->exists($producto->imagen)){
+            if (\Storage::disk('public')->exists($producto->imagen)) {
 
                 \Storage::disk('public')->delete($producto->imagen);
             }
 
             $imagen = $request->file('imagen');
-            $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre).'.'.$imagen->extension();
+            $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre) . '.' . $imagen->extension();
             $imagen = $request->file('imagen')->storeAs('/', $nombre, 'public');
 
             $producto->imagen = $nombre;
@@ -673,13 +575,6 @@ class ProductoController extends Controller
             DB::beginTransaction();
 
             $producto = Producto::findOrFail($request->id);
-            $route2 = 'pdf/'.$producto->id;
-
-            if ($producto->ficha_tecnica) {
-                Storage::delete('public/'.$producto->ficha_tecnica);
-
-                Storage::deleteDirectory('public/'.$route2);
-            }
             $producto->delete();
 
             DB::commit();
@@ -695,7 +590,7 @@ class ProductoController extends Controller
             return [
                 'type'     =>  'danger',
                 'title'    =>  'ERROR: ',
-                'message'  =>  $th.' Ocurrio un error al eliminar el Producto, intente nuevamente o contacte al Administrador del Sistema.'
+                'message'  =>  $th . ' Ocurrio un error al eliminar el Producto, intente nuevamente o contacte al Administrador del Sistema.'
             ];
         }
     }
@@ -717,163 +612,162 @@ class ProductoController extends Controller
     }
 
     public function importarEspecificacionesExcel(Request $request, $productoId)
-{
-    $request->validate([
-        'archivo_excel' => 'required|file|mimes:xlsx,xls,csv'
-    ]);
+    {
+        $request->validate([
+            'archivo_excel' => 'required|file|mimes:xlsx,xls,csv'
+        ]);
 
-    $producto = Producto::findOrFail($productoId);
+        $producto = Producto::findOrFail($productoId);
 
-    try {
-        $import = new EspecificacionesImport($producto);
+        try {
+            $import = new EspecificacionesImport($producto);
 
-        // Versión compatible con Laravel Excel 3.1
-        Excel::import($import, $request->file('archivo_excel'));
+            // Versión compatible con Laravel Excel 3.1
+            Excel::import($import, $request->file('archivo_excel'));
 
-        return back()->with('success', 'Especificaciones importadas correctamente');
-    } catch (\Exception $e) {
-        return back()->with('error', 'Error al importar: '.$e->getMessage());
+            return back()->with('success', 'Especificaciones importadas correctamente');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error al importar: ' . $e->getMessage());
+        }
     }
-}
 
-public function eliminarEspecificacion($id)
-{
-    $especificacion = Especificacion::findOrFail($id);
-    $especificacion->delete();
+    public function eliminarEspecificacion($id)
+    {
+        $especificacion = Especificacion::findOrFail($id);
+        $especificacion->delete();
 
-    return response()->json(['success' => true]);
-}
-public function getEspecificaciones($id)
-{
-    $especificaciones = Especificacion::where('producto_id', $id)
-                        ->select('id', 'campo', 'descripcion')
-                        ->get()
-                        ->toArray();
+        return response()->json(['success' => true]);
+    }
+    public function getEspecificaciones($id)
+    {
+        $especificaciones = Especificacion::where('producto_id', $id)
+            ->select('id', 'campo', 'descripcion')
+            ->get()
+            ->toArray();
 
-    $producto = Producto::find($id, ['nombre', 'nro_parte']);
+        $producto = Producto::find($id, ['nombre', 'nro_parte']);
 
-    return response()->json([
-        'success' => true,
-        'especificaciones' => $especificaciones,
-        'producto' => $producto ? $producto->toArray() : null
-    ]);
-}
-public function actualizarEspecificacion(Request $request, $id)
-{
-    $especificacion = Especificacion::findOrFail($id);
+        return response()->json([
+            'success' => true,
+            'especificaciones' => $especificaciones,
+            'producto' => $producto ? $producto->toArray() : null
+        ]);
+    }
+    public function actualizarEspecificacion(Request $request, $id)
+    {
+        $especificacion = Especificacion::findOrFail($id);
 
-    $validated = $request->validate([
-        'campo' => 'sometimes|string|max:255',
-        'descripcion' => 'sometimes|string|max:1000',
-    ]);
+        $validated = $request->validate([
+            'campo' => 'sometimes|string|max:255',
+            'descripcion' => 'sometimes|string|max:1000',
+        ]);
 
-    $especificacion->update($validated);
+        $especificacion->update($validated);
 
-    return response()->json(['success' => true]);
-}
+        return response()->json(['success' => true]);
+    }
 
-public function asignarFiltrosGenerico(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'productos' => 'required|array',
-        'productos.*' => ['required', 'json', function ($attribute, $value, $fail) {
-            $decoded = json_decode($value, true);
-            if (!is_array($decoded)) {
-                $fail('El formato de los filtros no es válido.');
+    public function asignarFiltrosGenerico(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'productos' => 'required|array',
+            'productos.*' => ['required', 'json', function ($attribute, $value, $fail) {
+                $decoded = json_decode($value, true);
+                if (!is_array($decoded)) {
+                    $fail('El formato de los filtros no es válido.');
+                }
+            }],
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->productos as $productoId => $filtrosJson) {
+                $filtros = json_decode($filtrosJson, true);
+                $producto = Producto::findOrFail($productoId);
+
+                // Eliminar relaciones existentes
+                $producto->filtros()->detach();
+
+                // Crear nuevas relaciones
+                foreach ($filtros as $asideId => $opciones) {
+                    foreach ($opciones as $opcion) {
+                        $producto->filtros()->attach($asideId, ['opcion' => $opcion]);
+                    }
+                }
+
+                // Actualizar filtros_ids especificando la tabla correcta
+                $producto->filtros_ids = $producto->filtros()
+                    ->pluck('asides.id') // Especificamos la tabla para el campo id
+                    ->unique()
+                    ->toArray();
+
+                $producto->save();
             }
-        }],
-    ]);
 
-    if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput();
+            DB::commit();
+
+            return back()->with('success', 'Filtros actualizados correctamente para todos los productos modificados.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Error al guardar los filtros: ' . $e->getMessage());
+        }
     }
+    public function filtrarAjax(Request $request)
+    {
+        $modeloId = $request->input('modelo_id');
+        $modelo = Modelo::with(['productos.filtros'])->findOrFail($modeloId);
 
-    try {
-        DB::beginTransaction();
+        $productos = $modelo->productos;
 
-        foreach ($request->productos as $productoId => $filtrosJson) {
-            $filtros = json_decode($filtrosJson, true);
-            $producto = Producto::findOrFail($productoId);
+        if ($request->query()) {
+            $productos = $productos->filter(function ($producto) use ($request) {
+                foreach ($request->query() as $key => $valores) {
+                    if ($key === 'modelo_id') continue;
 
-            // Eliminar relaciones existentes
-            $producto->filtros()->detach();
+                    $valores = explode(',', $valores);
 
-            // Crear nuevas relaciones
-            foreach ($filtros as $asideId => $opciones) {
-                foreach ($opciones as $opcion) {
-                    $producto->filtros()->attach($asideId, ['opcion' => $opcion]);
+                    $filtroValido = $producto->filtros->contains(function ($filtro) use ($key, $valores) {
+                        return Str::slug($filtro->nombre_aside) === $key
+                            && in_array($filtro->pivot->opcion, $valores);
+                    });
+
+                    if (!$filtroValido) return false;
+                }
+                return true;
+            })->values();
+        }
+
+        return response()->json($productos);
+    }
+    public function importMultipleEspecificaciones(Request $request)
+    {
+        // Depuración: Imprimir los datos recibidos
+        \Log::info('Productos:', ['productos' => $request->input('productos')]);
+        \Log::info('Archivos Excel:', ['archivos_excel' => $request->file('archivos_excel')]);
+
+        $request->validate([
+            'productos' => 'required|array',
+            'productos.*' => 'integer|exists:productos,id',
+            'archivos_excel' => 'required|array',
+            'archivos_excel.*.*' => 'file|mimes:xlsx,xls|max:2048',
+        ]);
+
+        foreach ($request->input('productos') as $productoId) {
+            $producto = Producto::find($productoId);
+            if ($producto && isset($request->file('archivos_excel')[$productoId])) {
+                foreach ($request->file('archivos_excel')[$productoId] as $file) {
+                    // Procesar cada archivo para el producto
+                    Excel::import(new EspecificacionesImport($producto), $file);
                 }
             }
-
-            // Actualizar filtros_ids especificando la tabla correcta
-            $producto->filtros_ids = $producto->filtros()
-                ->pluck('asides.id') // Especificamos la tabla para el campo id
-                ->unique()
-                ->toArray();
-
-            $producto->save();
         }
 
-        DB::commit();
-
-        return back()->with('success', 'Filtros actualizados correctamente para todos los productos modificados.');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return back()->with('error', 'Error al guardar los filtros: ' . $e->getMessage());
+        return response()->json(['message' => 'Especificaciones importadas correctamente.']);
     }
+    
 }
-public function filtrarAjax(Request $request)
-{
-    $modeloId = $request->input('modelo_id');
-    $modelo = Modelo::with(['productos.filtros'])->findOrFail($modeloId);
-
-    $productos = $modelo->productos;
-
-    if ($request->query()) {
-        $productos = $productos->filter(function ($producto) use ($request) {
-            foreach ($request->query() as $key => $valores) {
-                if ($key === 'modelo_id') continue;
-
-                $valores = explode(',', $valores);
-
-                $filtroValido = $producto->filtros->contains(function ($filtro) use ($key, $valores) {
-                    return Str::slug($filtro->nombre_aside) === $key
-                        && in_array($filtro->pivot->opcion, $valores);
-                });
-
-                if (!$filtroValido) return false;
-            }
-            return true;
-        })->values();
-    }
-
-    return response()->json($productos);
-}
-public function importMultipleEspecificaciones(Request $request)
-{
-    // Depuración: Imprimir los datos recibidos
-\Log::info('Productos:', ['productos' => $request->input('productos')]);
-\Log::info('Archivos Excel:', ['archivos_excel' => $request->file('archivos_excel')]);
-
-$request->validate([
-    'productos' => 'required|array',
-    'productos.*' => 'integer|exists:productos,id',
-    'archivos_excel' => 'required|array',
-    'archivos_excel.*.*' => 'file|mimes:xlsx,xls|max:2048',
-]);
-
-    foreach ($request->input('productos') as $productoId) {
-        $producto = Producto::find($productoId);
-        if ($producto && isset($request->file('archivos_excel')[$productoId])) {
-            foreach ($request->file('archivos_excel')[$productoId] as $file) {
-                // Procesar cada archivo para el producto
-                Excel::import(new EspecificacionesImport($producto), $file);
-            }
-        }
-    }
-
-    return response()->json(['message' => 'Especificaciones importadas correctamente.']);
-}
-
-}
-

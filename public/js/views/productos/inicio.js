@@ -1,5 +1,5 @@
 new Vue({
-    el: '#app-vasco',
+    el: '#app-kenya',
     data: {
         form: {},
         productos: {},
@@ -364,3 +364,4 @@ new Vue({
         }
     }
 })
+

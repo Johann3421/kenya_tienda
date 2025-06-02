@@ -218,3 +218,4 @@
     <script src="https://cdn.jsdelivr.net/npm/busy-load@0.1.2/dist/app.min.js"></script>
     <script src="{{asset('/js/views/productos/inicio.js')}}"></script>
 @endsection
+

@@ -189,9 +189,7 @@
                                         <img alt="Tarjeta de garantía icon" srcset="https://img.icons8.com/fluency/2x/guarantee.png 3x">
                                         <br>
                                         FICHA TECNICA:
-                                        <a href="{{asset("/storage/$producto->ficha_tecnica")}}" target="_blank">
-                                            PDF <iconify-icon icon="bx:download"></iconify-icon>
-                                        </a>
+                                        <a href="{{ asset('storage/'.$producto->ficha_tecnica) }}" target="_blank">PDF</a>
                                         <img alt="Tarjeta de garantía icon" srcset="https://img.icons8.com/ios-filled/2x/wordbook.png 3x" style="text-align:center;filter:invert(0%) sepia(0%) saturate(7469%) hue-rotate(214deg) brightness(91%) contrast(107%);">
                                     </div>
                                 </div>

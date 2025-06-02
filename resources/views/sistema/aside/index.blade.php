@@ -2,6 +2,7 @@
 @section('app-name')
     <title>Grupo kenya - Aside</title>
 @endsection
+@section('css')
 
 @section('content')
     <div class="card shadow-lg">
@@ -203,25 +204,40 @@
                         </div>
                     </div>
 
-                    <!-- Select producto -->
-                    <div class="row mb-4">
-                        <div class="col-md-12">
-                            <label class="form-label">Seleccionar Producto</label>
-                            <select class="form-select" required id="productoSelector" size="8">
-                                @foreach ($productos as $modelo => $grupo)
-                                    <optgroup label="{{ $modelo ?? 'Sin modelo' }}" data-modelo="{{ $modelo }}">
-                                        @foreach ($grupo as $producto)
-                                            <option value="{{ $producto->id }}"
-                                                    data-modelo="{{ $modelo }}"
-                                                    data-modelo-id="{{ $producto->modelo_id }}">
-                                                {{ $producto->nombre }}
-                                            </option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
+<!-- Select producto -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <label class="form-label">Seleccionar Producto</label>
+        <div class="producto-selector-wrapper"
+            style="max-height: 260px; overflow-y: auto; overflow-x: auto; border: 1px solid #dee2e6; border-radius: .375rem; background: #f8f9fa; padding: 0.5rem; min-width: 100%;">
+            <select class="form-select border-0 bg-transparent producto-selector" required id="productoSelector"
+                size="10"
+                style="font-size: 0.88rem; min-height: 220px; min-width: 700px; line-height: 1.3; white-space: nowrap;">
+                @foreach ($productos as $modelo => $grupo)
+                    <optgroup label="{{ $modelo ?? 'Sin modelo' }}" data-modelo="{{ $modelo }}">
+                        @foreach ($grupo as $producto)
+                            @php
+                                $detalles = [];
+                                if($producto->procesador) $detalles[] = 'Proc: '.$producto->procesador;
+                                if($producto->ram) $detalles[] = 'RAM: '.$producto->ram;
+                                if($producto->almacenamiento) $detalles[] = 'Alm: '.$producto->almacenamiento;
+                                if($producto->sistema_operativo) $detalles[] = 'SO: '.$producto->sistema_operativo;
+                                if($producto->marca) $detalles[] = 'Marca: '.$producto->marca;
+                                $detalleStr = count($detalles) ? ' — '.implode(' | ', $detalles) : '';
+                            @endphp
+                            <option value="{{ $producto->id }}"
+                                data-modelo="{{ $modelo }}"
+                                data-modelo-id="{{ $producto->modelo_id }}"
+                                style="font-size:0.88rem; padding: 0.35rem 0.7rem; border-bottom: 1px solid #e9ecef; background: #fff;">
+                                {{ strtoupper($producto->nombre) }}{{ $detalleStr }}
+                            </option>
+                        @endforeach
+                    </optgroup>
+                @endforeach
+            </select>
+        </div>
+    </div>
+</div>
 
                     <!-- Filtros -->
                     <div id="filtrosContainer">
@@ -271,6 +287,7 @@
         </div>
     </div>
 </div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const selectAsideDuplicar = document.getElementById('selectAsideDuplicar');
