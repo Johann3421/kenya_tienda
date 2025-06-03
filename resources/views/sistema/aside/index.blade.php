@@ -3,7 +3,51 @@
     <title>Grupo kenya - Aside</title>
 @endsection
 @section('css')
+<style>
+    /* Estilos para mejorar la experiencia de scroll */
+    .producto-selector-wrapper {
+        scrollbar-width: thin;
+        scrollbar-color: #adb5bd #f8f9fa;
+    }
 
+    .producto-selector-wrapper::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    .producto-selector-wrapper::-webkit-scrollbar-track {
+        background: #f8f9fa;
+        border-radius: 4px;
+    }
+
+    .producto-selector-wrapper::-webkit-scrollbar-thumb {
+        background-color: #adb5bd;
+        border-radius: 4px;
+    }
+
+    .producto-selector {
+        border: none !important;
+    }
+
+    .producto-selector optgroup {
+        font-weight: bold;
+        font-style: normal;
+        color: #495057;
+        background-color: #e9ecef;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .producto-selector option {
+        padding: 0.35rem 0.7rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .producto-selector option:hover {
+        background-color: #e9ecef !important;
+    }
+    
+</style>
+@endsection
 @section('content')
     <div class="card shadow-lg">
         <div class="card-header bg-kenya text-white">
@@ -204,17 +248,16 @@
                         </div>
                     </div>
 
-<!-- Select producto -->
 <div class="row mb-4">
     <div class="col-md-12">
         <label class="form-label">Seleccionar Producto</label>
         <div class="producto-selector-wrapper"
-            style="max-height: 260px; overflow-y: auto; overflow-x: auto; border: 1px solid #dee2e6; border-radius: .375rem; background: #f8f9fa; padding: 0.5rem; min-width: 100%;">
+            style="max-height: 260px; overflow: auto; border: 1px solid #dee2e6; border-radius: .375rem; background: #f8f9fa; padding: 0.5rem;">
             <select class="form-select border-0 bg-transparent producto-selector" required id="productoSelector"
                 size="10"
-                style="font-size: 0.88rem; min-height: 220px; min-width: 700px; line-height: 1.3; white-space: nowrap;">
+                style="font-size: 0.88rem; min-height: 220px; width: auto; min-width: 100%; line-height: 1.3; white-space: nowrap;">
                 @foreach ($productos as $modelo => $grupo)
-                    <optgroup label="{{ $modelo ?? 'Sin modelo' }}" data-modelo="{{ $modelo }}">
+                    <optgroup label="{{ $modelo ?? 'Sin modelo' }}" data-modelo="{{ $modelo }}" style="width: auto;">
                         @foreach ($grupo as $producto)
                             @php
                                 $detalles = [];
@@ -228,7 +271,7 @@
                             <option value="{{ $producto->id }}"
                                 data-modelo="{{ $modelo }}"
                                 data-modelo-id="{{ $producto->modelo_id }}"
-                                style="font-size:0.88rem; padding: 0.35rem 0.7rem; border-bottom: 1px solid #e9ecef; background: #fff;">
+                                style="font-size:0.88rem; padding: 0.35rem 0.7rem; border-bottom: 1px solid #e9ecef; background: #fff; width: auto;">
                                 {{ strtoupper($producto->nombre) }}{{ $detalleStr }}
                             </option>
                         @endforeach
@@ -289,62 +332,62 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const selectAsideDuplicar = document.getElementById('selectAsideDuplicar');
-    const duplicarConfirmMsg = document.getElementById('duplicarConfirmMsg');
-    const btnConfirmarDuplicar = document.getElementById('btnConfirmarDuplicar');
-    const duplicarAsideForm = document.getElementById('duplicarAsideForm');
-    let selectedAside = '';
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAsideDuplicar = document.getElementById('selectAsideDuplicar');
+        const duplicarConfirmMsg = document.getElementById('duplicarConfirmMsg');
+        const btnConfirmarDuplicar = document.getElementById('btnConfirmarDuplicar');
+        const duplicarAsideForm = document.getElementById('duplicarAsideForm');
+        let selectedAside = '';
 
-    // Mostrar mensaje de confirmación solo si hay selección
-    selectAsideDuplicar.addEventListener('change', function() {
-        selectedAside = this.value;
-        if (selectedAside) {
-            duplicarConfirmMsg.classList.remove('d-none');
-            btnConfirmarDuplicar.disabled = false;
-        } else {
-            duplicarConfirmMsg.classList.add('d-none');
-            btnConfirmarDuplicar.disabled = true;
-        }
-    });
-
-    // Enviar duplicado por AJAX
-    duplicarAsideForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (!selectedAside) return;
-
-        btnConfirmarDuplicar.disabled = true;
-        btnConfirmarDuplicar.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Duplicando...';
-
-        fetch("{{ route('sistema.aside.duplicar') }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ aside_id: selectedAside })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                btnConfirmarDuplicar.innerHTML = '<i class="fas fa-check"></i> ¡Duplicado!';
-                setTimeout(() => window.location.reload(), 800);
+        // Mostrar mensaje de confirmación solo si hay selección
+        selectAsideDuplicar.addEventListener('change', function() {
+            selectedAside = this.value;
+            if (selectedAside) {
+                duplicarConfirmMsg.classList.remove('d-none');
+                btnConfirmarDuplicar.disabled = false;
             } else {
+                duplicarConfirmMsg.classList.add('d-none');
+                btnConfirmarDuplicar.disabled = true;
+            }
+        });
+
+        // Enviar duplicado por AJAX
+        duplicarAsideForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!selectedAside) return;
+
+            btnConfirmarDuplicar.disabled = true;
+            btnConfirmarDuplicar.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Duplicando...';
+
+            fetch("{{ route('sistema.aside.duplicar') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ aside_id: selectedAside })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    btnConfirmarDuplicar.innerHTML = '<i class="fas fa-check"></i> ¡Duplicado!';
+                    setTimeout(() => window.location.reload(), 800);
+                } else {
+                    btnConfirmarDuplicar.innerHTML = '<i class="fas fa-copy"></i> Duplicar';
+                    btnConfirmarDuplicar.disabled = false;
+                    alert('No se pudo duplicar el filtro.');
+                }
+            })
+            .catch(() => {
                 btnConfirmarDuplicar.innerHTML = '<i class="fas fa-copy"></i> Duplicar';
                 btnConfirmarDuplicar.disabled = false;
-                alert('No se pudo duplicar el filtro.');
-            }
-        })
-        .catch(() => {
-            btnConfirmarDuplicar.innerHTML = '<i class="fas fa-copy"></i> Duplicar';
-            btnConfirmarDuplicar.disabled = false;
-            alert('Error al duplicar el filtro.');
+                alert('Error al duplicar el filtro.');
+            });
         });
     });
-});
 </script>
-    <script>
+<script>
         document.addEventListener('DOMContentLoaded', () => {
             const selectorModelo = document.getElementById('selectorModelo');
             const productoSelector = document.getElementById('productoSelector');
@@ -480,10 +523,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 actualizarProductosYFiltros();
             }
         });
-    </script>
-
-
-    <script>
+</script>
+<script>
         document.addEventListener('DOMContentLoaded', function() {
             // Configuración para el modal de nuevo
             const opcionesNuevo = [];
@@ -612,5 +653,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
-    </script>
+</script>
 @endsection
