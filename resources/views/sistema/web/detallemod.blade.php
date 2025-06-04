@@ -107,20 +107,23 @@
                             <div class="productoItem">
                                 <div class="contorno">
                                     <div class="portfolio-wrap" style="margin: 0 auto;">
-                                        @php
-                                            $isModelo10 = $prod->modelo && $prod->modelo->id == 10;
-                                            $isTonner = $prod->modelo && stripos($prod->modelo->descripcion ?? '', 'tonner') !== false;
+    @php
+        $isModelo10 = $prod->modelo && $prod->modelo->id == 10;
+        $isTonner = $prod->modelo && stripos($prod->modelo->descripcion ?? '', 'tonner') !== false;
 
-                                            $img = ($isModelo10 || $isTonner)
-                                                ? ($prod->imagen_1 ? asset('storage/' . $prod->imagen_1) : asset('producto.jpg'))
-                                                : ($prod->modelo && $prod->modelo->img_mod
-                                                    ? asset('storage/' . $prod->modelo->img_mod)
-                                                    : asset('producto.jpg'));
-                                        @endphp
+        $img = ($isModelo10 || $isTonner)
+            ? ($prod->imagen_1 ? asset('storage/' . $prod->imagen_1) : asset('producto.jpg'))
+            : ($prod->modelo && $prod->modelo->img_mod
+                ? asset('storage/' . $prod->modelo->img_mod)
+                : asset('producto.jpg'));
+    @endphp
 
-                                        <img src="{{ $img }}" class="img-fluid"
-                                             alt="Imagen de {{ $prod->nombre }}">
-                                    </div>
+    <img src="{{ $img }}"
+         class="img-fluid"
+         alt="Imagen de {{ $prod->nombre }}"
+         loading="lazy"
+         onerror="this.onerror=null;this.src='{{ asset('producto.jpg') }}'">
+</div>
 
 
                                     <div class="descripcion">
