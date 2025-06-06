@@ -678,6 +678,28 @@
                     font-size: 14px;
                 }
             }
+            /* Centra el PDF y limita el ancho */
+.pdf-center-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 400px;
+}
+
+#pdf-viewer canvas {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-radius: 8px;
+}
+
+/* Opcional: Limita el ancho máximo del PDF */
+#pdf-viewer {
+    max-width: 800px;
+    width: 100%;
+}
         </style>
 @endsection
 @section('menu')
@@ -950,25 +972,10 @@
                         </div>
 
                         <div class="tab-pane fade" id="terms" role="tabpanel">
-                            <div class="terms-container">
-                                <div class="section-title">
-                                    <i class="bx bx-file"></i> TÉRMINOS Y CONDICIONES DE GARANTÍA
-                                </div>
-                                <div class="terms-content">
-                                    <p>1. La garantía cubre defectos de fabricación bajo condiciones normales de uso.</p>
-                                    <p>2. El período de garantía es de @{{ garantia.garantia || 'X' }} meses a partir de la fecha de
-                                        compra.</p>
-                                    <p>3. La garantía no cubre daños por mal uso, accidentes o modificaciones no
-                                        autorizadas.</p>
-                                    <p>4. Para hacer válida la garantía debe presentar este comprobante y el producto con su
-                                        número de serie legible.</p>
-                                    <p>5. La garantía no incluye daños por fenómenos naturales o condiciones ambientales
-                                        extremas.</p>
-                                    <p>6. El servicio de garantía puede incluir reparación o reemplazo del producto a
-                                        criterio del fabricante.</p>
-                                </div>
-                            </div>
-                        </div>
+    <div class="pdf-center-container">
+        <div id="pdf-viewer"></div>
+    </div>
+</div>
                     </div>
                 </div>
             </div>
@@ -996,4 +1003,40 @@
     </script>
     <script src="{{ asset('js/consultar/garantia.js') }}"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
+<script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function renderPDF() {
+            if (!window.pdfjsLib) return;
+            pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('js/pdfjs/pdf.worker.js') }}";
+            const url = "{{ asset('GARANTIA_KENYA_SIN_HORARIO.pdf') }}";
+            const container = document.getElementById('pdf-viewer');
+            container.innerHTML = '';
+            pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    pdf.getPage(pageNum).then(function(page) {
+                        const viewport = page.getViewport({ scale: 1.2 });
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        container.appendChild(canvas);
+                        page.render({ canvasContext: context, viewport: viewport });
+                    });
+                }
+            });
+        }
+
+        // Renderiza el PDF cada vez que se hace clic en la pestaña de términos
+        document.getElementById('terms-tab').addEventListener('click', function () {
+            setTimeout(renderPDF, 100); // Espera a que la pestaña sea visible
+        });
+
+        // Si la pestaña está activa al cargar, renderiza de inmediato
+        if (document.getElementById('terms').classList.contains('active') ||
+            document.getElementById('terms').classList.contains('show')) {
+            renderPDF();
+        }
+    });
+</script>
 @endsection

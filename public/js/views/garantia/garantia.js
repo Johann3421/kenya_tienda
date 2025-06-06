@@ -86,6 +86,10 @@ new Vue({
     }
 },
     methods: {
+        closeModal(method) {
+    $('#formularioModal').modal('hide');
+    this.methods = ''; // Limpia el modo
+},
         getBarPercent(fechaInicio, fechaFin) {
         if (!fechaInicio || !fechaFin) return 0;
         const start = moment(fechaInicio);
@@ -450,4 +454,12 @@ new Vue({
             }
         },
     },
+    mounted() {
+
+    setTimeout(() => {
+    $('.modal-backdrop').remove(); // elimina fondo si quedó colgado
+    $('body').removeClass('modal-open'); // permite scroll otra vez
+}, 300);
+
+},
 });

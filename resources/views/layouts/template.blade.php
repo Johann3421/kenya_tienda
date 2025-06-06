@@ -17,7 +17,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Cargar Bootstrap JS (opcional pero recomendado si usas modales de Bootstrap) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <!-- Toastr para notificaciones -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
@@ -77,68 +77,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    {{-- <li>
-                        <div class="dropdown triangle">
-                            <a class="dropdown-toggle" href="#" data-toggle="dropdown"><i class="icon feather icon-bell notification-icon" style="padding: 6px;padding-left: 8px;"></i><span class="badge bg-danger"><span class="sr-only"></span></span></a>
-                            <div class="dropdown-menu dropdown-menu-right notification">
-                                <div class="noti-head">
-                                    <h6 class="d-inline-block m-b-0">Notifications</h6>
-                                    <div class="float-right">
-                                        <a href="#!" class="m-r-10">mark as read</a>
-                                        <a href="#!">clear all</a>
-                                    </div>
-                                </div>
-                                <ul class="noti-body">
-                                    <li class="n-title">
-                                        <p class="m-b-0">NEW</p>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <p><strong>John Doe</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>5 min</span></p>
-                                                <p>New ticket Added</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="n-title">
-                                        <p class="m-b-0">EARLIER</p>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>10 min</span></p>
-                                                <p>Prchace New Theme and make payment</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <p><strong>Sara Soudein</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>12 min</span></p>
-                                                <p>currently login</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="notification">
-                                        <div class="media">
-                                            <div class="media-body">
-                                                <p><strong>Joseph William</strong><span class="n-time text-muted"><i class="icon feather icon-clock m-r-10"></i>30 min</span></p>
-                                                <p>Prchace New Theme and make payment</p>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="noti-footer">
-                                    <a href="#!">show all</a>
-                                </div>
-                            </div>
-                        </div>
-                    </li> --}}
-                    {{-- <li>
-                        <div class="dropdown triangle">
-                            <a href="#!" class="displayChatbox dropdown-toggle"><i class="icon feather icon-mail notification-icon" style="padding: 6px;padding-left: 8px;"></i><span class="badge bg-success"><span class="sr-only"></span></span></a>
-                        </div>
-                    </li> --}}
+                    
                     <li>
                         <div class="dropdown drp-user triangle">
                             <a href="#!" class="dropdown-toggle" data-toggle="dropdown">
@@ -165,22 +104,7 @@
             </div>
         </header>
 
-        {{-- <div class="container d-none d-sm-block">
-            <div id="switcher-top" class="d-flex justify-content-center switcher-hover">
-                <span class="text-white py-0 px-5 text-center"><i class="fas fa-plus fa-fw"></i>Acceso Rápido</span>
-            </div>
-        </div>
-        <div class="container d-none d-sm-block">
-            <div id="switcher-list" class="d-flex justify-content-center switcher-hover">
-                <div class="row">
-                    <div class="px-3"><a class="py-3" href="https://sys.factmype.top/documents/create"><i class="fas fa-fw fa-file-invoice" aria-hidden="true"></i> Nuevo Comprobante</a></div>
-                    <div class="px-3"><a class="py-3" href="https://sys.factmype.top/pos"><i class="fas fa-fw fa-cash-register" aria-hidden="true"></i> POS</a></div>
-                    <div style="min-width: 220px;"></div>
-                    <div class="px-3"><a class="py-3" href="https://sys.factmype.top/companies/create"><i class="fas fa-fw fa-industry" aria-hidden="true"></i> Empresa</a></div>
-                    <div class="px-3"><a class="py-3" href="https://sys.factmype.top/establishments"><i class="fas fa-fw fa-warehouse" aria-hidden="true"></i> Establecimientos</a></div>
-                </div>
-            </div>
-        </div> --}}
+
 
         <section class="header-chat">
             <div class="h-list-header">
@@ -241,7 +165,7 @@
                 <!-- CONTENIDO -->
                 @yield('content')
                 <!-- Bootstrap JS Bundle con Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
             </div>
         </div>
 

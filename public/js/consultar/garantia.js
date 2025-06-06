@@ -14,6 +14,7 @@ new Vue({
         mesesTotalesGarantia: 0,
     },
     methods: {
+
         calcularPorcentajeGarantia() {
     const fechaInicio = new Date(this.garantia.fecha_venta);
     const fechaFin = new Date(this.garantia.fecha_Vencimiento);
@@ -111,6 +112,7 @@ new Vue({
         },
     },
     mounted() {
+        
     if (this.state == 'success') {
         this.calcularPorcentajeGarantia();
         setInterval(this.calcularPorcentajeGarantia, 86400000); // Actualiza cada 24 horas
