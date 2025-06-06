@@ -8,9 +8,51 @@ new Vue({
         state: null,
         whatsapp: my_whatsapp,
         vencido: mi_fecha,
-        tabsEnabled: false // Nueva variable para controlar las pestañas
+        tabsEnabled: false, // Nueva variable para controlar las pestañas
+        warrantyStage: 'new',
+        diasRestantes: 0,
+        mesesTotalesGarantia: 0,
     },
     methods: {
+        calcularPorcentajeGarantia() {
+    const fechaInicio = new Date(this.garantia.fecha_venta);
+    const fechaFin = new Date(this.garantia.fecha_Vencimiento);
+    const hoy = new Date();
+
+    // Calcular días totales y restantes
+    const diasTotales = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+    this.diasRestantes = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+
+    // Calcular porcentaje de tiempo RESTANTE (no transcurrido)
+    const porcentajeRestante = (this.diasRestantes / diasTotales) * 100;
+
+    // Determinar la etapa de la garantía
+    if (this.diasRestantes <= 0) {
+        this.warrantyStage = 'expired';
+    } else if (porcentajeRestante <= 20) {
+        this.warrantyStage = 'ending';  // Últimos 20% del tiempo
+    } else if (porcentajeRestante <= 50) {
+        this.warrantyStage = 'mid';     // Entre 20-50% del tiempo restante
+    } else {
+        this.warrantyStage = 'new';     // Más del 50% del tiempo restante
+    }
+
+    // Retornar porcentaje RESTANTE (para que la barra se vacíe)
+    return Math.max(0, Math.min(100, porcentajeRestante));
+},
+    getWarrantyStageClass() {
+        return {
+            'new-stage': this.warrantyStage === 'new',
+            'mid-stage': this.warrantyStage === 'mid',
+            'ending-stage': this.warrantyStage === 'ending',
+            'expired-stage': this.warrantyStage === 'expired',
+            'progress-bar-animated': this.warrantyStage === 'ending',
+            'progress-bar-striped': this.warrantyStage === 'ending'
+        };
+    },
+    showDaysCount() {
+        return this.warrantyStage !== 'expired' && this.diasRestantes <= 60;
+    },
         Buscar() {
             this.errors = [];
             this.garantia = [];
@@ -68,4 +110,10 @@ new Vue({
             return number + "";
         },
     },
+    mounted() {
+    if (this.state == 'success') {
+        this.calcularPorcentajeGarantia();
+        setInterval(this.calcularPorcentajeGarantia, 86400000); // Actualiza cada 24 horas
+    }
+},
 });

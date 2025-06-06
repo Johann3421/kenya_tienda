@@ -292,7 +292,6 @@
 
         .detail-item i,
         .detail-item iconify-icon {
-            margin-right: 8px;
             width: 20px;
             text-align: center;
             color: #E67E22;
@@ -551,6 +550,112 @@
                 font-size: 14px;
             }
         }
+
+        /* Estilos para la barra de progreso por etapas */
+        .warranty-progress {
+            margin: 20px 0;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            transition: width 0.6s ease;
+        }
+
+        /* Colores para cada etapa */
+        .new-stage {
+            background-color: #4CAF50;
+            /* Verde */
+        }
+
+        .mid-stage {
+            background-color: #FFC107;
+            /* Amarillo */
+        }
+
+        .ending-stage {
+            background-color: #F44336;
+            /* Rojo */
+            animation: pulse 1.5s infinite;
+        }
+
+        .expired-stage {
+            background-color: #9E9E9E;
+            /* Gris */
+        }
+
+        /* Animación para la etapa "Por vencer" */
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Estilos para las etiquetas de estado */
+        .warranty-stage-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .warranty-stage-info span {
+            font-size: 12px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+        }
+
+        .warranty-stage-info span.active {
+            font-weight: bold;
+            color: #000;
+        }
+
+        .warranty-stage-info i {
+            margin-right: 5px;
+        }
+
+        /* Mensajes de expiración */
+        .expiration-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .expiration-message.new {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .expiration-message.mid {
+            background-color: #fff8e1;
+            color: #ff8f00;
+        }
+
+        .expiration-message.ending {
+            background-color: #ffebee;
+            color: #c62828;
+            font-weight: bold;
+        }
+
+        .expiration-message.expired {
+            background-color: #f5f5f5;
+            color: #616161;
+        }
     </style>
 @endsection
 @section('menu')
@@ -611,137 +716,161 @@
                     </ul>
 
                     <div class="tab-content" id="warrantyTabsContent">
-    <!-- Pestaña de Garantía -->
-    <div class="tab-pane fade show active" id="warranty" role="tabpanel">
-        <div class="warranty-card">
-            <div class="card-header">
-                <div class="product-title" v-for="nom in garantia.get_productos">
-                    Producto: @{{ nom.nombre }}
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="details-column">
-                    <div class="section-title">
-                        <iconify-icon icon="zondicons:align-center"></iconify-icon> DETALLES
-                    </div>
-                    <div class="detail-item">
-                        <i class="fa-solid fa-tv"></i> Serie: @{{ garantia.serie }}
-                    </div>
-                    <div class="detail-item">
-                        <iconify-icon icon="bx:calendar"></iconify-icon> Inicia: @{{ garantia.fecha_venta }}
-                    </div>
-                    <div class="detail-item">
-                        <iconify-icon icon="bx:time"></iconify-icon> Garantía: @{{ garantia.garantia }} Meses
-                    </div>
-                    <div class="product-image-container">
-                        <img v-for="producto in garantia.get_productos"
-                            :src="producto.modelo && producto.modelo.img_mod
-                                ? '/storage/' + producto.modelo.img_mod
-                                : (producto.imagen_1 ? '/storage/' + producto.imagen_1 : '/producto.jpg')"
-                            class="product-image"
-                            :alt="'Imagen de ' + producto.nombre">
-                    </div>
-                    <div class="warranty-progress">
-                        <div v-if="garantia.fecha_Vencimiento > vencido" class="progress active">
-                            <div class="progress-bar" :style="'width:' + garantia.garantia + '%'"></div>
-                        </div>
-                        <div v-if="garantia.fecha_Vencimiento < vencido" class="progress expired">
-                            <div class="progress-bar"></div>
-                        </div>
-                        <div v-if="garantia.fecha_Vencimiento == vencido" class="progress expiring">
-                            <div class="progress-bar"></div>
-                        </div>
-                    </div>
-                    <div class="expiration-message active" v-if="garantia.fecha_Vencimiento > vencido">
-                        <iconify-icon icon="bx:calendar"></iconify-icon>
-                        La Garantía Vence: @{{ garantia.fecha_Vencimiento }}
-                    </div>
-                    <div class="expiration-message expired" v-if="garantia.fecha_Vencimiento < vencido">
-                        <iconify-icon icon="bx:calendar"></iconify-icon>
-                        La garantía ha vencido el: @{{ garantia.fecha_Vencimiento }}
-                    </div>
-                    <div class="expiration-message expiring" v-if="garantia.fecha_Vencimiento == vencido">
-                        <iconify-icon icon="bx:calendar"></iconify-icon>
-                        La Garantía vence hoy
-                    </div>
-                </div>
-                <div class="tech-column" v-for="det in garantia.get_productos">
-                    <div class="section-title">
-                        <i class="bx bx-file-blank"></i> DOCUMENTOS
-                    </div>
-                    <div class="tech-specs" v-if="det.ficha_tecnica">
-                        <a :href="'../storage/' + det.ficha_tecnica" target="_blank" class="tech-link">
-                            <iconify-icon icon="bx:download"></iconify-icon> FICHA TÉCNICA
-                        </a>
-                    </div>
-                    <div v-else class="no-data">
-                        <i class="bx bx-info-circle"></i> No hay ficha técnica disponible.
-                    </div>
-                    <div class="manuals-list">
-                        <div class="section-title" style="margin-top: 20px;">
-                            <i class="bx bxs-book-content"></i> MANUALES
-                        </div>
-                        <div v-if="garantia.get_manuales && garantia.get_manuales.get_manual && garantia.get_manuales.get_manual.length">
-                            <div v-for="manual in garantia.get_manuales.get_manual" class="manual-item">
-                                <a :href="'../storage/' + manual.link" target="_blank" class="download-link">
-                                    <iconify-icon icon="bx:download"></iconify-icon>
-                                    @{{ manual.descripcion }}
-                                </a>
+                        <!-- Pestaña de Garantía -->
+                        <div class="tab-pane fade show active" id="warranty" role="tabpanel">
+                            <div class="warranty-card">
+                                <div class="card-header">
+                                    <div class="product-title" v-for="nom in garantia.get_productos">
+                                        Producto: @{{ nom.nombre }}
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="details-column">
+                                        <div class="section-title">
+                                            <iconify-icon icon="zondicons:align-center"></iconify-icon> DETALLES
+                                        </div>
+                                        <div class="detail-item">
+                                            <i class="fa-solid fa-tv"></i> Serie: @{{ garantia.serie }}
+                                        </div>
+                                        <div class="detail-item">
+                                            <iconify-icon icon="bx:calendar"></iconify-icon> Inicia: @{{ garantia.fecha_venta }}
+                                        </div>
+                                        <div class="detail-item">
+                                            <iconify-icon icon="bx:time"></iconify-icon> Garantía: @{{ garantia.garantia }}
+                                            Meses
+                                        </div>
+                                        <div class="product-image-container">
+                                            <img v-for="producto in garantia.get_productos"
+                                                :src="producto.modelo && producto.modelo.img_mod ?
+                                                    '/storage/' + producto.modelo.img_mod :
+                                                    (producto.imagen_1 ? '/storage/' + producto.imagen_1 :
+                                                        '/producto.jpg')"
+                                                class="product-image" :alt="'Imagen de ' + producto.nombre">
+                                        </div>
+
+                                        <!-- Nuevo sistema de progreso por etapas -->
+                                        <div class="warranty-progress">
+                                            <div class="progress">
+                                                <div class="progress-bar"
+                                                    :style="'width:' + calcularPorcentajeGarantia() + '%'"
+                                                    :class="getWarrantyStageClass()">
+                                                    <span class="progress-text" v-if="showDaysCount()">
+                                                        @{{ diasRestantes }} días restantes
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="warranty-stage-info">
+                                                <span :class="{ 'active': warrantyStage === 'expired' }">
+                                                    <i class="bx bx-x-circle"></i> Vencida
+                                                </span>
+                                                <span :class="{ 'active': warrantyStage === 'ending' }">
+                                                    <i class="bx bx-error-circle"></i> Por vencer
+                                                </span>
+                                                <span :class="{ 'active': warrantyStage === 'mid' }">
+                                                    <i class="bx bx-time"></i> Intermedia
+                                                </span>
+                                                <span :class="{ 'active': warrantyStage === 'new' }">
+                                                    <i class="bx bx-check-circle"></i> Nueva
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="expiration-message" :class="warrantyStage">
+                                            <iconify-icon icon="bx:calendar"></iconify-icon>
+                                            <span v-if="warrantyStage === 'new'">
+                                                Garantía nueva - @{{ diasRestantes }} días restantes (Vence:
+                                                @{{ garantia.fecha_Vencimiento }})
+                                            </span>
+                                            <span v-else-if="warrantyStage === 'mid'">
+                                                Garantía en etapa intermedia - @{{ diasRestantes }} días restantes (Vence:
+                                                @{{ garantia.fecha_Vencimiento }})
+                                            </span>
+                                            <span v-else-if="warrantyStage === 'ending'">
+                                                ¡Garantía por vencer! - Solo @{{ diasRestantes }} días restantes (Vence:
+                                                @{{ garantia.fecha_Vencimiento }})
+                                            </span>
+                                            <span v-else-if="warrantyStage === 'expired'">
+                                                Garantía vencida el @{{ garantia.fecha_Vencimiento }}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="tech-column" v-for="det in garantia.get_productos">
+                                        <div class="section-title">
+                                            <i class="bx bx-chip"></i> ESPECIFICACIONES
+                                        </div>
+                                        <div class="tech-specs">
+                                            <p v-if="det.procesador"><i class="bx bx-right-arrow"></i>
+                                                @{{ det.procesador }}</p>
+                                            <p v-if="det.ram"><i class="bx bx-right-arrow"></i>
+                                                @{{ det.ram }}</p>
+                                            <p v-if="det.almacenamiento"><i class="bx bx-right-arrow"></i>
+                                                @{{ det.almacenamiento }}</p>
+                                            <p v-if="det.sistema_operativo"><i class="bx bx-right-arrow"></i>
+                                                @{{ det.sistema_operativo }}</p>
+                                            <p v-if="det.suite_ofimatica"><i class="bx bx-right-arrow"></i>
+                                                @{{ det.suite_ofimatica }}</p>
+                                        </div>
+
+                                        <div class="section-title" style="margin-top: 20px;">
+                                            <i class="bx bx-file-blank"></i> DOCUMENTOS
+                                        </div>
+                                        <div class="tech-specs">
+                                            <a :href="'../storage/' + det.ficha_tecnica" target="_blank"
+                                                class="tech-link">
+                                                <iconify-icon icon="bx:download"></iconify-icon> FICHA TÉCNICA
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div v-else class="no-data">
-                            <i class="bx bx-info-circle"></i> No hay manuales disponibles.
+
+                        <!-- Pestaña de Controladores -->
+                        <div class="tab-pane fade" id="drivers" role="tabpanel">
+                            <div class="drivers-container">
+                                <div class="section-title">
+                                    <i class="bx bx-chip"></i> CONTROLADORES DISPONIBLES
+                                </div>
+                                <div v-if="garantia.get_driversprod && garantia.get_driversprod.get_drivers && garantia.get_driversprod.get_drivers.length"
+                                    class="drivers-grid">
+                                    <div v-for="drivers in garantia.get_driversprod.get_drivers" class="driver-card">
+                                        <div class="driver-name">@{{ drivers.nombre }}</div>
+                                        <a :href="'../storage/' + drivers.link" target="_blank" class="driver-download">
+                                            <iconify-icon icon="bx:download"></iconify-icon> Descargar
+                                        </a>
+                                    </div>
+                                </div>
+                                <div v-else class="no-data">
+                                    <i class="bx bx-info-circle"></i> No hay controladores disponibles.
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Pestaña de Controladores -->
-    <div class="tab-pane fade" id="drivers" role="tabpanel">
-        <div class="drivers-container">
-            <div class="section-title">
-                <i class="bx bx-chip"></i> CONTROLADORES DISPONIBLES
-            </div>
-            <div v-if="garantia.get_driversprod && garantia.get_driversprod.get_drivers && garantia.get_driversprod.get_drivers.length" class="drivers-grid">
-                <div v-for="drivers in garantia.get_driversprod.get_drivers" class="driver-card">
-                    <div class="driver-name">@{{ drivers.nombre }}</div>
-                    <a :href="'../storage/' + drivers.link" target="_blank" class="driver-download">
-                        <iconify-icon icon="bx:download"></iconify-icon> Descargar
-                    </a>
-                </div>
-            </div>
-            <div v-else class="no-data">
-                <i class="bx bx-info-circle"></i> No hay controladores disponibles.
-            </div>
-        </div>
-    </div>
+                        <!-- Pestaña de Galería de Video -->
+                        <div class="tab-pane fade" id="gallery" role="tabpanel">
+                            <div class="video-gallery">
+                                <div class="section-title">
+                                    <i class="bx bx-video"></i> VIDEOS RELACIONADOS
+                                </div>
+                                <div class="videos-grid">
+                                    <div class="video-item">
+                                        <iframe width="100%" height="200"
+                                            src="https://www.youtube.com/embed/ejemplo1" frameborder="0"
+                                            allowfullscreen></iframe>
+                                        <div class="video-title">Instalación del Producto</div>
+                                    </div>
+                                    <div class="video-item">
+                                        <iframe width="100%" height="200"
+                                            src="https://www.youtube.com/embed/ejemplo2" frameborder="0"
+                                            allowfullscreen></iframe>
+                                        <div class="video-title">Configuración Básica</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-    <!-- Pestaña de Galería de Video -->
-<div class="tab-pane fade" id="gallery" role="tabpanel">
-    <div class="video-gallery">
-        <div class="section-title">
-            <i class="bx bx-video"></i> VIDEOS RELACIONADOS
-        </div>
-        <div class="videos-grid">
-            <div class="video-item">
-                <iframe width="100%" height="200"
-                    src="https://www.youtube.com/embed/ejemplo1" frameborder="0"
-                    allowfullscreen></iframe>
-                <div class="video-title">Instalación del Producto</div>
-            </div>
-            <div class="video-item">
-                <iframe width="100%" height="200"
-                    src="https://www.youtube.com/embed/ejemplo2" frameborder="0"
-                    allowfullscreen></iframe>
-                <div class="video-title">Configuración Básica</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-    <!-- Pestaña de Términos y Condiciones -->
+                        <!-- Pestaña de Términos y Condiciones -->
                         <div class="tab-pane fade" id="terms" role="tabpanel">
                             <div class="terms-container">
                                 <div class="section-title">
@@ -762,7 +891,7 @@
                                 </div>
                             </div>
                         </div>
-</div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -775,19 +904,8 @@
         var mi_fecha = {!! json_encode(date('Y-m-d')) !!};
         let serie_id = {!! json_encode(isset($serie) ? $serie : '') !!};
         const garantiaphp = {!! json_encode($garantia) !!};
+    </script>
 
-        console.log(serie_id)
-        console.log(garantiaphp)
-    </script>
-    <script>
-        n = new Date();
-        //Año
-        y = n.getFullYear();
-        //Mes
-        m = n.getMonth() + 1;
-        //Día
-        d = n.getDate();
-    </script>
     <script>
         new Vue({
             el: '#garantia',
@@ -799,15 +917,103 @@
                 state: null,
                 whatsapp: my_whatsapp,
                 vencido: mi_fecha,
+                // Nuevas propiedades para el sistema de etapas
+                warrantyStage: 'new',
+                diasRestantes: 0,
+                mesesTotalesGarantia: 0
             },
             created() {
                 if (serie_id !== '') {
-                    this.search = serie_id
-                    // this.Buscar();
+                    this.search = serie_id;
                 }
-                this.garantia = garantiaphp
+                this.garantia = garantiaphp;
+
+                // Calcular el estado inicial si hay datos de garantía
+                if (this.garantia && this.garantia.fecha_Vencimiento) {
+                    this.calcularPorcentajeGarantia();
+                }
             },
             methods: {
+                getProductImageUrl(producto) {
+        // Verificar si es un caso especial (toner o modelo ID 10)
+        const isSpecialCase = producto.modelo &&
+            (producto.modelo.id === 10 ||
+             (producto.modelo.descripcion &&
+              producto.modelo.descripcion.toLowerCase().includes('toner')));
+
+        // Si es caso especial, usar imagen_1 si existe
+        if (isSpecialCase) {
+            return producto.imagen_1 ? this.generateImageUrl(producto.imagen_1) : '/producto.jpg';
+        }
+
+        // Para casos normales, usar img_mod del modelo si existe
+        if (producto.modelo && producto.modelo.img_mod) {
+            return this.generateImageUrl(producto.modelo.img_mod);
+        }
+
+        // Fallback a imagen_1 si no hay modelo
+        if (producto.imagen_1) {
+            return this.generateImageUrl(producto.imagen_1);
+        }
+
+        // Imagen por defecto
+        return '/producto.jpg';
+    },
+
+    generateImageUrl(path) {
+        // Usar URL absoluta en producción
+        if (process.env.NODE_ENV === 'production') {
+            return window.location.origin + '/storage/' + path;
+        }
+        return '/storage/' + path;
+    },
+                // Método para calcular el porcentaje y etapa de la garantía
+                calcularPorcentajeGarantia() {
+                    if (!this.garantia.fecha_venta || !this.garantia.fecha_Vencimiento) return 0;
+
+                    const fechaInicio = new Date(this.garantia.fecha_venta);
+                    const fechaFin = new Date(this.garantia.fecha_Vencimiento);
+                    const hoy = new Date();
+
+                    // Calcular días totales y restantes
+                    const diasTotales = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+                    this.diasRestantes = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+
+                    // Calcular porcentaje de tiempo RESTANTE (no transcurrido)
+                    const porcentajeRestante = (this.diasRestantes / diasTotales) * 100;
+
+                    // Determinar la etapa de la garantía
+                    if (this.diasRestantes <= 0) {
+                        this.warrantyStage = 'expired';
+                    } else if (porcentajeRestante <= 20) {
+                        this.warrantyStage = 'ending'; // Últimos 20% del tiempo
+                    } else if (porcentajeRestante <= 50) {
+                        this.warrantyStage = 'mid'; // Entre 20-50% del tiempo restante
+                    } else {
+                        this.warrantyStage = 'new'; // Más del 50% del tiempo restante
+                    }
+
+                    return Math.max(0, Math.min(100, porcentajeRestante));
+                },
+
+                // Método para obtener las clases CSS según la etapa
+                getWarrantyStageClass() {
+                    return {
+                        'new-stage': this.warrantyStage === 'new',
+                        'mid-stage': this.warrantyStage === 'mid',
+                        'ending-stage': this.warrantyStage === 'ending',
+                        'expired-stage': this.warrantyStage === 'expired',
+                        'progress-bar-animated': this.warrantyStage === 'ending',
+                        'progress-bar-striped': this.warrantyStage === 'ending'
+                    };
+                },
+
+                // Mostrar conteo de días solo cuando está por vencer
+                showDaysCount() {
+                    return this.warrantyStage === 'ending' || this.warrantyStage === 'mid';
+                },
+
+                // Métodos existentes
                 Buscar() {
                     this.errors = [];
                     this.garantia = [];
@@ -818,10 +1024,10 @@
                         axios.post(urlBuscar, {
                             search: this.search,
                         }).then(response => {
-                            console.log(response)
                             this.loading = false;
                             this.state = response.data.state;
                             this.garantia = response.data.garantia;
+                            this.calcularPorcentajeGarantia();
                         }).catch(error => {
                             this.loading = false;
                             alert("Ocurrio un error al buscar, por favor intente nuevamente.");
