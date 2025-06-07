@@ -46,6 +46,8 @@ new Vue({
         mostrar: true,
         search_producto: "",
         producto_id_actualizar: null,
+        serie_asignar: "",
+        driver_seleccionado: null,
     },
     created() {
         this.Buscar();
@@ -78,6 +80,44 @@ new Vue({
         },
     },
     methods: {
+        abrirAsignarSerie(driver) {
+        this.serie_asignar = driver.serie || "";
+        this.driver_seleccionado = driver;
+        $("#asignarSerieModal").modal("show");
+    },
+    cerrarAsignarSerie() {
+        this.serie_asignar = "";
+        this.driver_seleccionado = null;
+        $("#asignarSerieModal").modal("hide");
+    },
+    guardarAsignarSerie() {
+    if (!this.serie_asignar) {
+        this.Alert("warning", "Serie requerida", "Debe ingresar al menos un número de serie.");
+        return;
+    }
+    this.loading = true;
+    // Convierte el textarea en array, una serie por línea
+    let seriesArray = this.serie_asignar
+        .split('\n')
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+    axios.post("../drivers/asignar-serie", {
+        driver_id: this.driver_seleccionado.id,
+        series: seriesArray
+    })
+    .then((response) => {
+        this.loading = false;
+        this.Alert(response.data.type, response.data.title, response.data.message);
+        if (response.data.type == "success") {
+            this.cerrarAsignarSerie();
+            this.Buscar(this.page);
+        }
+    })
+    .catch((error) => {
+        this.loading = false;
+        this.Alert("danger", "Error", "No se pudo asignar la(s) serie(s).");
+    });
+},
         changePage(page) {
             this.page = page;
             this.pagination.current_page = page;
@@ -485,3 +525,4 @@ new Vue({
         },
     },
 });
+

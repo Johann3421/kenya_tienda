@@ -13,6 +13,21 @@ new Vue({
         diasRestantes: 0,
         mesesTotalesGarantia: 0,
     },
+    computed: {
+    filteredDrivers() {
+        if (!this.garantia.get_driversprod || !this.garantia.get_driversprod.get_drivers) return [];
+        return this.garantia.get_driversprod.get_drivers.filter(driver => {
+            // Si no tiene serie, mostrar siempre
+            if (!driver.serie || driver.serie.length === 0) return true;
+            // Si tiene serie como array, mostrar si alguna coincide con la buscada
+            if (Array.isArray(driver.serie)) {
+                return driver.serie.map(s => s.toUpperCase()).includes(this.search.toUpperCase());
+            }
+            // Si por alguna razón sigue siendo string, compara igual
+            return driver.serie.toUpperCase() === this.search.toUpperCase();
+        });
+    }
+},
     methods: {
 
         calcularPorcentajeGarantia() {
@@ -112,7 +127,7 @@ new Vue({
         },
     },
     mounted() {
-        
+
     if (this.state == 'success') {
         this.calcularPorcentajeGarantia();
         setInterval(this.calcularPorcentajeGarantia, 86400000); // Actualiza cada 24 horas

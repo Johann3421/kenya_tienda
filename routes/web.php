@@ -161,6 +161,7 @@ Route::group(['middleware' => ['can:producto_drivers']], function () {
     Route::post('/drivers/update', 'ProductoDriversController@update');
     Route::post('/drivers/delete', 'ProductoDriversController@delete');
     Route::post('/drivers/autobuscar', 'ProductoDriversController@auto_buscar_producto');
+    Route::post('/drivers/asignar-serie', 'DriversController@asignarSerie');
 });
 
 // ------------------------ PRODUCTO-DRIVERS-RUTAS --------------------------------

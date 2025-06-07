@@ -78,629 +78,630 @@
         }
     </style>
     <style>
-            .warranty-progress {
-                margin: 20px 0;
+        .warranty-progress {
+            margin: 20px 0;
+        }
+
+        .progress {
+            height: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #f5f5f5;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            transition: width 0.6s ease;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* Colores por etapa */
+        .new-stage {
+            background-color: #4CAF50;
+            /* Verde - Nueva */
+        }
+
+        .mid-stage {
+            background-color: #FFC107;
+            /* Amarillo - Intermedia */
+        }
+
+        .ending-stage {
+            background-color: #F44336;
+            /* Rojo - Por vencer */
+            animation: pulse 1.5s infinite;
+        }
+
+        .expired-stage {
+            background-color: #9E9E9E;
+            /* Gris - Vencida */
+        }
+
+        .progress-text {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .warranty-stage-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+
+        .warranty-stage-info span {
+            color: #aaa;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .warranty-stage-info span.active {
+            font-weight: bold;
+        }
+
+        .warranty-stage-info span.active:nth-child(1) {
+            color: #4CAF50;
+        }
+
+        .warranty-stage-info span.active:nth-child(2) {
+            color: #FF9800;
+        }
+
+        .warranty-stage-info span.active:nth-child(3) {
+            color: #F44336;
+        }
+
+        .warranty-stage-info span.active:nth-child(4) {
+            color: #9E9E9E;
+        }
+
+        .expiration-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .expiration-message.new {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .expiration-message.mid {
+            background-color: #FFF3E0;
+            color: #EF6C00;
+        }
+
+        .expiration-message.ending {
+            background-color: #FFEBEE;
+            color: #C62828;
+            animation: pulse 2s infinite;
+        }
+
+        .expiration-message.expired {
+            background-color: #F5F5F5;
+            color: #616161;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
             }
 
-            .progress {
-                height: 25px;
-                border-radius: 12px;
-                overflow: hidden;
-                background-color: #f5f5f5;
-                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            50% {
+                opacity: 0.5;
             }
 
-            .progress-bar {
-                transition: width 0.6s ease;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                padding-right: 10px;
-                font-size: 12px;
-                font-weight: bold;
-                color: white;
+            100% {
+                opacity: 1;
             }
+        }
 
-            /* Colores por etapa */
-            .new-stage {
-                background-color: #4CAF50;
-                /* Verde - Nueva */
+        .warranty-section {
+            padding: 2rem 0;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .warranty-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Estilo de las pestañas */
+        .tabs-container {
+            margin-bottom: 2rem;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .nav-item {
+            margin-bottom: -2px;
+        }
+
+        .nav-link {
+            color: #6c757d;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link i,
+        .nav-link iconify-icon {
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background-color: #E67E22;
+            /* Naranja más oscuro */
+            border-color: transparent;
+            border-bottom: 3px solid #D35400;
+        }
+
+        .nav-link.disabled {
+            color: #adb5bd;
+            pointer-events: none;
+        }
+
+        .nav-link:not(.active):not(.disabled):hover {
+            color: #E67E22;
+            border-color: transparent;
+            background-color: rgba(230, 126, 34, 0.1);
+        }
+
+        /* Contenido de las pestañas */
+        .tab-content {
+            background: white;
+            border-radius: 0 8px 8px 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        /* Estilos generales (manteniendo los anteriores con ajustes de color) */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modern-input-group {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .modern-input {
+            border: none;
+            padding: 12px 15px;
+            font-size: 16px;
+            background-color: white;
+        }
+
+        .modern-input:focus {
+            box-shadow: none;
+            border-color: #E67E22;
+        }
+
+        .search-button {
+            background-color: #E67E22;
+            /* Naranja más oscuro */
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-button:hover {
+            background-color: #D35400;
+            /* Naranja más oscuro - hover */
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            font-size: 13px;
+            color: #dc3545;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modern-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(230, 126, 34, 0.3);
+            /* Naranja más oscuro */
+            border-radius: 50%;
+            border-top-color: #E67E22;
+            /* Naranja más oscuro */
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 1rem;
+        }
+
+        .loading-text {
+            font-size: 1.25rem;
+            color: #6c757d;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
+        }
 
-            .mid-stage {
-                background-color: #FFC107;
-                /* Amarillo - Intermedia */
-            }
+        .warranty-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
 
-            .ending-stage {
-                background-color: #F44336;
-                /* Rojo - Por vencer */
-                animation: pulse 1.5s infinite;
-            }
+        .card-header {
+            background-color: #E67E22;
+            /* Naranja más oscuro */
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 18px;
+        }
 
-            .expired-stage {
-                background-color: #9E9E9E;
-                /* Gris - Vencida */
-            }
+        .card-content {
+            display: flex;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
 
-            .progress-text {
-                background: rgba(0, 0, 0, 0.3);
-                padding: 2px 8px;
-                border-radius: 10px;
-                font-size: 11px;
-            }
+        .details-column,
+        .tech-column {
+            padding: 0 15px;
+            flex: 1;
+            min-width: 300px;
+        }
 
-            .warranty-stage-info {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 10px;
-                font-size: 12px;
-            }
+        .details-column {
+            border-right: 1px solid #eee;
+        }
 
-            .warranty-stage-info span {
-                color: #aaa;
-                padding: 2px 5px;
-                border-radius: 3px;
-            }
+        .section-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #343a40;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
 
-            .warranty-stage-info span.active {
-                font-weight: bold;
-            }
+        .section-title i,
+        .section-title iconify-icon {
+            margin-right: 8px;
+            font-size: 18px;
+            color: #E67E22;
+            /* Naranja más oscuro */
+        }
 
-            .warranty-stage-info span.active:nth-child(1) {
-                color: #4CAF50;
-            }
+        .detail-item {
 
-            .warranty-stage-info span.active:nth-child(2) {
-                color: #FF9800;
-            }
+            margin-bottom: 12px;
+            color: #6c757d;
 
-            .warranty-stage-info span.active:nth-child(3) {
-                color: #F44336;
-            }
+            align-items: center;
+        }
 
-            .warranty-stage-info span.active:nth-child(4) {
-                color: #9E9E9E;
-            }
+        .detail-item i,
+        .detail-item iconify-icon {
+            width: 20px;
+            text-align: center;
+            color: #E67E22;
+            /* Naranja más oscuro */
+        }
 
-            .expiration-message {
-                padding: 10px;
-                border-radius: 5px;
-                margin-top: 10px;
-                font-size: 14px;
-            }
+        .product-image-container {
+            margin: 20px 0;
+            text-align: center;
+        }
 
-            .expiration-message.new {
-                background-color: #E8F5E9;
-                color: #2E7D32;
-            }
+        .product-image {
+            max-height: 180px;
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
 
-            .expiration-message.mid {
-                background-color: #FFF3E0;
-                color: #EF6C00;
-            }
+        .warranty-progress {
+            margin: 20px 0;
+        }
 
-            .expiration-message.ending {
-                background-color: #FFEBEE;
-                color: #C62828;
-                animation: pulse 2s infinite;
-            }
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
 
-            .expiration-message.expired {
-                background-color: #F5F5F5;
-                color: #616161;
-            }
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.6s ease;
+        }
 
-            @keyframes pulse {
-                0% {
-                    opacity: 1;
-                }
+        .progress.active .progress-bar {
+            background-color: #E67E22;
+            /* Naranja más oscuro */
+        }
 
-                50% {
-                    opacity: 0.5;
-                }
+        .progress.expired .progress-bar {
+            background-color: #dc3545;
+        }
 
-                100% {
-                    opacity: 1;
-                }
-            }
+        .progress.expiring .progress-bar {
+            background-color: #17a2b8;
+        }
 
-            .warranty-section {
-                padding: 2rem 0;
-                background-color: #f8f9fa;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            }
+        .expiration-message {
+            font-size: 13px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
 
-            .warranty-container {
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 15px;
-            }
+        .expiration-message.active {
+            background-color: rgba(230, 126, 34, 0.1);
+            /* Naranja más oscuro */
+            color: #E67E22;
+            /* Naranja más oscuro */
+        }
 
-            /* Estilo de las pestañas */
-            .tabs-container {
-                margin-bottom: 2rem;
-            }
+        .expiration-message.expired {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
 
-            .nav-tabs {
-                border-bottom: 2px solid #e9ecef;
-            }
+        .expiration-message.expiring {
+            background-color: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+        }
 
-            .nav-item {
-                margin-bottom: -2px;
-            }
+        .tech-specs {
+            margin-top: 20px;
+        }
 
-            .nav-link {
-                color: #6c757d;
-                border: none;
-                padding: 12px 20px;
-                font-weight: 600;
-                transition: all 0.3s;
-                border-radius: 0;
-                display: flex;
-                align-items: center;
-            }
+        .tech-link {
+            color: #E67E22;
+            /* Naranja más oscuro */
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #E67E22;
+            /* Naranja más oscuro */
+            border-radius: 5px;
+        }
 
-            .nav-link i,
-            .nav-link iconify-icon {
-                margin-right: 8px;
-                font-size: 18px;
-            }
+        .tech-link:hover {
+            color: #D35400;
+            /* Naranja más oscuro - hover */
+            background-color: rgba(230, 126, 34, 0.1);
+            /* Naranja más oscuro */
+        }
 
-            .nav-link.active {
-                color: #fff;
-                background-color: #E67E22;
-                /* Naranja más oscuro */
-                border-color: transparent;
-                border-bottom: 3px solid #D35400;
-            }
+        .tech-link iconify-icon {
+            margin-right: 8px;
+        }
 
-            .nav-link.disabled {
-                color: #adb5bd;
-                pointer-events: none;
-            }
+        .manual-item {
+            margin-bottom: 10px;
+        }
 
-            .nav-link:not(.active):not(.disabled):hover {
-                color: #E67E22;
-                border-color: transparent;
-                background-color: rgba(230, 126, 34, 0.1);
-            }
+        .manual-item a {
+            color: #495057;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
 
-            /* Contenido de las pestañas */
-            .tab-content {
-                background: white;
-                border-radius: 0 8px 8px 8px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-                padding: 20px;
-            }
+        .manual-item a:hover {
+            color: #E67E22;
+            /* Naranja más oscuro */
+        }
 
-            /* Estilos generales (manteniendo los anteriores con ajustes de color) */
-            .search-container {
-                display: flex;
-                justify-content: center;
-                margin-bottom: 2rem;
-            }
+        .manual-item iconify-icon {
+            margin-right: 8px;
+            color: #E67E22;
+            /* Naranja más oscuro */
+        }
 
-            .search-box {
-                width: 100%;
-                max-width: 500px;
-            }
+        /* Estilos para la pestaña de controladores */
+        .drivers-container {
+            padding: 20px;
+        }
 
-            .modern-input-group {
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-                border-radius: 8px;
-                overflow: hidden;
-            }
+        .drivers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
 
-            .modern-input {
-                border: none;
-                padding: 12px 15px;
-                font-size: 16px;
-                background-color: white;
-            }
+        .driver-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #E67E22;
+            /* Naranja más oscuro */
+            transition: transform 0.2s;
+        }
 
-            .modern-input:focus {
-                box-shadow: none;
-                border-color: #E67E22;
-            }
+        .driver-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
 
-            .search-button {
-                background-color: #E67E22;
-                /* Naranja más oscuro */
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                font-weight: 600;
-                transition: all 0.3s ease;
-            }
+        .driver-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #343a40;
+        }
 
-            .search-button:hover {
-                background-color: #D35400;
-                /* Naranja más oscuro - hover */
-                transform: translateY(-1px);
-            }
+        .driver-download {
+            color: #E67E22;
+            /* Naranja más oscuro */
+            text-decoration: none;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            transition: color 0.2s;
+        }
 
-            .error-message {
-                font-size: 13px;
-                color: #dc3545;
-                margin-top: 5px;
-                text-align: center;
-            }
+        .driver-download:hover {
+            color: #D35400;
+            /* Naranja más oscuro - hover */
+        }
 
-            .loading-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 2rem;
-            }
+        .driver-download iconify-icon {
+            margin-right: 5px;
+        }
 
-            .modern-spinner {
-                width: 50px;
-                height: 50px;
-                border: 4px solid rgba(230, 126, 34, 0.3);
-                /* Naranja más oscuro */
-                border-radius: 50%;
-                border-top-color: #E67E22;
-                /* Naranja más oscuro */
-                animation: spin 1s ease-in-out infinite;
-                margin-bottom: 1rem;
-            }
+        /* Estilos para la pestaña de videos */
+        .video-gallery {
+            padding: 20px;
+        }
 
-            .loading-text {
-                font-size: 1.25rem;
-                color: #6c757d;
-            }
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
 
-            @keyframes spin {
-                to {
-                    transform: rotate(360deg);
-                }
-            }
+        .video-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
 
-            .warranty-card {
-                background: white;
-                border-radius: 8px;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-                overflow: hidden;
-                margin-bottom: 2rem;
-            }
+        .video-title {
+            padding: 12px;
+            font-weight: 600;
+            color: #343a40;
+            text-align: center;
+        }
 
-            .card-header {
-                background-color: #E67E22;
-                /* Naranja más oscuro */
-                color: white;
-                padding: 15px 20px;
-                font-weight: 600;
-                font-size: 18px;
-            }
+        /* Estilos para términos y condiciones */
+        .terms-container {
+            padding: 20px;
+        }
 
+        .terms-content {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .terms-content p {
+            margin-bottom: 10px;
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .no-results,
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            font-size: 18px;
+            color: #6c757d;
+        }
+
+        .no-results strong,
+        .no-data i {
+            color: #343a40;
+        }
+
+        .no-data i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 10px;
+            color: #E67E22;
+            /* Naranja más oscuro */
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
             .card-content {
-                display: flex;
-                padding: 20px;
-                flex-wrap: wrap;
-            }
-
-            .details-column,
-            .tech-column {
-                padding: 0 15px;
-                flex: 1;
-                min-width: 300px;
+                flex-direction: column;
             }
 
             .details-column {
-                border-right: 1px solid #eee;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding-bottom: 20px;
+                margin-bottom: 20px;
             }
 
-            .section-title {
-                font-weight: 700;
-                font-size: 16px;
-                color: #343a40;
-                margin-bottom: 15px;
-                display: flex;
-                align-items: center;
-            }
-
-            .section-title i,
-            .section-title iconify-icon {
-                margin-right: 8px;
-                font-size: 18px;
-                color: #E67E22;
-                /* Naranja más oscuro */
-            }
-
-            .detail-item {
-
-                margin-bottom: 12px;
-                color: #6c757d;
-
-                align-items: center;
-            }
-
-            .detail-item i,
-            .detail-item iconify-icon {
-                width: 20px;
-                text-align: center;
-                color: #E67E22;
-                /* Naranja más oscuro */
-            }
-
-            .product-image-container {
-                margin: 20px 0;
-                text-align: center;
-            }
-
-            .product-image {
-                max-height: 180px;
-                max-width: 100%;
-                border-radius: 8px;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .warranty-progress {
-                margin: 20px 0;
-            }
-
-            .progress {
-                height: 10px;
-                border-radius: 5px;
-                background-color: #e9ecef;
-                overflow: hidden;
-            }
-
-            .progress-bar {
-                height: 100%;
-                border-radius: 5px;
-                transition: width 0.6s ease;
-            }
-
-            .progress.active .progress-bar {
-                background-color: #E67E22;
-                /* Naranja más oscuro */
-            }
-
-            .progress.expired .progress-bar {
-                background-color: #dc3545;
-            }
-
-            .progress.expiring .progress-bar {
-                background-color: #17a2b8;
-            }
-
-            .expiration-message {
-                font-size: 13px;
-                padding: 8px 12px;
-                border-radius: 5px;
-                margin-top: 10px;
-            }
-
-            .expiration-message.active {
-                background-color: rgba(230, 126, 34, 0.1);
-                /* Naranja más oscuro */
-                color: #E67E22;
-                /* Naranja más oscuro */
-            }
-
-            .expiration-message.expired {
-                background-color: rgba(220, 53, 69, 0.1);
-                color: #dc3545;
-            }
-
-            .expiration-message.expiring {
-                background-color: rgba(23, 162, 184, 0.1);
-                color: #17a2b8;
-            }
-
-            .tech-specs {
-                margin-top: 20px;
-            }
-
-            .tech-link {
-                color: #E67E22;
-                /* Naranja más oscuro */
-                font-weight: 600;
-                text-decoration: none;
-                transition: color 0.2s;
-                display: inline-flex;
-                align-items: center;
-                padding: 8px 12px;
-                border: 1px solid #E67E22;
-                /* Naranja más oscuro */
-                border-radius: 5px;
-            }
-
-            .tech-link:hover {
-                color: #D35400;
-                /* Naranja más oscuro - hover */
-                background-color: rgba(230, 126, 34, 0.1);
-                /* Naranja más oscuro */
-            }
-
-            .tech-link iconify-icon {
-                margin-right: 8px;
-            }
-
-            .manual-item {
-                margin-bottom: 10px;
-            }
-
-            .manual-item a {
-                color: #495057;
-                text-decoration: none;
-                display: flex;
-                align-items: center;
-                transition: color 0.2s;
-            }
-
-            .manual-item a:hover {
-                color: #E67E22;
-                /* Naranja más oscuro */
-            }
-
-            .manual-item iconify-icon {
-                margin-right: 8px;
-                color: #E67E22;
-                /* Naranja más oscuro */
-            }
-
-            /* Estilos para la pestaña de controladores */
-            .drivers-container {
-                padding: 20px;
-            }
-
-            .drivers-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 15px;
-                margin-top: 20px;
-            }
-
-            .driver-card {
-                background: #f8f9fa;
-                border-radius: 8px;
-                padding: 15px;
-                border-left: 4px solid #E67E22;
-                /* Naranja más oscuro */
-                transition: transform 0.2s;
-            }
-
-            .driver-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            }
-
-            .driver-name {
-                font-weight: 600;
-                margin-bottom: 10px;
-                color: #343a40;
-            }
-
-            .driver-download {
-                color: #E67E22;
-                /* Naranja más oscuro */
-                text-decoration: none;
+            .nav-link {
+                padding: 10px 12px;
                 font-size: 14px;
-                display: inline-flex;
-                align-items: center;
-                transition: color 0.2s;
             }
+        }
 
-            .driver-download:hover {
-                color: #D35400;
-                /* Naranja más oscuro - hover */
-            }
+        /* Centra el PDF y limita el ancho */
+        .pdf-center-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            min-height: 400px;
+        }
 
-            .driver-download iconify-icon {
-                margin-right: 5px;
-            }
+        #pdf-viewer canvas {
+            display: block;
+            margin: 20px auto;
+            max-width: 100%;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+            border-radius: 8px;
+        }
 
-            /* Estilos para la pestaña de videos */
-            .video-gallery {
-                padding: 20px;
-            }
-
-            .videos-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                gap: 20px;
-                margin-top: 20px;
-            }
-
-            .video-item {
-                background: #f8f9fa;
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-            }
-
-            .video-title {
-                padding: 12px;
-                font-weight: 600;
-                color: #343a40;
-                text-align: center;
-            }
-
-            /* Estilos para términos y condiciones */
-            .terms-container {
-                padding: 20px;
-            }
-
-            .terms-content {
-                background: #f8f9fa;
-                border-radius: 8px;
-                padding: 20px;
-                margin-top: 15px;
-            }
-
-            .terms-content p {
-                margin-bottom: 10px;
-                color: #495057;
-                line-height: 1.6;
-            }
-
-            .no-results,
-            .no-data {
-                text-align: center;
-                padding: 2rem;
-                font-size: 18px;
-                color: #6c757d;
-            }
-
-            .no-results strong,
-            .no-data i {
-                color: #343a40;
-            }
-
-            .no-data i {
-                font-size: 24px;
-                display: block;
-                margin-bottom: 10px;
-                color: #E67E22;
-                /* Naranja más oscuro */
-            }
-
-            /* Responsive */
-            @media (max-width: 768px) {
-                .card-content {
-                    flex-direction: column;
-                }
-
-                .details-column {
-                    border-right: none;
-                    border-bottom: 1px solid #eee;
-                    padding-bottom: 20px;
-                    margin-bottom: 20px;
-                }
-
-                .nav-link {
-                    padding: 10px 12px;
-                    font-size: 14px;
-                }
-            }
-            /* Centra el PDF y limita el ancho */
-.pdf-center-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    width: 100%;
-    min-height: 400px;
-}
-
-#pdf-viewer canvas {
-    display: block;
-    margin: 20px auto;
-    max-width: 100%;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    border-radius: 8px;
-}
-
-/* Opcional: Limita el ancho máximo del PDF */
-#pdf-viewer {
-    max-width: 800px;
-    width: 100%;
-}
-        </style>
+        /* Opcional: Limita el ancho máximo del PDF */
+        #pdf-viewer {
+            max-width: 800px;
+            width: 100%;
+        }
+    </style>
 @endsection
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
@@ -931,13 +932,13 @@
                                     <i class="bx bx-chip"></i> CONTROLADORES DISPONIBLES
                                 </div>
                                 <div class="drivers-grid">
-                                    <div v-for="drivers in garantia.get_driversprod.get_drivers" class="driver-card">
-                                        <div class="driver-name">@{{ drivers.nombre }}</div>
-                                        <a :href="'../storage/' + drivers.link" target="_blank" class="driver-download">
-                                            <iconify-icon icon="bx:download"></iconify-icon> Descargar
-                                        </a>
-                                    </div>
-                                </div>
+    <div v-for="drivers in filteredDrivers" class="driver-card">
+        <div class="driver-name">@{{ drivers.nombre }}</div>
+        <a :href="'../storage/' + drivers.link" target="_blank" class="driver-download">
+            <iconify-icon icon="bx:download"></iconify-icon> Descargar
+        </a>
+    </div>
+</div>
                             </div>
                             <div v-else class="no-data">
                                 <i class="bx bx-search-alt"></i> Ingrese un número de serie válido para ver los
@@ -972,10 +973,10 @@
                         </div>
 
                         <div class="tab-pane fade" id="terms" role="tabpanel">
-    <div class="pdf-center-container">
-        <div id="pdf-viewer"></div>
-    </div>
-</div>
+                            <div class="pdf-center-container">
+                                <div id="pdf-viewer"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1003,40 +1004,45 @@
     </script>
     <script src="{{ asset('js/consultar/garantia.js') }}"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
-<script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function renderPDF() {
-            if (!window.pdfjsLib) return;
-            pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('js/pdfjs/pdf.worker.js') }}";
-            const url = "{{ asset('GARANTIA_KENYA_SIN_HORARIO.pdf') }}";
-            const container = document.getElementById('pdf-viewer');
-            container.innerHTML = '';
-            pdfjsLib.getDocument(url).promise.then(function(pdf) {
-                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                    pdf.getPage(pageNum).then(function(page) {
-                        const viewport = page.getViewport({ scale: 1.2 });
-                        const canvas = document.createElement('canvas');
-                        const context = canvas.getContext('2d');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        container.appendChild(canvas);
-                        page.render({ canvasContext: context, viewport: viewport });
-                    });
-                }
+    <script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function renderPDF() {
+                if (!window.pdfjsLib) return;
+                pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('js/pdfjs/pdf.worker.js') }}";
+                const url = "{{ asset('GARANTIA_KENYA_SIN_HORARIO.pdf') }}";
+                const container = document.getElementById('pdf-viewer');
+                container.innerHTML = '';
+                pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        pdf.getPage(pageNum).then(function(page) {
+                            const viewport = page.getViewport({
+                                scale: 1.2
+                            });
+                            const canvas = document.createElement('canvas');
+                            const context = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            container.appendChild(canvas);
+                            page.render({
+                                canvasContext: context,
+                                viewport: viewport
+                            });
+                        });
+                    }
+                });
+            }
+
+            // Renderiza el PDF cada vez que se hace clic en la pestaña de términos
+            document.getElementById('terms-tab').addEventListener('click', function() {
+                setTimeout(renderPDF, 100); // Espera a que la pestaña sea visible
             });
-        }
 
-        // Renderiza el PDF cada vez que se hace clic en la pestaña de términos
-        document.getElementById('terms-tab').addEventListener('click', function () {
-            setTimeout(renderPDF, 100); // Espera a que la pestaña sea visible
+            // Si la pestaña está activa al cargar, renderiza de inmediato
+            if (document.getElementById('terms').classList.contains('active') ||
+                document.getElementById('terms').classList.contains('show')) {
+                renderPDF();
+            }
         });
-
-        // Si la pestaña está activa al cargar, renderiza de inmediato
-        if (document.getElementById('terms').classList.contains('active') ||
-            document.getElementById('terms').classList.contains('show')) {
-            renderPDF();
-        }
-    });
-</script>
+    </script>
 @endsection

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use App\Producto_drivers;
 
 class DriversController extends Controller
 {
@@ -29,6 +30,7 @@ class DriversController extends Controller
 
     public function buscar(Request $request)
     {
+
 
         $drivers = Driver::select("id", "categoria","nombre", "version", "liberado", "tamano", "unidad", "gravedad", "activo", "link")
         ->where('nombre', 'LIKE', '%'.$request->search.'%')
@@ -269,4 +271,37 @@ class DriversController extends Controller
             ];
         }
     }
+
+public function asignarSerie(Request $request)
+{
+    $request->validate([
+        'driver_id' => 'required|integer|exists:producto_drivers,id',
+        'series'    => 'required|array|min:1',
+        'series.*'  => 'string|max:255'
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        $driver = Producto_drivers::findOrFail($request->driver_id);
+        $driver->serie = $request->series; // Guarda como array/JSON
+        $driver->save();
+
+        DB::commit();
+
+        return [
+            'type' => 'success',
+            'title' => 'Serie(s) asignada(s)',
+            'message' => 'Las series fueron asignadas correctamente al driver.'
+        ];
+    } catch (\Throwable $th) {
+        DB::rollBack();
+        return [
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'No se pudo asignar la(s) serie(s).'
+        ];
+    }
 }
+}
+

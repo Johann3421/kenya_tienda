@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Producto_drivers extends Model
 {
-    //
     protected $table = 'producto_drivers';
-
     public $timestamps = false;
+
+    protected $casts = [
+        'serie' => 'array',
+    ];
 
     public function Productos()
     {

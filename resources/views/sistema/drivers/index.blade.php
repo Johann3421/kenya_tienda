@@ -64,7 +64,7 @@
             top: 58px;
             left: 0;
             /* border-top: 1px solid rgba(0,0,0,.2);
-                                            border-radius: 10px; */
+                                                border-radius: 10px; */
         }
 
         .item_producto {
@@ -604,6 +604,17 @@
                                 <div style="font-size: 30px;"><i class="fas fa-clone"></i></div>
                                 <div>Duplicar</div>
                             </button>
+                            <button type="button" class="btn btn-icon btn-warning mr-2" style="min-width: 88px;"
+                                v-if="active != 0" data-toggle="modal" data-target="#asignarSerieModal"
+                                v-on:click="abrirAsignarSerie(seleccion)">
+                                <div style="font-size: 30px;"><i class="fas fa-link"></i></div>
+                                <div>Asignar Serie</div>
+                            </button>
+                            <button type="button" class="btn btn-icon btn-warning disabled mr-2"
+                                style="min-width: 88px;" v-else>
+                                <div style="font-size: 30px;"><i class="fas fa-link"></i></div>
+                                <div>Asignar Serie</div>
+                            </button>
                             <button type="button" class="btn btn-icon btn-danger mr-2" style="min-width: 88px;"
                                 v-if="(active != 0)" data-toggle="modal" data-target="#formularioModal"
                                 v-on:click="formularioModal('modal-sm', active, 'delete', seleccion.driver_nombre)">
@@ -615,6 +626,7 @@
                                 <div style="font-size: 30px;"><i class="fas fa-trash-alt"></i></div>
                                 <div>Eliminar</div>
                             </button>
+
                         </div>
                         <div class="mb-3 mt-3 col-md-3">
                             <div class="p-b-10">
@@ -714,7 +726,7 @@
                                     </a>
                                     <a href="#" v-else class="pag-inicio-fin desabilitado" title="Página inicio"><i
                                             class="fas fa-step-backward"></i>
-                                        </a>
+                                    </a>
                                     <li class="page-item" v-if="pagination.current_page > 1">
                                         <a href="#" class="page-link"
                                             style="padding: 6px 10px 4px 10px; font-size: 18px;" title="Anterior"
@@ -755,6 +767,38 @@
                             <div style="margin: 7px; font-size: 15px;" v-else>0 de 0 Registros</div>
                         </div>
                     </div>
+                    <!-- filepath: resources/views/sistema/drivers/index.blade.php -->
+<!-- Modal Asignar Serie -->
+<div class="modal fade" id="asignarSerieModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding: 10px 15px">
+                <h5 class="mb-0">Asignar Series al Driver</h5>
+                <button type="button" title="Cerrar" data-dismiss="modal" aria-label="Close"
+                    v-on:click="cerrarAsignarSerie" class="btn btn-danger btn-xs float-right"
+                    style="padding: 0px 7px;">X</button>
+            </div>
+            <div class="modal-body" style="padding: 15px 15px;">
+                <div class="form-group">
+                    <label for="serie_asignar" class="label-sm">Números de Serie</label>
+                    <textarea id="serie_asignar" v-model="serie_asignar" class="form-control" rows="4"
+                        placeholder="Ejemplo:&#10;ABC123456&#10;DEF789012"></textarea>
+                    <small class="form-text text-muted">
+                        Ingresa <b>una serie por línea</b>. Puedes pegar varias a la vez.<br>
+                        <span style="color:#888;">(Solo se mostrará este driver para las series indicadas)</span>
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer" style="padding: 10px 15px;">
+                <button class="btn btn-warning btn-block event-btn" v-on:click="guardarAsignarSerie" :disabled="loading">
+                    <span class="spinner-grow spinner-grow-sm" role="status" v-if="loading"></span>
+                    <span class="load-text" v-if="loading">Asignando...</span>
+                    <span class="btn-text" v-if="!loading"><i class="fas fa-link"></i> Asignar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
                 </div>
             </div>
         </div>
