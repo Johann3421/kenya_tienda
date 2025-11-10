@@ -97,7 +97,7 @@
             <h2>Información</h2>
             <span><i class="fa-solid fa-envelope" aria-hidden="true"></i> soporte@kenya.com.pe</span>
             <span><i class="fa-solid fa-phone" aria-hidden="true"></i> +51 958 021 778</span>
-            <span><i class="fa-solid fa-location-arrow" aria-hidden="true"></i> Jr. Huallayco 1135 - Huánuco</span>
+            <span><i class="fa-solid fa-location-arrow" aria-hidden="true"></i> Av. Pablo Carriquiry N°455 Oficina 03</span>
             <div>
                 <a href="#" target="_blank" rel="noopener noreferrer"><i
                         class="fa-brands fa-facebook" aria-hidden="true"></i></a>
@@ -109,7 +109,7 @@
                         class="fa-brands fa-youtube" aria-hidden="true"></i></a>
             </div>
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.0809981423886!2d-76.24414302405405!3d-9.927212306067894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c31de50fed27%3A0x67e578d3599ef726!2sJir%C3%B3n%20Huallayco%201135%2C%20Hu%C3%A1nuco%2010001!5e0!3m2!1ses!2spe!4v1745447241939!5m2!1ses!2spe"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.6172522719596!2d-77.01817840277106!3d-12.096092161538214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8709d895a81%3A0x3ba45384561942b!2sOficina%2003%2C%20Av%20Pablo%20Carriquiry%20455%2C%20San%20Isidro%2015036!5e0!3m2!1ses!2spe!4v1762792365755!5m2!1ses!2spe"
                 width="500" height="250" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
 

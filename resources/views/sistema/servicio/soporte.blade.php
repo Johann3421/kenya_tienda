@@ -157,6 +157,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-9">
+                                                {{-- ...existing code... --}}
                                                 <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
                                                     <span class="contorno-texto">Estado del Servicio</span>
                                                     <div class="custom-control custom-radio custom-control-inline">
@@ -175,10 +176,11 @@
                                                     </div>
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                         <input class="form-check-input check-xl" type="radio"
-                                                            v-model="estado_servicio" id="devolver" value="E3">
+                                                            v-model="estado_servicio" id="solicitud_pieza"
+                                                            value="E3">
                                                         <label class="form-check-label"
-                                                            style="font-size: 11px; margin: 4px;" for="devolver">SIN
-                                                            SOLUCIÓN - DEVOLVER</label>
+                                                            style="font-size: 11px; margin: 4px;"
+                                                            for="solicitud_pieza">SOLICITUD DE PIEZA</label>
                                                     </div>
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                         <input class="form-check-input check-xl" type="radio"
@@ -201,7 +203,24 @@
                                                             style="font-size: 11px; margin: 4px;"
                                                             for="entregado">ENTREGADO</label>
                                                     </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input class="form-check-input check-xl" type="radio"
+                                                            v-model="estado_servicio" id="reparado_por_entregar"
+                                                            value="E7">
+                                                        <label class="form-check-label"
+                                                            style="font-size: 11px; margin: 4px;"
+                                                            for="reparado_por_entregar">REPARADO - POR ENTREGAR</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input class="form-check-input check-xl" type="radio"
+                                                            v-model="estado_servicio" id="aprobado_cliente"
+                                                            value="E8">
+                                                        <label class="form-check-label"
+                                                            style="font-size: 11px; margin: 4px;"
+                                                            for="aprobado_cliente">APROBADO POR CLIENTE</label>
+                                                    </div>
                                                 </div>
+                                                {{-- ...existing code... --}}
                                             </div>
                                         </div>
                                         <div class="row m-b-20">
@@ -373,23 +392,33 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-md-12">
-    <div class="form-group row m-b-0">
-        <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-2">Opciones :</span>
-        <div class="col-sm-10 m-b-5">
-            <div v-for="(item, idx) in descripcion_falla" :key="idx" class="input-group mb-2">
-                <input type="text" v-model="item.titulo" class="form-control form-control-sm" placeholder="Nombre de la opción (ej: Falla principal)">
-                <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
-                <div class="input-group-append">
-                    <button class="btn btn-danger btn-sm" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <button class="btn btn-success btn-sm mt-2" @click="addDescripcion"><i class="fas fa-plus"></i> Opción</button>
-            <small class="form-text error-color" v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
-        </div>
-    </div>
-</div>
+                                                            <div class="form-group row m-b-0">
+                                                                <span
+                                                                    style="font-size: 11px; padding-right: 0;padding-top: 3px;"
+                                                                    class="col-sm-2">Opciones :</span>
+                                                                <div class="col-sm-10 m-b-5">
+                                                                    <div v-for="(item, idx) in descripcion_falla"
+                                                                        :key="idx" class="input-group mb-2">
+                                                                        <input type="text" v-model="item.titulo"
+                                                                            class="form-control form-control-sm"
+                                                                            placeholder="Nombre de la opción (ej: Falla principal)">
+                                                                        <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
+                                                                        <div class="input-group-append">
+                                                                            <button class="btn btn-danger btn-sm"
+                                                                                v-if="descripcion_falla.length > 1"
+                                                                                @click="removeDescripcion(idx)">
+                                                                                <i class="fas fa-minus"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <button class="btn btn-success btn-sm mt-2"
+                                                                        @click="addDescripcion"><i
+                                                                            class="fas fa-plus"></i> Opción</button>
+                                                                    <small class="form-text error-color"
+                                                                        v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -577,11 +606,13 @@
                                                     <div class="row m-t-10">
                                                         <div class="col-md-6">
                                                             <div class="form-group m-b-0">
-                                                                <label class="m-b-0"
-                                                                    for="observacion">Observacion</label>
-                                                                <textarea id="observacion" v-model="observacion" class="form-control" :readonly="loading"
-                                                                    style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;"></textarea>
-                                                            </div>
+    <label class="m-b-0" for="observacion">
+        <i class="fas fa-exclamation-circle text-primary mr-1"></i>
+        Falla reportada por usuario
+    </label>
+    <textarea id="observacion" v-model="observacion" class="form-control" :readonly="loading"
+        style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;"></textarea>
+</div>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <div class="form-group m-b-0">
@@ -837,30 +868,27 @@
                                         <div class="col-md-3">
                                             {{-- ...CREAR Y EDITAR... --}}
 
-<div class="contorno-check" style="padding: 5px 0px 3px 8px;">
-    <span class="contorno-texto">Tipo de Servicio</span>
-    <div class="custom-control custom-radio custom-control-inline">
-        <input class="form-check-input check-xl" type="radio"
-            v-model="tipo_servicio" id="soporte" value="SOPORTE">
-        <label class="form-check-label"
-            style="font-size: 11px; margin: 4px;"
-            for="soporte">SOPORTE</label>
-    </div>
-    <div class="custom-control custom-radio custom-control-inline">
-        <input class="form-check-input check-xl" type="radio"
-            v-model="tipo_servicio" id="garantia" value="GARANTIA">
-        <label class="form-check-label"
-            style="font-size: 11px; margin: 4px;"
-            for="garantia">GARANTIA</label>
-    </div>
-    <div class="custom-control custom-radio custom-control-inline">
-        <input class="form-check-input check-xl" type="radio"
-            v-model="tipo_servicio" id="ingreso" value="INGRESO">
-        <label class="form-check-label"
-            style="font-size: 11px; margin: 4px;"
-            for="ingreso">INGRESO</label>
-    </div>
-</div>
+                                            <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
+                                                <span class="contorno-texto">Tipo de Servicio</span>
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input class="form-check-input check-xl" type="radio"
+                                                        v-model="tipo_servicio" id="soporte" value="SOPORTE">
+                                                    <label class="form-check-label" style="font-size: 11px; margin: 4px;"
+                                                        for="soporte">SOPORTE</label>
+                                                </div>
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input class="form-check-input check-xl" type="radio"
+                                                        v-model="tipo_servicio" id="garantia" value="GARANTIA">
+                                                    <label class="form-check-label" style="font-size: 11px; margin: 4px;"
+                                                        for="garantia">GARANTIA</label>
+                                                </div>
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input class="form-check-input check-xl" type="radio"
+                                                        v-model="tipo_servicio" id="ingreso" value="INGRESO">
+                                                    <label class="form-check-label" style="font-size: 11px; margin: 4px;"
+                                                        for="ingreso">INGRESO</label>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-md-9">
                                             <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
@@ -1079,23 +1107,33 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-12">
-    <div class="form-group row m-b-0">
-        <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-2">Opciones  :</span>
-        <div class="col-sm-10 m-b-5">
-            <div v-for="(item, idx) in descripcion_falla" :key="idx" class="input-group mb-2">
-                <input type="text" v-model="item.titulo" class="form-control form-control-sm" placeholder="Nombre de la opción (ej: Falla principal)">
-                <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
-                <div class="input-group-append">
-                    <button class="btn btn-danger btn-sm" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <button class="btn btn-success btn-sm mt-2" @click="addDescripcion"><i class="fas fa-plus"></i> Opción</button>
-            <small class="form-text error-color" v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
-        </div>
-    </div>
-</div>
+                                                        <div class="form-group row m-b-0">
+                                                            <span
+                                                                style="font-size: 11px; padding-right: 0;padding-top: 3px;"
+                                                                class="col-sm-2">Opciones :</span>
+                                                            <div class="col-sm-10 m-b-5">
+                                                                <div v-for="(item, idx) in descripcion_falla"
+                                                                    :key="idx" class="input-group mb-2">
+                                                                    <input type="text" v-model="item.titulo"
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="Nombre de la opción (ej: Falla principal)">
+                                                                    <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-danger btn-sm"
+                                                                            v-if="descripcion_falla.length > 1"
+                                                                            @click="removeDescripcion(idx)">
+                                                                            <i class="fas fa-minus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                <button class="btn btn-success btn-sm mt-2"
+                                                                    @click="addDescripcion"><i class="fas fa-plus"></i>
+                                                                    Opción</button>
+                                                                <small class="form-text error-color"
+                                                                    v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

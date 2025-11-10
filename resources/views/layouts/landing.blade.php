@@ -171,7 +171,7 @@ body {
                     <ul class="kenya-footer-list kenya-contact-list">
                         <li>
                             <i class="kenya-icon fas fa-map-marker-alt"></i>
-                            <span>Jr. Huallayco 1135 - Huánuco</span>
+                            <span>Av. Pablo Carriquiry N°455 Oficina 03</span>
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-envelope"></i>
@@ -183,7 +183,7 @@ body {
                         </li>
                         <li>
                             <i class="kenya-icon fab fa-whatsapp"></i>
-                            <span>958 021778</span>
+                            <span>958 021 778</span>
                         </li>
                     </ul>
                 </div>
