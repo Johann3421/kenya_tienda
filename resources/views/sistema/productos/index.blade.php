@@ -713,8 +713,7 @@
                             </div>
                             {{-- MODAL PARA EDITAR ESPECIFICACIONES --}}
 
-
-{{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
+                           {{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
 <div class="modal-content" v-if="methods == 'import_spec'">
     <div class="modal-header" style="padding: 10px 15px">
         <h5 class="mb-0">IMPORTAR ESPECIFICACIONES</h5>
@@ -774,7 +773,6 @@
     </form>
 </div>
 {{-- MODAL PARA IMPORTAR DESDE EXCEL --}}
-
 
                             {{-- EDITAR --}}
                             <div class="modal-content" v-if="methods == 'edit'">

@@ -15,6 +15,19 @@
 
 @section('css')
     <style>
+        .site-width {
+            margin: 0 auto;
+            padding: 0;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        /* Ensure product cards fit inside the constrained width */
+        .site-width .prod-filter-container {
+            gap: 20px;
+            justify-content: center !important;
+        }
+
         .contorno {
             border: 1px solid #cecece;
             border-radius: 2px;
@@ -187,9 +200,11 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
             padding: 15px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
             color: white;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
 
         .prod-overlay-text {
@@ -422,7 +437,7 @@
         }
 
         .novedades-container {
-            max-width: 1230px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 0 15px;
         }
@@ -493,7 +508,7 @@
         .novedades-image-container {
             position: relative;
             width: 100%;
-            height: 200px;
+            aspect-ratio: 4/3;
             overflow: hidden;
         }
 
@@ -600,6 +615,21 @@
             transform: scale(1.2);
         }
 
+        /* Estilo para la descripción del slide (mejor estética) */
+        .hero-slide-desc {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 14px 20px;
+            border-radius: 10px;
+            color: #f7f7f7;
+            font-size: 1.02rem;
+            line-height: 1.45;
+            max-width: 880px;
+            margin-top: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            backdrop-filter: blur(2px);
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .novedades-carousel-item {
@@ -651,6 +681,10 @@
     <!-- ======= Hero Section ======= -->
     <section id="hero">
         <div class="hero-container">
+                <!-- buscador movido al header -->
+                @php
+                    $slideDesc = 'COMPUTADORA de alto rendimiento, ha sido diseñada especialmente para operar en entornos extremos, agrestes y de alta exigencia, como regiones altoandinas con baja temperatura y polvo, Selva con alta humedad y áreas con condiciones climáticas adversas del Perú. Su construcción robusta, su sistema de refrigeración avanzada y sus componentes de nivel industrial garantizan estabilidad y potencia incluso en las condiciones más duras.';
+                @endphp
             <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
 
                 <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
@@ -684,13 +718,27 @@
                                     class="animate__animated animate__fadeInDown">
                                     {{ $banner->contenido }}
                                 </p>
+                                @php
+                                    // Ocultar slideDesc para banners que sean "toner" (o contengan la palabra toner)
+                                    $bannerText = trim((string)($banner->titulo ?? '') . ' ' . (string)($banner->descripcion ?? '') . ' ' . (string)($banner->contenido ?? ''));
+                                    $isToner = stripos($bannerText, 'toner') !== false || stripos($bannerText, 'tonner') !== false;
+                                @endphp
+                                @if (!$isToner)
+                                    <p class="hero-slide-desc animate__animated animate__fadeInUp" style="text-align:center"
+                                       data-full="{{ e($slideDesc) }}"
+                                       data-trunc="{{ e(Str::limit($slideDesc, 220)) }}">
+                                        {{ Str::limit($slideDesc, 220) }} <a href="#" class="slide-toggle" style="color:#fff; font-weight:600; margin-left:6px;">ver más</a>
+                                    </p>
+                                @endif
 
                                 @if ($banner->link)
                                     <!-- Botón (Naranja vibrante y llamativo) -->
-                                    <a href="#" class="btn-get-started animate__animated animate__fadeInUp scrollto"
-                                        style="background-color: #ee7c31; border: none; padding: 15px 40px; font-size: 1.3rem; margin-top: 35px; font-weight: 700; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: all 0.3s ease; display: inline-block;">
-                                        {{ $banner->link_nombre }}
-                                    </a>
+                                    <div style="margin-top:18px;">
+                                        <a href="#" class="btn-get-started animate__animated animate__fadeInUp scrollto"
+                                           style="background-color: #ee7c31; border: none; padding: 12px 30px; font-size: 1.05rem; margin-top: 0; font-weight: 700; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.18); transition: all 0.3s ease; display: inline-block; color:#fff; text-decoration:none;">
+                                            {{ $banner->link_nombre }}
+                                        </a>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -715,6 +763,7 @@
         <!-- ======= About Us Section ======= -->
         <section id="productos" class="portfolio section-bg">
             <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="site-width">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section-title">
@@ -762,13 +811,13 @@
                                     @endif
                                     <div class="prod-image-overlay">
                                         @if ($mod->categoria_id)
-                                            <h6 class="prod-overlay-text">{{ $mod->descripcion }}</h6>
+                                            <h6 class="prod-overlay-text" title="{{ $mod->descripcion }}">{{ Str::limit($mod->descripcion ?? '', 160) }}</h6>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="prod-details">
                                     <div class="prod-title-container">
-                                        <p class="prod-title">{{ $mod->descripcion }}</p>
+                                        <p class="prod-title" title="{{ $mod->descripcion }}">{{ Str::limit($mod->descripcion ?? '', 90) }}</p>
                                     </div>
                                     <div class="prod-action-btn">
                                         <a href="{{ route('detallemod', $mod->id) }}"><i class='bx bx-shopping-bag'></i>
@@ -1025,6 +1074,36 @@
             // Iniciar carrusel
             initCarousel();
         });
+    </script>
+    <script>
+        // Expand/collapse slide description
+        (function(){
+            function setCollapsed(el) {
+                el.classList.remove('expanded');
+                el.innerHTML = el.getAttribute('data-trunc') + ' <a href="#" class="slide-toggle" style="color:#fff; font-weight:600; margin-left:6px;">ver más</a>';
+            }
+
+            function setExpanded(el) {
+                el.classList.add('expanded');
+                el.innerHTML = el.getAttribute('data-full') + ' <a href="#" class="slide-toggle" style="color:#fff; font-weight:600; margin-left:6px;">ver menos</a>';
+            }
+
+            document.addEventListener('click', function(e){
+                const toggle = e.target.closest('.slide-toggle');
+                if (!toggle) return;
+                e.preventDefault();
+                const parent = toggle.closest('.hero-slide-desc');
+                if (!parent) return;
+                if (parent.classList.contains('expanded')) {
+                    setCollapsed(parent);
+                } else {
+                    setExpanded(parent);
+                }
+            });
+
+            // Initialize all hero-slide-desc elements as collapsed
+            document.querySelectorAll('.hero-slide-desc').forEach(el => setCollapsed(el));
+        })();
     </script>
     <!-- FIN DEL SCRIPT DEL CARRUSEL DE NOVEDADES -->
 @endsection

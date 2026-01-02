@@ -6,6 +6,8 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ReclamacionController;
 use App\Http\Controllers\Sistema\AsideController;
 use App\Http\Controllers\SoporteController;
+use App\Http\Controllers\SerialDrawController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +47,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/api/dni/{numero}', 'ApiController@dni');
 Route::get('/api/ruc/{numero}', 'ApiController@ruc');
 Route::get('/api/proveedor/{numero}', 'ApiController@proveedor');
+Route::get('/search-products', [SearchController::class, 'products'])->name('search.products');
 
 // --------------------- INICIO --------------------------------
 Route::middleware('auth')->group(function () {
@@ -141,6 +144,10 @@ Route::view('/Catalogo', 'Catalogo')->name('catalogo');
 Route::view('/Novedades', 'Novedades')->name('novedades');
 Route::view('/Contactenos', 'Contactenos')->name('contactenos');
 Route::view('/Reclamaciones', 'Reclamaciones')->name('reclamaciones');
+
+Route::get('/sorteo', [SerialDrawController::class, 'index'])->name('serial.draw');
+Route::post('/sorteo', [SerialDrawController::class, 'store'])->name('serial.draw.store');
+Route::post('/sorteo/claim', [SerialDrawController::class, 'claim'])->name('serial.draw.claim');
 
 Route::post('/reclamaciones/enviar', [ReclamacionController::class, 'enviar']);
 
@@ -374,7 +381,7 @@ Route::get('/test', function() {
     ];
 });
 Route::post('/banners', [BannerMedioController::class, 'store'])->name('banners.store');
-Route::prefix('admin')->name('admin.')->group(function() {
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function() {
     // Listar banners (GET)
     Route::get('banners', [BannerMedioController::class, 'index'])->name('banners.index');
 
@@ -386,5 +393,40 @@ Route::prefix('admin')->name('admin.')->group(function() {
 
     // Eliminar banner (DELETE)
     Route::delete('banners/{bannerMedio}', [BannerMedioController::class, 'destroy'])->name('banners.destroy');
+
+    // Serial Rewards
+    Route::resource('serial-rewards', \App\Http\Controllers\Admin\SerialRewardController::class);
 });
 Route::get('/producto/buscar-especificaciones', [ProductoController::class, 'buscarPorModeloONroParte']);
+
+
+Route::get('/limpiar-todo', function() {
+    try {
+        // 1. Limpieza de cachés
+        Artisan::call('cache:clear');
+        Artisan::call('config:clear');
+        Artisan::call('view:clear');
+        Artisan::call('route:clear');
+        
+        // 2. Reoptimizar (solo para producción)
+        if (app()->environment('production')) {
+            Artisan::call('config:cache');
+            Artisan::call('view:cache');
+        }
+        
+        // 3. Recrear enlaces simbólicos
+        Artisan::call('storage:link');
+        
+        return "¡Sistema limpiado! ✅<br>" . 
+               "Cache/Config/View/Route borrados.<br>" .
+               "Ahora elimina esta ruta (/limpiar-todo) por seguridad.";
+               
+    } catch (Exception $e) {
+        return "❌ Error: " . $e->getMessage();
+    }
+});
+
+
+
+
+

@@ -77,7 +77,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
-                    
+
                     <li>
                         <div class="dropdown drp-user triangle">
                             <a href="#!" class="dropdown-toggle" data-toggle="dropdown">
@@ -170,7 +170,29 @@
         </div>
 
         <script src="{{asset('theme/js/vendor-all.min.js')}}"></script>
-        <script src="{{asset('theme/js/plugins/bootstrap.min.js')}}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+        <script>
+            // Shim for old code that expects jQuery plugin interface for tooltips (e.g. $(...).tooltip)
+            // If Bootstrap 5 is loaded (no jQuery plugin), provide a thin wrapper mapping to bootstrap.Tooltip
+            (function() {
+                if (window.jQuery && window.bootstrap && typeof jQuery.fn.tooltip !== 'function') {
+                    jQuery.fn.tooltip = function(option) {
+                        return this.each(function() {
+                            var el = this;
+                            var instance = bootstrap.Tooltip.getInstance(el);
+                            if (!instance) {
+                                instance = new bootstrap.Tooltip(el, typeof option === 'object' ? option : {});
+                            }
+                            if (typeof option === 'string') {
+                                if (typeof instance[option] === 'function') {
+                                    instance[option]();
+                                }
+                            }
+                        });
+                    };
+                }
+            })();
+        </script>
         <script src="{{asset('theme/js/pcoded.min.js')}}"></script>
         {{-- <script src="{{asset('theme/js/menu-setting.min.js')}}"></script> --}}
         <script src="{{asset('theme/js/plugins/ekko-lightbox.min.js')}}"></script>

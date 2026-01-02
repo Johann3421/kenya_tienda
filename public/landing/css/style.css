@@ -115,7 +115,7 @@ h1, h2, h3, h4, h5, h6, .font-primary {
   }
 
   .kenya-header-container {
-    max-width: 1200px;
+    max-width: 1600px;
     margin: 0 auto;
     padding: 0 15px;
     display: flex;
@@ -532,7 +532,7 @@ section {
     justify-content: center;
     gap: 20px;
     width: 100%;
-    max-width: 1400px;
+    max-width: 1600px;
     padding: 0 20px;
 }
 
@@ -1263,7 +1263,7 @@ section {
     grid-template-columns: repeat(4, 1fr);
     gap: 30px;
     margin-bottom: 40px;
-    max-width: 1200px;
+    max-width: 1600px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -1319,7 +1319,7 @@ section {
   .kenya-footer-bottom {
     border-top: 1px solid #424242;
     padding-top: 20px;
-    max-width: 1200px;
+    max-width: 1600px;
     margin-left: auto;
     margin-right: auto;
   }

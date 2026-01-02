@@ -76,15 +76,16 @@ class ModeloController extends Controller
             $modelo->activo = $request->estado;
             $modelo->save();
 
-            $route = 'MODELOS/'.$modelo->id;
+            $route = 'MODELOS/'.$modelo->id; // relative path inside the public disk
 
             if ($request->hasFile('imagen')) {
                 $file = $request->file('imagen');
                 $extension = $file->extension();
                 $file_name = 'IMG_'.Str::random(10).'.'.$extension;
 
-                Storage::putFileAs('public/'.$route, $file, $file_name);
-                $modelo->img_mod = $route.'/'.$file_name;
+                // Use explicit public disk to avoid double "public/public" if FILESYSTEM_DRIVER changes
+                Storage::disk('public')->putFileAs($route, $file, $file_name);
+                $modelo->img_mod = $route.'/'.$file_name; // store path relative to disk root
 
                 $modelo->save();
             }
@@ -130,16 +131,19 @@ class ModeloController extends Controller
             $modelo->descripcion = Str::upper($request->descripcion);
             $modelo->activo = $request->estado;
 
-            $route = 'MODELOS/'.$modelo->id;
+            $route = 'MODELOS/'.$modelo->id; // relative path inside the public disk
 
             if ($request->hasFile('imagen')) {
-                Storage::delete('public/'.$modelo->img_mod);
+                // Delete previous file using the public disk
+                if ($modelo->img_mod) {
+                    Storage::disk('public')->delete($modelo->img_mod);
+                }
 
                 $file = $request->file('imagen');
                 $extension = $file->extension();
                 $file_name = 'IMG_'.Str::random(10).'.'.$extension;
 
-                Storage::putFileAs('public/'.$route, $file, $file_name);
+                Storage::disk('public')->putFileAs($route, $file, $file_name);
                 $modelo->img_mod = $route.'/'.$file_name;
             }
 
@@ -178,9 +182,8 @@ class ModeloController extends Controller
             $route = 'MODELOS/'.$modelo->id;
 
             if ($modelo->img_mod) {
-                Storage::delete('public/'.$modelo->img_mod);
-
-                Storage::deleteDirectory('public/'.$route);
+                Storage::disk('public')->delete($modelo->img_mod);
+                Storage::disk('public')->deleteDirectory($route);
             }
 
             $modelo->delete();

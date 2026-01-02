@@ -4,7 +4,6 @@
     </IfModule>
 
     RewriteEngine On
-    RewriteRule ^storage/(.*)$ /storage/$1 [L]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -19,13 +18,11 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
-
 </IfModule>
-
-
 <IfModule mod_php7.c>
     php_value upload_max_filesize 2G
     php_value post_max_size 2G
     php_value max_execution_time 300
     php_value max_input_time 300
 </IfModule>
+

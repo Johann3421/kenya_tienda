@@ -213,7 +213,7 @@
         }
 
         .warranty-container {
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 0 15px;
         }
@@ -1007,12 +1007,17 @@
     <script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            let pdfRendered = false; // Bandera para evitar renderizados múltiples
+
             function renderPDF() {
-                if (!window.pdfjsLib) return;
+                if (pdfRendered || !window.pdfjsLib) return;
+                pdfRendered = true; // Marcar como renderizado
+
                 pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('js/pdfjs/pdf.worker.js') }}";
                 const url = "{{ asset('GARANTIA_KENYA_SIN_HORARIO.pdf') }}";
                 const container = document.getElementById('pdf-viewer');
-                container.innerHTML = '';
+                container.innerHTML = ''; // Limpiar cualquier contenido previo
+
                 pdfjsLib.getDocument(url).promise.then(function(pdf) {
                     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                         pdf.getPage(pageNum).then(function(page) {
@@ -1030,18 +1035,28 @@
                             });
                         });
                     }
+                }).catch(function(error) {
+                    console.error('Error al renderizar PDF:', error);
+                    pdfRendered = false; // Resetear en caso de error
                 });
             }
 
-            // Renderiza el PDF cada vez que se hace clic en la pestaña de términos
-            document.getElementById('terms-tab').addEventListener('click', function() {
-                setTimeout(renderPDF, 100); // Espera a que la pestaña sea visible
+            // Usar evento de Bootstrap para renderizar solo cuando la pestaña se muestra
+            $('#warrantyTabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+                const target = $(e.target).attr('href');
+                if (target === '#terms') {
+                    renderPDF();
+                }
             });
 
             // Si la pestaña está activa al cargar, renderiza de inmediato
             if (document.getElementById('terms').classList.contains('active') ||
                 document.getElementById('terms').classList.contains('show')) {
                 renderPDF();
+            }
+            // Verificar hash en la URL para activar pestaña específica
+            if (window.location.hash === '#terms') {
+                $('#terms-tab').tab('show');
             }
         });
     </script>

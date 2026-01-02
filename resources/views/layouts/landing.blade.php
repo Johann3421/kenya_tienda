@@ -72,9 +72,34 @@ body {
     flex: 1 0 auto;
 }
 
-/* Si tu footer tiene una clase específica, por ejemplo .footer */
+    /* Si tu footer tiene una clase específica, por ejemplo .footer */
 .footer {
     flex-shrink: 0;
+}
+
+/* Aumentar el ancho máximo de los contenedores para mejor uso del espacio en pantallas anchas */
+.container {
+    max-width: 1600px !important;
+}
+
+/* Hacer header y footer full-width para aprovechar el espacio */
+header, footer {
+    width: 100%;
+    max-width: none !important;
+}
+
+/* Centrar el contenido del header */
+.kenya-header-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Centrar el contenido del footer */
+.kenya-footer-fullwidth {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
     /* Versión oculta solo para imprimir PDF */
     #print-pdf-container {
@@ -119,6 +144,14 @@ body {
                     </a>
                 </h1>
             </div>
+            <!-- Buscador global en header -->
+            <div style="flex:1; display:flex; justify-content:center; align-items:center;">
+                <div style="width:100%; max-width:720px;">
+                    <input id="productSearch" type="search" placeholder="Buscar productos por nombre o característica..."
+                        style="width:100%; padding:10px 14px; border-radius:30px; border:1px solid #ddd; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
+                    <div id="searchResults" style="position:absolute; z-index:9999; display:none; margin-top:8px; width:calc(100% - 40px); background:#fff; border:1px solid #e6e6e6; border-radius:8px; max-height:360px; overflow:auto; box-shadow:0 8px 24px rgba(0,0,0,0.08);"></div>
+                </div>
+            </div>
 
             @yield('menu')
         </div>
@@ -151,7 +184,7 @@ body {
                         <li><a href="{{ route('consultar.garantia') }}">Soporte técnico</a></li>
                         <li><a href="{{ route('consultar.garantia') }}">Consulta el estado de tu Producto</a></li>
                         <li><a href="{{ route('contactenos') }}">Preguntas frecuentes</a></li>
-                        <li><a href="{{ route('consultar.garantia') }}">Términos y condiciones de garantía</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}#terms">Términos y condiciones de garantía</a></li>
                     </ul>
                 </div>
 
@@ -171,7 +204,7 @@ body {
                     <ul class="kenya-footer-list kenya-contact-list">
                         <li>
                             <i class="kenya-icon fas fa-map-marker-alt"></i>
-                            <span>Av. Pablo Carriquiry N°455 Oficina 03</span>
+                            <span>Av. Pablo Carriquiry N°455 Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-envelope"></i>
@@ -256,6 +289,78 @@ body {
                 }
             }
         });
+    </script>
+    <script>
+        (function(){
+            const input = document.getElementById('productSearch');
+            const resultsBox = document.getElementById('searchResults');
+            let timer = null;
+
+            function renderResults(items) {
+                if (!resultsBox) return;
+                if (!items || items.length === 0) {
+                    resultsBox.style.display = 'none';
+                    resultsBox.innerHTML = '';
+                    return;
+                }
+                resultsBox.style.display = 'block';
+                resultsBox.innerHTML = items.map(i => `
+                    <a href="${i.url}" class="search-item" style="display:flex; gap:12px; padding:10px; border-bottom:1px solid #f2f2f2; align-items:center; text-decoration:none; color:#333;">
+                        <img src="${i.img}" style="width:56px; height:56px; object-fit:cover; border-radius:6px;" alt="${i.nombre}">
+                        <div style="flex:1">
+                            <div style="font-weight:600;">${i.nombre}</div>
+                            <div style="font-size:12px; color:#666;">${(i.descripcion || '').substring(0,120)}</div>
+                        </div>
+                    </a>`).join('');
+            }
+
+            async function doSearch(q){
+                if (!q || q.trim().length < 2) {
+                    renderResults([]);
+                    return;
+                }
+                try {
+                    const res = await fetch(`{{ route('search.products') }}?q=` + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } });
+                    const json = await res.json();
+                    renderResults(json.data || []);
+                } catch (err) {
+                    console.error('Search error', err);
+                    renderResults([]);
+                }
+            }
+
+            if (input) {
+                input.addEventListener('input', function(e){
+                    clearTimeout(timer);
+                    const q = e.target.value;
+                    timer = setTimeout(() => doSearch(q), 300);
+                });
+            }
+
+            // Ensure dropdown width and positioning follow the input
+            function syncSearchDropdown() {
+                if (!input || !resultsBox) return;
+                // make parent of input a positioned container (in case inline styles change)
+                const parent = input.parentElement;
+                if (parent) parent.style.position = parent.style.position || 'relative';
+                // ensure results box fills the parent width
+                resultsBox.style.width = '100%';
+                resultsBox.style.left = '0';
+                resultsBox.style.transform = 'none';
+            }
+
+            // initial sync and on resize
+            syncSearchDropdown();
+            window.addEventListener('resize', syncSearchDropdown);
+
+            // close on outside click
+            document.addEventListener('click', function(ev){
+                if (!resultsBox) return;
+                if (!resultsBox.contains(ev.target) && ev.target !== input) {
+                    resultsBox.style.display = 'none';
+                }
+            });
+        })();
     </script>
 
     @yield('js')

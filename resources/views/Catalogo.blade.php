@@ -19,11 +19,26 @@
     // Configuración inicial
     use App\Producto;
     use App\Modelo;
+    use Illuminate\Support\Facades\DB;
 
     // Obtener parámetros de filtro
     $busqueda = request('busqueda');
     $modeloId = request('modelo');
     $orden = request('orden', 'newest');
+
+    // Nuevos filtros por especificaciones técnicas
+    $procesador = request('procesador');
+    $memoria_ram = request('memoria_ram');
+    $almacenamiento = request('almacenamiento');
+    $sistema_operativo = request('sistema_operativo');
+    $unidad_optica = request('unidad_optica');
+    $conectividad_lan = request('conectividad_lan');
+    $conectividad_wlan = request('conectividad_wlan');
+    $conectividad_usb = request('conectividad_usb');
+    $conectividad_vga = request('conectividad_vga');
+    $conectividad_hdmi = request('conectividad_hdmi');
+    $ofimatica = request('ofimatica');
+    $perifericos = request('perifericos');
 
     // Consulta base
     $productosQuery = Producto::query();
@@ -36,6 +51,68 @@
     // Aplicar filtro por modelo
     if ($modeloId) {
         $productosQuery->where('modelo_id', $modeloId);
+    }
+
+    // Aplicar filtros por especificaciones técnicas usando la tabla especificaciones
+    if ($procesador) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($procesador) {
+            $q->where('campo', 'Procesador')->where('descripcion', $procesador);
+        });
+    }
+    if ($memoria_ram) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($memoria_ram) {
+            $q->where('campo', 'Memoria Ram')->where('descripcion', $memoria_ram);
+        });
+    }
+    if ($almacenamiento) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($almacenamiento) {
+            $q->where('campo', 'Almacenamiento')->where('descripcion', $almacenamiento);
+        });
+    }
+    if ($sistema_operativo) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($sistema_operativo) {
+            $q->where('campo', 'Sistema Operativo')->where('descripcion', $sistema_operativo);
+        });
+    }
+    if ($unidad_optica) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($unidad_optica) {
+            $q->where('campo', 'Unidad Óptica')->where('descripcion', $unidad_optica);
+        });
+    }
+    if ($conectividad_lan) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($conectividad_lan) {
+            $q->where('campo', 'Conectividad LAN')->where('descripcion', $conectividad_lan);
+        });
+    }
+    if ($conectividad_wlan) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($conectividad_wlan) {
+            $q->where('campo', 'Conectividad WLAN')->where('descripcion', $conectividad_wlan);
+        });
+    }
+    if ($conectividad_usb) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($conectividad_usb) {
+            $q->where('campo', 'Conectividad USB')->where('descripcion', $conectividad_usb);
+        });
+    }
+    if ($conectividad_vga) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($conectividad_vga) {
+            $q->where('campo', 'Conectividad VGA')->where('descripcion', $conectividad_vga);
+        });
+    }
+    if ($conectividad_hdmi) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($conectividad_hdmi) {
+            $q->where('campo', 'Conectividad HDMI')->where('descripcion', $conectividad_hdmi);
+        });
+    }
+    if ($ofimatica) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($ofimatica) {
+            $q->where('campo', 'Ofimática')->where('descripcion', $ofimatica);
+        });
+    }
+    if ($perifericos) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($perifericos) {
+            $q->where('campo', 'Periféricos')->where('descripcion', $perifericos);
+        });
     }
 
     // Aplicar ordenación
@@ -57,6 +134,20 @@
     // Obtener modelos activos para el dropdown
     $modelos = Modelo::where('activo', 'Si')->orderBy('descripcion')->get();
 
+    // Obtener opciones para filtros de especificaciones desde la tabla especificaciones
+    $procesadores = DB::table('especificaciones')->where('campo', 'Procesador')->distinct()->pluck('descripcion')->sort();
+    $memorias_ram = DB::table('especificaciones')->where('campo', 'Memoria Ram')->distinct()->pluck('descripcion')->sort();
+    $almacenamientos = DB::table('especificaciones')->where('campo', 'Almacenamiento')->distinct()->pluck('descripcion')->sort();
+    $sistemas_operativos = DB::table('especificaciones')->where('campo', 'Sistema Operativo')->distinct()->pluck('descripcion')->sort();
+    $unidades_opticas = DB::table('especificaciones')->where('campo', 'Unidad Óptica')->distinct()->pluck('descripcion')->sort();
+    $conectividades_lan = DB::table('especificaciones')->where('campo', 'Conectividad LAN')->distinct()->pluck('descripcion')->sort();
+    $conectividades_wlan = DB::table('especificaciones')->where('campo', 'Conectividad WLAN')->distinct()->pluck('descripcion')->sort();
+    $conectividades_usb = DB::table('especificaciones')->where('campo', 'Conectividad USB')->distinct()->pluck('descripcion')->sort();
+    $conectividades_vga = DB::table('especificaciones')->where('campo', 'Conectividad VGA')->distinct()->pluck('descripcion')->sort();
+    $conectividades_hdmi = DB::table('especificaciones')->where('campo', 'Conectividad HDMI')->distinct()->pluck('descripcion')->sort();
+    $ofimaticas = DB::table('especificaciones')->where('campo', 'Ofimática')->distinct()->pluck('descripcion')->sort();
+    $perifericos_list = DB::table('especificaciones')->where('campo', 'Periféricos')->distinct()->pluck('descripcion')->sort();
+
     // Paginar resultados (con eager loading si es necesario)
     $productos = $productosQuery->with('modelo')->paginate(9);
     ?>
@@ -69,8 +160,26 @@
                 <p>Descubre nuestra amplia gama de productos de alta calidad</p>
             </div>
 
-            <!-- Filtros y búsqueda -->
-            <div class="catalog-filters">
+            <div class="row">
+                <div class="col-lg-3">
+                    @include('partials.aside-catalogo', [
+                        'procesadores' => $procesadores,
+                        'memorias_ram' => $memorias_ram,
+                        'almacenamientos' => $almacenamientos,
+                        'sistemas_operativos' => $sistemas_operativos,
+                        'unidades_opticas' => $unidades_opticas,
+                        'conectividades_lan' => $conectividades_lan,
+                        'conectividades_wlan' => $conectividades_wlan,
+                        'conectividades_usb' => $conectividades_usb,
+                        'conectividades_vga' => $conectividades_vga,
+                        'conectividades_hdmi' => $conectividades_hdmi,
+                        'ofimaticas' => $ofimaticas,
+                        'perifericos_list' => $perifericos_list
+                    ])
+                </div>
+                <div class="col-lg-9">
+                    <!-- Filtros y búsqueda -->
+                    <div class="catalog-filters">
                 <div class="row">
                     <div class="col-md-6">
                         <form method="GET" action="">
@@ -245,7 +354,9 @@
                         </ul>
                     </nav>
                 </div>
-            @endif
+                    @endif
+                </div>
+            </div>
         </div>
     </section>
     <style>
@@ -271,7 +382,7 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
             padding: 0 15px;
         }
@@ -587,6 +698,16 @@
 
             .product-title {
                 font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .col-lg-3 {
+                display: none;
+            }
+            .col-lg-9 {
+                flex: 0 0 100%;
+                max-width: 100%;
             }
         }
 

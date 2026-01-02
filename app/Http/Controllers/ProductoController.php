@@ -770,8 +770,7 @@ public function subirFichaTecnica(Request $request, $producto)
 
         return response()->json(['message' => 'Especificaciones importadas correctamente.']);
     }
-
-public function buscarPorModeloONroParte(Request $request)
+    public function buscarPorModeloONroParte(Request $request)
 {
     $query = \App\Producto::query();
 

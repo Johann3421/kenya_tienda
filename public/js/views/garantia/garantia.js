@@ -82,14 +82,10 @@ new Vue({
     },
     watch: {
     filtroEstado() {
-        this.Buscar(1); // Siempre vuelve a la p√°gina 1 al cambiar filtro
+        this.Buscar(1); // Siempre vuelve a la p·gina 1 al cambiar filtro
     }
 },
     methods: {
-        closeModal(method) {
-    $('#formularioModal').modal('hide');
-    this.methods = ''; // Limpia el modo
-},
         getBarPercent(fechaInicio, fechaFin) {
         if (!fechaInicio || !fechaFin) return 0;
         const start = moment(fechaInicio);
@@ -106,7 +102,7 @@ new Vue({
         const now = moment();
         const end = moment(fechaFin);
         if (end.diff(now, 'months', true) <= 3) {
-            return 'bg-danger'; // rojo √∫ltimos 3 meses
+            return 'bg-danger'; // rojo ˙ltimos 3 meses
         }
         if (percent > 66) {
             return 'bg-success'; // verde
@@ -454,12 +450,4 @@ new Vue({
             }
         },
     },
-    mounted() {
-
-    setTimeout(() => {
-    $('.modal-backdrop').remove(); // elimina fondo si qued√≥ colgado
-    $('body').removeClass('modal-open'); // permite scroll otra vez
-}, 300);
-
-},
 });

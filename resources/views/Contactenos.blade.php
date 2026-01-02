@@ -98,6 +98,7 @@
             <span><i class="fa-solid fa-envelope" aria-hidden="true"></i> soporte@kenya.com.pe</span>
             <span><i class="fa-solid fa-phone" aria-hidden="true"></i> +51 958 021 778</span>
             <span><i class="fa-solid fa-location-arrow" aria-hidden="true"></i> Av. Pablo Carriquiry N°455 Oficina 03</span>
+
             <div>
                 <a href="#" target="_blank" rel="noopener noreferrer"><i
                         class="fa-brands fa-facebook" aria-hidden="true"></i></a>
@@ -108,11 +109,10 @@
                 <a href="#" target="_blank" rel="noopener noreferrer"><i
                         class="fa-brands fa-youtube" aria-hidden="true"></i></a>
             </div>
-            <iframe
+<iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.6172522719596!2d-77.01817840277106!3d-12.096092161538214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8709d895a81%3A0x3ba45384561942b!2sOficina%2003%2C%20Av%20Pablo%20Carriquiry%20455%2C%20San%20Isidro%2015036!5e0!3m2!1ses!2spe!4v1762792365755!5m2!1ses!2spe"
                 width="500" height="250" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-
         </div>
     </section>
     <style>
@@ -130,7 +130,7 @@
         }
 
         /* Sección de contacto */
-.contactanos {
+        .contactanos {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3rem;

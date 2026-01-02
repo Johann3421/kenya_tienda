@@ -76,7 +76,7 @@ public function filtros()
                 ->withPivot('opcion')
                 ->withTimestamps();
 }
-public function getOpcionesFiltro($asideId)
+    public function getOpcionesFiltro($asideId)
 {
     return $this->filtros()
         ->where('asides.id', $asideId)

@@ -468,7 +468,8 @@
             </div>
         </div>
     </div>
-
+    
+@section('js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.btn-toggle-collapse').forEach(function(btn) {
@@ -1014,4 +1015,5 @@ document.getElementById('selectAllProducts').onchange = function() {
             }
         });
     </script>
+@endsection
 @endsection

@@ -6,6 +6,7 @@ use App\Models\Aside;
 use App\Models\Categoria;
 use Illuminate\Database\Eloquent\Model;
 use App\Producto;
+use Illuminate\Support\Facades\Storage;
 
 class Modelo extends Model
 {
@@ -29,4 +30,10 @@ public function asides()
 {
     return $this->hasMany(Aside::class); // Asegúrate que es hasMany y no belongsToMany
 }
+
+    // Accessor: full public URL for image
+    public function getImgUrlAttribute()
+    {
+        return $this->img_mod ? asset('storage/'.$this->img_mod) : null;
+    }
 }
