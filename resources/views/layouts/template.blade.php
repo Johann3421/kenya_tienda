@@ -172,6 +172,26 @@
         <script src="{{asset('theme/js/vendor-all.min.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
         <script>
+            // Limpiar backdrop de modales al cerrar - FIX para Bootstrap 5
+            document.addEventListener('DOMContentLoaded', function() {
+                // Escuchar evento de cierre de modales
+                document.addEventListener('hidden.bs.modal', function (event) {
+                    // Limpiar todos los backdrops que puedan quedar
+                    setTimeout(() => {
+                        const backdrops = document.querySelectorAll('.modal-backdrop');
+                        backdrops.forEach(backdrop => backdrop.remove());
+                        
+                        // Verificar si hay modales abiertos
+                        const openModals = document.querySelectorAll('.modal.show');
+                        if (openModals.length === 0) {
+                            document.body.classList.remove('modal-open');
+                            document.body.style.overflow = '';
+                            document.body.style.paddingRight = '';
+                        }
+                    }, 100);
+                });
+            });
+            
             // Shim for old code that expects jQuery plugin interface for tooltips (e.g. $(...).tooltip)
             // If Bootstrap 5 is loaded (no jQuery plugin), provide a thin wrapper mapping to bootstrap.Tooltip
             (function() {

@@ -1696,7 +1696,7 @@
                     {{-- MODAL --}}
                     <div class="mb-3 mt-3">
                         <button type="button" class="btn btn-icon btn-primary mr-2" style="min-width: 88px;"
-                            data-toggle="modal" data-target="#formularioModal"
+                            data-bs-toggle="modal" data-bs-target="#formularioModal"
                             v-on:click="formularioModal('modal-lg', null, 'create', null)">
                             <div style="font-size: 30px;"><i class="fas fa-plus"></i></div>
                             <div>Nuevo</div>
@@ -1725,7 +1725,7 @@
                         </button>
 
                         <button type="button" class="btn btn-icon btn-success mr-2" style="min-width: 88px;"
-                            v-if="active != 0" data-toggle="modal" data-target="#formularioModal"
+                            v-if="active != 0" data-bs-toggle="modal" data-bs-target="#formularioModal"
                             v-on:click="formularioModal('', active, 'facturar', seleccion)">
                             <div style="font-size: 30px;"><i class="fas fa-file-invoice-dollar"></i></div>
                             <div>Facturar</div>
@@ -1736,7 +1736,7 @@
                             <div>Facturar</div>
                         </button>
                         <button type="button" class="btn btn-icon btn-danger mr-2" style="min-width: 88px;"
-                            data-toggle="modal" data-target="#formularioModal"
+                            data-bs-toggle="modal" data-bs-target="#formularioModal"
                             v-on:click="formularioModal('', active, 'avisos', '')">
                             <div style="font-size: 30px;"><i class="fa fa-exclamation-triangle"></i></div>
                             <div>Avisos</div>

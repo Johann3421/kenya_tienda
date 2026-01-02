@@ -266,7 +266,7 @@ new Vue({
 
                 if (response.data.type == 'success') {
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
+                    const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
                     this.closeModal('delete');
                 }
             }).catch(error => {
@@ -340,7 +340,7 @@ new Vue({
             this.state = null;
             this.message = null;
             this.errors = [];
-            $('#formularioModal').modal('hide');
+            const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
         },
 
         Fecha2(doc) {

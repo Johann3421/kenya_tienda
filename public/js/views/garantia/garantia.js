@@ -82,7 +82,7 @@ new Vue({
     },
     watch: {
     filtroEstado() {
-        this.Buscar(1); // Siempre vuelve a la página 1 al cambiar filtro
+        this.Buscar(1); // Siempre vuelve a la pï¿½gina 1 al cambiar filtro
     }
 },
     methods: {
@@ -102,7 +102,7 @@ new Vue({
         const now = moment();
         const end = moment(fechaFin);
         if (end.diff(now, 'months', true) <= 3) {
-            return 'bg-danger'; // rojo últimos 3 meses
+            return 'bg-danger'; // rojo ï¿½ltimos 3 meses
         }
         if (percent > 66) {
             return 'bg-success'; // verde
@@ -324,8 +324,13 @@ new Vue({
                         if (response.data.type == "success") {
                             this.resetDatos();
                             this.Buscar(this.page);
-                            $("#formularioModal").modal("hide");
-                            this.closeModal("delete");
+                            // Cerrar modal con Bootstrap 5
+                            const modalElement = document.getElementById('formularioModal');
+                            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                            if (modalInstance) {
+                                modalInstance.hide();
+                            }
+                            this.methods = '';
                         } else {
                             this.errors = response.data.errors;
                         }
@@ -362,8 +367,13 @@ new Vue({
 
                     if (response.data.type == "success") {
                         this.Buscar(this.page);
-                        $("#formularioModal").modal("hide");
-                        this.closeModal("delete");
+                        // Cerrar modal con Bootstrap 5
+                        const modalElement = document.getElementById('formularioModal');
+                        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                        this.methods = '';
                     }
                 })
                 .catch((error) => {
@@ -383,13 +393,27 @@ new Vue({
         closeModal() {
             this.modal = false;
             this.modal_size = null;
-            this.methods = null;
+            this.methods = '';
             this.id = null;
 
             this.loading = false;
             this.state = null;
             this.message = null;
             this.errors = [];
+            
+            // Limpiar backdrop de Bootstrap 5
+            const modalElement = document.getElementById('formularioModal');
+            if (modalElement) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+            }
+            // Asegurar que se eliminen los backdrops
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
         },
         Fecha(doc) {
             let date = new Date(doc);

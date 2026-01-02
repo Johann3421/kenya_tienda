@@ -278,9 +278,8 @@ new Vue({
 
                 if (response.data.type == 'success') {
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
-                    this.closeModal('delete');
-                }else {
+                    this.closeModal();
+                } else {
                     this.errors = response.data.errors;
                 }
 
@@ -342,7 +341,7 @@ new Vue({
 
                 if (response.data.type == 'success') {
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
+                    const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
                     this.closeModal('delete');
                 }
             }).catch(error => {
@@ -363,6 +362,12 @@ new Vue({
             this.modal_size = null;
             this.methods = null;
             this.id = null;
+
+            const modalElement = document.getElementById('formularioModal');
+            if (modalElement) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) modalInstance.hide();
+            }
 
             this.loading = false;
             this.state = null;

@@ -199,7 +199,7 @@ new Vue({
             });
         },
         searchBarras(barras) {
-            $('#formularioModal').modal('hide');
+            const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
             this.closeModal();
 
             this.search = barras;
@@ -478,7 +478,7 @@ try {
                     if (response.data.type == 'success') {
                         this.resetDatos();
                         this.Buscar(this.page);
-                        $('#formularioModal').modal('hide');
+                        const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
                         this.closeModal('delete');
                     }
                     this.Alert(response.data.type, response.data.title, response.data.message);
@@ -558,7 +558,7 @@ try {
                     this.state = response.data.type;
                     if (response.data.type == 'success') {
                         this.Buscar(this.page);
-                        $('#formularioModal').modal('hide');
+                        const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
                         this.closeModal();
                     }
                     this.Alert(response.data.type, response.data.title, response.data.message);
@@ -584,7 +584,7 @@ try {
 
                 if (response.data.type == 'success') {
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
+                    const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
                     this.closeModal('delete');
                 }
             }).catch(error => {
@@ -678,7 +678,7 @@ try {
             this.state = null;
             this.message = null;
             this.errors = [];
-            $('#formularioModal').modal('hide');
+            const modalEl = document.getElementById('formularioModal'); const modalInst = bootstrap.Modal.getInstance(modalEl); if(modalInst) modalInst.hide();;
         },
 
         Documento() {

@@ -236,14 +236,14 @@
                     <div class="row">
                         <div class="mb-3 mt-3 col-md-9">
                             <button type="button" class="btn btn-icon btn-primary mr-2" style="min-width: 88px;"
-                                data-toggle="modal" data-target="#formularioModal"
+                                data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('', null, 'create', null)">
                                 <div style="font-size: 30px;"><i class="fas fa-plus"></i></div>
                                 <div>Nuevo</div>
                             </button>
 
                             <button type="button" class="btn btn-icon btn-info mr-2" style="min-width: 88px;"
-                                v-if="active != 0" data-toggle="modal" data-target="#formularioModal"
+                                v-if="active != 0" data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('', active, 'edit', seleccion)">
                                 <div style="font-size: 30px;"><i class="fas fa-edit"></i></div>
                                 <div>Editar</div>
@@ -255,7 +255,7 @@
                             </button>
 
                             <button type="button" class="btn btn-icon btn-danger mr-2" style="min-width: 88px;"
-                                v-if="active != 0" data-toggle="modal" data-target="#formularioModal"
+                                v-if="active != 0" data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('modal-sm', active, 'delete', seleccion.nombre)">
                                 <div style="font-size: 30px;"><i class="fas fa-trash-alt"></i></div>
                                 <div>Eliminar</div>
@@ -266,7 +266,7 @@
                                 <div>Eliminar</div>
                             </button>
                             <button type="button" class="btn btn-icon btn-primary mr-2" style="min-width: 88px;"
-                                data-toggle="modal" data-target="#bannerModal">
+                                data-bs-toggle="modal" data-bs-target="#bannerModal">
                                 <div style="font-size: 30px;"><i class="fas fa-plus-circle"></i></div>
                                 <div>Nuevo Banner</div>
                             </button>
@@ -409,8 +409,8 @@
                                                         <td>@{{ config.nombre }}</td>
                                                         <td>@{{ config.descripcion }}</td>
                                                         <td class="text-center">
-                                                            <a href="#" v-if="config.archivo" data-toggle="modal"
-                                                                data-target="#formularioModal"
+                                                            <a href="#" v-if="config.archivo" data-bs-toggle="modal"
+                                                                data-bs-target="#formularioModal"
                                                                 v-on:click="formularioModal('', config.id, 'image', config)"><i
                                                                     class="fa fa-image"></i> @{{ config.archivo }}</a>
                                                         </td>
@@ -466,8 +466,8 @@
                                                             @endphp
 
                                                             @if (file_exists(public_path($fullPath)))
-                                                                <a href="#" data-toggle="modal"
-                                                                    data-target="#imageModal"
+                                                                <a href="#" data-bs-toggle="modal"
+                                                                    data-bs-target="#imageModal"
                                                                     onclick="document.getElementById('bannerImage').src='{{ asset($fullPath) }}'">
                                                                     <img src="{{ asset($fullPath) }}"
                                                                         style="max-height: 50px;" alt="Banner">

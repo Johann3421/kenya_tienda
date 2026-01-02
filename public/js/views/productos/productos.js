@@ -514,8 +514,7 @@ eliminarArchivoExcel(index) {
                 if (response.data.type == 'success') {
                     this.resetDatos();
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
-                    this.closeModal('delete');
+                    this.closeModal();
                 }
             }).catch(error => {
                 this.loading = false;
@@ -590,8 +589,7 @@ eliminarArchivoExcel(index) {
                 if (response.data.type == 'success') {
                     this.resetDatos();
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
-                    this.closeModal('delete');
+                    this.closeModal();
                 }
             }).catch(error => {
                 this.loading = false;
@@ -666,8 +664,7 @@ eliminarArchivoExcel(index) {
                 if (response.data.type == 'success') {
                     this.resetDatos();
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
-                    this.closeModal('delete');
+                    this.closeModal();
                 }
             }).catch(error => {
                 this.loading = false;
@@ -686,10 +683,10 @@ eliminarArchivoExcel(index) {
                 this.loading = false;
                 this.state = response.data.type;
                 this.Alert(response.data.type, response.data.title, response.data.message);
-                response.data.type == 'success'
+                if (response.data.type == 'success') {
                     this.Buscar(this.page);
-                    $('#formularioModal').modal('hide');
                     this.closeModal();
+                }
             }).catch(error => {
                 this.loading = false;
                 if (error.response.status == 422) {
@@ -750,6 +747,12 @@ eliminarArchivoExcel(index) {
             this.modal_size = null;
             this.methods = null;
             this.id = null;
+
+            const modalElement = document.getElementById('formularioModal');
+            if (modalElement) {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) modalInstance.hide();
+            }
 
             this.loading = false;
             this.state = null;

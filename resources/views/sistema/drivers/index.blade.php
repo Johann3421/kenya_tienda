@@ -576,14 +576,14 @@
                     <div class="row">
                         <div class="mb-3 mt-3 col-md-9">
                             <button type="button" class="btn btn-icon btn-primary mr-2" style="min-width: 88px;"
-                                data-toggle="modal" data-target="#formularioModal"
+                                data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('', null, 'create', null)">
                                 <div style="font-size: 30px;"><i class="fas fa-plus"></i></div>
                                 <div>Nuevo</div>
                             </button>
 
                             <button type="button" class="btn btn-icon btn-info mr-2" style="min-width: 88px;"
-                                v-if="active != 0" data-toggle="modal" data-target="#formularioModal"
+                                v-if="active != 0" data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('', active, 'edit', seleccion)">
                                 <div style="font-size: 30px;"><i class="fas fa-edit"></i></div>
                                 <div>Editar</div>
@@ -594,7 +594,7 @@
                                 <div>Editar</div>
                             </button>
                             <button type="button" class="btn btn-icon btn-success mr-2" style="min-width: 88px;"
-                                v-if="active != 0" data-toggle="modal" data-target="#formularioModal"
+                                v-if="active != 0" data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('', active, 'duplicate', seleccion)">
                                 <div style="font-size: 30px;"><i class="fas fa-clone"></i></div>
                                 <div>Duplicar</div>
@@ -605,7 +605,7 @@
                                 <div>Duplicar</div>
                             </button>
                             <button type="button" class="btn btn-icon btn-warning mr-2" style="min-width: 88px;"
-                                v-if="active != 0" data-toggle="modal" data-target="#asignarSerieModal"
+                                v-if="active != 0" data-bs-toggle="modal" data-bs-target="#asignarSerieModal"
                                 v-on:click="abrirAsignarSerie(seleccion)">
                                 <div style="font-size: 30px;"><i class="fas fa-link"></i></div>
                                 <div>Asignar Serie</div>
@@ -616,7 +616,7 @@
                                 <div>Asignar Serie</div>
                             </button>
                             <button type="button" class="btn btn-icon btn-danger mr-2" style="min-width: 88px;"
-                                v-if="(active != 0)" data-toggle="modal" data-target="#formularioModal"
+                                v-if="(active != 0)" data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('modal-sm', active, 'delete', seleccion.driver_nombre)">
                                 <div style="font-size: 30px;"><i class="fas fa-trash-alt"></i></div>
                                 <div>Eliminar</div>
