@@ -147,7 +147,7 @@ new Vue({
                         if (response.data.cliente) {
                             this.nombres = response.data.cliente.nombres;
                         } else if (response.data.data) {
-                            this.nombres = response.data.data.nombres+' '+response.data.data.apellido_paterno+' '+response.data.data.apellido_materno;                            
+                            this.nombres = response.data.data.nombres+' '+response.data.data.apellido_paterno+' '+response.data.data.apellido_materno;
                         } else {
                             this.nombres = null;
                         }
@@ -156,7 +156,7 @@ new Vue({
                         alert('No se pudo obtener los datos de Reniec, por favor intente nuevamente.');
                     });
                 } else {
-                    this.errors['numero_documento'] = ['El campo debe de ser de 8 caracteres.'];    
+                    this.errors['numero_documento'] = ['El campo debe de ser de 8 caracteres.'];
                 }
             } else {
                 this.errors['numero_documento'] = ['El campo es requerido.'];
@@ -189,7 +189,7 @@ new Vue({
                         alert('No se pudo obtener los datos de Sunat, por favor intente nuevamente.');
                     });
                 } else {
-                    this.errors['numero_documento'] = ['El campo debe de ser de 11 caracteres.'];    
+                    this.errors['numero_documento'] = ['El campo debe de ser de 11 caracteres.'];
                 }
             } else {
                 this.errors['numero_documento'] = ['El campo es requerido.'];
@@ -208,7 +208,7 @@ new Vue({
                     this.loading = false;
                 }
             }
-            
+
             if (Object.keys(this.errors).length === 0) {
                 axios.post('clientes/store', {
                     numero_documento: this.numero_documento,
@@ -221,7 +221,7 @@ new Vue({
                     this.loading = false;
                     this.state = response.data.type;
                     this.Alert(response.data.type, response.data.title, response.data.message);
-                    
+
                     if (response.data.type == 'success') {
                         this.resetDatos();
                         this.Buscar(this.page);
@@ -241,7 +241,7 @@ new Vue({
         Update() {
             this.errors = [];
             this.loading = true;
-            
+
             axios.post('clientes/update', {
                 id: this.id,
                 email: this.email,
@@ -266,7 +266,7 @@ new Vue({
         },
         Delete() {
             this.loading = true;
-            
+
             axios.post('clientes/delete', {
                 id: this.id,
             }).then(response => {

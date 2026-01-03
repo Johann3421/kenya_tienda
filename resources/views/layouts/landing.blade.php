@@ -266,6 +266,10 @@ header, footer {
     <script src="{{ asset('landing/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
     <script src="{{ asset('landing/vendor/aos/aos.js') }}"></script>
 
+    <!-- Toastr para notificaciones -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <!-- Template Main JS File -->
     <script src="{{ asset('landing/js/main.js') }}"></script>
     <script src="{{ asset('js/vue.min.js') }}"></script>

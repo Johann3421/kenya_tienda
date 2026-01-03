@@ -180,7 +180,7 @@
                     setTimeout(() => {
                         const backdrops = document.querySelectorAll('.modal-backdrop');
                         backdrops.forEach(backdrop => backdrop.remove());
-                        
+
                         // Verificar si hay modales abiertos
                         const openModals = document.querySelectorAll('.modal.show');
                         if (openModals.length === 0) {
@@ -191,7 +191,7 @@
                     }, 100);
                 });
             });
-            
+
             // Shim for old code that expects jQuery plugin interface for tooltips (e.g. $(...).tooltip)
             // If Bootstrap 5 is loaded (no jQuery plugin), provide a thin wrapper mapping to bootstrap.Tooltip
             (function() {

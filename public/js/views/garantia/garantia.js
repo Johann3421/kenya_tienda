@@ -400,7 +400,7 @@ new Vue({
             this.state = null;
             this.message = null;
             this.errors = [];
-            
+
             // Limpiar backdrop de Bootstrap 5
             const modalElement = document.getElementById('formularioModal');
             if (modalElement) {
