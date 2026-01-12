@@ -365,10 +365,10 @@
                         <div class="card-header">
                             <ul class="nav nav-tabs card-header-tabs">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#configTab">Configuración</a>
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#configTab">Configuración</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#bannersTab">Banners</a>
+                                    <a class="nav-link" data-bs-toggle="tab" href="#bannersTab">Banners</a>
                                 </li>
                             </ul>
                         </div>

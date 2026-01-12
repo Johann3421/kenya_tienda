@@ -61,7 +61,7 @@
             <table width="100%">
                 <tr>
                     <td class="text-left" style="width: 65%;">
-                        <img src="{{asset('theme/images/membrete.png')}}" alt="recibo-logo" style="width: 95%;">
+                        <img src="{{ public_path('theme/images/kenya.png') }}" alt="logo-kenya" style="width: 50%;">
                     </td>
                     <td class="text-right" style="width: 35%;">
                         <div class="text-center" style="border: 2px solid #000; border-radius: 7px; font-size: 14px; height: 90px; padding-top: 0px;">
@@ -129,7 +129,23 @@
                     <tr>
                         <td colspan="4">
                             <strong>DESCRIPCIÓN DE LA FALLA: </strong>
-                            <pre style="max-width: 100%;">{{$soporte->descripcion}}</pre>
+                            @php
+                                $descripcion = json_decode($soporte->descripcion, true);
+                            @endphp
+                            @if(is_array($descripcion))
+                                @foreach($descripcion as $item)
+                                    <div style="margin-bottom: 5px;">
+                                        @if(isset($item['titulo']))
+                                            <strong>{{ $item['titulo'] }}:</strong>
+                                        @endif
+                                        @if(isset($item['texto']))
+                                            {{ $item['texto'] }}
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @else
+                                <pre style="max-width: 100%;">{{$soporte->descripcion}}</pre>
+                            @endif
                         </td>
                     </tr>
                     <tr>

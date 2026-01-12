@@ -177,6 +177,7 @@ new Vue({
                     this.modelo.descripcion =  seleccion.descripcion,
                     this.modelo.estado    =  seleccion.activo,
                     this.modelo.imagen = seleccion.img_mod
+                    this.modelo.imagen_url = '/storage/MODELOS/' + (seleccion.img_mod || '')
 
                     break;
                 case 'duplicate':
@@ -355,6 +356,7 @@ new Vue({
             this.modelo.estado       = null,
             this.modelo = {
                 imagen: null,
+                imagen_url: null
             }
         },
         closeModal() {

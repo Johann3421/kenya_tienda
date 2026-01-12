@@ -368,7 +368,7 @@
                                                         <div>
                                                             <label class="image_show" for="file_edit" title="Buscar Imagen"
                                                                 v-if="modelo.imagen">
-                                                                <img id="show_image" class="img-fluid" src="{{asset('storage/app/public/MODELOS/1/IMG_TJHVWjAG4F.png')}}">
+                                                                <img id="show_image" class="img-fluid" :src="modelo.imagen_url || '{{ asset('storage/MODELOS/1/IMG_TJHVWjAG4F.png') }}'">
                                                                 <input type="file" id="file_edit" style="display: none;"
                                                                     v-on:change="changeImagen($event)" accept="image/*">
                                                             </label>
