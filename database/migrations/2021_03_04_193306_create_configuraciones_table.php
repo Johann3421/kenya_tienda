@@ -26,7 +26,7 @@ class CreateConfiguracionesTable extends Migration
 
         DB::table('configuraciones')->insert([
             ['nombre' => 'ruc_empresa', 'descripcion' => '10447783849', 'archivo' => null, 'archivo_nombre' => null, 'archivo_ruta' => null, 'activo' => 'SI'],
-            ['nombre' => 'nombre_empresa', 'descripcion' => 'GRUPO VASCO', 'archivo' => null, 'archivo_nombre' => null, 'archivo_ruta' => null, 'activo' => 'SI'],
+            ['nombre' => 'nombre_empresa', 'descripcion' => 'KENYA', 'archivo' => null, 'archivo_nombre' => null, 'archivo_ruta' => null, 'activo' => 'SI'],
             ['nombre' => 'contacto_direccion', 'descripcion' => 'Jr. Huallayco - 1135 - Huanuco', 'archivo' => null, 'archivo_nombre' => null, 'archivo_ruta' => null, 'activo' => 'SI'],
             ['nombre' => 'contacto_email', 'descripcion' => 'acuerdos.marco@kenya.com.pe', 'archivo' => null, 'archivo_nombre' => null, 'archivo_ruta' => null, 'activo' => 'SI'],
             ['nombre' => 'contacto_telefono', 'descripcion' => '958021778', 'archivo' => null, 'archivo_nombre' => null, 'archivo_ruta' => null, 'activo' => 'SI'],

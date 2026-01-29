@@ -150,6 +150,13 @@ public function store(Request $request)
         $soporte->marca                = Str::upper($request->marca);
         $soporte->modelo               = Str::upper($request->modelo);
         $soporte->serie                = Str::upper($request->serie);
+        $soporte->pieza_retirada       = $request->pieza_retirada ? Str::upper($request->pieza_retirada) : null;
+        $soporte->pieza_serie          = $request->pieza_serie ? Str::upper($request->pieza_serie) : null;
+        $soporte->pieza_falla          = $request->pieza_falla ? Str::upper($request->pieza_falla) : null;
+        $soporte->falla                = $request->falla ? Str::upper($request->falla) : null;
+        $soporte->diagnostico          = $request->diagnostico ? Str::upper($request->diagnostico) : null;
+        $soporte->piezas_retiradas_multiple = $request->piezas_retiradas_multiple ? $request->piezas_retiradas_multiple : null;
+        $soporte->piezas_adicionales_texto  = $request->piezas_adicionales_texto ? $request->piezas_adicionales_texto : null;
         if (is_array($request->descripcion)) {
     $soporte->descripcion = json_encode($request->descripcion, JSON_UNESCAPED_UNICODE);
 } else {
@@ -166,6 +173,7 @@ public function store(Request $request)
         $soporte->solo_diagnostico     = $request->solo_diagnostico;
         $soporte->observacion          = Str::upper($request->observacion);
         $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
+        $soporte->nro_parte            = $request->nro_parte ? Str::upper($request->nro_parte) : null;
         $soporte->numero_caso = $request->numero_caso;
 
 
@@ -179,7 +187,7 @@ public function store(Request $request)
 
         $soporte->save();
 
-        $soporte->codigo_barras = 'VASCO' . $date->format('y') . Str::padLeft($soporte->id, 4, '0');
+        $soporte->codigo_barras = 'KENYA' . $date->format('y') . Str::padLeft($soporte->id, 4, '0');
         $soporte->save();
 
         $detalles = json_decode($request->detalles, true);
@@ -287,6 +295,13 @@ public function update(Request $request)
         $soporte->marca                = Str::upper($request->marca);
         $soporte->modelo               = Str::upper($request->modelo);
         $soporte->serie                = Str::upper($request->serie);
+        $soporte->pieza_retirada       = $request->pieza_retirada ? Str::upper($request->pieza_retirada) : null;
+        $soporte->pieza_serie          = $request->pieza_serie ? Str::upper($request->pieza_serie) : null;
+        $soporte->pieza_falla          = $request->pieza_falla ? Str::upper($request->pieza_falla) : null;
+        $soporte->falla                = $request->falla ? Str::upper($request->falla) : null;
+        $soporte->diagnostico          = $request->diagnostico ? Str::upper($request->diagnostico) : null;
+        $soporte->piezas_retiradas_multiple = $request->piezas_retiradas_multiple ? $request->piezas_retiradas_multiple : null;
+        $soporte->piezas_adicionales_texto  = $request->piezas_adicionales_texto ? $request->piezas_adicionales_texto : null;
         if (is_array($request->descripcion)) {
     $soporte->descripcion = json_encode($request->descripcion, JSON_UNESCAPED_UNICODE);
 } else {
@@ -301,6 +316,7 @@ public function update(Request $request)
         $soporte->solo_diagnostico     = $request->solo_diagnostico;
         $soporte->observacion          = Str::upper($request->observacion);
         $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
+        $soporte->nro_parte            = $request->nro_parte ? Str::upper($request->nro_parte) : null;
         $soporte->numero_caso = $request->numero_caso;
         $soporte->save();
 

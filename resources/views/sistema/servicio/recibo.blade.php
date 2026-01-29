@@ -64,10 +64,10 @@
                         <img src="{{ public_path('theme/images/kenya.png') }}" alt="logo-kenya" style="width: 50%;">
                     </td>
                     <td class="text-right" style="width: 35%;">
-                        <div class="text-center" style="border: 2px solid #000; border-radius: 7px; font-size: 14px; height: 90px; padding-top: 0px;">
-                            <div style="padding: 3px 0;">RUC &nbsp; {{ $configs['ruc_empresa']->descripcion ?? '' }}</div>
-                            <h3 style="background-color: #ee7c31; color: #fff; margin: 2px 0 0 0; padding: 5px 15px;">SOPORTE TÉCNICO</h3>
-                            <div>N° {{str_pad($soporte->id, 4, '0', STR_PAD_LEFT)}}</div>
+                        <div class="text-center" style="border: 2px solid #000; border-radius: 7px; font-size: 12px; min-height: 90px; padding: 5px 8px; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="padding: 2px 0; font-size: 11px; word-wrap: break-word; overflow-wrap: break-word;">N° CASO: <strong>{{ $soporte->numero_caso ?? '' }}</strong></div>
+                            <h3 style="background-color: #ee7c31; color: #fff; margin: 3px 0 0 0; padding: 4px 8px; font-size: 16px;">REPORTE TÉCNICO</h3>
+                            <div style="font-size: 12px;">N° {{str_pad($soporte->id, 4, '0', STR_PAD_LEFT)}}</div>
                         </div>
                     </td>
                 </tr>
@@ -77,7 +77,7 @@
         <!-- Contenido principal -->
         <div id="content" style="margin-top: 40px;">
             <div class="text-center" style="margin-bottom: 30px; font-weight: 700;">
-                <h2>SOPORTE TÉCNICO ESPECIALIZADO<br>DE EQUIPOS DE COMPUTO Y SUMINISTROS EN GENERAL</h2>
+                <h2>FICHA RESUMEN</h2>
             </div>
 
             <div style="width: 50%; border: 1px solid #000; border-radius: 7px; margin-bottom: 10px;">
@@ -125,6 +125,11 @@
                         <td style="border-right: 0.01em solid #000;">{{$soporte->marca}}</td>
                         <td style="border-right: 0.01em solid #000;">{{$soporte->modelo}}</td>
                         <td>{{$soporte->serie}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <strong>N° PARTE: </strong>{{$soporte->nro_parte ?? 'N/A'}}
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="4">
@@ -195,24 +200,14 @@
                     <pre>{{$soporte->reporte_tecnico}}</pre>
                 @endif
             </div>
-
-            <!-- Firmas -->
-            <div class="row" style="margin-top: 100px;">
-                <table style="width: 100%;">
-                    <tr class="column text-center">
-                        <td style="padding: 0 15px;"><div style="border-top: 1px solid #000;">FIRMA DE CLIENTE</div></td>
-                        <td style="padding: 0 15px;"><div style="border-top: 1px solid #000;">FIRMA DE CONFORMIDAD</div></td>
-                        <td style="padding: 0 15px;"><div style="border-top: 1px solid #000;">V° B° TÉCNICO</div></td>
-                    </tr>
-                </table>
-            </div>
         </div>
 
         <!-- Pie de página solo condiciones -->
         <div id="footer">
             <div class="condiciones">
-                <strong>CONDICIONES</strong><br>
-                EQUIPOS CON MAS DE 30 DIAS, SE CONSIDERARA COMO ABANDONO Y PASARA A SER PARTE DE LA EMPRESA Y/O A SER RECICLADO.
+                <strong>TERMINOS Y CONDICIONES</strong><br>
+                LOS EQUIPOS DE CÓMPUTO MARCA KENYA HAN SIDO REVISADOS, BAJO LA GARANTÍA DEL FABRICANTE, DE ACUERDO CON LOS TÉRMINOS Y CONDICIONES VIGENTES.<br>
+                <strong>https://www.kenya.com.pe/consultar/garantia#terms</strong>
             </div>
         </div>
     </div>

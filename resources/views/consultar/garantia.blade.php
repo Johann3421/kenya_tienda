@@ -1060,5 +1060,32 @@
                 $('#terms-tab').tab('show');
             }
         });
+        // Al cargar la página de garantía
+document.addEventListener('DOMContentLoaded', function() {
+    // Intenta leer del sessionStorage
+    const seriedelStorage = sessionStorage.getItem('garantia_serie');
+
+    // O del parámetro de URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const serieUrl = urlParams.get('serie');
+
+    const serie = seriedelStorage || serieUrl;
+
+    if (serie) {
+        const inputSerie = document.querySelector('input[placeholder="Ingrese Número de Serie"], input.modern-input');
+        if (inputSerie) {
+            inputSerie.value = serie;
+            // Dispara el evento para que se procese
+            inputSerie.dispatchEvent(new Event('input', { bubbles: true }));
+            inputSerie.dispatchEvent(new Event('change', { bubbles: true }));
+
+            // Click en el botón de búsqueda
+            setTimeout(() => {
+                const boton = document.querySelector('button.search-button');
+                if (boton) boton.click();
+            }, 300);
+        }
+    }
+});
     </script>
 @endsection

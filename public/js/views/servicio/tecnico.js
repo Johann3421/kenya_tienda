@@ -49,6 +49,7 @@ new Vue({
         marca: null,
         modelo: null,
         serie: null,
+        nro_parte: null,
         descripcion: null,
         acuenta: 0,
         costo_servicio: 0,
@@ -59,11 +60,23 @@ new Vue({
         solo_diagnostico: 'NO',
 
         //ACCESORIOS
-        cargador: 'NO',
-        cable_usb: 'NO',
+        // removed cargador and cable_usb
         cable_poder: 'NO',
         sin_accesorios: 'NO',
         otros: '',
+
+        //PIEZAS RETIRADAS
+        pieza_retirada: null,
+        pieza_serie: null,
+        pieza_falla: null,
+
+        //DIAGNOSTICO
+        falla: null,
+        diagnostico: null,
+
+        //PIEZAS RETIRADAS MULTIPLES
+        piezas_retiradas_multiple: [{ nombre: '', serie: '', falla: '' }],
+        piezas_adicionales_texto: '',
 
         //DETALLES
         listDetalles: [],
@@ -107,6 +120,33 @@ new Vue({
     created() {
         this.Buscar();
     },
+    mounted() {
+        this.$nextTick(() => {
+            try {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"], [data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (el) { try { return new bootstrap.Tooltip(el); } catch(e) { return null; } });
+            } catch (e) {
+                // bootstrap not available yet
+            }
+
+            // Click-to-toggle help text for .help-icon elements
+            try {
+                document.addEventListener('click', function (ev) {
+                    var help = ev.target.closest && ev.target.closest('.help-icon');
+                    if (help) {
+                        // close other open helpers
+                        document.querySelectorAll('.help-icon.active').forEach(function (el) { if (el !== help) el.classList.remove('active'); });
+                        help.classList.toggle('active');
+                    } else {
+                        // click outside: close any open helper
+                        document.querySelectorAll('.help-icon.active').forEach(function (el) { el.classList.remove('active'); });
+                    }
+                });
+            } catch (e) {
+                // ignore
+            }
+        });
+    },
     computed: {
         isActive: function () {
             return this.pagination.current_page;
@@ -140,6 +180,12 @@ new Vue({
     },
     removeDescripcion(idx) {
         this.descripcion_falla.splice(idx, 1);
+    },
+    addPiezaRetirada() {
+        this.piezas_retiradas_multiple.push({ nombre: '', serie: '', falla: '' });
+    },
+    removePiezaRetirada(idx) {
+        this.piezas_retiradas_multiple.splice(idx, 1);
     },
         confirmarEliminar(soporte) {
         if (confirm('¿Seguro que desea eliminar este soporte técnico y todos sus datos?')) {
@@ -182,6 +228,16 @@ new Vue({
             } catch (error) {
                 console.error('Error uploading PDF:', error);
                 return null;
+            }
+            this.$nextTick(() => { this.initTooltips(); });
+        },
+        // Inicializa tooltips de Bootstrap cuando el modal carga contenido dinámico
+        initTooltips() {
+            try {
+                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-toggle="tooltip"], [data-bs-toggle="tooltip"]'));
+                tooltipTriggerList.map(function (el) { try { return new bootstrap.Tooltip(el); } catch(e) { return null; } });
+            } catch (e) {
+                // ignore
             }
         },
         changePage(page) {
@@ -264,7 +320,16 @@ new Vue({
                 case 'edit':
                     this.result_id = seleccion.id;
                     this.result_barra = seleccion.codigo_barras;
-                    this.whatsapp_soporte = '%20te%20saluda%20*GRUPO%20VASCO*%20para%20informarle%20que%20su%20servicio%20tecnico%20de%20código*('+seleccion.codigo_barras+this.zeroFill(seleccion.id, 4)+')*%20,%20se%20encuentra%20*'+this.Estado(seleccion.estado)+'*%20y%20puede%20acercarse%20a%20recoger%20su%20equipo%20en%20los%20siguiente%20horarios%20de%20atención:';
+                    let numeroCase = seleccion.numero_caso;
+                    let nombreCliente = seleccion.get_cliente.nombres;
+                    let pdfLink = seleccion.pdf_link ? 'https://www.kenya.com.pe' + seleccion.pdf_link : '';
+                    let plainMsg = 'Estimados señores de ' + nombreCliente +
+               '\nreciban un cordial saludo.\n\nLes informamos que el proceso de garantía, atendido por nuestro Soporte Técnico y correspondiente al número de caso N.° ' +
+               numeroCase +
+               ', ha concluido satisfactoriamente. Asimismo, se les remite el Informe Técnico, disponible en el siguiente enlace:\n\n👉 (Enlace): ' +
+               pdfLink +
+               '\n\nQuedamos atentos ante cualquier consulta o coordinación adicional.\nAtentamente,\n\nKENYA – Soporte Técnico.';
+                    this.whatsapp_soporte = encodeURIComponent(plainMsg);
                     this.fecha_registro = this.Fecha3(seleccion.fecha_registro);
                     this.fecha_entrega = this.Datetime(seleccion.fecha_entrega);
                     this.tipo_servicio = seleccion.servicio;
@@ -279,6 +344,7 @@ new Vue({
                     this.marca = seleccion.marca;
                     this.modelo = seleccion.modelo;
                     this.serie = seleccion.serie;
+                    this.nro_parte = seleccion.nro_parte;
                     this.descripcion = seleccion.descripcion;
                     this.acuenta = seleccion.acuenta;
                     this.costo_servicio = seleccion.costo_servicio;
@@ -289,11 +355,19 @@ new Vue({
                     this.solo_diagnostico = seleccion.solo_diagnostico;
                     //ACCESORIOS
                     var accesorio = JSON.parse(seleccion.accesorios);
-                    this.cargador = accesorio.cargador;
-                    this.cable_usb = accesorio.cable_usb;
                     this.cable_poder = accesorio.cable_poder;
                     this.sin_accesorios = accesorio.sin_accesorios;
                     this.otros = accesorio.otros;
+                    //PIEZAS RETIRADAS
+                    this.pieza_retirada = seleccion.pieza_retirada || null;
+                    this.pieza_serie = seleccion.pieza_serie || null;
+                    this.pieza_falla = seleccion.pieza_falla || null;
+                    //DIAGNOSTICO
+                    this.falla = seleccion.falla || null;
+                    this.diagnostico = seleccion.diagnostico || null;
+                    //PIEZAS RETIRADAS MULTIPLES
+                    this.piezas_retiradas_multiple = seleccion.piezas_retiradas_multiple ? JSON.parse(seleccion.piezas_retiradas_multiple) : [{ nombre: '', serie: '', falla: '' }];
+                    this.piezas_adicionales_texto = seleccion.piezas_adicionales_texto || '';
                     //DETALLES
                     this.listDetalles = seleccion.get_detalles;
                     // Cargar PDF actual si existe
@@ -328,6 +402,49 @@ try {
 
                     this.Ubigeo();
                     break;
+            }
+        },
+        enviarWhatsApp() {
+            // Construye el número con prefijo de país si es necesario y abre wa.me
+            try {
+                let phone = this.celular ? String(this.celular).trim() : '';
+                phone = phone.replace(/[^0-9]/g, '');
+                if (!phone) {
+                    alert('No hay número de celular disponible.');
+                    return;
+                }
+                if (phone.length === 9) {
+                    phone = '51' + phone; // Perú local numbers
+                } else if (phone.length === 10 && phone.startsWith('0')) {
+                    phone = '51' + phone.slice(1);
+                } else if (phone.startsWith('51') === false && phone.length >= 8 && phone.length <= 13) {
+                    // Si no tiene prefijo y no es 9 dígitos, intentamos agregar 51 por defecto
+                    phone = '51' + phone;
+                }
+
+                // whatsapp_soporte puede estar ya codificado; decodificamos primero para evitar doble-encoding
+                let decoded = '';
+                try {
+                    decoded = this.whatsapp_soporte ? decodeURIComponent(this.whatsapp_soporte) : '';
+                } catch (e) {
+                    decoded = this.whatsapp_soporte || '';
+                }
+
+                // Si no hay mensaje preparado, construimos uno sencillo
+                if (!decoded) {
+                    const nombreCliente = this.nombres || '';
+                    const numeroCase = this.numero_caso || this.result_barra || '';
+                    const pdfLink = this.pdf_link ? 'https://www.kenya.com.pe' + this.pdf_link : '';
+                    decoded = 'Estimados señores de ' + nombreCliente + '\nreciban un cordial saludo.\n\nLes informamos que el proceso de garantía, atendido por nuestro Soporte Técnico y correspondiente al número de caso N.° ' + numeroCase + ', ha concluido satisfactoriamente.\n\nInforme Técnico: ' + pdfLink + '\n\nAtentamente,\nKENYA – Soporte Técnico.';
+                }
+
+                console.log('WhatsApp message (decoded):', decoded);
+
+                const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(decoded);
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('Error al abrir WhatsApp:', error);
+                alert('No se pudo abrir WhatsApp, por favor intente manualmente.');
             }
         },
         addDetalles() {
@@ -445,11 +562,16 @@ try {
                 formData.append('modelo', this.modelo);
                 formData.append('serie', this.serie);
                 formData.append('descripcion', JSON.stringify(this.descripcion_falla));
-                formData.append('cargador', this.cargador);
-                formData.append('cable_usb', this.cable_usb);
                 formData.append('cable_poder', this.cable_poder);
                 formData.append('sin_accesorios', this.sin_accesorios);
                 formData.append('otros', this.otros);
+                formData.append('pieza_retirada', this.pieza_retirada);
+                formData.append('pieza_serie', this.pieza_serie);
+                formData.append('pieza_falla', this.pieza_falla);
+                formData.append('falla', this.falla);
+                formData.append('diagnostico', this.diagnostico);
+                formData.append('piezas_retiradas_multiple', JSON.stringify(this.piezas_retiradas_multiple));
+                formData.append('piezas_adicionales_texto', this.piezas_adicionales_texto);
                 formData.append('acuenta', this.acuenta);
                 formData.append('costo_servicio', this.costo_servicio);
                 formData.append('saldo_total', this.saldo_total);
@@ -458,6 +580,7 @@ try {
                 formData.append('confirmar_reparacion', this.confirmar_reparacion);
                 formData.append('solo_diagnostico', this.solo_diagnostico);
                 formData.append('numero_caso', this.numero_caso);
+                formData.append('nro_parte', this.nro_parte);
 
 
                 // Añadir PDF si existe
@@ -528,11 +651,16 @@ try {
                 formData.append('modelo', this.modelo);
                 formData.append('serie', this.serie);
                 formData.append('descripcion', JSON.stringify(this.descripcion_falla));
-                formData.append('cargador', this.cargador);
-                formData.append('cable_usb', this.cable_usb);
                 formData.append('cable_poder', this.cable_poder);
                 formData.append('sin_accesorios', this.sin_accesorios);
                 formData.append('otros', this.otros);
+                formData.append('pieza_retirada', this.pieza_retirada);
+                formData.append('pieza_serie', this.pieza_serie);
+                formData.append('pieza_falla', this.pieza_falla);
+                formData.append('falla', this.falla);
+                formData.append('diagnostico', this.diagnostico);
+                formData.append('piezas_retiradas_multiple', JSON.stringify(this.piezas_retiradas_multiple));
+                formData.append('piezas_adicionales_texto', this.piezas_adicionales_texto);
                 formData.append('acuenta', this.acuenta);
                 formData.append('costo_servicio', this.costo_servicio);
                 formData.append('saldo_total', this.saldo_total);
@@ -541,6 +669,7 @@ try {
                 formData.append('confirmar_reparacion', this.confirmar_reparacion);
                 formData.append('solo_diagnostico', this.solo_diagnostico);
                 formData.append('numero_caso', this.numero_caso);
+                formData.append('nro_parte', this.nro_parte);
 
 
                 // Añadir PDF si existe
@@ -644,6 +773,7 @@ try {
                     this.marca = null;
                     this.modelo = null;
                     this.serie = null;
+                    this.nro_parte = null;
                     this.descripcion = null;
                     this.acuenta = 0;
                     this.costo_servicio = 0;
@@ -653,11 +783,19 @@ try {
                     this.confirmar_reparacion = 'NO';
                     this.solo_diagnostico = 'NO';
                     //ACCESORIOS
-                    this.cargador = 'NO';
-                    this.cable_usb = 'NO';
                     this.cable_poder = 'NO';
                     this.sin_accesorios = 'NO';
                     this.otros = '';
+                    //PIEZAS RETIRADAS
+                    this.pieza_retirada = null;
+                    this.pieza_serie = null;
+                    this.pieza_falla = null;
+                    //DIAGNOSTICO
+                    this.falla = null;
+                    this.diagnostico = null;
+                    //PIEZAS RETIRADAS MULTIPLES
+                    this.piezas_retiradas_multiple = [{ nombre: '', serie: '', falla: '' }];
+                    this.piezas_adicionales_texto = '';
                     //DETALLES
                     this.listDetalles = [];
                     this.detalle_descripcion = null;
@@ -912,6 +1050,22 @@ try {
         },
         Next(index) {
             document.getElementById(index).focus();
+        },
+        abrirGarantia() {
+            if (this.serie && this.serie.trim() !== '') {
+                const numeroSerie = this.serie.trim();
+                // Guarda el número de serie en sessionStorage para que la otra ventana lo pueda leer
+                try {
+                    sessionStorage.setItem('garantia_serie', numeroSerie);
+                } catch (e) {
+                    console.log('No se pudo usar sessionStorage');
+                }
+                // Abre la página de garantía con el parámetro en la URL también
+                const url = 'https://www.kenya.com.pe/consultar/garantia?serie=' + encodeURIComponent(numeroSerie);
+                window.open(url, '_blank');
+            } else {
+                alert('Por favor, ingrese un número de serie antes de consultar la garantía.');
+            }
         }
     },
     watch: {

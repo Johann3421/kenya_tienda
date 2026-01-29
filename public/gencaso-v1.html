@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Guía de Número de Caso</title>
+<style>
+    body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #ffffff;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 30px;
+        border-top: 6px solid #f57c00;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .logo img {
+        max-width: 220px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #f57c00;
+        margin-bottom: 10px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+    }
+
+    /* Número de Caso */
+    .case-box {
+        text-align: center;
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+        color: white;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .case-title {
+        font-size: 18px;
+        letter-spacing: 2px;
+        opacity: 0.9;
+    }
+
+    .case-number {
+        font-size: 52px;
+        font-weight: bold;
+        margin-top: 10px;
+        letter-spacing: 4px;
+    }
+
+    /* Colores por inicial */
+    /* Recuadros coloreados según inicial */
+.legend-item.ezent {
+    background: rgba(5, 224, 248, 0.15);
+    border-left-color: #05e0f8;
+}
+
+.legend-item.lima {
+    background: rgba(0, 245, 8, 0.15);
+    border-left-color: #00f508;
+}
+
+.legend-item.year-2026 {
+    background: rgba(4, 18, 211, 0.15);
+    border-left-color: #0412d3;
+}
+
+.legend-item.correlativo {
+    background: rgba(173, 10, 37, 0.15);
+    border-left-color: #ad0a25;
+}
+    .model-e { color: #05e0f8; }
+    .zone-l  { color: #00f508; }
+    .year    { color: #0412d3; }
+    .correl  { color: #ad0a25; }
+
+    .section {
+        margin-bottom: 25px;
+    }
+
+    .section h2 {
+        color: #f57c00;
+        border-bottom: 2px solid #ffe0b2;
+        padding-bottom: 6px;
+        margin-bottom: 12px;
+    }
+
+    .legend {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+    }
+
+    .legend-item {
+        background: #fff3e0;
+        border-radius: 6px;
+        padding: 12px;
+        border-left: 5px solid #f57c00;
+    }
+
+    .legend-item strong {
+        color: #e65100;
+    }
+
+    .formula {
+        background: #fef7f0;
+        border: 2px dashed #ff9800;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: #e65100;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <img src="https://www.kenya.com.pe/theme/images/kenya.png" alt="KENYA">
+    </div>
+
+    <h1>Guía de Creación de Número de Caso</h1>
+    <div class="subtitle">El número de caso debe constar con “SIETE CARACTERES ALFANUMERICOS” </div>
+
+    <!-- Composición -->
+    <div class="section">
+        <h2>Composición</h2>
+        <div class="formula">
+            INICIAL DEL MODELO – ZONA DE ATENCIÓN – ÚLTIMO DÍGITO DEL AÑO – CORRELATIVO (4 DÍGITOS)
+        </div>
+    </div>
+
+    <!-- Ejemplo Central -->
+    <div class="case-box">
+        <div class="case-title">
+            <strong style="color:#fafafa;">
+                NÚMERO DE CASO 
+            </strong>
+          </div>
+        <div class="case-number">
+            <span class="model-e">E</span>
+            <span class="zone-l">L</span>
+            <span class="year">6</span>
+            <span class="correl">0024</span>
+        </div>
+        <div class="case-title" > 
+            <strong> EL60024 </strong> 
+        </div>
+    </div>
+
+    <!-- Explicación -->
+    <div class="section">
+        <h2>Ejemplo Explicado</h2>
+        <div class="legend">
+            <div class="legend-item ezent">
+                <strong style="color:#05e0f8;">E</strong> → EZENT
+            </div>
+            <div class="legend-item lima">
+                <strong style="color:#00f508;">L</strong> → LIMA
+            </div>
+            <div class="legend-item year-2026">
+                <strong style="color:#0412d3;">6</strong> → Año 2026
+            </div>
+            <div class="legend-item correlativo">
+                <strong style="color:#ad0a25;">0024</strong> → Número correlativo
+            </div>
+        </div>
+    </div>
+
+    <!-- Leyenda de Modelos -->
+    <div class="section">
+        <h2>Leyenda de Modelos</h2>
+        <div class="legend">
+            <div class="legend-item"><strong>E</strong> – EZENT</div>
+            <div class="legend-item"><strong>O</strong> – OFISZU</div>
+            <div class="legend-item"><strong>G</strong> – GENWORK</div>
+            <div class="legend-item"><strong>P</strong> – PROWORK</div>
+        </div>
+    </div>
+
+    <!-- Leyenda de Zonas -->
+    <div class="section">
+        <h2>Leyenda de Zonas de Atención</h2>
+        <div class="legend">
+            <div class="legend-item"><strong>H</strong> – HUÁNUCO</div>
+            <div class="legend-item"><strong>L</strong> – LIMA</div>
+            <div class="legend-item"><strong>P</strong> – PROVINCIAS</div>
+        </div>
+    </div>
+    <!-- Leyenda de n° Correlativo -->
+    <div class="section">
+        <h2>Serie Secuencial de Hasta 1,000 Atenciones Anuales</h2>
+        <div class="legend">
+            <div class="legend-item"><strong>1</strong> – 0001</div>
+            <div class="legend-item"><strong>2</strong> – 0002</div>
+            <div class="legend-item"><strong>3</strong> – 0003</div>
+            <div class="legend-item"><strong>4</strong> – 0004</div>
+        </div>
+    </div>
+    <div class="subtitle">
+        <strong style="color:#bb1600;">
+          NOTA: 
+        </strong>
+        <strong style="color:#000000;">
+            SEGUIR LA SECUENCIA SERIAL, SEGÚN EL ÚLTIMO REGISTRO EN SISTEMA DE GARANTÍAS KENYA
+          </strong>
+      </div>
+</div>
+
+</body>
+</html>

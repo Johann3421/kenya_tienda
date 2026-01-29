@@ -133,3 +133,60 @@ textarea {
 .text-uppercase {
     text-transform: uppercase;
 }
+
+/* Tooltip hover helper (simple CSS, works without JS) */
+.help-icon {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    color: #6c757d;
+}
+.help-icon .help-text {
+    visibility: hidden;
+    opacity: 0;
+    width: max-content;
+    max-width: 220px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    padding: 6px 8px;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 2000;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.12s ease-in-out, visibility 0.12s;
+    font-size: 12px;
+}
+.help-icon .help-text::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+.help-icon:hover .help-text,
+.help-icon:focus .help-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Show help text when toggled via click */
+.help-icon.active .help-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Make sure help text is readable on small screens */
+@media (max-width: 576px) {
+    .help-icon .help-text {
+        left: 0;
+        transform: none;
+        bottom: 105%;
+        max-width: 260px;
+    }
+}

@@ -9,6 +9,10 @@ class Soporte extends Model
     protected $table = 'soportes';
     protected $primaryKey = 'id';
 
+    protected $casts = [
+        'piezas_retiradas_multiple' => 'json',
+    ];
+
     public function getCliente()
     {
         return $this->hasOne('App\Models\Cliente', 'id', 'cliente_id')->select('id', 'tipo', 'codigo_sunat', 'nombres', 'email', 'celular', 'direccion');

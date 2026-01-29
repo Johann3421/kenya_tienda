@@ -16,6 +16,12 @@
 
 @section('css')
     <style>
+        /* Registro de fuente personalizada Kenya */
+        @font-face {
+            font-family: 'Kenyav1';
+            src: url('/Kenyav1-Regular.otf') format('opentype');
+        }
+
         .site-width {
             margin: 0 auto;
             padding: 0;
@@ -703,7 +709,7 @@
                         <div class="carousel-container" style="text-align: center;">
                             <div class="carousel-content container">
                                 <!-- Título PRINCIPAL (Enorme y destacado) -->
-                                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px;"
+                                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px; font-family: 'Kenyav1', sans-serif;"
                                     class="animate__animated animate__fadeInDown">
                                     <span style="color: {{ $banner->titulo_color }};">{{ $banner->titulo }}</span>
                                 </h2>

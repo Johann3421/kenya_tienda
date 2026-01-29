@@ -112,12 +112,15 @@
                                                                 <span
                                                                     style="font-size: 11px; padding-right: 0; padding-top: 3px;"
                                                                     class="col-sm-4">N° CASO :</span>
-                                                                <div class="col-sm-8">
+                                                                <div class="col-sm-8" style="display: flex; align-items: center; gap:6px;">
                                                                     <input type="text" id="numero_caso"
                                                                         v-model="numero_caso" :readonly="loading"
                                                                         class="form-control form-control-sm"
                                                                         :class="[errors.numero_caso ? 'is-invalid' : '']"
                                                                         placeholder="Ingrese N° Caso">
+                                                                    <button type="button" class="btn btn-sm btn-info" title="Ver guía N° Caso" onclick="window.open('https://www.kenya.com.pe/gencaso-v1.html','_blank')">
+                                                                        <i class="fas fa-book"></i>
+                                                                    </button>
                                                                     <small class="form-text error-color"
                                                                         v-if="errors.numero_caso">@{{ errors.numero_caso[0] }}</small>
                                                                 </div>
@@ -309,7 +312,7 @@
                                                 <div class="contorno-check">
                                                     <span class="contorno-texto">Detalles del Equipo</span>
                                                     <div class="row">
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <div class="form-group row m-b-0">
                                                                 <span
                                                                     style="font-size: 11px; padding-right: 0;padding-top: 3px;"
@@ -325,7 +328,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <div class="form-group row m-b-0">
                                                                 <span
                                                                     style="font-size: 11px; padding-right: 0;padding-top: 3px;"
@@ -340,7 +343,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-4">
                                                             <div class="form-group row m-b-0">
                                                                 <span
                                                                     style="font-size: 11px; padding-right: 0;padding-top: 3px;"
@@ -356,40 +359,73 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
                                                             <div class="form-group row m-b-0">
                                                                 <span
                                                                     style="font-size: 11px; padding-right: 0;padding-top: 3px;"
                                                                     class="col-sm-4">SERIE :</span>
                                                                 <div class="col-sm-8 m-b-5">
-                                                                    <input type="text" id="serie" v-model="serie"
-                                                                        :readonly="loading"
-                                                                        class="form-control form-control-sm"
-                                                                        :class="[errors.serie ? 'is-invalid' : '']">
+                                                                    <div class="input-group input-group-sm">
+                                                                        <input type="text" id="serie" v-model="serie"
+                                                                            :readonly="loading"
+                                                                            class="form-control form-control-sm"
+                                                                            :class="[errors.serie ? 'is-invalid' : '']">
+                                                                        <div class="input-group-append">
+                                                                            <button class="btn btn-info btn-sm" @click="abrirGarantia()" type="button" title="Consultar Garantía">
+                                                                                <i class="fas fa-search"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
                                                                     <small class="form-text error-color"
                                                                         v-if="errors.serie">@{{ errors.serie[0] }}
                                                                     </small>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-12">
-    <div class="form-group row m-b-0">
-        <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-2">Opciones :</span>
-        <div class="col-sm-10 m-b-5">
-            <div v-for="(item, idx) in descripcion_falla" :key="idx" class="input-group mb-2">
-                <input type="text" v-model="item.titulo" class="form-control form-control-sm" placeholder="Nombre de la opción (ej: Falla principal)">
-                <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
-                <div class="input-group-append">
-                    <button class="btn btn-danger btn-sm" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <button class="btn btn-success btn-sm mt-2" @click="addDescripcion"><i class="fas fa-plus"></i> Opción</button>
-            <small class="form-text error-color" v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
-        </div>
-    </div>
-</div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row m-b-0">
+                                                                <span
+                                                                    style="font-size: 11px; padding-right: 0;padding-top: 3px;"
+                                                                    class="col-sm-4">N° PARTE :</span>
+                                                                <div class="col-sm-8 m-b-5">
+                                                                    <input type="text" id="nro_parte" v-model="nro_parte"
+                                                                        :readonly="loading"
+                                                                        class="form-control form-control-sm"
+                                                                        :class="[errors.nro_parte ? 'is-invalid' : '']">
+                                                                    <small class="form-text error-color"
+                                                                        v-if="errors.nro_parte">@{{ errors.nro_parte[0] }}
+                                                                    </small>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row m-b-0">
+                                                                <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-3">Falla :</span>
+                                                                <div class="col-sm-9 m-b-5">
+                                                                    <input type="text" v-model="falla"
+                                                                        :readonly="loading"
+                                                                        maxlength="20"
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group row m-b-0">
+                                                                <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-3">Diagnóstico :</span>
+                                                                <div class="col-sm-9 m-b-5">
+                                                                    <input type="text" v-model="diagnostico"
+                                                                        :readonly="loading"
+                                                                        maxlength="20"
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -413,20 +449,7 @@
                                                                     style="font-size: 11px; margin: 5px;">SIN
                                                                     ACCESORIOS</label>
                                                             </div>
-                                                            <div class="custom-control custom-radio custom-control-inline">
-                                                                <input class="form-check-input check-xl" type="checkbox"
-                                                                    id="cargador" v-model="cargador" true-value="SI"
-                                                                    false-value="NO" :readonly="loading">
-                                                                <label class="form-check-label" for="cargador"
-                                                                    style="font-size: 11px; margin: 5px;">CARGADOR</label>
-                                                            </div>
-                                                            <div class="custom-control custom-radio custom-control-inline">
-                                                                <input class="form-check-input check-xl" type="checkbox"
-                                                                    id="cable_usb" v-model="cable_usb" true-value="SI"
-                                                                    false-value="NO" :readonly="loading">
-                                                                <label class="form-check-label" for="cable_usb"
-                                                                    style="font-size: 11px; margin: 5px;">CABLE USB</label>
-                                                            </div>
+                                                            <!-- CARGADOR y CABLE USB removidos -->
                                                             <div class="custom-control custom-radio custom-control-inline">
                                                                 <input class="form-check-input check-xl" type="checkbox"
                                                                     id="cable_poder" v-model="cable_poder"
@@ -447,10 +470,58 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- PIEZAS RETIRADAS MULTIPLES -->
+                                        <div class="row m-b-10">
+                                            <div class="col-md-12">
+                                                <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <span style="font-size: 11px; padding-right: 0;padding-top: 3px;">PIEZAS RETIRADAS:</span>
+                                                        </div>
+                                                        <div class="col-md-10">
+                                                            <div v-for="(item, idx) in piezas_retiradas_multiple" :key="idx" class="row mb-2">
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group m-b-0">
+                                                                        <label class="m-b-0" style="font-size: 10px;">Nombre</label>
+                                                                        <input type="text" v-model="item.nombre" class="form-control form-control-sm" :readonly="loading">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group m-b-0">
+                                                                        <label class="m-b-0" style="font-size: 10px;">Nro de Serie</label>
+                                                                        <input type="text" v-model="item.serie" class="form-control form-control-sm" :readonly="loading">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group m-b-0">
+                                                                        <label class="m-b-0" style="font-size: 10px;">Falla</label>
+                                                                        <input type="text" v-model="item.falla" class="form-control form-control-sm" :readonly="loading">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <button type="button" class="btn btn-danger btn-sm w-100" v-if="piezas_retiradas_multiple.length > 1" @click="removePiezaRetirada(idx)" :disabled="loading" style="margin-top: 21px;">
+                                                                        <i class="fas fa-minus"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <button type="button" class="btn btn-success btn-sm mt-2" @click="addPiezaRetirada" :disabled="loading">
+                                                                <i class="fas fa-plus"></i> Agregar Pieza
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- PIEZAS ADICIONALES TÍTULO -->
+                                        <div class="row m-b-10">
+                                            <div class="col-md-12">
+                                                <span style="font-size: 12px; font-weight: bold; color: #333;">Piezas Adicionales: @{{ piezas_adicionales_texto }}</span>
+                                            </div>
+                                        </div>
                                         <div class="row m-b-10">
                                             <div class="col-md-10">
-                                                <h5>PROFORMA DE REPARACIÓN</h5>
-                                            </div>
+                                                    <!-- PROFORMA DE REPARACIÓN (titulo eliminado) -->
+                                                </div>
                                             <div class="col-md-10">
                                                 <div class="contorno-check">
                                                     <div class="row">
@@ -577,8 +648,12 @@
                                                     <div class="row m-t-10">
                                                         <div class="col-md-6">
                                                             <div class="form-group m-b-0">
-                                                                <label class="m-b-0"
-                                                                    for="observacion">Observacion</label>
+                                                                <label class="m-b-0" for="observacion">Observacion
+                                                                    <span class="help-icon" tabindex="0">
+                                                                        <i class="fas fa-exclamation-circle"></i>
+                                                                        <span class="help-text">Este campo solo se mostrara de manera interna</span>
+                                                                    </span>
+                                                                </label>
                                                                 <textarea id="observacion" v-model="observacion" class="form-control" :readonly="loading"
                                                                     style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;"></textarea>
                                                             </div>
@@ -587,7 +662,12 @@
                                                             <div class="form-group m-b-0">
                                                                 <label class="m-b-0" for="reporte_tecnico"><i
                                                                         class="fas fa-chalkboard-teacher"></i> Reporte
-                                                                    Técnico</label>
+                                                                    Técnico
+                                                                    <span class="help-icon" tabindex="0">
+                                                                        <i class="fas fa-info-circle"></i>
+                                                                        <span class="help-text">Este campo se mostrara en el pdf final</span>
+                                                                    </span>
+                                                                </label>
                                                                 <textarea id="reporte_tecnico" v-model="reporte_tecnico" class="form-control" :readonly="loading"
                                                                     style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;"></textarea>
                                                             </div>
@@ -817,12 +897,15 @@
                                                             <span
                                                                 style="font-size: 11px; padding-right: 0; padding-top: 3px;"
                                                                 class="col-sm-4">N° CASO :</span>
-                                                            <div class="col-sm-8">
+                                                            <div class="col-sm-8" style="display: flex; align-items: center; gap:6px;">
                                                                 <input type="text" id="numero_caso"
                                                                     v-model="numero_caso" :readonly="loading"
                                                                     class="form-control form-control-sm"
                                                                     :class="[errors.numero_caso ? 'is-invalid' : '']"
                                                                     placeholder="Ingrese N° Caso">
+                                                                <button type="button" class="btn btn-sm btn-info" title="Ver guía N° Caso" onclick="window.open('https://www.kenya.com.pe/gencaso-v1.html','_blank')">
+                                                                    <i class="fas fa-book"></i>
+                                                                </button>
                                                                 <small class="form-text error-color"
                                                                     v-if="errors.numero_caso">@{{ errors.numero_caso[0] }}</small>
                                                             </div>
@@ -994,10 +1077,7 @@
                                                                         class="form-control form-control-sm"
                                                                         :class="[errors.celular ? 'is-invalid' : '']">
                                                                     <div class="input-group-append">
-                                                                        <a :href="'https://wa.me/' + celular + '?text=Hola%20' +
-                                                                            Espacios(nombres) + ',%20' +
-                                                                            whatsapp_soporte"
-                                                                            target="_blank" class="btn btn-whatsapp"
+                                                                        <a href="#" @click.prevent="enviarWhatsApp()" class="btn btn-whatsapp"
                                                                             style="padding: 0px 5px;"
                                                                             title="Enviar Whatsapp al Cliente"><i
                                                                                 class="fab fa-whatsapp"></i> </a>
@@ -1018,7 +1098,7 @@
                                             <div class="contorno-check">
                                                 <span class="contorno-texto">Detalles del Equipo</span>
                                                 <div class="row">
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group row m-b-0">
                                                             <span
                                                                 style="font-size: 11px; padding-right: 0;padding-top: 3px;"
@@ -1033,7 +1113,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group row m-b-0">
                                                             <span
                                                                 style="font-size: 11px; padding-right: 0;padding-top: 3px;"
@@ -1048,7 +1128,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-4">
                                                         <div class="form-group row m-b-0">
                                                             <span
                                                                 style="font-size: 11px; padding-right: 0;padding-top: 3px;"
@@ -1063,39 +1143,71 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
                                                         <div class="form-group row m-b-0">
                                                             <span
                                                                 style="font-size: 11px; padding-right: 0;padding-top: 3px;"
                                                                 class="col-sm-4">SERIE :</span>
                                                             <div class="col-sm-8 m-b-5">
-                                                                <input type="text" id="serie" v-model="serie"
-                                                                    :readonly="loading"
-                                                                    class="form-control form-control-sm"
-                                                                    :class="[errors.serie ? 'is-invalid' : '']">
+                                                                <div class="input-group input-group-sm">
+                                                                    <input type="text" id="serie" v-model="serie"
+                                                                        :readonly="loading"
+                                                                        class="form-control form-control-sm"
+                                                                        :class="[errors.serie ? 'is-invalid' : '']">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-info btn-sm" @click="abrirGarantia()" type="button" title="Consultar Garantía">
+                                                                            <i class="fas fa-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
                                                                 <small class="form-text error-color"
                                                                     v-if="errors.serie">@{{ errors.serie[0] }} </small>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12">
-    <div class="form-group row m-b-0">
-        <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-2">Opciones  :</span>
-        <div class="col-sm-10 m-b-5">
-            <div v-for="(item, idx) in descripcion_falla" :key="idx" class="input-group mb-2">
-                <input type="text" v-model="item.titulo" class="form-control form-control-sm" placeholder="Nombre de la opción (ej: Falla principal)">
-                <textarea v-model="item.texto" class="form-control form-control-sm ml-2" placeholder="Descripción"></textarea>
-                <div class="input-group-append">
-                    <button class="btn btn-danger btn-sm" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <button class="btn btn-success btn-sm mt-2" @click="addDescripcion"><i class="fas fa-plus"></i> Opción</button>
-            <small class="form-text error-color" v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
-        </div>
-    </div>
-</div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row m-b-0">
+                                                            <span
+                                                                style="font-size: 11px; padding-right: 0;padding-top: 3px;"
+                                                                class="col-sm-4">N° PARTE :</span>
+                                                            <div class="col-sm-8 m-b-5">
+                                                                <input type="text" id="nro_parte" v-model="nro_parte"
+                                                                    :readonly="loading"
+                                                                    class="form-control form-control-sm"
+                                                                    :class="[errors.nro_parte ? 'is-invalid' : '']">
+                                                                <small class="form-text error-color"
+                                                                    v-if="errors.nro_parte">@{{ errors.nro_parte[0] }} </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row m-b-0">
+                                                            <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-3">Falla :</span>
+                                                            <div class="col-sm-9 m-b-5">
+                                                                <input type="text" v-model="falla"
+                                                                    :readonly="loading"
+                                                                    maxlength="20"
+                                                                    class="form-control form-control-sm"
+                                                                    placeholder="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group row m-b-0">
+                                                            <span style="font-size: 11px; padding-right: 0;padding-top: 3px;" class="col-sm-3">Diagnóstico :</span>
+                                                            <div class="col-sm-9 m-b-5">
+                                                                <input type="text" v-model="diagnostico"
+                                                                    :readonly="loading"
+                                                                    maxlength="20"
+                                                                    class="form-control form-control-sm"
+                                                                    placeholder="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1118,20 +1230,7 @@
                                                                 style="font-size: 11px; margin: 5px;">SIN
                                                                 ACCESORIOS</label>
                                                         </div>
-                                                        <div class="custom-control custom-radio custom-control-inline">
-                                                            <input class="form-check-input check-xl" type="checkbox"
-                                                                id="cargador" v-model="cargador" true-value="SI"
-                                                                false-value="NO" :readonly="loading">
-                                                            <label class="form-check-label" for="cargador"
-                                                                style="font-size: 11px; margin: 5px;">CARGADOR</label>
-                                                        </div>
-                                                        <div class="custom-control custom-radio custom-control-inline">
-                                                            <input class="form-check-input check-xl" type="checkbox"
-                                                                id="cable_usb" v-model="cable_usb" true-value="SI"
-                                                                false-value="NO" :readonly="loading">
-                                                            <label class="form-check-label" for="cable_usb"
-                                                                style="font-size: 11px; margin: 5px;">CABLE USB</label>
-                                                        </div>
+                                                        <!-- CARGADOR y CABLE USB removidos -->
                                                         <div class="custom-control custom-radio custom-control-inline">
                                                             <input class="form-check-input check-xl" type="checkbox"
                                                                 id="cable_poder" v-model="cable_poder" true-value="SI"
@@ -1150,9 +1249,57 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- PIEZAS RETIRADAS MULTIPLES -->
+                                    <div class="row m-b-10">
+                                        <div class="col-md-12">
+                                            <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
+                                                <div class="row">
+                                                    <div class="col-md-2">
+                                                        <span style="font-size: 11px; padding-right: 0;padding-top: 3px;">PIEZAS RETIRADAS:</span>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <div v-for="(item, idx) in piezas_retiradas_multiple" :key="idx" class="row mb-2">
+                                                            <div class="col-md-3">
+                                                                <div class="form-group m-b-0">
+                                                                    <label class="m-b-0" style="font-size: 10px;">Nombre</label>
+                                                                    <input type="text" v-model="item.nombre" class="form-control form-control-sm" :readonly="loading">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group m-b-0">
+                                                                    <label class="m-b-0" style="font-size: 10px;">Nro de Serie</label>
+                                                                    <input type="text" v-model="item.serie" class="form-control form-control-sm" :readonly="loading">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <div class="form-group m-b-0">
+                                                                    <label class="m-b-0" style="font-size: 10px;">Falla</label>
+                                                                    <input type="text" v-model="item.falla" class="form-control form-control-sm" :readonly="loading">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <button type="button" class="btn btn-danger btn-sm w-100" v-if="piezas_retiradas_multiple.length > 1" @click="removePiezaRetirada(idx)" :disabled="loading" style="margin-top: 21px;">
+                                                                    <i class="fas fa-minus"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-success btn-sm mt-2" @click="addPiezaRetirada" :disabled="loading">
+                                                            <i class="fas fa-plus"></i> Agregar Pieza
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- PIEZAS ADICIONALES TÍTULO -->
+                                    <div class="row m-b-10">
+                                        <div class="col-md-12">
+                                            <span style="font-size: 12px; font-weight: bold; color: #333;">Piezas Adicionales: @{{ piezas_adicionales_texto }}</span>
+                                        </div>
+                                    </div>
                                     <div class="row m-b-10">
                                         <div class="col-md-10">
-                                            <h5>PROFORMA DE REPARACIÓN</h5>
+                                            <!-- PROFORMA DE REPARACIÓN (titulo eliminado) -->
                                         </div>
                                         <div class="col-md-10">
                                             <div class="contorno-check">
@@ -1279,16 +1426,26 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group m-b-0">
-                                                            <label class="m-b-0" for="observacion">Observacion</label>
+                                                                <label class="m-b-0" for="observacion">Observacion
+                                                                    <span class="help-icon" tabindex="0">
+                                                                        <i class="fas fa-exclamation-circle"></i>
+                                                                        <span class="help-text">Este campo solo se mostrara de manera interna</span>
+                                                                    </span>
+                                                            </label>
                                                             <textarea id="observacion" v-model="observacion" class="form-control" :readonly="loading"
                                                                 style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;"></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-group m-b-0">
-                                                            <label class="m-b-0" for="reporte_tecnico"><i
+                                                                <label class="m-b-0" for="reporte_tecnico"><i
                                                                     class="fas fa-chalkboard-teacher"></i> Reporte
-                                                                Técnico</label>
+                                                                Técnico
+                                                                    <span class="help-icon" tabindex="0">
+                                                                        <i class="fas fa-info-circle"></i>
+                                                                        <span class="help-text">Este campo se mostrara en el pdf final</span>
+                                                                    </span>
+                                                            </label>
                                                             <textarea id="reporte_tecnico" v-model="reporte_tecnico" class="form-control" :readonly="loading"
                                                                 style="max-width: 100%; padding: 0px 6px !important; font-size: 11px !important;"></textarea>
                                                         </div>
@@ -1389,7 +1546,7 @@
                                                 <div class="reparar">REPARAR</div>
                                             </div>
                                             <div class="mb-2" v-else-if="confirmar_reparacion == 'NO'">
-                                                <div class="proforma">PROFORMA</div>
+                                                <div class="proforma">&nbsp;</div>
                                             </div>
                                             <div class="mb-2">
                                                 <div class="contorno-check" style="padding: 5px 0px 3px 8px;">
@@ -1787,10 +1944,10 @@
                                     <td class="text-center">@{{ soporte.serie }}</td>
                                     <!-- Serie en su propia columna -->
                                     <td>
-                                        <strong style="text-decoration: underline">EQUIPO:</strong>
-                                        @{{ soporte.equipo }}<br>
-                                        <strong style="text-decoration: underline;">MODELO:</strong>
-                                        @{{ soporte.modelo }}
+                                        <strong style="text-decoration: underline">FALLA:</strong>
+                                        @{{ soporte.falla }}<br>
+                                        <strong style="text-decoration: underline;">DIAGNÓSTICO:</strong>
+                                        @{{ soporte.diagnostico }}
                                     </td>
                                     <td class="text-center">
                                         <button class="btn btn-sm btn-primary" @click.stop="formEditar(soporte)"
