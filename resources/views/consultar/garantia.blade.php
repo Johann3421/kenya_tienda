@@ -686,20 +686,389 @@
             align-items: flex-start;
             width: 100%;
             min-height: 400px;
+            background-color: #f0f0f0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #pdf-viewer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            width: fit-content;
+            min-width: 100%;
         }
 
         #pdf-viewer canvas {
             display: block;
-            margin: 20px auto;
-            max-width: 100%;
+            margin: 10px auto;
+            height: auto;
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            border-radius: 8px;
+            border-radius: 4px;
         }
 
-        /* Opcional: Limita el ancho máximo del PDF */
-        #pdf-viewer {
-            max-width: 800px;
+        .pdf-canvas-responsive {
+            height: auto !important;
+            display: block !important;
+        }
+
+        /* RESPONSIVE PDF VIEWER - TABLET */
+        @media (max-width: 768px) {
+            .pdf-center-container {
+                min-height: 300px;
+                padding: 0 10px;
+            }
+
+            #pdf-viewer {
+                padding: 8px;
+                width: fit-content;
+            }
+
+            #pdf-viewer canvas {
+                margin: 8px auto;
+                height: auto;
+            }
+        }
+
+        /* RESPONSIVE PDF VIEWER - MOBILE */
+        @media (max-width: 576px) {
+            .pdf-center-container {
+                min-height: 250px;
+                padding: 0 8px;
+                background-color: #f5f5f5;
+            }
+
+            #pdf-viewer {
+                padding: 5px;
+                width: fit-content;
+                border-radius: 0;
+            }
+
+            #pdf-viewer canvas {
+                margin: 5px auto;
+                height: auto;
+                display: block;
+                box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+            }
+
+            /* Asegurar que el PDF sea escalable en móviles */
+            #pdf-viewer {
+                touch-action: manipulation;
+                user-select: none;
+                -webkit-user-select: none;
+            }
+
+            /* Mejorar legibilidad del PDF en móviles pequeños */
+            #pdf-viewer canvas {
+                image-rendering: -webkit-optimize-contrast;
+                image-rendering: crisp-edges;
+            }
+        }
+
+        /* RESPONSIVE PDF VIEWER - MOBILE EXTRA PEQUEÑO */
+        @media (max-width: 480px) {
+            .pdf-center-container {
+                min-height: 200px;
+                padding: 0 5px;
+            }
+
+            #pdf-viewer {
+                padding: 3px;
+                width: fit-content;
+            }
+
+            #pdf-viewer canvas {
+                margin: 3px auto;
+                height: auto;
+            }
+        }
+
+        /* CONTROLES DE PDF */
+        .pdf-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .pdf-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .pdf-btn-primary {
+            background-color: #E67E22;
+            color: white;
+        }
+
+        .pdf-btn-primary:hover {
+            background-color: #D35400;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .pdf-btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .pdf-btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .pdf-btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .pdf-btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            background-color: #E67E22;
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pdf-btn-small:hover {
+            background-color: #D35400;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .pdf-btn-small i {
+            font-size: 14px;
+        }
+
+        .pdf-zoom-level {
+            font-weight: 600;
+            color: #495057;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        /* MODAL FULLSCREEN */
+        .pdf-fullscreen-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .pdf-fullscreen-modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .pdf-fullscreen-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+        }
+
+        .pdf-fullscreen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #E67E22;
+            color: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .pdf-fullscreen-header h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .pdf-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .pdf-close-btn:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .pdf-fullscreen-controls {
+            display: flex;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .pdf-fullscreen-viewer {
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: #f0f0f0;
+            padding: 10px;
+        }
+
+        #pdf-fullscreen-container {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: fit-content;
+            min-width: 100%;
+        }
+
+        #pdf-fullscreen-container canvas {
+            display: block;
+            margin: 10px auto;
+            height: auto;
+        }
+
+        /* RESPONSIVE PARA FULLSCREEN */
+        @media (max-width: 768px) {
+            .pdf-controls {
+                gap: 8px;
+                padding: 8px;
+            }
+
+            .pdf-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .pdf-fullscreen-header h3 {
+                font-size: 16px;
+            }
+
+            .pdf-fullscreen-controls {
+                padding: 8px 10px;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pdf-controls {
+                gap: 6px;
+                padding: 6px;
+            }
+
+            .pdf-btn {
+                padding: 8px 12px;
+                font-size: 13px;
+                flex: 1;
+                justify-content: center;
+                min-height: 44px;
+                border-radius: 6px;
+            }
+
+            .pdf-btn i {
+                display: inline;
+                font-size: 18px;
+                margin-right: 4px;
+            }
+
+            .pdf-zoom-level {
+                flex: 1;
+                text-align: center;
+                font-size: 14px;
+            }
+
+            .pdf-fullscreen-modal.active {
+                align-items: stretch;
+            }
+
+            .pdf-fullscreen-content {
+                border-radius: 0;
+            }
+
+            .pdf-fullscreen-header h3 {
+                font-size: 14px;
+            }
+
+            .pdf-close-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 20px;
+            }
+
+            .pdf-fullscreen-controls {
+                padding: 8px;
+                gap: 8px;
+                justify-content: center;
+            }
+
+            .pdf-fullscreen-controls .pdf-btn {
+                min-height: 48px;
+                padding: 10px 16px;
+                font-size: 14px;
+                border-radius: 6px;
+                flex: 0 1 auto;
+                min-width: 60px;
+            }
+
+            .pdf-fullscreen-controls .pdf-btn i {
+                font-size: 20px;
+                margin-right: 6px;
+            }
+
+            .pdf-fullscreen-controls .pdf-btn-small {
+                background-color: #E67E22;
+                color: white;
+                font-weight: 600;
+            }
+
+            .pdf-fullscreen-controls .pdf-btn-small:hover {
+                background-color: #D35400;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .pdf-fullscreen-viewer {
+                padding: 5px;
+            }
         }
     </style>
 @endsection
@@ -974,8 +1343,46 @@
                         </div>
 
                         <div class="tab-pane fade" id="terms" role="tabpanel">
+                            <!-- Controles de PDF para móvil -->
+                            <div id="pdf-controls" class="pdf-controls">
+                                <button id="pdf-zoom-in" class="pdf-btn pdf-btn-primary" title="Aumentar zoom">
+                                    <i class="bx bx-plus"></i> Zoom +
+                                </button>
+                                <button id="pdf-zoom-out" class="pdf-btn pdf-btn-primary" title="Disminuir zoom">
+                                    <i class="bx bx-minus"></i> Zoom -
+                                </button>
+                                <button id="pdf-fullscreen" class="pdf-btn pdf-btn-success" title="Ver en pantalla completa">
+                                    <i class="bx bx-fullscreen"></i> Pantalla Completa
+                                </button>
+                                <span id="pdf-zoom-level" class="pdf-zoom-level">100%</span>
+                            </div>
+
                             <div class="pdf-center-container">
                                 <div id="pdf-viewer"></div>
+                            </div>
+
+                            <!-- Modal Fullscreen para PDF -->
+                            <div id="pdf-fullscreen-modal" class="pdf-fullscreen-modal">
+                                <div class="pdf-fullscreen-content">
+                                    <div class="pdf-fullscreen-header">
+                                        <h3>Términos y Condiciones</h3>
+                                        <button id="pdf-close-fullscreen" class="pdf-close-btn">
+                                            <i class="bx bx-x"></i>
+                                        </button>
+                                    </div>
+                                    <div class="pdf-fullscreen-controls">
+                                        <button id="pdf-fullscreen-zoom-in" class="pdf-btn pdf-btn-small" title="Aumentar zoom">
+                                            <i class="bx bx-plus"></i>
+                                        </button>
+                                        <button id="pdf-fullscreen-zoom-out" class="pdf-btn pdf-btn-small" title="Disminuir zoom">
+                                            <i class="bx bx-minus"></i>
+                                        </button>
+                                        <span id="pdf-fullscreen-zoom-level" class="pdf-zoom-level">100%</span>
+                                    </div>
+                                    <div class="pdf-fullscreen-viewer">
+                                        <div id="pdf-fullscreen-container"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1008,27 +1415,55 @@
     <script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            let pdfRendered = false; // Bandera para evitar renderizados múltiples
+            let pdfRendered = false;
+            let currentScale = 1.0;
+            let fullscreenScale = 1.0;
 
-            function renderPDF() {
-                if (pdfRendered || !window.pdfjsLib) return;
-                pdfRendered = true; // Marcar como renderizado
+            // Función para obtener la escala óptima según el dispositivo
+            function getOptimalPDFScale() {
+                const width = window.innerWidth;
+                if (width <= 480) {
+                    return 1.0; // Escala base para móvil
+                } else if (width <= 576) {
+                    return 1.0; // Escala base para móvil
+                } else if (width <= 768) {
+                    return 1.8; // Escala aumentada para tablet pequeña
+                } else if (width <= 992) {
+                    return 1.5; // Escala moderada para tablet
+                } else {
+                    return 1.2; // Escala normal para desktop
+                }
+            }
+
+            // Inicializar con escala óptima
+            currentScale = getOptimalPDFScale();
+            fullscreenScale = currentScale;
+
+            function renderPDF(containerId = 'pdf-viewer', scale = null) {
+                if (!window.pdfjsLib) return;
 
                 pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('js/pdfjs/pdf.worker.js') }}";
                 const url = "{{ asset('GARANTIA_KENYA_SIN_HORARIO.pdf') }}";
-                const container = document.getElementById('pdf-viewer');
-                container.innerHTML = ''; // Limpiar cualquier contenido previo
+                const container = document.getElementById(containerId);
+                if (!container) return;
+
+                container.innerHTML = '';
+
+                const renderScale = scale !== null ? scale : currentScale;
 
                 pdfjsLib.getDocument(url).promise.then(function(pdf) {
                     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                         pdf.getPage(pageNum).then(function(page) {
                             const viewport = page.getViewport({
-                                scale: 1.2
+                                scale: renderScale
                             });
                             const canvas = document.createElement('canvas');
                             const context = canvas.getContext('2d');
                             canvas.height = viewport.height;
                             canvas.width = viewport.width;
+
+                            canvas.className = 'pdf-canvas-responsive';
+
                             container.appendChild(canvas);
                             page.render({
                                 canvasContext: context,
@@ -1038,54 +1473,176 @@
                     }
                 }).catch(function(error) {
                     console.error('Error al renderizar PDF:', error);
-                    pdfRendered = false; // Resetear en caso de error
                 });
+            }
+
+            // Función para renderizar en el contenedor principal
+            function renderMainPDF(scale = null) {
+                renderPDF('pdf-viewer', scale);
+            }
+
+            // Función para renderizar en fullscreen
+            function renderFullscreenPDF(scale = null) {
+                renderPDF('pdf-fullscreen-container', scale);
+            }
+
+            // Función para actualizar el indicador de zoom
+            function updateZoomLevel(scale, levelElement) {
+                const percentage = Math.round(scale * 100);
+                levelElement.textContent = percentage + '%';
             }
 
             // Usar evento de Bootstrap para renderizar solo cuando la pestaña se muestra
             $('#warrantyTabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
                 const target = $(e.target).attr('href');
                 if (target === '#terms') {
-                    renderPDF();
+                    renderMainPDF();
+                    pdfRendered = true;
                 }
             });
 
             // Si la pestaña está activa al cargar, renderiza de inmediato
             if (document.getElementById('terms').classList.contains('active') ||
                 document.getElementById('terms').classList.contains('show')) {
-                renderPDF();
+                renderMainPDF();
+                pdfRendered = true;
             }
+
             // Verificar hash en la URL para activar pestaña específica
             if (window.location.hash === '#terms') {
                 $('#terms-tab').tab('show');
             }
+
+            // CONTROLES DE ZOOM - VISTA NORMAL
+            const zoomInBtn = document.getElementById('pdf-zoom-in');
+            const zoomOutBtn = document.getElementById('pdf-zoom-out');
+            const zoomLevel = document.getElementById('pdf-zoom-level');
+            const fullscreenBtn = document.getElementById('pdf-fullscreen');
+            const modal = document.getElementById('pdf-fullscreen-modal');
+            const closeBtn = document.getElementById('pdf-close-fullscreen');
+
+            // CONTROLES DE ZOOM - FULLSCREEN
+            const fullscreenZoomInBtn = document.getElementById('pdf-fullscreen-zoom-in');
+            const fullscreenZoomOutBtn = document.getElementById('pdf-fullscreen-zoom-out');
+            const fullscreenZoomLevel = document.getElementById('pdf-fullscreen-zoom-level');
+
+            // Inicializar indicadores
+            updateZoomLevel(currentScale, zoomLevel);
+
+            // ZOOM IN - VISTA NORMAL
+            if (zoomInBtn) {
+                zoomInBtn.addEventListener('click', function() {
+                    currentScale = Math.min(currentScale + 0.2, 3.0);
+                    renderMainPDF(currentScale);
+                    updateZoomLevel(currentScale, zoomLevel);
+                    console.log('Zoom IN: ' + currentScale);
+                });
+            }
+
+            // ZOOM OUT - VISTA NORMAL
+            if (zoomOutBtn) {
+                zoomOutBtn.addEventListener('click', function() {
+                    currentScale = Math.max(currentScale - 0.2, 0.5);
+                    renderMainPDF(currentScale);
+                    updateZoomLevel(currentScale, zoomLevel);
+                    console.log('Zoom OUT: ' + currentScale);
+                });
+            }
+
+            // FULLSCREEN
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', function() {
+                    modal.classList.add('active');
+                    fullscreenScale = currentScale;
+                    updateZoomLevel(fullscreenScale, fullscreenZoomLevel);
+                    setTimeout(() => {
+                        renderFullscreenPDF(fullscreenScale);
+                    }, 100);
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    modal.classList.remove('active');
+                });
+            }
+
+            // Cerrar modal al hacer clic fuera
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.classList.remove('active');
+                    }
+                });
+            }
+
+            // Cerrar modal con tecla Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    modal.classList.remove('active');
+                }
+            });
+
+            // ZOOM IN - FULLSCREEN
+            if (fullscreenZoomInBtn) {
+                fullscreenZoomInBtn.addEventListener('click', function() {
+                    fullscreenScale = Math.min(fullscreenScale + 0.2, 4.0);
+                    renderFullscreenPDF(fullscreenScale);
+                    updateZoomLevel(fullscreenScale, fullscreenZoomLevel);
+                    console.log('Fullscreen Zoom IN: ' + fullscreenScale);
+                });
+            }
+
+            // ZOOM OUT - FULLSCREEN
+            if (fullscreenZoomOutBtn) {
+                fullscreenZoomOutBtn.addEventListener('click', function() {
+                    fullscreenScale = Math.max(fullscreenScale - 0.2, 0.5);
+                    renderFullscreenPDF(fullscreenScale);
+                    updateZoomLevel(fullscreenScale, fullscreenZoomLevel);
+                    console.log('Fullscreen Zoom OUT: ' + fullscreenScale);
+                });
+            }
+
+            // Re-renderizar PDF si se cambia el tamaño de la ventana (orientación del dispositivo)
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    if (pdfRendered) {
+                        renderMainPDF(currentScale);
+                    }
+                }, 300);
+            });
         });
+    </script>
+
+    <script>
         // Al cargar la página de garantía
-document.addEventListener('DOMContentLoaded', function() {
-    // Intenta leer del sessionStorage
-    const seriedelStorage = sessionStorage.getItem('garantia_serie');
+        document.addEventListener('DOMContentLoaded', function() {
+            // Intenta leer del sessionStorage
+            const seriedelStorage = sessionStorage.getItem('garantia_serie');
 
-    // O del parámetro de URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const serieUrl = urlParams.get('serie');
+            // O del parámetro de URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const serieUrl = urlParams.get('serie');
 
-    const serie = seriedelStorage || serieUrl;
+            const serie = seriedelStorage || serieUrl;
 
-    if (serie) {
-        const inputSerie = document.querySelector('input[placeholder="Ingrese Número de Serie"], input.modern-input');
-        if (inputSerie) {
-            inputSerie.value = serie;
-            // Dispara el evento para que se procese
-            inputSerie.dispatchEvent(new Event('input', { bubbles: true }));
-            inputSerie.dispatchEvent(new Event('change', { bubbles: true }));
+            if (serie) {
+                const inputSerie = document.querySelector('input[placeholder="Ingrese Número de Serie"], input.modern-input');
+                if (inputSerie) {
+                    inputSerie.value = serie;
+                    // Dispara el evento para que se procese
+                    inputSerie.dispatchEvent(new Event('input', { bubbles: true }));
+                    inputSerie.dispatchEvent(new Event('change', { bubbles: true }));
 
-            // Click en el botón de búsqueda
-            setTimeout(() => {
-                const boton = document.querySelector('button.search-button');
-                if (boton) boton.click();
-            }, 300);
-        }
-    }
-});
+                    // Click en el botón de búsqueda
+                    setTimeout(() => {
+                        const boton = document.querySelector('button.search-button');
+                        if (boton) boton.click();
+                    }, 300);
+                }
+            }
+        });
     </script>
 @endsection

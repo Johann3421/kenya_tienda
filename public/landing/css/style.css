@@ -198,6 +198,253 @@ h1, h2, h3, h4, h5, h6, .font-primary {
     float: right;
   }
 
+  /* MENÚ MÓVIL HAMBURGUESA - OCULTO POR DEFECTO EN DESKTOP */
+  .kenya-mobile-menu-toggle {
+    display: none !important;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #2c3e50;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+  }
+
+  .kenya-mobile-menu-toggle:hover {
+    color: #ee7c31;
+  }
+
+  /* Menú móvil - OCULTO POR DEFECTO */
+  .kenya-mobile-menu {
+    display: none !important;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    min-width: 200px;
+    margin-top: 5px;
+  }
+
+  .kenya-mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .kenya-mobile-menu li {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .kenya-mobile-menu li:last-child {
+    border-bottom: none;
+  }
+
+  .kenya-mobile-menu a {
+    display: block;
+    padding: 12px 16px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .kenya-mobile-menu a:hover {
+    background: #f5f5f5;
+    color: #ee7c31;
+    padding-left: 20px;
+  }
+
+  @media (max-width: 992px) {
+    .kenya-header-container {
+      flex-wrap: wrap;
+      padding: 10px 15px;
+    }
+
+    .kenya-logo-img {
+      max-height: 45px;
+    }
+
+    .kenya-nav-list > li {
+      margin-left: 5px;
+    }
+
+    .kenya-nav-link {
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    .kenya-nav-icon {
+      margin-right: 4px;
+      font-size: 14px;
+    }
+  }
+
+  /* RESPONSIVE NAVBAR - MOBILE */
+  @media (max-width: 768px) {
+    .kenya-main-header {
+      padding: 8px 0;
+    }
+
+    .kenya-header-container {
+      padding: 8px 10px;
+    }
+
+    .kenya-logo-img {
+      max-height: 40px;
+    }
+
+    .kenya-nav-list > li {
+      margin-left: 3px;
+    }
+
+    .kenya-nav-link {
+      padding: 6px 8px;
+      font-size: 11px;
+    }
+
+    .kenya-nav-icon {
+      margin-right: 3px;
+      font-size: 12px;
+    }
+
+    /* Buscador en header - reducir tamaño */
+    #productSearch {
+      font-size: 13px !important;
+      padding: 8px 12px !important;
+    }
+  }
+
+  /* RESPONSIVE NAVBAR - MOBILE PEQUEÑO */
+  @media (max-width: 576px) {
+    .kenya-main-header {
+      padding: 5px 0;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .kenya-header-container {
+      padding: 5px 8px;
+      gap: 5px;
+    }
+
+    .kenya-logo-img {
+      max-height: 35px;
+    }
+
+    .kenya-logo-wrapper {
+      flex-shrink: 0;
+    }
+
+    /* Menú principal se oculta en mobile pequeño */
+    .kenya-main-nav {
+      display: none;
+    }
+
+    .kenya-nav-list > li {
+      margin-left: 0;
+    }
+
+    .kenya-nav-link {
+      padding: 5px 6px;
+      font-size: 10px;
+    }
+
+    .kenya-nav-icon {
+      margin-right: 2px;
+      font-size: 11px;
+    }
+
+    /* Buscador responsive para mobile */
+    #productSearch {
+      font-size: 12px !important;
+      padding: 6px 10px !important;
+    }
+
+    #searchResults {
+      max-height: 300px !important;
+    }
+  }
+
+  /* MENÚ MÓVIL HAMBURGUESA - OCULTO POR DEFECTO EN DESKTOP */
+  .kenya-mobile-menu-toggle {
+    display: none !important;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #2c3e50;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+  }
+
+  .kenya-mobile-menu-toggle:hover {
+    color: #ee7c31;
+  }
+
+  /* Menú móvil - OCULTO POR DEFECTO */
+  .kenya-mobile-menu {
+    display: none !important;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    min-width: 200px;
+    margin-top: 5px;
+  }
+
+  .kenya-mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .kenya-mobile-menu li {
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .kenya-mobile-menu li:last-child {
+    border-bottom: none;
+  }
+
+  .kenya-mobile-menu a {
+    display: block;
+    padding: 12px 16px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .kenya-mobile-menu a:hover {
+    background: #f5f5f5;
+    color: #ee7c31;
+    padding-left: 20px;
+  }
+
+  /* MOSTRAR MENÚ HAMBURGUESA SOLO EN MOBILE */
+  @media (max-width: 576px) {
+    .kenya-mobile-menu-toggle {
+      display: block !important;
+    }
+
+    .kenya-mobile-menu {
+      display: none !important;
+    }
+
+    .kenya-mobile-menu.active {
+      display: block !important;
+    }
+  }
+
   .kenya-d-none {
     display: none;
   }
@@ -393,11 +640,199 @@ h1, h2, h3, h4, h5, h6, .font-primary {
   background: #1c5c93;
 }
 
-@media (max-width: 768px) {
+/* HERO RESPONSIVE - TABLET */
+@media (max-width: 992px) {
   #hero h2 {
-    font-size: 28px;
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+
+  #hero h3 {
+    font-size: 20px !important;
+  }
+
+  #hero p {
+    font-size: 16px;
+    width: 90%;
+  }
+
+  #hero .carousel-content.container {
+    padding: 0 40px;
+  }
+
+  #hero .carousel-control-prev, #hero .carousel-control-next {
+    width: 12%;
+  }
+
+  #hero .carousel-control-next-icon, #hero .carousel-control-prev-icon {
+    font-size: 36px;
   }
 }
+
+/* HERO RESPONSIVE - TABLET PEQUEÑA */
+@media (max-width: 768px) {
+  #hero, #hero .carousel-item {
+    height: calc(100vh - 60px);
+  }
+
+  #hero h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+
+  #hero h3 {
+    font-size: 16px !important;
+    margin-top: 8px !important;
+  }
+
+  #hero p {
+    font-size: 14px;
+    width: 95%;
+    margin-top: 15px !important;
+  }
+
+  #hero .carousel-content.container {
+    padding: 0 30px;
+  }
+
+  #hero .carousel-control-prev, #hero .carousel-control-next {
+    width: 15%;
+  }
+
+  #hero .carousel-control-next-icon, #hero .carousel-control-prev-icon {
+    font-size: 32px;
+  }
+
+  .hero-slide-desc {
+    font-size: 13px !important;
+    padding: 10px 15px !important;
+    max-width: 700px !important;
+    margin-top: 10px !important;
+  }
+
+  #hero .btn-get-started {
+    padding: 10px 24px;
+    font-size: 12px;
+    margin: 8px;
+  }
+}
+
+/* HERO RESPONSIVE - MOBILE */
+@media (max-width: 576px) {
+  #hero, #hero .carousel-item {
+    height: calc(100vh - 50px);
+    min-height: 500px;
+  }
+
+  #hero h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7) !important;
+    line-height: 1.2;
+  }
+
+  #hero h3 {
+    font-size: 13px !important;
+    margin-top: 5px !important;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.8) !important;
+  }
+
+  #hero p {
+    font-size: 12px;
+    width: 100%;
+    margin-top: 10px !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.6) !important;
+  }
+
+  #hero .carousel-content.container {
+    padding: 0 15px;
+  }
+
+  #hero .carousel-control-prev, #hero .carousel-control-next {
+    width: 20%;
+    opacity: 0.8;
+  }
+
+  #hero .carousel-control-next-icon, #hero .carousel-control-prev-icon {
+    font-size: 24px;
+  }
+
+  .hero-slide-desc {
+    font-size: 11px !important;
+    padding: 8px 12px !important;
+    max-width: 90% !important;
+    margin-top: 8px !important;
+    display: none;
+  }
+
+  /* Mostrar descripción alternativa en mobile */
+  .hero-slide-desc.mobile-visible {
+    display: inline-block;
+  }
+
+  #hero .btn-get-started {
+    padding: 8px 18px;
+    font-size: 11px;
+    margin: 5px;
+    border-radius: 4px;
+  }
+
+  #hero .carousel-indicators {
+    bottom: 15px !important;
+  }
+
+  #hero .carousel-indicators li {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+/* HERO RESPONSIVE - MOBILE EXTRA PEQUEÑO */
+@media (max-width: 480px) {
+  #hero, #hero .carousel-item {
+    height: calc(100vh - 45px);
+    min-height: 450px;
+  }
+
+  #hero h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+  }
+
+  #hero h3 {
+    font-size: 11px !important;
+    margin-top: 3px !important;
+  }
+
+  #hero p {
+    font-size: 10px;
+    margin-top: 8px !important;
+  }
+
+  #hero .carousel-content.container {
+    padding: 0 12px;
+  }
+
+  .hero-slide-desc {
+    font-size: 9px !important;
+    padding: 6px 10px !important;
+  }
+
+  #hero .btn-get-started {
+    padding: 6px 14px;
+    font-size: 10px;
+    margin: 4px;
+  }
+
+  #hero .carousel-control-prev, #hero .carousel-control-next {
+    width: 25%;
+  }
+
+  #hero .carousel-control-next-icon, #hero .carousel-control-prev-icon {
+    font-size: 20px;
+  }
+}
+
 
 @media (min-width: 1024px) {
   #hero p {

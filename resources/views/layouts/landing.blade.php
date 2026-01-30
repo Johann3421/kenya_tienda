@@ -154,7 +154,25 @@ header, footer {
             </div>
 
             @yield('menu')
+
+            <!-- Botón hamburguesa para mobile -->
+            <button class="kenya-mobile-menu-toggle" id="kenyaMobileMenuToggle" title="Menú">
+                <i class="bx bx-menu"></i>
+            </button>
         </div>
+
+        <!-- Menú móvil dropdown -->
+        <nav class="kenya-mobile-menu" id="kenyaMobileMenu">
+            <ul>
+                <li><a href="{{ url('/') }}"><i class="bx bx-home"></i> Inicio</a></li>
+                <li><a href="{{ route('quienes.somos') }}">Quienes Somos</a></li>
+                <li><a href="{{ route('catalogo') }}">Catalogo</a></li>
+                <li><a href="{{ route('novedades') }}">Novedades</a></li>
+                <li><a href="{{ route('consultar.garantia') }}">Soporte</a></li>
+                <li><a href="{{ route('serial.draw') }}">🎁 Sorteo</a></li>
+                <li><a href="{{ route('contactenos') }}">Contáctenos</a></li>
+            </ul>
+        </nav>
     </header><!-- End Header -->
 @endif
     @yield('content')
@@ -364,6 +382,44 @@ header, footer {
                     resultsBox.style.display = 'none';
                 }
             });
+        })();
+    </script>
+
+    <!-- Script para Menú Móvil -->
+    <script>
+        (function(){
+            const toggleBtn = document.getElementById('kenyaMobileMenuToggle');
+            const mobileMenu = document.getElementById('kenyaMobileMenu');
+            const menuLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
+
+            if (toggleBtn && mobileMenu) {
+                // Toggle menu on button click
+                toggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle('active');
+                });
+
+                // Close menu when clicking on a link
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('active');
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.kenya-main-header')) {
+                        mobileMenu.classList.remove('active');
+                    }
+                });
+
+                // Close menu on scroll
+                window.addEventListener('scroll', function() {
+                    if (mobileMenu.classList.contains('active')) {
+                        mobileMenu.classList.remove('active');
+                    }
+                });
+            }
         })();
     </script>
 
