@@ -52,7 +52,8 @@ Route::get('/search-products', [SearchController::class, 'products'])->name('sea
 // --------------------- INICIO --------------------------------
 Route::middleware('auth')->group(function () {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/perfil', 'HomeController@index')->name('perfil');
+    Route::get('/perfil', [\App\Http\Controllers\PerfilController::class, 'index'])->name('perfil');
+    Route::post('/perfil', [\App\Http\Controllers\PerfilController::class, 'update'])->name('perfil.update');
 });
 
 
@@ -407,20 +408,20 @@ Route::get('/limpiar-todo', function() {
         Artisan::call('config:clear');
         Artisan::call('view:clear');
         Artisan::call('route:clear');
-        
+
         // 2. Reoptimizar (solo para producción)
         if (app()->environment('production')) {
             Artisan::call('config:cache');
             Artisan::call('view:cache');
         }
-        
+
         // 3. Recrear enlaces simbólicos
         Artisan::call('storage:link');
-        
-        return "¡Sistema limpiado! ✅<br>" . 
+
+        return "¡Sistema limpiado! ✅<br>" .
                "Cache/Config/View/Route borrados.<br>" .
                "Ahora elimina esta ruta (/limpiar-todo) por seguridad.";
-               
+
     } catch (Exception $e) {
         return "❌ Error: " . $e->getMessage();
     }

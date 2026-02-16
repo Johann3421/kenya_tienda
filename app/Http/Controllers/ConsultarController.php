@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Soporte;
 use App\Pedido;
 use App\Garantia;
+use App\Producto;
 use App\Models\Cliente;
 use App\Models\Configuracion;
 use Carbon\Carbon;
@@ -74,23 +75,103 @@ class ConsultarController extends Controller {
     }
 
     public function garantia_buscar(Request $request) {
-        $dato = strtoupper($request->search);
-        $numserie = substr($dato, 0, 7);
-        $id = substr($dato, -1, 4);
+        try {
+            \Log::info('=== INICIO garantia_buscar ===');
+            \Log::info('Búsqueda por serie: ' . $request->search);
 
-        $garantia = Garantia::where('serie', 'LIKE', "%{$request->search}%")
-            ->with([
-                'getProductos.modelo', // Asegúrate de cargar la relación modelo
-                'getManuales.getManual',
-                'getDriversprod.getDrivers'
-            ])->first();
+            $garantia = Garantia::where('serie', 'LIKE', "%{$request->search}%")
+                ->with(['getManuales.getManual', 'getDriversprod.getDrivers'])
+                ->first();
 
-        if ($garantia) {
-            return [
-                'state' => 'success',
-                'garantia' => $garantia,
-            ];
-        } else {
+            if ($garantia) {
+                \Log::info('Garantía encontrada ID: ' . $garantia->id);
+
+                // Obtener todos los productos de esta garantía
+                $productos = $garantia->getProductos;
+
+                \Log::info('Productos encontrados: ' . count($productos));
+
+                // Mapeo de nombres de campos de DB a nombres esperados en el template
+                $campoMapping = [
+                    'Procesador' => 'procesador',
+                    'Memoria Ram' => 'ram',
+                    'Almacenamiento' => 'almacenamiento',
+                    'Unidad Óptica' => 'unidad_optica',
+                    'Conectividad LAN' => 'conectividad_lan',
+                    'Conectividad WLAN' => 'conectividad_wlan',
+                    'Conectividad USB' => 'conectividad_usb',
+                    'Conectividad VGA' => 'conectividad_vga',
+                    'Conectividad HDMI' => 'conectividad_hdmi',
+                    'Sistema Operativo' => 'sistema_operativo',
+                    'Ofimatica' => 'suite_ofimatica',
+                    'OfimÃ¡tica' => 'suite_ofimatica',
+                    'Periféricos' => 'perifericos',
+                ];
+
+                // Campos opcionales con valores por defecto
+                $valoresDefault = [
+                    'suite_ofimatica' => 'NO INCLUYE',
+                    'perifericos' => 'NO ESPECIFICADO',
+                ];
+
+                if ($productos && $productos->count() > 0) {
+                    $productosProcessados = [];
+
+                    foreach ($productos as $producto) {
+                        \Log::info('Procesando producto ID: ' . $producto->id . ', Nombre: ' . $producto->nombre);
+
+                        $productoArray = $producto->toArray();
+
+                        // Inicializar valores por defecto
+                        foreach ($valoresDefault as $campo => $valor) {
+                            $productoArray[$campo] = $valor;
+                        }
+
+                        // Cargar modelo
+                        if ($producto->modelo) {
+                            $productoArray['modelo'] = $producto->modelo->toArray();
+                        }
+
+                        // Cargar especificaciones directamente de la tabla
+                        $specs = \DB::table('especificaciones')
+                            ->where('producto_id', $producto->id)
+                            ->get();
+
+                        \Log::info('Especificaciones encontradas para producto ' . $producto->id . ': ' . count($specs));
+
+                        if ($specs && count($specs) > 0) {
+                            foreach ($specs as $esp) {
+                                // Usar el mapeo para convertir el nombre del campo
+                                $nombreCampo = isset($campoMapping[$esp->campo])
+                                    ? $campoMapping[$esp->campo]
+                                    : strtolower(str_replace(' ', '_', $esp->campo));
+
+                                \Log::info('Especificación original: "' . $esp->campo . '" → Mapeado a: "' . $nombreCampo . '" = ' . $esp->descripcion);
+                                $productoArray[$nombreCampo] = $esp->descripcion;
+                            }
+                        } else {
+                            \Log::warning('NO hay especificaciones para producto_id: ' . $producto->id);
+                        }
+
+                        $productosProcessados[] = $productoArray;
+                    }
+
+                    // Reemplazar la relación con los datos procesados
+                    $garantia->setRelation('getProductos', collect($productosProcessados));
+                }
+
+                return [
+                    'state' => 'success',
+                    'garantia' => $garantia,
+                ];
+            } else {
+                \Log::warning('No se encontró garantía con serie: ' . $request->search);
+                return [
+                    'state' => 'error',
+                ];
+            }
+        } catch (\Exception $e) {
+            \Log::error('Error en garantia_buscar: ' . $e->getMessage() . ' - Línea: ' . $e->getLine());
             return [
                 'state' => 'error',
             ];
@@ -98,12 +179,93 @@ class ConsultarController extends Controller {
     }
 
     public function buscar_serie($serie) {
-        $whatsapp = Configuracion::where('nombre', 'contacto_whatsapp')->first();
-        $prod = Garantia::with('getManuales.getManual')->first();
-        $garantia = Garantia::where('serie', 'LIKE', "%{$serie}%")
-            ->with(['getProductos', 'getManuales.getManual', 'getDriversprod.getDrivers'])->first();
+        try {
+            $whatsapp = Configuracion::where('nombre', 'contacto_whatsapp')->first();
+            $prod = Garantia::with('getManuales.getManual')->first();
 
-        return view('consultar.garantiaQR', compact('whatsapp', 'garantia', 'prod'));
+            $garantia = Garantia::where('serie', 'LIKE', "%{$serie}%")
+                ->with(['getManuales.getManual', 'getDriversprod.getDrivers'])
+                ->first();
+
+            // Mapeo de nombres de campos de DB a nombres esperados en el template
+            $campoMapping = [
+                'Procesador' => 'procesador',
+                'Memoria Ram' => 'ram',
+                'Almacenamiento' => 'almacenamiento',
+                'Unidad Óptica' => 'unidad_optica',
+                'Conectividad LAN' => 'conectividad_lan',
+                'Conectividad WLAN' => 'conectividad_wlan',
+                'Conectividad USB' => 'conectividad_usb',
+                'Conectividad VGA' => 'conectividad_vga',
+                'Conectividad HDMI' => 'conectividad_hdmi',
+                'Sistema Operativo' => 'sistema_operativo',
+                'Ofimatica' => 'suite_ofimatica',
+                'OfimÃ¡tica' => 'suite_ofimatica',
+                'Periféricos' => 'perifericos',
+            ];
+
+            // Campos opcionales con valores por defecto
+            $valoresDefault = [
+                'suite_ofimatica' => 'NO INCLUYE',
+                'perifericos' => 'NO ESPECIFICADO',
+            ];
+
+            if ($garantia) {
+                // Obtener todos los productos de esta garantía
+                $productos = $garantia->getProductos;
+
+                \Log::info('QR - Productos encontrados: ' . count($productos));
+
+                if ($productos && $productos->count() > 0) {
+                    $productosProcessados = [];
+
+                    foreach ($productos as $producto) {
+                        \Log::info('QR - Procesando producto ID: ' . $producto->id);
+
+                        $productoArray = $producto->toArray();
+
+                        // Inicializar valores por defecto
+                        foreach ($valoresDefault as $campo => $valor) {
+                            $productoArray[$campo] = $valor;
+                        }
+
+                        // Cargar modelo
+                        if ($producto->modelo) {
+                            $productoArray['modelo'] = $producto->modelo->toArray();
+                        }
+
+                        // Cargar especificaciones directamente de la tabla
+                        $specs = \DB::table('especificaciones')
+                            ->where('producto_id', $producto->id)
+                            ->get();
+
+                        \Log::info('QR - Especificaciones encontradas para producto ' . $producto->id . ': ' . count($specs));
+
+                        if ($specs && count($specs) > 0) {
+                            foreach ($specs as $esp) {
+                                // Usar el mapeo para convertir el nombre del campo
+                                $nombreCampo = isset($campoMapping[$esp->campo])
+                                    ? $campoMapping[$esp->campo]
+                                    : strtolower(str_replace(' ', '_', $esp->campo));
+
+                                \Log::info('QR - Especificación original: "' . $esp->campo . '" → Mapeado a: "' . $nombreCampo . '" = ' . $esp->descripcion);
+                                $productoArray[$nombreCampo] = $esp->descripcion;
+                            }
+                        }
+
+                        $productosProcessados[] = $productoArray;
+                    }
+
+                    // Reemplazar la relación con los datos procesados
+                    $garantia->setRelation('getProductos', collect($productosProcessados));
+                }
+            }
+
+            return view('consultar.garantiaQR', compact('whatsapp', 'garantia', 'prod'));
+        } catch (\Exception $e) {
+            \Log::error('Error en buscar_serie: ' . $e->getMessage() . ' - Línea: ' . $e->getLine());
+            abort(500, 'Error al procesar la garantía');
+        }
     }
 
 }

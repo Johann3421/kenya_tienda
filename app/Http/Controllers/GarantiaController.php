@@ -143,7 +143,7 @@ class GarantiaController extends Controller
             'garantia'             => 'required|string',
             'fecha_venta'          => 'required',
             'fecha_Vencimiento'    => 'required',
-            'serie'                => 'required|digits:14',
+            'serie'                => 'required|size:14',
             'estado'               => 'required|string'
         ]);
 
@@ -215,7 +215,7 @@ class GarantiaController extends Controller
             'garantia'             => 'required|string',
             'fecha_venta'          => 'required',
             'fecha_Vencimiento'    => 'required',
-            'serie'                => 'required|string',
+            'serie'                => 'required|size:14',
             'estado'               => 'required|string'
         ]);
 

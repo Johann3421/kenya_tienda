@@ -45,7 +45,7 @@
 
         <header class="navbar pcoded-header navbar-expand-lg navbar-light headerpos-fixed" style="padding: 0px;">
             <div class="m-header">
-                <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
+                <a class="mobile-menu" id="mobile-collapse" href="javascript:void(0)"><span></span></a>
                 <a href="{{url('/')}}" class="b-brand">
                     @php
                         $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
@@ -57,14 +57,14 @@
                     @endif
                     {{-- <img src="{{asset('theme/images/logo-icon.png')}}" alt="" class="logo-thumb"> --}}
                 </a>
-                <a href="#!" class="mob-toggler">
+                <a href="javascript:void(0)" class="mob-toggler">
                     <i class="feather icon-more-vertical"></i>
                 </a>
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a href="#!" class="pop-search"><i class="feather icon-search"></i></a>
+                        <a href="javascript:void(0)" class="pop-search"><i class="feather icon-search"></i></a>
                         <div class="search-bar">
                             <input type="text" class="form-control border-0 shadow-none" placeholder="Search here">
                             <button type="button" class="close" aria-label="Close">
@@ -73,17 +73,17 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a href="#!" class="full-screen" onclick="javascript:toggleFullScreen()"><i class="feather icon-maximize"></i></a>
+                        <a href="javascript:void(0)" class="full-screen" onclick="javascript:toggleFullScreen()"><i class="feather icon-maximize"></i></a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
 
                     <li>
                         <div class="dropdown drp-user triangle">
-                            <a href="#!" class="dropdown-toggle" data-toggle="dropdown">
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="{{asset('theme/images/auth/auth.jpg')}}" class="img-radius wid-40" alt="User-Profile-Image">
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right profile-notification">
+                            <div class="dropdown-menu dropdown-menu-end profile-notification">
                                 <div class="pro-head">
                                     <span>{{ Auth::user()->nombres.' '.Auth::user()->ape_paterno.' '.Auth::user()->ape_materno }}</span>
                                 </div>
@@ -109,7 +109,7 @@
         <section class="header-chat">
             <div class="h-list-header">
                 <h6>Josephin Doe</h6>
-                <a href="#!" class="h-back-user-list"><i class="feather icon-chevron-left"></i></a>
+                <a href="javascript:void(0)" class="h-back-user-list"><i class="feather icon-chevron-left"></i></a>
             </div>
             <div class="h-list-body">
                 <div class="main-chat-cont scroll-div">
@@ -148,7 +148,7 @@
             <div class="h-list-footer">
                 <div class="input-group">
                     <input type="file" class="chat-attach" style="display:none">
-                    <a href="#!" class="input-group-prepend btn btn-success btn-attach">
+                    <a href="javascript:void(0)" class="input-group-prepend btn btn-success btn-attach">
                         <i class="feather icon-paperclip"></i>
                     </a>
                     <input type="text" name="h-chat-text" class="form-control h-auto h-send-chat" placeholder="Write hear . . ">
