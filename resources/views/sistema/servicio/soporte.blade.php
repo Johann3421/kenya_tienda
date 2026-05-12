@@ -68,9 +68,21 @@
                                                                     style="font-size: 11px; padding-right: 0;padding-top: 3px;"
                                                                     class="col-sm-4">FECHA REGISTRO :</span>
                                                                 <div class="col-sm-8">
-                                                                    <input type="text" id="fecha_registro"
-                                                                        value="{{ date('d/m/Y H:i') }}"
-                                                                        class="form-control form-control-sm" readonly>
+                                                                    @php
+                                                                        $allowedUsers = ['ANDERSSON', 'HUAMALI'];
+                                                                        $currentChecks = [];
+                                                                        if (Auth::user()) {
+                                                                            $currentChecks[] = strtoupper(trim(Auth::user()->username ?? ''));
+                                                                            $currentChecks[] = strtoupper(trim(Auth::user()->nombres ?? ''));
+                                                                            $currentChecks[] = strtoupper(trim((Auth::user()->nombres ?? '') . ' ' . (Auth::user()->ape_paterno ?? '')));
+                                                                        }
+                                                                        $currentChecks = array_filter(array_unique($currentChecks));
+                                                                    @endphp
+                                                                    @if(count(array_intersect($allowedUsers, $currentChecks)) > 0)
+                                                                        <input type="datetime-local" id="fecha_registro" v-model="fecha_registro" class="form-control form-control-sm" :class="[errors.fecha_registro ? 'is-invalid' : '']" :readonly="loading">
+                                                                    @else
+                                                                        <input type="text" id="fecha_registro" :value="fecha_registro || '{{ date('d/m/Y H:i') }}'" class="form-control form-control-sm" readonly>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -98,11 +110,17 @@
                                                                     style="font-size: 11px; padding-right: 0;padding-top: 3px;"
                                                                     class="col-sm-3">TÉCNICO :</span>
                                                                 <div class="col-sm-9">
-                                                                    <select class="form-control form-control-sm" readonly>
-                                                                        <option value="user">
-                                                                            {{ Auth::user()->nombres . ' ' . Auth::user()->ape_paterno . ' ' . Auth::user()->ape_materno }}
-                                                                        </option>
-                                                                    </select>
+                                                                    @if(count(array_intersect($allowedUsers, $currentChecks)) > 0)
+                                                                        <select class="form-control form-control-sm" v-model="tecnico_id">
+                                                                            <option v-for="t in tecnicos" :value="t.id">@{{ t.nombres + ' ' + (t.ape_paterno || '') + ' ' + (t.ape_materno || '') }}</option>
+                                                                        </select>
+                                                                    @else
+                                                                        <select class="form-control form-control-sm" readonly>
+                                                                            <option value="user">
+                                                                                {{ Auth::user()->nombres . ' ' . Auth::user()->ape_paterno . ' ' . Auth::user()->ape_materno }}
+                                                                            </option>
+                                                                        </select>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -425,6 +443,24 @@
                                                                         placeholder="">
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
+                                                    {{-- DESCRIPCIÓN DE LA FALLA (aparece en el PDF) --}}
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-12">
+                                                            <label style="font-size: 11px; font-weight: bold; margin-bottom: 4px; display: block;">Descripción de la Falla <small style="color:#888; font-weight:normal;">(se muestra en el PDF)</small></label>
+                                                            <div v-for="(item, idx) in descripcion_falla" :key="idx" class="row mb-1 align-items-center">
+                                                                <div class="col-md-4">
+                                                                    <input type="text" v-model="item.titulo" :readonly="loading" class="form-control form-control-sm" placeholder="Título">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <input type="text" v-model="item.texto" :readonly="loading" class="form-control form-control-sm" placeholder="Descripción de la falla">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <button type="button" class="btn btn-danger btn-sm btn-block" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)" :disabled="loading"><i class="fas fa-minus"></i></button>
+                                                                </div>
+                                                            </div>
+                                                            <button type="button" class="btn btn-success btn-sm mt-1" @click="addDescripcion" :disabled="loading"><i class="fas fa-plus"></i> Agregar</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -853,9 +889,21 @@
                                                                 style="font-size: 11px; padding-right: 0;padding-top: 3px;"
                                                                 class="col-sm-4">FECHA REGISTRO :</span>
                                                             <div class="col-sm-8">
-                                                                <input type="text" id="fecha_registro"
-                                                                    :value="fecha_registro"
-                                                                    class="form-control form-control-sm" readonly>
+                                                                @php
+                                                                    $allowedUsers = ['ANDERSSON', 'HUAMALI'];
+                                                                    $currentChecks = [];
+                                                                    if (Auth::user()) {
+                                                                        $currentChecks[] = strtoupper(trim(Auth::user()->username ?? ''));
+                                                                        $currentChecks[] = strtoupper(trim(Auth::user()->nombres ?? ''));
+                                                                        $currentChecks[] = strtoupper(trim((Auth::user()->nombres ?? '') . ' ' . (Auth::user()->ape_paterno ?? '')));
+                                                                    }
+                                                                    $currentChecks = array_filter(array_unique($currentChecks));
+                                                                @endphp
+                                                                @if(count(array_intersect($allowedUsers, $currentChecks)) > 0)
+                                                                    <input type="datetime-local" id="fecha_registro" v-model="fecha_registro" class="form-control form-control-sm" :class="[errors.fecha_registro ? 'is-invalid' : '']" :readonly="loading">
+                                                                @else
+                                                                    <input type="text" id="fecha_registro" :value="fecha_registro" class="form-control form-control-sm" readonly>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -883,11 +931,17 @@
                                                                 style="font-size: 11px; padding-right: 0;padding-top: 3px;"
                                                                 class="col-sm-3">TÉCNICO :</span>
                                                             <div class="col-sm-9">
-                                                                <select class="form-control form-control-sm" readonly>
-                                                                    <option value="user">
-                                                                        {{ Auth::user()->nombres . ' ' . Auth::user()->ape_paterno . ' ' . Auth::user()->ape_materno }}
-                                                                    </option>
-                                                                </select>
+                                                                @if(in_array(strtoupper(Auth::user()->username ?? ''), $allowedUsers))
+                                                                    <select class="form-control form-control-sm" v-model="tecnico_id">
+                                                                        <option v-for="t in tecnicos" :value="t.id">@{{ t.nombres + ' ' + (t.ape_paterno || '') + ' ' + (t.ape_materno || '') }}</option>
+                                                                    </select>
+                                                                @else
+                                                                    <select class="form-control form-control-sm" readonly>
+                                                                        <option value="user">
+                                                                            {{ Auth::user()->nombres . ' ' . Auth::user()->ape_paterno . ' ' . Auth::user()->ape_materno }}
+                                                                        </option>
+                                                                    </select>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1207,6 +1261,24 @@
                                                                     placeholder="">
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                {{-- DESCRIPCIÓN DE LA FALLA (aparece en el PDF) --}}
+                                                <div class="row mt-2">
+                                                    <div class="col-md-12">
+                                                        <label style="font-size: 11px; font-weight: bold; margin-bottom: 4px; display: block;">Descripción de la Falla <small style="color:#888; font-weight:normal;">(se muestra en el PDF)</small></label>
+                                                        <div v-for="(item, idx) in descripcion_falla" :key="idx" class="row mb-1 align-items-center">
+                                                            <div class="col-md-4">
+                                                                <input type="text" v-model="item.titulo" :readonly="loading" class="form-control form-control-sm" placeholder="Título">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="text" v-model="item.texto" :readonly="loading" class="form-control form-control-sm" placeholder="Descripción de la falla">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm btn-block" v-if="descripcion_falla.length > 1" @click="removeDescripcion(idx)" :disabled="loading"><i class="fas fa-minus"></i></button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-success btn-sm mt-1" @click="addDescripcion" :disabled="loading"><i class="fas fa-plus"></i> Agregar</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -2057,6 +2129,7 @@
 @section('js')
     <script>
         var my_mw_soporte = {!! json_encode($mw_soporte) !!};
+        var my_tecnicos = {!! json_encode($tecnicos ?? []) !!};
     </script>
     <script type="text/javascript" src="{{ asset('js/barcode.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/jquery.printarea.js') }}"></script>

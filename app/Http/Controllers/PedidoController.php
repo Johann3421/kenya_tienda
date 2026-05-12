@@ -40,11 +40,11 @@ class PedidoController extends Controller
     public function buscar(Request $request)
     {
         $estados = DB::table('pedidos')
-        ->selectRaw('COUNT(CASE WHEN estado_entrega = "realizado" THEN 1 END) as realizado')
-        ->selectRaw('COUNT(CASE WHEN estado_entrega = "transito" THEN 1 END) as transito')
-        ->selectRaw('COUNT(CASE WHEN estado_entrega = "tienda" THEN 1 END) as tienda')
-        ->selectRaw('COUNT(CASE WHEN estado_entrega = "entregado" THEN 1 END) as entregado')
-        ->selectRaw('COUNT(CASE WHEN estado_entrega = "cancelado" THEN 1 END) as cancelado')
+        ->selectRaw("COUNT(CASE WHEN estado_entrega = 'realizado' THEN 1 END) as realizado")
+        ->selectRaw("COUNT(CASE WHEN estado_entrega = 'transito' THEN 1 END) as transito")
+        ->selectRaw("COUNT(CASE WHEN estado_entrega = 'tienda' THEN 1 END) as tienda")
+        ->selectRaw("COUNT(CASE WHEN estado_entrega = 'entregado' THEN 1 END) as entregado")
+        ->selectRaw("COUNT(CASE WHEN estado_entrega = 'cancelado' THEN 1 END) as cancelado")
         ->where('activo', 'SI')
         ->first();
 
@@ -499,7 +499,7 @@ class PedidoController extends Controller
         $series = Serie::where('tipo', 'CI')->get();
         $serie_defecto = Serie::where('tipo', 'CI')->first();
         $numeracion = Pedido::where('serie', $serie_defecto->serie)->orderBy('numeracion', 'desc')->first();
-        $vendedores = User::select('id', \DB::raw("concat(nombres, ' ', ape_paterno, ' ', ape_materno) as nombres_apellidos"))
+        $vendedores = User::select('id', \DB::raw($this->concatSql(['nombres', "' '", 'ape_paterno', "' '", 'ape_materno'])." as nombres_apellidos"))
             ->get();
 
         return [
@@ -701,13 +701,13 @@ class PedidoController extends Controller
             return Pedido::join('clientes as c', 'c.id', '=', 'pedidos.cliente_id')
                 ->select(
                     'pedidos.id',
-                    \DB::raw("concat(pedidos.serie, '-', pedidos.numeracion) as serie_numeracion"),
+                    \DB::raw($this->concatSql(['pedidos.serie', "'-'", 'pedidos.numeracion'])." as serie_numeracion"),
                     'c.id as documento_cliente',
                     'c.nombres as cliente',
                     'pedidos.total',
-                    \DB::raw("date_format(pedidos.created_at, '%d/%m/%Y') as fecha")
+                    \DB::raw($this->dateFormatSql('pedidos.created_at')." as fecha")
                 )
-                ->where(\DB::raw("concat(pedidos.serie, '-', pedidos.numeracion)"), 'like', '%'.$request->frase.'%')
+                ->where(\DB::raw($this->concatSql(['pedidos.serie', "'-'", 'pedidos.numeracion'])), 'like', '%'.$request->frase.'%')
                 ->orWhere('c.id', 'like', '%'.$request->frase.'%')
                 ->orWhere('c.nombres', 'like', '%'.$request->frase.'%')
                 ->paginate(10)
@@ -717,11 +717,11 @@ class PedidoController extends Controller
         return Pedido::join('clientes as c', 'c.id', '=', 'pedidos.cliente_id')
             ->select(
                 'pedidos.id',
-                \DB::raw("concat(pedidos.serie, '-', pedidos.numeracion) as serie_numeracion"),
+                \DB::raw($this->concatSql(['pedidos.serie', "'-'", 'pedidos.numeracion'])." as serie_numeracion"),
                 'c.id as documento_cliente',
                 'c.nombres as cliente',
                 'pedidos.total',
-                \DB::raw("date_format(pedidos.created_at, '%d/%m/%Y') as fecha")
+                \DB::raw($this->dateFormatSql('pedidos.created_at')." as fecha")
             )
             ->paginate(10)
         ;
@@ -736,5 +736,25 @@ class PedidoController extends Controller
         $pdf->setPaper('A4');
 
         return $pdf->stream('Pedido.pdf');
+    }
+
+    private function concatSql(array $parts): string
+    {
+        if (DB::getDriverName() === 'pgsql') {
+            return implode(' || ', array_map(function ($part) {
+                return str_contains($part, '.') ? "CAST({$part} AS TEXT)" : $part;
+            }, $parts));
+        }
+
+        return 'concat('.implode(', ', $parts).')';
+    }
+
+    private function dateFormatSql(string $column): string
+    {
+        if (DB::getDriverName() === 'pgsql') {
+            return "to_char({$column}, 'DD/MM/YYYY')";
+        }
+
+        return "date_format({$column}, '%d/%m/%Y')";
     }
 }

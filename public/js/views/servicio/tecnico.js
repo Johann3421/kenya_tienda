@@ -35,8 +35,9 @@ new Vue({
         result_id: null,
         result_barra: null,
 
-        fecha_registro: new Date().toISOString().slice(0, 10),
-        fecha_entrega: new Date().toISOString().slice(0, 10) + 'T20:00',
+        // valores por defecto en formato compatible con datetime-local: YYYY-MM-DDTHH:MM
+        fecha_registro: new Date().toISOString().slice(0, 16),
+        fecha_entrega: new Date().toISOString().slice(0, 16),
         tipo_servicio: 'SOPORTE',
         estado_servicio: 'E1',
         numero_documento: null,
@@ -113,9 +114,11 @@ new Vue({
         pdf_file_edit: null,
         original_pdf_link: null, // Para guardar el valor original del PDF
         numero_caso: null,
+        tecnicos: my_tecnicos || [],
+        tecnico_id: null,
         descripcion_falla: [
-    { titulo: 'Falla principal', texto: '' }
-],
+            { titulo: 'Falla principal', texto: '' }
+        ],
     },
     created() {
         this.Buscar();
@@ -330,7 +333,13 @@ new Vue({
                pdfLink +
                '\n\nQuedamos atentos ante cualquier consulta o coordinación adicional.\nAtentamente,\n\nKENYA – Soporte Técnico.';
                     this.whatsapp_soporte = encodeURIComponent(plainMsg);
-                    this.fecha_registro = this.Fecha3(seleccion.fecha_registro);
+                    // set fecha_registro in a format compatible with datetime-local
+                    try {
+                        this.fecha_registro = this.Datetime(seleccion.fecha_registro);
+                    } catch (e) {
+                        this.fecha_registro = seleccion.fecha_registro;
+                    }
+                    this.tecnico_id = seleccion.user_id || null;
                     this.fecha_entrega = this.Datetime(seleccion.fecha_entrega);
                     this.tipo_servicio = seleccion.servicio;
                     this.estado_servicio = seleccion.estado;
@@ -548,6 +557,7 @@ try {
 
                 // Añadir todos los campos existentes al FormData
                 formData.append('fecha_registro', this.fecha_registro);
+                if (this.tecnico_id) formData.append('tecnico_id', this.tecnico_id);
                 formData.append('fecha_entrega', this.fecha_entrega);
                 formData.append('tipo_servicio', this.tipo_servicio);
                 formData.append('estado_servicio', this.estado_servicio);
@@ -637,6 +647,7 @@ try {
                 // Añadir todos los campos al FormData
                 formData.append('id', this.id);
                 formData.append('fecha_registro', this.fecha_registro);
+                if (this.tecnico_id) formData.append('tecnico_id', this.tecnico_id);
                 formData.append('fecha_entrega', this.fecha_entrega);
                 formData.append('tipo_servicio', this.tipo_servicio);
                 formData.append('estado_servicio', this.estado_servicio);
@@ -759,8 +770,9 @@ try {
                     break;
 
                 default:
-                    this.fecha_registro = new Date().toISOString().slice(0, 10);
-                    this.fecha_entrega = new Date().toISOString().slice(0, 10) + 'T20:00';
+                    // valores por defecto compatibles con datetime-local (YYYY-MM-DDTHH:MM)
+                    this.fecha_registro = new Date().toISOString().slice(0, 16);
+                    this.fecha_entrega = new Date().toISOString().slice(0, 16);
                     this.tipo_servicio = 'SOPORTE';
                     this.estado_servicio = 'E1';
                     this.numero_documento = null;
@@ -934,8 +946,27 @@ try {
             }
         },
         Datetime(doc) {
-            var str = doc.replace(' ', 'T');
-            return str;
+            // Retorna un string en formato `YYYY-MM-DDTHH:MM` compatible con input datetime-local
+            if (!doc) return '';
+            try {
+                // Si viene como objeto Date o Carbon (se serializa a objeto), convertir a Date
+                if (typeof doc === 'object') {
+                    var d = new Date(doc);
+                    if (isNaN(d.getTime())) return '';
+                    return d.toISOString().slice(0, 16);
+                }
+
+                // Si es string, normalizar separador y quitar segundos si existen
+                var s = String(doc).replace(' ', 'T');
+                // Si tiene segundos (HH:MM:SS), recortar a HH:MM
+                var m = s.match(/T(\d{2}:\d{2})(:\d{2})?/);
+                if (m) {
+                    return s.replace(/T(\d{2}:\d{2})(:\d{2})?/, 'T$1');
+                }
+                return s;
+            } catch (e) {
+                return String(doc).replace(' ', 'T');
+            }
         },
         Fecha1(doc) {
             var dateString = doc;

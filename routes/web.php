@@ -11,7 +11,13 @@ use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
-Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+if (app()->environment('local')) {
+    Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
+}
+
+Route::get('/health', function () {
+    return response('ok', 200);
+});
 
 Route::get('/', function () {
     $categorias = App\Models\Categoria::with('getModelo')->where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
@@ -141,7 +147,7 @@ Route::group(['middleware' => ['auth', 'can:productos']], function () {
 });
 
 Route::view('/quienes-somos', 'quienes-somos')->name('quienes.somos');
-Route::view('/Catalogo', 'Catalogo')->name('catalogo');
+Route::view('/Catalogo', 'Catalogo')->name('catalogo.static');
 Route::view('/Novedades', 'Novedades')->name('novedades');
 Route::view('/Contactenos', 'Contactenos')->name('contactenos');
 Route::view('/Reclamaciones', 'Reclamaciones')->name('reclamaciones');
@@ -372,6 +378,7 @@ Route::prefix('sistema')->middleware(['auth', 'verified'])->group(function() {
     // ... otras rutas del sistema ...
 });
 
+if (app()->environment('local')) {
 Route::get('/test', function() {
     $modelo = \App\Modelo::find(10);
     return [
@@ -381,7 +388,8 @@ Route::get('/test', function() {
         'asides' => $modelo ? $modelo->asides->toArray() : []
     ];
 });
-Route::post('/banners', [BannerMedioController::class, 'store'])->name('banners.store');
+}
+Route::post('/banners', [BannerMedioController::class, 'store'])->middleware('auth')->name('banners.store');
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function() {
     // Listar banners (GET)
     Route::get('banners', [BannerMedioController::class, 'index'])->name('banners.index');
@@ -401,6 +409,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function() {
 Route::get('/producto/buscar-especificaciones', [ProductoController::class, 'buscarPorModeloONroParte']);
 
 
+if (app()->environment('local')) {
 Route::get('/limpiar-todo', function() {
     try {
         // 1. Limpieza de cachés
@@ -426,8 +435,6 @@ Route::get('/limpiar-todo', function() {
         return "❌ Error: " . $e->getMessage();
     }
 });
-
-
-
+}
 
 

@@ -46,6 +46,31 @@ class GarantiaController extends Controller
         if ($filtroEstado) {
             $garantias = $garantias->where(function ($query) use ($filtroEstado) {
                 $now = Carbon::now();
+                if (DB::getDriverName() === 'pgsql') {
+                    $end = 'garantia."fecha_Vencimiento"';
+                    $remainingExpression = "CASE
+                        WHEN garantia.fecha_venta IS NULL OR {$end} IS NULL THEN NULL
+                        ELSE 100 - (
+                            EXTRACT(day FROM (LEAST(?::date, {$end}::date) - garantia.fecha_venta::date)) /
+                            NULLIF(EXTRACT(day FROM ({$end}::date - garantia.fecha_venta::date)), 0) * 100
+                        )
+                    END";
+
+                    $query->whereRaw("({$remainingExpression}) IS NOT NULL", [$now->toDateString()]);
+
+                    if ($filtroEstado == 'verde') {
+                        $query->whereRaw("{$remainingExpression} > 66 AND {$end} > ?", [$now->toDateString(), $now->toDateString()]);
+                    } elseif ($filtroEstado == 'naranja') {
+                        $query->whereRaw("{$remainingExpression} <= 66 AND {$remainingExpression} > 33 AND {$end} > ?", [$now->toDateString(), $now->toDateString(), $now->toDateString()]);
+                    } elseif ($filtroEstado == 'rojo') {
+                        $query->whereRaw("{$remainingExpression} <= 33 AND {$remainingExpression} > 0 AND {$end} > ?", [$now->toDateString(), $now->toDateString(), $now->toDateString()]);
+                    } elseif ($filtroEstado == 'vencida') {
+                        $query->where('garantia.fecha_Vencimiento', '<=', $now->toDateString());
+                    }
+
+                    return;
+                }
+
                 // Usamos raw para calcular el porcentaje en SQL
                 $query->whereRaw("
                 (

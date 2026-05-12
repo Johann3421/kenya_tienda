@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\User;
 use App\Models\Configuracion;
 use App\Models\DetallesSoporte;
 use App\Models\Soporte;
@@ -27,17 +28,18 @@ class SoporteController extends Controller
     {
         $series     = Serie::all();
         $mw_soporte = Configuracion::where('nombre', 'mensaje_wahtsapp')->first();
-        return view('sistema.servicio.soporte', compact('mw_soporte', 'series'));
+        $tecnicos = User::select('id','nombres','ape_paterno','ape_materno','username')->get();
+        return view('sistema.servicio.soporte', compact('mw_soporte', 'series', 'tecnicos'));
     }
 
     public function buscar(Request $request)
 {
     $estados = DB::table('soportes')
-        ->selectRaw('COUNT(CASE WHEN estado = "realizado" THEN 1 END) as realizado')
-        ->selectRaw('COUNT(CASE WHEN estado = "transito" THEN 1 END) as transito')
-        ->selectRaw('COUNT(CASE WHEN estado = "tienda" THEN 1 END) as tienda')
-        ->selectRaw('COUNT(CASE WHEN estado = "entregado" THEN 1 END) as entregado')
-        ->selectRaw('COUNT(CASE WHEN estado = "cancelado" THEN 1 END) as cancelado')
+        ->selectRaw("COUNT(CASE WHEN estado = 'realizado' THEN 1 END) as realizado")
+        ->selectRaw("COUNT(CASE WHEN estado = 'transito' THEN 1 END) as transito")
+        ->selectRaw("COUNT(CASE WHEN estado = 'tienda' THEN 1 END) as tienda")
+        ->selectRaw("COUNT(CASE WHEN estado = 'entregado' THEN 1 END) as entregado")
+        ->selectRaw("COUNT(CASE WHEN estado = 'cancelado' THEN 1 END) as cancelado")
         ->first();
 
     $soportes = Soporte::where('activo', 'SI')
@@ -168,8 +170,43 @@ public function store(Request $request)
         $soporte->costo_servicio       = $request->costo_servicio;
         $soporte->saldo_total          = $request->saldo_total;
         $soporte->fecha_registro       = $date->format('Y-m-d H:i:s');
-        $soporte->fecha_entrega        = $request->fecha_entrega;
+        // Aceptar y normalizar formatos de fecha/hora enviados desde inputs datetime-local (ej. 2026-04-09T20:00)
+        if ($request->filled('fecha_entrega')) {
+            try {
+                $parsed = str_replace('T', ' ', $request->fecha_entrega);
+                $soporte->fecha_entrega = Carbon::parse($parsed)->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                // Si no se puede parsear, guardar el valor tal cual (Laravel/MySQL intentará convertirlo)
+                $soporte->fecha_entrega = $request->fecha_entrega;
+            }
+        } else {
+            $soporte->fecha_entrega = null;
+        }
         $soporte->confirmar_reparacion = $request->confirmar_reparacion;
+        // Permitir temporalmente editar fecha_registro y tecnico para usuarios específicos
+        $allowedUsers = ['ANDERSSON', 'HUAMALI'];
+        $currentChecks = [];
+        $user = Auth::user();
+        if ($user) {
+            $currentChecks[] = strtoupper(trim($user->username ?? ''));
+            $currentChecks[] = strtoupper(trim($user->nombres ?? ''));
+            // nombre completo (nombres + ape_paterno)
+            $currentChecks[] = strtoupper(trim(($user->nombres ?? '') . ' ' . ($user->ape_paterno ?? '')));
+        }
+        $currentChecks = array_filter(array_unique($currentChecks));
+        $allowed = (bool) array_intersect($allowedUsers, $currentChecks);
+        if ($allowed) {
+            if ($request->filled('fecha_registro')) {
+                try {
+                    $soporte->fecha_registro = Carbon::parse($request->fecha_registro)->format('Y-m-d H:i:s');
+                } catch (\Exception $e) {
+                    // ignorar si el formato no es válido
+                }
+            }
+            if ($request->filled('tecnico_id')) {
+                $soporte->user_id = $request->tecnico_id;
+            }
+        }
         $soporte->solo_diagnostico     = $request->solo_diagnostico;
         $soporte->observacion          = Str::upper($request->observacion);
         $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
@@ -240,7 +277,8 @@ public function update(Request $request)
         'descripcion'      => 'required',
         'acuenta'          => 'required|integer',
         'costo_servicio'   => 'required|integer',
-        'saldo_total'      => 'required|integer',
+            'saldo_total'      => 'required|integer',
+            'tecnico_id'       => 'nullable|integer|exists:users,id',
         'pdf_file'         => 'nullable|file|mimes:pdf|max:5120', // 5MB máximo
         'numero_caso' => 'nullable|string|max:255',
 
@@ -311,13 +349,47 @@ public function update(Request $request)
         $soporte->acuenta              = $request->acuenta;
         $soporte->costo_servicio       = $request->costo_servicio;
         $soporte->saldo_total          = $request->saldo_total;
-        $soporte->fecha_entrega        = $request->fecha_entrega;
+        // Normalizar y parsear fecha_entrega recibida en update
+        if ($request->filled('fecha_entrega')) {
+            try {
+                $parsed = str_replace('T', ' ', $request->fecha_entrega);
+                $soporte->fecha_entrega = Carbon::parse($parsed)->format('Y-m-d H:i:s');
+            } catch (\Exception $e) {
+                $soporte->fecha_entrega = $request->fecha_entrega;
+            }
+        } else {
+            $soporte->fecha_entrega = null;
+        }
         $soporte->confirmar_reparacion = $request->confirmar_reparacion;
         $soporte->solo_diagnostico     = $request->solo_diagnostico;
         $soporte->observacion          = Str::upper($request->observacion);
         $soporte->reporte_tecnico      = Str::upper($request->reporte_tecnico);
         $soporte->nro_parte            = $request->nro_parte ? Str::upper($request->nro_parte) : null;
         $soporte->numero_caso = $request->numero_caso;
+
+        // Permitir temporalmente editar fecha_registro y tecnico para usuarios específicos (mismo comportamiento que en store)
+        $allowedUsers = ['ANDERSSON', 'HUAMALI'];
+        $currentChecks = [];
+        $user = Auth::user();
+        if ($user) {
+            $currentChecks[] = strtoupper(trim($user->username ?? ''));
+            $currentChecks[] = strtoupper(trim($user->nombres ?? ''));
+            $currentChecks[] = strtoupper(trim(($user->nombres ?? '') . ' ' . ($user->ape_paterno ?? '')));
+        }
+        $currentChecks = array_filter(array_unique($currentChecks));
+        $allowed = (bool) array_intersect($allowedUsers, $currentChecks);
+        if ($allowed) {
+            if ($request->filled('fecha_registro')) {
+                try {
+                    $soporte->fecha_registro = Carbon::parse($request->fecha_registro)->format('Y-m-d H:i:s');
+                } catch (\Exception $e) {
+                    // ignorar si el formato no es válido
+                }
+            }
+            if ($request->filled('tecnico_id')) {
+                $soporte->user_id = $request->tecnico_id;
+            }
+        }
         $soporte->save();
 
         DB::commit();
@@ -489,5 +561,4 @@ public function update(Request $request)
 
 
 }
-
 

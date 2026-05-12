@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\SyncKenyaProducts::class,
     ];
 
     /**
@@ -24,7 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Ejecutar la sincronización todos los días a las 2 AM
+        $schedule->command('kenya:sync-products')->dailyAt('02:00');
     }
 
     /**

@@ -189,11 +189,21 @@
             width: 100%;
             overflow: hidden;
             margin: 0 auto !important;
+            /* fallback ratio using padding-top so container keeps shape across browsers */
+            padding-top: 92%; /* aumentar altura para mostrar aún más de la imagen */
+            height: 0;
+            min-height: 280px; /* evita que sea demasiado pequeño en pantallas grandes */
         }
 
         .prod-main-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* fill container, keep centered */
+            object-position: center 45%; /* desplaza el foco hacia arriba ligeramente */
+            display: block;
             transition: transform 0.5s ease;
         }
 
@@ -282,7 +292,7 @@
                 margin-left: 5px;
             }
 
-            .prod-image-wrapper {}
+            .prod-image-wrapper { padding-top: 86%; min-height: 220px; }
         }
 
         @media (max-width: 768px) {
@@ -291,7 +301,7 @@
                 max-width: calc(50% - 15px);
             }
 
-            .prod-image-wrapper {}
+            .prod-image-wrapper { padding-top: 78%; min-height: 200px; }
         }
 
         @media (max-width: 576px) {
@@ -300,7 +310,7 @@
                 max-width: 100%;
             }
 
-            .prod-image-wrapper {}
+            .prod-image-wrapper { padding-top: 88%; min-height: 180px; }
         }
 
         /* FIN DE LA SECCION DE CATEGORIAS*/

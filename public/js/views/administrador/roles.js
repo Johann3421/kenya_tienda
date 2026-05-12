@@ -116,18 +116,18 @@ new Vue({
 
             switch (metodo) {
                 case 'create':
-                    this.ResetDatos();
+                    this.resetDatos();
                     this.active = 0;
                     break;
 
                 case 'edit':
-                    this.ResetDatos();
+                    this.resetDatos();
                     this.nombre = seleccion.name;
                     var self = this;
                     seleccion.permissions.forEach(element => {
                         self.permisosSelecs.push((element.id).toString());
                     });
-                    setTimeout(function(){ 
+                    setTimeout(function(){
                         self.todosCheck();
                     }, 100);
                     break;
@@ -182,7 +182,7 @@ new Vue({
         Store() {
             this.errors = [];
             this.loading = true;
-            
+
             axios.post('roles/store', {
                 name: this.nombre,
                 permisos: this.permisosSelecs,
@@ -190,11 +190,11 @@ new Vue({
                 this.loading = false;
                 this.state = response.data.type;
                 this.Alert(response.data.type, response.data.title, response.data.message);
-                
+
                 if (response.data.type == 'success') {
                     this.nombre = null,
                     this.Buscar(this.page);
-                    this.ResetDatos();
+                    this.resetDatos();
                 }
             }).catch(error => {
                 this.loading = false;
@@ -208,7 +208,7 @@ new Vue({
         Update() {
             this.errors = [];
             this.loading = true;
-            
+
             axios.post('roles/update', {
                 id: this.id,
                 name: this.nombre,
@@ -233,7 +233,7 @@ new Vue({
         },
         Delete() {
             this.loading = true;
-            
+
             axios.post('roles/delete', {
                 id: this.id,
             }).then(response => {

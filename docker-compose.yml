@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kenya_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-kenya_tienda}
+      - DB_USERNAME=${DB_USERNAME:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - APP_NAME=${APP_NAME:-"Kenya Tienda"}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_KEY=${APP_KEY}
+      - APP_DEBUG=${APP_DEBUG:-false}
+      - APP_URL=${APP_URL:-http://localhost}
+      - LOG_CHANNEL=stderr
+      - QUEUE_CONNECTION=sync
+      - SESSION_DRIVER=file
+      - CACHE_DRIVER=file
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - app_storage:/var/www/html/storage/app/public
+
+  db:
+    image: postgres:15-alpine
+    container_name: kenya_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-kenya_tienda}
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # ATENCIÓN: Este dump es de MariaDB. Para que Postgres lo importe sin errores, 
+      # deberá ser convertido a dialecto Postgres previamente.
+      - ./RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:
+  app_storage:
