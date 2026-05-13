@@ -30,10 +30,24 @@ class DatabaseSeeder extends Seeder
         $total = 0;
         $buffer = '';
         $inInsert = false;
+        $truncatedTables = [];
 
         foreach ($lines as $line) {
             // Empezar a capturar si la línea es un INSERT
             if (strpos($line, 'INSERT INTO') === 0) {
+                if (preg_match('/INSERT INTO `([^`]+)`/', $line, $matches)) {
+                    $tableName = $matches[1];
+                    // Truncar la tabla antes del primer bloque de INSERT para evitar errores de Unique Constraint
+                    if (!in_array($tableName, $truncatedTables)) {
+                        try {
+                            DB::unprepared("TRUNCATE TABLE \"$tableName\" CASCADE;");
+                        } catch (\Exception $e) {
+                            // Ignorar si hay algún problema al truncar
+                        }
+                        $truncatedTables[] = $tableName;
+                    }
+                }
+                
                 $inInsert = true;
                 $buffer = '';
             }
