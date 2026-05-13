@@ -72,10 +72,10 @@ services:
     image: dimitri/pgloader
     container_name: kenya_pgloader
     # Comando mágico: Transfiere todo del MySQL legado al PostgreSQL nuevo
-    command: >
-      pgloader 
-      mysql://kenya_app:mypassword@mysql_legacy/kenya_tienda_old 
-      postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db/${DB_DATABASE:-kenya_tienda}
+    command:
+      - pgloader
+      - mysql://kenya_app:mypassword@mysql_legacy/kenya_tienda_old
+      - postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db/${DB_DATABASE:-kenya_tienda}
     depends_on:
       mysql_legacy:
         condition: service_healthy
