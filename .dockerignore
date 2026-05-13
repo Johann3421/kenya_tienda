@@ -17,6 +17,7 @@ storage/logs/*
 bootstrap/cache/*.php
 public/storage
 *.sql
+!RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql
 *.zip
 *.rar
 *.7z
