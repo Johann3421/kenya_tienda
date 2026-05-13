@@ -28,21 +28,35 @@ class DatabaseSeeder extends Seeder
 
         $lines = file($inputFile);
         $total = 0;
+        $buffer = '';
+        $inInsert = false;
 
         foreach ($lines as $line) {
-            if (preg_match('/INSERT INTO `([^`]+)` \(([^)]+)\) VALUES/', $line, $matches)) {
-                $table = $matches[1];
-                $cols = str_replace('`', '"', $matches[2]);
+            // Empezar a capturar si la línea es un INSERT
+            if (strpos($line, 'INSERT INTO') === 0) {
+                $inInsert = true;
+                $buffer = '';
+            }
+            
+            if ($inInsert) {
+                $buffer .= $line;
                 
-                $newLine = str_replace("INSERT INTO `{$table}` ({$matches[2]})", "INSERT INTO \"{$table}\" ({$cols})", $line);
-                
-                // Convertir escapes de MySQL a PostgreSQL
-                $newLine = str_replace("\\'", "''", $newLine);
-                $newLine = str_replace('\\"', '"', $newLine);
-                $newLine = str_replace('\\r\\n', "\r\n", $newLine);
-                
-                DB::unprepared($newLine);
-                $total++;
+                // Si la línea termina en punto y coma, ejecutamos el bloque
+                if (substr(rtrim($line), -1) === ';') {
+                    $inInsert = false;
+                    
+                    // 1. Reemplazar comillas invertidas por comillas dobles (para identificadores Postgres)
+                    $sql = str_replace('`', '"', $buffer);
+                    
+                    // 2. Reemplazar escapes de MySQL por escapes de Postgres
+                    $sql = str_replace("\\'", "''", $sql);
+                    $sql = str_replace('\\"', '"', $sql);
+                    $sql = str_replace('\\r\\n', "\r\n", $sql);
+                    $sql = str_replace('\\n', "\n", $sql);
+                    
+                    DB::unprepared($sql);
+                    $total++;
+                }
             }
         }
 
