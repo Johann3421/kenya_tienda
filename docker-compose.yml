@@ -49,42 +49,6 @@ services:
       timeout: 5s
       retries: 5
 
-  # ---- SERVICIOS TEMPORALES DE MIGRACIÓN ----
-
-  mysql_legacy:
-    image: mariadb:10.11
-    container_name: kenya_mysql_legacy
-    environment:
-      MYSQL_DATABASE: kenya_tienda_old
-      MYSQL_USER: kenya_app
-      MYSQL_PASSWORD: mypassword
-      MYSQL_ROOT_PASSWORD: mypassword
-    volumes:
-      # Absorbe el respaldo de MariaDB/MySQL de 1.7MB
-      - ./RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql:/docker-entrypoint-initdb.d/init.sql
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
-  migrator:
-    image: dimitri/pgloader:ccl.latest
-    container_name: kenya_pgloader
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        echo "LOAD DATABASE
-             FROM mysql://kenya_app:mypassword@mysql_legacy:3306/kenya_tienda_old
-             INTO postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db:5432/${DB_DATABASE:-kenya_tienda}
-             WITH include drop, create tables, create indexes, reset sequences;" > /tmp/migracion.load
-        pgloader /tmp/migracion.load
-    depends_on:
-      mysql_legacy:
-        condition: service_healthy
-      db:
-        condition: service_healthy
-
 volumes:
   db_data_v2:
   app_storage:
