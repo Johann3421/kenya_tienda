@@ -9,7 +9,7 @@ class CreateLocationTable extends Migration
     public function up()
     {
         Schema::create('departments', function (Blueprint $table) {
-            $table->char('id', 2)->index();
+            $table->char('id', 2)->primary();
             $table->string('description');
             $table->boolean('active')->default(true);
         });
@@ -43,7 +43,7 @@ class CreateLocationTable extends Migration
         ]);
 
         Schema::create('provinces', function (Blueprint $table) {
-            $table->char('id', 4)->index();
+            $table->char('id', 4)->primary();
             $table->char('department_id', 2);
             $table->string('description');
             $table->boolean('active')->default(true);
@@ -251,7 +251,7 @@ class CreateLocationTable extends Migration
         ]);
 
         Schema::create('districts', function (Blueprint $table) {
-            $table->char('id', 6)->index();
+            $table->char('id', 6)->primary();
             $table->char('province_id', 4);
             $table->string('description');
             $table->boolean('active')->default(true);
