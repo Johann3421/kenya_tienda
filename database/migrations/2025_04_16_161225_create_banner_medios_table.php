@@ -14,7 +14,7 @@ class CreateBannerMediosTable extends Migration
             $table->string('titulo')->nullable();
             $table->string('imagen_path');
             $table->string('url_destino');
-            $table->boolean('activo')->default(true);
+            $table->smallInteger('activo')->default(1);
             $table->integer('orden')->default(0);
             $table->string('posicion')->default('medio'); // Para diferenciar ubicación
             $table->timestamps();

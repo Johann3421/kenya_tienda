@@ -33,7 +33,7 @@ return new class extends Migration
                 $table->text('description')->nullable();
                 $table->unsignedInteger('attempt_threshold')->nullable()->index();
                 $table->date('available_from')->nullable();
-                $table->boolean('is_active')->default(true);
+                $table->smallInteger('is_active')->default(1);
                 $table->timestamps();
             });
         }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('modelo_id')->constrained('modelos')->onDelete('cascade');
             $table->string('nombre_aside', 100);
             $table->json('opciones')->nullable();
-            $table->boolean('activo')->default(true);
+            $table->smallInteger('activo')->default(1);
             $table->timestamps();
 
             // Índices adicionales para mejor rendimiento

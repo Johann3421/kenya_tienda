@@ -11,7 +11,7 @@ class CreateLocationTable extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->char('id', 2)->primary();
             $table->string('description');
-            $table->boolean('active')->default(true);
+            $table->smallInteger('active')->default(1);
         });
 
         DB::table('departments')->insert([
@@ -46,7 +46,7 @@ class CreateLocationTable extends Migration
             $table->char('id', 4)->primary();
             $table->char('department_id', 2);
             $table->string('description');
-            $table->boolean('active')->default(true);
+            $table->smallInteger('active')->default(1);
 
             $table->foreign('department_id')->references('id')->on('departments');
         });
@@ -254,7 +254,7 @@ class CreateLocationTable extends Migration
             $table->char('id', 6)->primary();
             $table->char('province_id', 4);
             $table->string('description');
-            $table->boolean('active')->default(true);
+            $table->smallInteger('active')->default(1);
 
             $table->foreign('province_id')->references('id')->on('provinces');
         });
