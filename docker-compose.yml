@@ -14,8 +14,8 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - DB_DATABASE=${DB_DATABASE:-kenya_tienda}
-      - DB_USERNAME=${DB_USERNAME:-postgres}
-      - DB_PASSWORD=${DB_PASSWORD:-postgres}
+      - DB_USERNAME=${DB_USERNAME:-kenya_app}
+      - DB_PASSWORD=${DB_PASSWORD:-mypassword}
       - APP_NAME=${APP_NAME:-"Kenya Tienda"}
       - APP_ENV=${APP_ENV:-production}
       - APP_KEY=${APP_KEY}
@@ -37,20 +37,51 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_DATABASE:-kenya_tienda}
-      POSTGRES_USER: ${DB_USERNAME:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_USER: ${DB_USERNAME:-kenya_app}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-mypassword}
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-      # ATENCIÓN: Este dump es de MariaDB. Para que Postgres lo importe sin errores, 
-      # deberá ser convertido a dialecto Postgres previamente.
-      - ./RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # ---- SERVICIOS TEMPORALES DE MIGRACIÓN ----
+
+  mysql_legacy:
+    image: mariadb:10.11
+    container_name: kenya_mysql_legacy
+    environment:
+      MYSQL_DATABASE: kenya_tienda_old
+      MYSQL_USER: kenya_app
+      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: mypassword
+    volumes:
+      # Absorbe el respaldo de MariaDB/MySQL de 1.7MB
+      - ./RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  migrator:
+    image: dimitri/pgloader
+    container_name: kenya_pgloader
+    # Comando mágico: Transfiere todo del MySQL legado al PostgreSQL nuevo
+    command: >
+      pgloader 
+      --with "include drop, create tables, create indexes, reset sequences" 
+      mysql://kenya_app:mypassword@mysql_legacy/kenya_tienda_old 
+      postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db/${DB_DATABASE:-kenya_tienda}
+    depends_on:
+      mysql_legacy:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
 volumes:
   db_data:
