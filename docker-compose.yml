@@ -69,12 +69,16 @@ services:
       retries: 10
 
   migrator:
-    image: ubuntu:22.04
+    image: dimitri/pgloader:ccl.latest
     container_name: kenya_pgloader
-    command: >
-      bash -c "apt-get update && apt-get install -y pgloader sqlite3 libsqlite3-0 && 
-      echo 'LOAD DATABASE FROM mysql://kenya_app:mypassword@mysql_legacy/kenya_tienda_old INTO postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db/${DB_DATABASE:-kenya_tienda} WITH include drop, create tables, create indexes, reset sequences;' > /tmp/migracion.load && 
-      pgloader /tmp/migracion.load"
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "LOAD DATABASE
+             FROM mysql://kenya_app:mypassword@mysql_legacy:3306/kenya_tienda_old
+             INTO postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db:5432/${DB_DATABASE:-kenya_tienda}
+             WITH include drop, create tables, create indexes, reset sequences;" > /tmp/migracion.load
+        pgloader /tmp/migracion.load
     depends_on:
       mysql_legacy:
         condition: service_healthy
