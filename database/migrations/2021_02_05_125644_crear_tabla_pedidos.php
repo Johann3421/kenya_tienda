@@ -36,21 +36,11 @@ class CrearTablaPedidos extends Migration
         });
 
         DB::statement("CREATE VIEW view_pedidos AS SELECT
-            SUM(
-                IF(estado_entrega = 'P1', 1, 0)
-            ) AS realizado,
-            SUM(
-                IF(estado_entrega = 'P2', 1, 0)
-            ) AS transito,
-            SUM(
-                IF(estado_entrega = 'P3', 1, 0)
-            ) AS tienda,
-            SUM(
-                IF(estado_entrega = 'P4', 1, 0)
-            ) AS entregado,
-            SUM(
-                IF(estado_entrega = 'P5', 1, 0)
-            ) AS cancelado
+            SUM(CASE WHEN estado_entrega = 'P1' THEN 1 ELSE 0 END) AS realizado,
+            SUM(CASE WHEN estado_entrega = 'P2' THEN 1 ELSE 0 END) AS transito,
+            SUM(CASE WHEN estado_entrega = 'P3' THEN 1 ELSE 0 END) AS tienda,
+            SUM(CASE WHEN estado_entrega = 'P4' THEN 1 ELSE 0 END) AS entregado,
+            SUM(CASE WHEN estado_entrega = 'P5' THEN 1 ELSE 0 END) AS cancelado
             FROM pedidos;
         ");
     }
