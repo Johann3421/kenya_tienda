@@ -42,7 +42,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data_v2:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
@@ -71,11 +71,15 @@ services:
   migrator:
     image: dimitri/pgloader
     container_name: kenya_pgloader
-    # Comando mágico: Transfiere todo del MySQL legado al PostgreSQL nuevo
+    entrypoint: ["/bin/sh", "-c"]
+    # Generamos un archivo de configuración nativo para evitar bugs de la línea de comandos
     command:
-      - pgloader
-      - mysql://kenya_app:mypassword@mysql_legacy/kenya_tienda_old
-      - postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db/${DB_DATABASE:-kenya_tienda}
+      - |
+        echo "LOAD DATABASE
+             FROM mysql://kenya_app:mypassword@mysql_legacy:3306/kenya_tienda_old
+             INTO postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db:5432/${DB_DATABASE:-kenya_tienda}
+             WITH include drop, create tables, create indexes, reset sequences;" > /tmp/migracion.load
+        pgloader /tmp/migracion.load
     depends_on:
       mysql_legacy:
         condition: service_healthy
@@ -83,5 +87,5 @@ services:
         condition: service_healthy
 
 volumes:
-  db_data:
+  db_data_v2:
   app_storage:
