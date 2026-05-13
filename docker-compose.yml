@@ -74,7 +74,6 @@ services:
     # Comando mágico: Transfiere todo del MySQL legado al PostgreSQL nuevo
     command: >
       pgloader 
-      --with "include drop, create tables, create indexes, reset sequences" 
       mysql://kenya_app:mypassword@mysql_legacy/kenya_tienda_old 
       postgresql://${DB_USERNAME:-kenya_app}:${DB_PASSWORD:-mypassword}@db/${DB_DATABASE:-kenya_tienda}
     depends_on:
