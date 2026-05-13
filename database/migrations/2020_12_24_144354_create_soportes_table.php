@@ -42,24 +42,12 @@ class CreateSoportesTable extends Migration
         });
 
         DB::statement("CREATE VIEW view_soportes AS SELECT
-            SUM(
-                IF(estado = 'E1', 1, 0)
-            ) AS pendiente,
-            SUM(
-                IF(estado = 'E2', 1, 0)
-            ) AS diagnostico,
-            SUM(
-                IF(estado = 'E3', 1, 0)
-            ) AS sinsolucion,
-            SUM(
-                IF(estado = 'E4', 1, 0)
-            ) AS reparando,
-            SUM(
-                IF(estado = 'E5', 1, 0)
-            ) AS listo,
-            SUM(
-                IF(estado = 'E6', 1, 0)
-            ) AS entregado
+            SUM(CASE WHEN estado = 'E1' THEN 1 ELSE 0 END) AS pendiente,
+            SUM(CASE WHEN estado = 'E2' THEN 1 ELSE 0 END) AS diagnostico,
+            SUM(CASE WHEN estado = 'E3' THEN 1 ELSE 0 END) AS sinsolucion,
+            SUM(CASE WHEN estado = 'E4' THEN 1 ELSE 0 END) AS reparando,
+            SUM(CASE WHEN estado = 'E5' THEN 1 ELSE 0 END) AS listo,
+            SUM(CASE WHEN estado = 'E6' THEN 1 ELSE 0 END) AS entregado
             FROM soportes;
         ");
     }
