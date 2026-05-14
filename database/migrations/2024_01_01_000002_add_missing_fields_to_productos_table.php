@@ -22,6 +22,9 @@ return new class extends Migration
             if (!Schema::hasColumn('productos', 'Tipo de panel')) {
                 $table->string('Tipo de panel')->nullable();
             }
+            if (!Schema::hasColumn('productos', 'Modelo')) {
+                $table->string('Modelo')->nullable();
+            }
         });
     }
 
@@ -33,7 +36,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('productos', function (Blueprint $table) {
-            $table->dropColumn(['Tipo de suministro', 'Tipo de panel']);
+            $table->dropColumn(['Tipo de suministro', 'Tipo de panel', 'Modelo']);
         });
     }
 };
