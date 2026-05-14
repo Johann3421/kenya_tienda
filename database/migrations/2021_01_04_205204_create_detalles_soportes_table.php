@@ -18,7 +18,7 @@ class CreateDetallesSoportesTable extends Migration
             $table->foreignId('soporte_id')->references('id')->on('soportes')->onDelete('cascade');
             $table->string('descripcion');
             $table->double('precio', 9, 2)->default(0.00);
-            $table->double('descuento', 9, 2)->default(0.00);
+            $table->string('descuento')->nullable();
             $table->smallInteger('cantidad');
             $table->double('importe', 9, 2)->default(0.00);
             $table->timestamps();
