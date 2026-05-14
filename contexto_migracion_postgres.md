@@ -48,6 +48,10 @@ Durante el volcado, se detectó que la base de datos MySQL tenía tablas que **n
 - **`especificaciones`**: La tabla existía en MySQL y era usada por el modelo `Especificacion.php` y múltiples controladores, pero no tenía archivo de migración. Se creó manualmente la migración `2024_01_01_000000_create_especificaciones_table.php` definiendo la llave foránea hacia `productos`.
 - **`pagina_estados`**: Otra tabla huérfana en las migraciones pero presente en el volcado y en uso en la aplicación. Se creó su respectiva migración `2024_01_01_000001_create_pagina_estados_table.php` para almacenar las rutas, nombres y estados de las páginas.
 
+### B. Columnas Faltantes (Añadidas directamente en MySQL)
+Al igual que las tablas huérfanas, algunos administradores añadieron columnas a tablas existentes usando phpMyAdmin o comandos directos sin dejar rastro en las migraciones de Laravel. Postgres es estricto y arroja un error si el volcado de MySQL contiene columnas que no existen en su esquema.
+- **Tabla `productos`**: Faltaban las columnas `"Tipo de suministro"` y `"Tipo de panel"`. Se creó la migración correctiva `2024_01_01_000002_add_missing_fields_to_productos_table.php` para agregarlas al esquema antes de insertar los datos.
+
 ---
 
 ## 4. Estado Actual y Procedimiento de Ejecución
