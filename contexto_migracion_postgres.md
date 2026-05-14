@@ -46,6 +46,7 @@ Archivo parcheado (`double` -> `string`):
 Durante el volcado, se detectó que la base de datos MySQL tenía tablas que **nunca fueron declaradas en las migraciones de Laravel**. PostgreSQL necesita que las tablas existan antes de inyectar datos.
 
 - **`especificaciones`**: La tabla existía en MySQL y era usada por el modelo `Especificacion.php` y múltiples controladores, pero no tenía archivo de migración. Se creó manualmente la migración `2024_01_01_000000_create_especificaciones_table.php` definiendo la llave foránea hacia `productos`.
+- **`pagina_estados`**: Otra tabla huérfana en las migraciones pero presente en el volcado y en uso en la aplicación. Se creó su respectiva migración `2024_01_01_000001_create_pagina_estados_table.php` para almacenar las rutas, nombres y estados de las páginas.
 
 ---
 
