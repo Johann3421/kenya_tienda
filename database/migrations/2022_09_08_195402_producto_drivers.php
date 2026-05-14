@@ -28,6 +28,8 @@ class ProductoDrivers extends Migration
             $table->char('activo', 2)->default('Si')->comment("Si=si, No=no");
             $table->text('link');
             $table->foreignId('producto_id')->references('id')->on('productos')->onDelete('restrict');
+            $table->string('serie')->nullable();
+            $table->text('link_driver')->nullable();
             $table->timestamps();
         });
 

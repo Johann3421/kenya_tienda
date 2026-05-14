@@ -51,6 +51,7 @@ Durante el volcado, se detectó que la base de datos MySQL tenía tablas que **n
 ### B. Columnas Faltantes (Añadidas directamente en MySQL)
 Al igual que las tablas huérfanas, algunos administradores añadieron columnas a tablas existentes usando phpMyAdmin o comandos directos sin dejar rastro en las migraciones de Laravel. Postgres es estricto y arroja un error si el volcado de MySQL contiene columnas que no existen en su esquema.
 - **Tabla `productos`**: Faltaban múltiples columnas (14 en total) que habían sido añadidas con nombres irregulares, mayúsculas y espacios: `"Tipo de suministro"`, `"Tipo de panel"`, `"Modelo"`, `"Color"`, `"Descripción"`, `"Rendimiento"`, `"Garantia"`, `"Sistema RAEE"`, `"Certificaciones"`, `"Empaque"`, `"Número de parte"`, `"Dimensiones"`, `"especificaciones_json"` y `"filtros_ids"`. Se modificó la migración correctiva `2024_01_01_000002_add_missing_fields_to_productos_table.php` declarándolas todas como `text` para agregarlas al esquema antes de insertar los datos.
+- **Tabla `producto_drivers`**: Faltaban las columnas `"serie"` y `"link_driver"`. Se agregaron directamente a la migración original `2022_09_08_195402_producto_drivers.php`.
 
 ---
 
