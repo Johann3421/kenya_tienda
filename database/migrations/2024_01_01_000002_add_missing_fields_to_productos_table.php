@@ -14,16 +14,18 @@ return new class extends Migration
     public function up()
     {
         Schema::table('productos', function (Blueprint $table) {
-            // Se agregan campos que existían en la base de datos MySQL original
-            // pero que nunca se registraron en ninguna migración de Laravel.
-            if (!Schema::hasColumn('productos', 'Tipo de suministro')) {
-                $table->string('Tipo de suministro')->nullable();
-            }
-            if (!Schema::hasColumn('productos', 'Tipo de panel')) {
-                $table->string('Tipo de panel')->nullable();
-            }
-            if (!Schema::hasColumn('productos', 'Modelo')) {
-                $table->string('Modelo')->nullable();
+            // Columnas agregadas manualmente en MySQL legacy
+            $columnas = [
+                'Tipo de suministro', 'Tipo de panel', 'Modelo', 'Color', 
+                'Descripción', 'Rendimiento', 'Garantia', 'Sistema RAEE', 
+                'Certificaciones', 'Empaque', 'Número de parte', 'Dimensiones', 
+                'especificaciones_json', 'filtros_ids'
+            ];
+
+            foreach ($columnas as $col) {
+                if (!Schema::hasColumn('productos', $col)) {
+                    $table->text($col)->nullable();
+                }
             }
         });
     }
@@ -36,7 +38,12 @@ return new class extends Migration
     public function down()
     {
         Schema::table('productos', function (Blueprint $table) {
-            $table->dropColumn(['Tipo de suministro', 'Tipo de panel', 'Modelo']);
+            $table->dropColumn([
+                'Tipo de suministro', 'Tipo de panel', 'Modelo', 'Color', 
+                'Descripción', 'Rendimiento', 'Garantia', 'Sistema RAEE', 
+                'Certificaciones', 'Empaque', 'Número de parte', 'Dimensiones', 
+                'especificaciones_json', 'filtros_ids'
+            ]);
         });
     }
 };
