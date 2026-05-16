@@ -14,7 +14,9 @@ class CreateDriverlinkTable extends Migration
     public function up()
     {
         Schema::table('producto_drivers', function (Blueprint $table) {
-            $table->string('link_driver')->nullable();
+            if (!Schema::hasColumn('producto_drivers', 'link_driver')) {
+                $table->string('link_driver')->nullable();
+            }
         });
     }
 
