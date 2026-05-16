@@ -42,7 +42,13 @@ COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/php.ini /usr/local/etc/php/conf.d/99-kenya.ini
 COPY docker/entrypoint.sh /usr/local/bin/kenya-entrypoint
 
-RUN cp -r storage/app/public /var/www/initial_storage_public
+RUN cp -r storage/app/public /var/www/initial_storage_public \
+    && echo "=== ROOT OF INITIAL STORAGE ===" > public/debug_docker.txt \
+    && ls -la /var/www/initial_storage_public >> public/debug_docker.txt \
+    && echo -e "\n=== BANNERS ===" >> public/debug_docker.txt \
+    && ls -la /var/www/initial_storage_public/BANNERS >> public/debug_docker.txt || echo "BANNERS dir missing" >> public/debug_docker.txt \
+    && echo -e "\n=== MODELOS 11 ===" >> public/debug_docker.txt \
+    && ls -la /var/www/initial_storage_public/MODELOS/11 >> public/debug_docker.txt || echo "MODELOS 11 dir missing" >> public/debug_docker.txt
 
 RUN composer dump-autoload --optimize \
     && chmod +x /usr/local/bin/kenya-entrypoint \
