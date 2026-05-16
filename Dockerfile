@@ -42,6 +42,8 @@ COPY docker/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/php.ini /usr/local/etc/php/conf.d/99-kenya.ini
 COPY docker/entrypoint.sh /usr/local/bin/kenya-entrypoint
 
+RUN cp -r storage/app/public /var/www/initial_storage_public
+
 RUN composer dump-autoload --optimize \
     && chmod +x /usr/local/bin/kenya-entrypoint \
     && mkdir -p storage/app/public storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
