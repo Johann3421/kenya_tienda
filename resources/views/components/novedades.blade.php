@@ -256,10 +256,18 @@
             <div class="novedades-carousel-track">
                 @foreach ($novedades as $prod)
                     @php
-                        // SOLO usa la imagen del modelo (ignora imagen_1 completamente)
-                        $imagen = $prod->modelo && $prod->modelo->img_mod
-                            ? asset('storage/' . $prod->modelo->img_mod)
-                            : asset('producto.jpg');
+                        // Prioridad de imagen: imagen_1 > imagen (antiguo) > modelo->img_mod > categoria->img_cat > default
+                        if (!empty($prod->imagen_1)) {
+                            $imagen = asset('storage/' . $prod->imagen_1);
+                        } elseif (!empty($prod->imagen)) {
+                            $imagen = asset('storage/' . $prod->imagen);
+                        } elseif ($prod->modelo && !empty($prod->modelo->img_mod)) {
+                            $imagen = asset('storage/' . $prod->modelo->img_mod);
+                        } elseif ($prod->getCategoria && !empty($prod->getCategoria->img_cat)) {
+                            $imagen = asset('storage/' . $prod->getCategoria->img_cat);
+                        } else {
+                            $imagen = asset('producto.jpg');
+                        }
                     @endphp
 
                     <div class="novedades-carousel-item filter-{{ $prod->categoria_id }}">

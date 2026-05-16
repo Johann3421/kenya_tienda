@@ -84,4 +84,8 @@ public function filtros()
         ->toArray();
 }
 
+    // NOTE: removed accessor getImageUrlAttribute per revert request.
+    // Image selection is handled in the views to preserve previous behaviour
+    // (checking imagen_1, imagen, modelo->img_mod, getCategoria->img_cat, then default).
+
 }

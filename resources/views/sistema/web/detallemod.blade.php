@@ -109,14 +109,17 @@
                                 <div class="contorno">
                                     <div class="portfolio-wrap" style="margin: 0 auto;">
     @php
-        $isModelo10 = $prod->modelo && $prod->modelo->id == 10;
-        $isTonner = $prod->modelo && stripos($prod->modelo->descripcion ?? '', 'tonner') !== false;
-
-        $img = ($isModelo10 || $isTonner)
-            ? ($prod->imagen_1 ? asset('storage/' . $prod->imagen_1) : asset('producto.jpg'))
-            : ($prod->modelo && $prod->modelo->img_mod
-                ? asset('storage/' . $prod->modelo->img_mod)
-                : asset('producto.jpg'));
+        if (!empty($prod->imagen_1)) {
+            $img = asset('storage/' . $prod->imagen_1);
+        } elseif (!empty($prod->imagen)) {
+            $img = asset('storage/' . $prod->imagen);
+        } elseif ($prod->modelo && !empty($prod->modelo->img_mod)) {
+            $img = asset('storage/' . $prod->modelo->img_mod);
+        } elseif ($prod->getCategoria && !empty($prod->getCategoria->img_cat)) {
+            $img = asset('storage/' . $prod->getCategoria->img_cat);
+        } else {
+            $img = asset('producto.jpg');
+        }
     @endphp
 
     <img src="{{ $img }}"

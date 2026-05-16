@@ -116,36 +116,26 @@
     <br>
     <div class="row">
         <div class="col-lg-4 mb-5">
-            @php
-                // Detección de modelos tonner (ID 10 o descripción contiene 'tonner')
-                $isTonner = $producto->modelo && (
-                    $producto->modelo->id == 10 ||
-                    stripos($producto->modelo->descripcion ?? '', 'tonner') !== false
-                );
+                @php
+                    // Prioridad de imagen: imagen_1 > imagen (antiguo) > modelo->img_mod > categoria->img_cat > default
+                    if (!empty($producto->imagen_1)) {
+                        $imagen = asset('storage/' . $producto->imagen_1);
+                    } elseif (!empty($producto->imagen)) {
+                        $imagen = asset('storage/' . $producto->imagen);
+                    } elseif ($producto->modelo && !empty($producto->modelo->img_mod)) {
+                        $imagen = asset('storage/' . $producto->modelo->img_mod);
+                    } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_cat)) {
+                        $imagen = asset('storage/' . $producto->getCategoria->img_cat);
+                    } else {
+                        $imagen = asset('producto.jpg');
+                    }
+                    $altText = $producto->nombre ?? 'Producto';
+                @endphp
 
-                // Lógica de imágenes priorizada
-                $imagen = $isTonner
-                    ? ($producto->imagen_1
-                        ? asset('storage/' . $producto->imagen_1)
-                        : asset('producto.jpg'))
-                    : ($producto->modelo && $producto->modelo->img_mod
-                        ? asset('storage/' . $producto->modelo->img_mod)
-                        : ($producto->imagen_1
-                            ? asset('storage/' . $producto->imagen_1)
-                            : asset('producto.jpg')));
-
-                // Texto alt mejorado
-                $altText = $isTonner
-                    ? "Imagen del producto " . $producto->nombre
-                    : ($producto->modelo
-                        ? "Imagen del modelo " . ($producto->modelo->nombre ?? '')
-                        : "Imagen del producto " . $producto->nombre);
-            @endphp
-
-            <div class="product-image-container">
-                <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}"
-                     onerror="this.src='{{ asset('producto.jpg') }}'">
-            </div>
+                <div class="product-image-container">
+                    <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}"
+                         onerror="this.src='{{ asset('producto.jpg') }}'">
+                </div>
         </div>
 
         <div class="col-lg-8" id="producto_detalle">

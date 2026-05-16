@@ -348,15 +348,8 @@ public function subirFichaTecnica(Request $request, $producto)
             return response()->json($validator->errors()->all(), 422);
         }
 
-        $imagen_ficha = $request->file('imagen_ficha');
-        $nombre_ficha = preg_replace('([^A-Za-z0-9])', '', $request->nombre_ficha) . '.' . $imagen_ficha->extension();
-        $imagen_ficha = $request->file('imagen_ficha')->storeAs('/', $nombre_ficha, 'public');
-
-        $imagen = $request->file('imagen');
-        $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre) . '.' . $imagen->extension();
-        $imagen = $request->file('imagen')->storeAs('/', $nombre, 'public');
-
-        Producto::create([
+        // Primero creamos el producto sin las rutas de archivo para obtener el ID
+        $producto = Producto::create([
             'nombre'                => mb_strtoupper($request->nombre),
             'nombre_secundario'     => mb_strtoupper($request->nombre_secundario),
             'descripcion'           => mb_strtoupper($request->descripcion),
@@ -372,29 +365,49 @@ public function subirFichaTecnica(Request $request, $producto)
             'sistema_operativo'     => $request->sistema_operativo,
             'unidad_optica'         => $request->unidad_optica,
             'teclado'               => $request->teclado,
-            'ficha'                 => $nombre_ficha,
             'mouse'                 => $request->mouse,
             'suite_ofimatica'       => $request->suite_ofimatica,
             'garantia_de_fabrica'   => $request->garantia_de_fabrica,
             'empaque_de_fabrica'    => $request->empaque_de_fabrica,
             'certificacion'         => $request->certificacion,
-            //'unidad'                => $request->unidad,
-            //'moneda'                => mb_strtoupper($request->moneda),
-            //'precio_unitario'       => $request->precio_unitario,
             'tipo_afectacion'       => $request->tipo_afectacion,
             'categoria'             => mb_strtoupper($request->categoria),
             'marca'                 => mb_strtoupper($request->marca),
             'modelo_id'             => $request->modelo_id,
             'cantidad_por_precio'   => $request->cantidad_por_precio == 'true' ? 1 : 0,
-            //'incluye_igv'           => $request->incluye_igv == 'true' ? 1 : 0,
             'codigo_interno'        => mb_strtoupper($request->codigo_interno),
             'codigo_sunat'          => mb_strtoupper($request->codigo_sunat),
             'maneja_lotes'          => $request->maneja_lotes == 'true' ? 1 : 0,
             'maneja_series'         => $request->maneja_series == 'true' ? 1 : 0,
             'incluye_percepcion'    => $request->incluye_percepcion == 'true' ? 1 : 0,
             'linea_producto'        => mb_strtoupper($request->linea_producto),
-            'imagen'                => $nombre
+            'imagen'                => null,
+            'ficha'                 => null,
+            'ficha_tecnica'         => null,
         ]);
+
+        // Carpeta por producto
+        $route = 'PRODUCTOS/' . $producto->id;
+
+        // Subir PDF de ficha (si existe)
+        if ($request->hasFile('imagen_ficha')) {
+            $fileFicha = $request->file('imagen_ficha');
+            $nombre_ficha = 'FICHA_' . $producto->id . '_' . Str::random(8) . '.' . $fileFicha->extension();
+            Storage::disk('public')->putFileAs('pdfs', $fileFicha, $nombre_ficha);
+            $producto->ficha = $nombre_ficha;
+            $producto->ficha_tecnica = 'pdfs/' . $nombre_ficha;
+        }
+
+        // Subir imagen principal (si existe)
+        if ($request->hasFile('imagen')) {
+            $fileImg = $request->file('imagen');
+            $extension = $fileImg->extension();
+            $file_name = 'IMG_' . Str::random(12) . '.' . $extension;
+            Storage::disk('public')->putFileAs($route, $fileImg, $file_name);
+            $producto->imagen = $route . '/' . $file_name;
+        }
+
+        $producto->save();
     }
 
     public function todos(Request $request)
@@ -483,6 +496,9 @@ public function subirFichaTecnica(Request $request, $producto)
         }
 
         $producto = Producto::find($request->id);
+        // Carpeta específica por producto
+        $route = 'PRODUCTOS/' . $producto->id;
+
         if ($request->hasFile('ficha')) {
             $validator = \Validator::make($request->all(), [
                 'ficha' => 'nullable|ficha_t'
@@ -490,17 +506,15 @@ public function subirFichaTecnica(Request $request, $producto)
             if ($validator->fails()) {
                 return response()->json($validator->errors()->all(), 422);
             }
-
-            if (\Storage::disk('public')->exists($producto->ficha)) {
-
+            if ($producto->ficha && \Storage::disk('public')->exists($producto->ficha)) {
                 \Storage::disk('public')->delete($producto->ficha);
             }
 
-            $ficha = $request->file('ficha');
-            $nombre_ficha = preg_replace('([^A-Za-z0-9])', '', $request->nombre_ficha) . '.' . $ficha->extension();
-            $ficha = $request->file('ficha')->storeAs('/', $nombre_ficha, 'public');
-
+            $fileFicha = $request->file('ficha');
+            $nombre_ficha = 'FICHA_' . $producto->id . '_' . Str::random(8) . '.' . $fileFicha->extension();
+            Storage::disk('public')->putFileAs('pdfs', $fileFicha, $nombre_ficha);
             $producto->ficha = $nombre_ficha;
+            $producto->ficha_tecnica = 'pdfs/' . $nombre_ficha;
         }
 
         if ($request->hasFile('imagen')) {
@@ -513,16 +527,15 @@ public function subirFichaTecnica(Request $request, $producto)
                 return response()->json($validator->errors()->all(), 422);
             }
 
-            if (\Storage::disk('public')->exists($producto->imagen)) {
-
+            if ($producto->imagen && \Storage::disk('public')->exists($producto->imagen)) {
                 \Storage::disk('public')->delete($producto->imagen);
             }
 
-            $imagen = $request->file('imagen');
-            $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre) . '.' . $imagen->extension();
-            $imagen = $request->file('imagen')->storeAs('/', $nombre, 'public');
-
-            $producto->imagen = $nombre;
+            $fileImg = $request->file('imagen');
+            $extension = $fileImg->extension();
+            $file_name = 'IMG_' . Str::random(12) . '.' . $extension;
+            Storage::disk('public')->putFileAs($route, $fileImg, $file_name);
+            $producto->imagen = $route . '/' . $file_name;
         }
 
         $producto->nombre                = mb_strtoupper($request->nombre);

@@ -171,12 +171,18 @@
                                             (isset($producto->modelo->descripcion) && stripos($producto->modelo->descripcion, 'tonner') !== false)
                                         );
 
-                                        // Lógica de imágenes
-                                        $img = $isTonner
-                                            ? ($producto->imagen_1 ? asset('storage/'.$producto->imagen_1) : asset('images/products/default.jpg'))
-                                            : ($producto->modelo && $producto->modelo->img_mod
-                                                ? asset('storage/'.$producto->modelo->img_mod)
-                                                : asset('images/products/default.jpg'));
+                                        // Prioridad de imagen: imagen_1 > imagen > modelo->img_mod > categoria->img_cat > default
+                                        if (!empty($producto->imagen_1)) {
+                                            $img = asset('storage/' . $producto->imagen_1);
+                                        } elseif (!empty($producto->imagen)) {
+                                            $img = asset('storage/' . $producto->imagen);
+                                        } elseif ($producto->modelo && !empty($producto->modelo->img_mod)) {
+                                            $img = asset('storage/' . $producto->modelo->img_mod);
+                                        } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_cat)) {
+                                            $img = asset('storage/' . $producto->getCategoria->img_cat);
+                                        } else {
+                                            $img = asset('producto.jpg');
+                                        }
                                     @endphp
 
                                     <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}" class="img-fluid">
