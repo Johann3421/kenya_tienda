@@ -8,7 +8,7 @@ mkdir -p storage/app/public storage/framework/cache storage/framework/sessions s
 # Si el volumen está vacío o le faltan imágenes (porque Docker Compose lo ocultó), copiarlas de vuelta
 if [ -d "/var/www/initial_storage_public" ]; then
     echo "Sincronizando imágenes y archivos predeterminados al volumen persistente..."
-    cp -rn /var/www/initial_storage_public/. storage/app/public/ || true
+    cp -ru /var/www/initial_storage_public/. storage/app/public/ || true
 fi
 
 chown -R www-data:www-data storage bootstrap/cache || true
