@@ -14,8 +14,12 @@ class AddFallaDiagnosticoToSoportesTable extends Migration
     public function up()
     {
         Schema::table('soportes', function (Blueprint $table) {
-            $table->string('falla')->nullable()->after('pieza_falla');
-            $table->string('diagnostico')->nullable()->after('falla');
+            if (!Schema::hasColumn('soportes', 'falla')) {
+                $table->string('falla')->nullable();
+            }
+            if (!Schema::hasColumn('soportes', 'diagnostico')) {
+                $table->string('diagnostico')->nullable();
+            }
         });
     }
 

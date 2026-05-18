@@ -14,9 +14,15 @@ class AddPiezasRetiradasToSoportesTable extends Migration
     public function up()
     {
         Schema::table('soportes', function (Blueprint $table) {
-            $table->string('pieza_retirada', 255)->nullable()->after('serie');
-            $table->string('pieza_serie', 100)->nullable()->after('pieza_retirada');
-            $table->text('pieza_falla')->nullable()->after('pieza_serie');
+            if (!Schema::hasColumn('soportes', 'pieza_retirada')) {
+                $table->string('pieza_retirada', 255)->nullable();
+            }
+            if (!Schema::hasColumn('soportes', 'pieza_serie')) {
+                $table->string('pieza_serie', 100)->nullable();
+            }
+            if (!Schema::hasColumn('soportes', 'pieza_falla')) {
+                $table->text('pieza_falla')->nullable();
+            }
         });
     }
 
