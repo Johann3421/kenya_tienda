@@ -240,21 +240,32 @@
 
                                 <div class="product-image">
                                     @php
-                                        // Verificar si es modelo tonner (ID 10 o descripción contiene 'tonner')
-                                        $isTonner = $producto->modelo && (
-                                            $producto->modelo->id == 10 ||
-                                            (isset($producto->modelo->descripcion) && stripos($producto->modelo->descripcion, 'tonner') !== false)
-                                        );
+                                        // Imagen del modelo como fallback si la imagen del producto falla
+                                        $modelImg = asset('producto.jpg');
+                                        if ($producto->modelo && !empty($producto->modelo->img_mod)) {
+                                            $modelImg = asset('storage/' . $producto->modelo->img_mod);
+                                        } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_cat)) {
+                                            $modelImg = asset('storage/' . $producto->getCategoria->img_cat);
+                                        }
 
-                                        // Lógica de imágenes
-                                        $img = $isTonner
-                                            ? ($producto->imagen_1 ? asset('storage/'.$producto->imagen_1) : asset('images/products/default.jpg'))
-                                            : ($producto->modelo && $producto->modelo->img_mod
-                                                ? asset('storage/'.$producto->modelo->img_mod)
-                                                : asset('images/products/default.jpg'));
+                                        if (!empty($producto->imagen_1)) {
+                                            // Tiene imagen propia – intenta storage/ primero (Docker), luego public/ (legacy)
+                                            $img    = asset('storage/' . $producto->imagen_1);
+                                            $imgFb  = asset($producto->imagen_1);
+                                            $imgFb2 = $modelImg;
+                                        } elseif (!empty($producto->imagen)) {
+                                            $img    = asset('storage/' . $producto->imagen);
+                                            $imgFb  = $modelImg;
+                                            $imgFb2 = asset('producto.jpg');
+                                        } else {
+                                            $img    = $modelImg;
+                                            $imgFb  = asset('producto.jpg');
+                                            $imgFb2 = asset('producto.jpg');
+                                        }
                                     @endphp
 
-                                    <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}" class="img-fluid">
+                                    <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}" class="img-fluid"
+                                        onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
 
                                     <div class="product-actions">
                                         <button class="quick-view" data-id="{{ $producto->id }}">
