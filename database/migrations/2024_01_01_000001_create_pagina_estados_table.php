@@ -13,14 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pagina_estados', function (Blueprint $table) {
-            $table->id();
-            $table->string('ruta')->nullable();
-            $table->string('nombre')->nullable();
-            $table->string('estado')->default('activo');
-            $table->timestamp('fin_mantenimiento')->nullable();
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('pagina_estados')) {
+            Schema::create('pagina_estados', function (Blueprint $table) {
+                $table->id();
+                $table->string('ruta')->nullable();
+                $table->string('nombre')->nullable();
+                $table->string('estado')->default('activo');
+                $table->timestamp('fin_mantenimiento')->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**

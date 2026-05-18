@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('especificaciones', function (Blueprint $table) {
-            $table->id();
-            $table->string('campo')->nullable();
-            $table->text('descripcion')->nullable();
-            $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('especificaciones')) {
+            Schema::create('especificaciones', function (Blueprint $table) {
+                $table->id();
+                $table->string('campo')->nullable();
+                $table->text('descripcion')->nullable();
+                $table->foreignId('producto_id')->constrained('productos')->onDelete('cascade');
+                $table->timestamps();
+            });
+        }
     }
 
     /**
