@@ -1205,7 +1205,8 @@
                                                     <label class="image_show" for="file_edit_1" title="Buscar Imagen"
                                                         v-if="producto.imagen_1">
                                                         <img id="show_image_1" class="img-fluid"
-                                                            :src="'storage/' + producto.imagen_1">
+                                                            :src="'/' + producto.imagen_1"
+                                                            v-on:error="(function(e){ if(!e.target.dataset.fb){ e.target.dataset.fb=1; e.target.src='/storage/'+producto.imagen_1; } else { e.target.src='{{ asset('producto.jpg') }}'; } })($event)">
                                                         <input type="file" id="file_edit_1" style="display: none;"
                                                             v-on:change="changeImagen($event, 1)" accept="image/*">
                                                     </label>
@@ -1754,7 +1755,8 @@
                                                     <label class="image_show" for="file_edit_1" title="Buscar Imagen"
                                                         v-if="producto.imagen_1">
                                                         <img id="show_image_1" class="img-fluid"
-                                                            :src="'storage/' + producto.imagen_1">
+                                                            :src="'/' + producto.imagen_1"
+                                                            v-on:error="(function(e){ if(!e.target.dataset.fb){ e.target.dataset.fb=1; e.target.src='/storage/'+producto.imagen_1; } else { e.target.src='{{ asset('producto.jpg') }}'; } })($event)">
                                                         <input type="file" id="file_edit_1" style="display: none;"
                                                             v-on:change="changeImagen($event, 1)" accept="image/*">
                                                     </label>

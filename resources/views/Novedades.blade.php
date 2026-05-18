@@ -164,28 +164,33 @@
                                 @endif
 
                                 <div class="product-image">
+                                    {{-- CPANEL: INICIO - BLOQUE A COPIAR A CPANEL (resources/views/Novedades.blade.php) --}}
                                     @php
-                                        // Verificar si es modelo tonner (ID 10 o descripción contiene 'tonner')
-                                        $isTonner = $producto->modelo && (
-                                            $producto->modelo->id == 10 ||
-                                            (isset($producto->modelo->descripcion) && stripos($producto->modelo->descripcion, 'tonner') !== false)
-                                        );
-
-                                        // Prioridad de imagen: imagen_1 > imagen > modelo->img_mod > categoria->img_cat > default
-                                        if (!empty($producto->imagen_1)) {
-                                            $img = asset('storage/' . $producto->imagen_1);
-                                        } elseif (!empty($producto->imagen)) {
-                                            $img = asset('storage/' . $producto->imagen);
-                                        } elseif ($producto->modelo && !empty($producto->modelo->img_mod)) {
-                                            $img = asset('storage/' . $producto->modelo->img_mod);
+                                        // Imagen del modelo como fallback si la imagen del producto falla
+                                        $modelImg = asset('producto.jpg');
+                                        if ($producto->modelo && !empty($producto->modelo->img_mod)) {
+                                            $modelImg = asset('storage/' . $producto->modelo->img_mod);
                                         } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_cat)) {
-                                            $img = asset('storage/' . $producto->getCategoria->img_cat);
+                                            $modelImg = asset('storage/' . $producto->getCategoria->img_cat);
+                                        }
+                                        if (!empty($producto->imagen_1)) {
+                                            $img    = asset($producto->imagen_1);
+                                            $imgFb  = asset('storage/' . $producto->imagen_1);
+                                            $imgFb2 = $modelImg;
+                                        } elseif (!empty($producto->imagen)) {
+                                            $img    = asset('storage/' . $producto->imagen);
+                                            $imgFb  = $modelImg;
+                                            $imgFb2 = asset('producto.jpg');
                                         } else {
-                                            $img = asset('producto.jpg');
+                                            $img    = $modelImg;
+                                            $imgFb  = asset('producto.jpg');
+                                            $imgFb2 = asset('producto.jpg');
                                         }
                                     @endphp
+                                    {{-- CPANEL: FIN - BLOQUE A COPIAR A CPANEL (resources/views/Novedades.blade.php) --}}
 
-                                    <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}" class="img-fluid">
+                                     <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}" class="img-fluid"
+                                         onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
 
                                     <div class="product-actions">
                                         <button class="quick-view" data-id="{{ $producto->id }}">

@@ -401,6 +401,243 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function() {
 Route::get('/producto/buscar-especificaciones', [ProductoController::class, 'buscarPorModeloONroParte']);
 
 
+// ============================================================
+// DIAGNÓSTICO DE STORAGE/IMÁGENES — BORRAR DESPUÉS DE USAR
+// Acceder a: /diagnostico-storage
+// ============================================================
+Route::get('/diagnostico-storage', function() {
+    $lines = [];
+    $ok  = fn($msg) => "<li style='color:green'>✅ $msg</li>";
+    $err = fn($msg) => "<li style='color:red'>❌ $msg</li>";
+    $inf = fn($msg) => "<li style='color:#555'>ℹ️ $msg</li>";
+
+    $lines[] = "<h2>1. PHP / Upload settings</h2><ul>";
+    $lines[] = $inf("upload_max_filesize = " . ini_get('upload_max_filesize'));
+    $lines[] = $inf("post_max_size = " . ini_get('post_max_size'));
+    $lines[] = $inf("file_uploads = " . ini_get('file_uploads'));
+    $lines[] = $inf("APP_ENV = " . app()->environment());
+    $lines[] = "</ul>";
+
+    // 2. Rutas físicas
+    $storagePath   = storage_path('app/public');
+    $publicStorage = public_path('storage');
+    $lines[] = "<h2>2. Rutas de storage</h2><ul>";
+    $lines[] = $inf("storage_path('app/public') → $storagePath");
+    $lines[] = $inf("public_path('storage') → $publicStorage");
+
+    // 3. ¿Existe storage/app/public?
+    if (is_dir($storagePath)) {
+        $lines[] = $ok("storage/app/public existe");
+    } else {
+        $lines[] = $err("storage/app/public NO existe — crear carpeta");
+    }
+
+    // 4. ¿Es escribible?
+    if (is_writable($storagePath)) {
+        $lines[] = $ok("storage/app/public es escribible");
+    } else {
+        $lines[] = $err("storage/app/public NO es escribible — revisar permisos (chmod 755 o 775)");
+    }
+
+    // 5. ¿public/storage es symlink correcto?
+    if (is_link($publicStorage)) {
+        $target = readlink($publicStorage);
+        if (realpath($target) === realpath($storagePath) || $target === $storagePath) {
+            $lines[] = $ok("public/storage es symlink → $target");
+        } else {
+            $lines[] = $err("public/storage es symlink pero apunta a: $target (esperado: $storagePath)");
+        }
+    } elseif (is_dir($publicStorage)) {
+        $lines[] = $err("public/storage es directorio real (no symlink) — puede que storage:link no funcione en este hosting");
+        $lines[] = $inf("Solución en cPanel: copiar contenido de storage/app/public a public/storage manualmente");
+    } else {
+        $lines[] = $err("public/storage NO existe — ejecutar php artisan storage:link o crear manualmente");
+    }
+    $lines[] = "</ul>";
+
+    // 6. Carpeta PRODUCTOS dentro de storage
+    $productosPath = $storagePath . '/PRODUCTOS';
+    $lines[] = "<h2>3. Directorio PRODUCTOS</h2><ul>";
+    if (is_dir($productosPath)) {
+        $lines[] = $ok("storage/app/public/PRODUCTOS existe");
+        // Listar primeras 5 subcarpetas
+        $subs = array_slice(glob($productosPath . '/*', GLOB_ONLYDIR), 0, 5);
+        foreach ($subs as $s) {
+            $lines[] = $inf("Carpeta: " . basename($s));
+        }
+    } else {
+        $lines[] = $err("storage/app/public/PRODUCTOS NO existe — aún no se subió ninguna imagen por el nuevo código");
+    }
+
+    // Buscar también double-public path
+    $doublePublicPath = $storagePath . '/public/PRODUCTOS';
+    if (is_dir($doublePublicPath)) {
+        $lines[] = $err("Encontrado: storage/app/public/public/PRODUCTOS — ¡BUG de doble 'public'! Los archivos están aquí en vez de en PRODUCTOS/");
+        $lines[] = $inf("Mover archivos: mv storage/app/public/public/* storage/app/public/");
+    }
+    $lines[] = "</ul>";
+
+    // 7. Últimos 5 productos con imagen en BD
+    $lines[] = "<h2>4. Últimos productos con imagen (BD vs disco)</h2><ul>";
+
+    // Detectar qué columnas de imagen existen
+    $cols = \Illuminate\Support\Facades\Schema::getColumnListing('productos');
+    $hasImagen  = in_array('imagen',   $cols);
+    $hasImagen1 = in_array('imagen_1', $cols);
+    $hasFicha   = in_array('ficha',    $cols);
+    $lines[] = $inf("Columnas de imagen en BD: imagen=" . ($hasImagen ? '✔' : '✘') . " | imagen_1=" . ($hasImagen1 ? '✔' : '✘') . " | ficha=" . ($hasFicha ? '✔' : '✘'));
+    if (!$hasImagen) {
+        $lines[] = $err("Columna 'imagen' NO existe — ejecutar la migración o el SQL de ALTER TABLE");
+    }
+    if (!$hasFicha) {
+        $lines[] = $err("Columna 'ficha' NO existe — ejecutar la migración o el SQL de ALTER TABLE");
+    }
+
+    try {
+        $select = ['id', 'nombre'];
+        if ($hasImagen)  $select[] = 'imagen';
+        if ($hasImagen1) $select[] = 'imagen_1';
+
+        $query = \App\Producto::query();
+        if ($hasImagen1) $query->orWhereNotNull('imagen_1');
+        if ($hasImagen)  $query->orWhereNotNull('imagen');
+        $prods = $query->orderBy('id', 'desc')->limit(5)->get($select);
+        foreach ($prods as $p) {
+            $img = ($hasImagen1 && $p->imagen_1) ? $p->imagen_1
+                 : (($hasImagen  && $p->imagen)  ? $p->imagen : null);
+            if (!$img) continue;
+            $fullPath = $storagePath . '/' . $img;
+            $url = asset('storage/' . $img);
+            if (file_exists($fullPath)) {
+                $lines[] = $ok("ID {$p->id} | DB: $img | Archivo: OK | URL: <a href='$url' target='_blank'>$url</a>");
+            } else {
+                $lines[] = $err("ID {$p->id} | DB: $img | Archivo: NO EXISTE en disco | URL: <a href='$url' target='_blank'>$url</a>");
+                // Intentar búsqueda alternativa
+                $basename = basename($img);
+                $found = [];
+                $rit = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($storagePath, \FilesystemIterator::SKIP_DOTS));
+                foreach ($rit as $f) {
+                    if ($f->getFilename() === $basename) {
+                        $found[] = $f->getPathname();
+                    }
+                }
+                if ($found) {
+                    $lines[] = $inf("&nbsp;&nbsp;&rarr; Encontrado en: " . implode(', ', $found));
+                }
+            }
+        }
+    } catch (\Exception $e) {
+        $lines[] = $err("Error al consultar BD: " . $e->getMessage());
+    }
+    $lines[] = "</ul>";
+
+    // 8. Prueba de escritura real
+    $lines[] = "<h2>5. Prueba de escritura</h2><ul>";
+    $testDir  = $storagePath . '/TEST_WRITE';
+    $testFile = $testDir . '/test.txt';
+    try {
+        if (!is_dir($testDir)) mkdir($testDir, 0775, true);
+        file_put_contents($testFile, 'ok');
+        $lines[] = $ok("Escritura OK en storage/app/public/TEST_WRITE/test.txt");
+        unlink($testFile);
+        rmdir($testDir);
+    } catch (\Throwable $e) {
+        $lines[] = $err("No se pudo escribir: " . $e->getMessage());
+    }
+    $lines[] = "</ul>";
+
+    return response(
+        "<html><body style='font-family:monospace;padding:20px'>"
+        . "<h1>🔍 Diagnóstico de Storage/Imágenes</h1>"
+        . "<p style='color:orange'><b>⚠️ BORRAR ESTA RUTA DESPUÉS DE USAR</b></p>"
+        . implode('', $lines)
+        . "</body></html>"
+    );
+});
+// ============================================================
+// FIN DIAGNÓSTICO STORAGE — BORRAR BLOQUE ANTERIOR DESPUÉS DE USAR
+// ============================================================
+
+// ============================================================
+// DIAGNÓSTICO: RAÍZ DEL SERVIDOR vs public_path()
+// Acceder a: /diagnostico-servidor
+// Responde la pregunta: ¿asset('PRODUCTOS/...') sirve el archivo?
+// ============================================================
+Route::get('/diagnostico-servidor', function () {
+    $results = [];
+    $ok  = fn($msg) => "<li style='color:green'>✅ $msg</li>";
+    $err = fn($msg) => "<li style='color:red'>❌ $msg</li>";
+    $inf = fn($msg) => "<li style='color:#555'>ℹ️ $msg</li>";
+    $warn = fn($msg) => "<li style='color:orange'>⚠️ $msg</li>";
+
+    $docRoot   = rtrim($_SERVER['DOCUMENT_ROOT'] ?? '', '/');
+    $publicPath = rtrim(public_path(), '/');
+    $appUrl     = config('app.url');
+
+    $results[] = "<h2>1. Raíz del servidor</h2><ul>";
+    $results[] = $inf("DOCUMENT_ROOT    = $docRoot");
+    $results[] = $inf("public_path()    = $publicPath");
+    $results[] = $inf("SCRIPT_FILENAME  = " . ($_SERVER['SCRIPT_FILENAME'] ?? 'N/A'));
+    $results[] = $inf("APP_URL          = $appUrl");
+
+    if ($docRoot === $publicPath) {
+        $results[] = $ok("Document root = public_path() ✔ asset('PRODUCTOS/...') funcionará directamente.");
+    } else {
+        $results[] = $warn("Document root ≠ public_path().");
+        $results[] = $inf("Doc root: $docRoot");
+        $results[] = $inf("Public:   $publicPath");
+        $results[] = $warn("asset('PRODUCTOS/...') genera URL basada en APP_URL, pero Apache sirve desde DOCUMENT_ROOT.");
+        $results[] = $warn("Si las URLs dan 404, significa que el doc root NO es la carpeta public/ de Laravel.");
+    }
+    $results[] = "</ul>";
+
+    // Test: escribir un archivo en public_path() y dar la URL para verificar manualmente
+    $testFile = 'test_srv_' . time() . '.txt';
+    $testPath = public_path($testFile);
+    $testUrl  = $appUrl . '/' . $testFile;
+    file_put_contents($testPath, 'OK_DIRECT');
+    $results[] = "<h2>2. Test acceso directo desde public_path()</h2><ul>";
+    $results[] = $ok("Archivo creado: $testPath");
+    $results[] = $inf("URL generada: <a href='$testUrl' target='_blank'>$testUrl</a>");
+    $results[] = $warn("Abre esa URL en el navegador. Si ves 'OK_DIRECT' → asset() funciona sin storage/. Si da 404 → el doc root es diferente.");
+    $results[] = $inf("(El archivo se auto-elimina en 60 segundos si recargas esta página)");
+    // Intentar limpiar el de la vez anterior
+    foreach (glob(public_path('test_srv_*.txt')) as $old) {
+        if ($old !== $testPath) @unlink($old);
+    }
+    $results[] = "</ul>";
+
+    // Test: escribir en storage y dar la URL
+    $testStorage = 'test_storage_' . time() . '.txt';
+    \Illuminate\Support\Facades\Storage::disk('public')->put($testStorage, 'OK_STORAGE');
+    $storageUrl = $appUrl . '/storage/' . $testStorage;
+    $results[] = "<h2>3. Test symlink storage (método anterior)</h2><ul>";
+    $results[] = $ok("Archivo en storage/app/public/$testStorage");
+    $results[] = $inf("URL: <a href='$storageUrl' target='_blank'>$storageUrl</a>");
+    $results[] = $warn("Si ves 'OK_STORAGE' → el symlink funciona y el método anterior también serviría.");
+    $results[] = $warn("Si da 404 → el symlink NO funciona (confirma que necesitamos guardar en public/).");
+    $results[] = "</ul>";
+
+    // Estado del .htaccess
+    $htContent = file_exists(public_path('.htaccess')) ? file_get_contents(public_path('.htaccess')) : '';
+    $results[] = "<h2>4. Estado .htaccess</h2><ul>";
+    $results[] = (strpos($htContent, 'SymLinksIfOwnerMatch') !== false || strpos($htContent, 'FollowSymLinks') !== false)
+        ? $ok(".htaccess tiene opción SymLinks")
+        : $err(".htaccess SIN opción SymLinks → SUBE EL .htaccess ACTUALIZADO A CPANEL");
+    $results[] = "</ul>";
+
+    return response(
+        "<html><body style='font-family:monospace;padding:20px'>"
+        . "<h1>🔍 Diagnóstico Servidor/Imágenes</h1>"
+        . "<p style='color:orange'><b>⚠️ BORRAR ESTA RUTA DESPUÉS DE USAR</b></p>"
+        . implode('', $results)
+        . "</body></html>"
+    );
+});
+// ============================================================
+// FIN DIAGNÓSTICO SERVIDOR — BORRAR BLOQUE ANTERIOR DESPUÉS DE USAR
+// ============================================================
+
 Route::get('/limpiar-todo', function() {
     try {
         // 1. Limpieza de cachés

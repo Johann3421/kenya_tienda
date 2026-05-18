@@ -3,6 +3,11 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    # CRÍTICO para cPanel: sin esto Apache NO sigue el symlink public/storage → storage/app/public
+    # y todas las imágenes/PDFs del storage dan 404 aunque el archivo exista.
+    # SymLinksIfOwnerMatch es la opción permitida en la mayoría de hostings compartidos.
+    Options +SymLinksIfOwnerMatch
+
     RewriteEngine On
 
     # Handle Authorization Header

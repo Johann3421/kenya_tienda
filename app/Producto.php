@@ -84,8 +84,13 @@ public function filtros()
         ->toArray();
 }
 
-    // NOTE: removed accessor getImageUrlAttribute per revert request.
-    // Image selection is handled in the views to preserve previous behaviour
-    // (checking imagen_1, imagen, modelo->img_mod, getCategoria->img_cat, then default).
+     /* CPANEL: INICIO - BLOQUE A COPIAR A CPANEL (app/Producto.php)
+         Copiar este bloque y pegar en el archivo `app/Producto.php` en cPanel
+         Reemplaza la sección indicada para mantener la lógica actual del modelo.
+     */
+     // NOTE: removed accessor getImageUrlAttribute per revert request.
+     // Image selection is handled in the views to preserve previous behaviour
+     // (checking imagen_1, imagen, modelo->img_mod, getCategoria->img_cat, then default).
+     /* CPANEL: FIN - FIN BLOQUE A COPIAR A CPANEL (app/Producto.php) */
 
 }

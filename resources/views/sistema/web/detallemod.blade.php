@@ -108,25 +108,36 @@
                             <div class="productoItem">
                                 <div class="contorno">
                                     <div class="portfolio-wrap" style="margin: 0 auto;">
+    {{-- CPANEL: INICIO - BLOQUE A COPIAR A CPANEL (resources/views/sistema/web/detallemod.blade.php) --}}
     @php
-        if (!empty($prod->imagen_1)) {
-            $img = asset('storage/' . $prod->imagen_1);
-        } elseif (!empty($prod->imagen)) {
-            $img = asset('storage/' . $prod->imagen);
-        } elseif ($prod->modelo && !empty($prod->modelo->img_mod)) {
-            $img = asset('storage/' . $prod->modelo->img_mod);
+        // Imagen del modelo como fallback si la imagen del producto falla
+        $modelImg = asset('producto.jpg');
+        if ($prod->modelo && !empty($prod->modelo->img_mod)) {
+            $modelImg = asset('storage/' . $prod->modelo->img_mod);
         } elseif ($prod->getCategoria && !empty($prod->getCategoria->img_cat)) {
-            $img = asset('storage/' . $prod->getCategoria->img_cat);
+            $modelImg = asset('storage/' . $prod->getCategoria->img_cat);
+        }
+        if (!empty($prod->imagen_1)) {
+            $img    = asset($prod->imagen_1);
+            $imgFb  = asset('storage/' . $prod->imagen_1);
+            $imgFb2 = $modelImg;
+        } elseif (!empty($prod->imagen)) {
+            $img    = asset('storage/' . $prod->imagen);
+            $imgFb  = $modelImg;
+            $imgFb2 = asset('producto.jpg');
         } else {
-            $img = asset('producto.jpg');
+            $img    = $modelImg;
+            $imgFb  = asset('producto.jpg');
+            $imgFb2 = asset('producto.jpg');
         }
     @endphp
+    {{-- CPANEL: FIN - BLOQUE A COPIAR A CPANEL (resources/views/sistema/web/detallemod.blade.php) --}}
 
-    <img src="{{ $img }}"
-         class="img-fluid"
-         alt="Imagen de {{ $prod->nombre }}"
-         loading="lazy"
-         onerror="this.onerror=null;this.src='{{ asset('producto.jpg') }}'">
+        <img src="{{ $img }}"
+            class="img-fluid"
+            alt="Imagen de {{ $prod->nombre }}"
+            loading="lazy"
+            onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
 </div>
 
 

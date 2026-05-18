@@ -148,17 +148,25 @@ public function store(Request $request)
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
         $producto->save();
 
-        // Subir imágenes (igual que ya tienes)
+        // ── CPANEL: INICIO ── store() imágenes → public/PRODUCTOS/{id}/ ──
+        // Guarda directamente en public/ para evitar el symlink de storage.
+        // Ruta física: public/PRODUCTOS/{id}/IMG{n}_random.ext
+        // URL: asset('PRODUCTOS/{id}/IMG{n}_random.ext')
         $route = 'PRODUCTOS/' . $producto->id;
         for ($i = 1; $i <= 5; $i++) {
             if ($request->hasFile('imagen_' . $i)) {
-                $file = $request->file('imagen_' . $i);
+                $file      = $request->file('imagen_' . $i);
                 $extension = $file->extension();
                 $file_name = 'IMG' . $i . '_' . Str::random(10) . '.' . $extension;
-                Storage::putFileAs('public/' . $route, $file, $file_name);
+                $dir       = public_path($route);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+                $file->move($dir, $file_name);
                 $producto->{'imagen_' . $i} = $route . '/' . $file_name;
             }
         }
+        // ── CPANEL: FIN ── store() imágenes ──
         $producto->save();
 
         DB::commit();
@@ -224,21 +232,29 @@ public function update(Request $request)
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
 
-        // Subir imágenes (igual que ya tienes)
+        // ── CPANEL: INICIO ── update() imágenes → public/PRODUCTOS/{id}/ ──
+        // Guarda directamente en public/ para evitar el symlink de storage.
         $route = 'PRODUCTOS/' . $producto->id;
         for ($i = 1; $i <= 5; $i++) {
             if ($request->hasFile('imagen_' . $i)) {
-                // Elimina la imagen anterior si existe
-                if ($producto->{'imagen_' . $i}) {
-                    Storage::delete('public/' . $producto->{'imagen_' . $i});
+                // Elimina la imagen anterior de ambas ubicaciones posibles
+                $oldPath = $producto->{'imagen_' . $i};
+                if ($oldPath) {
+                    @unlink(public_path($oldPath));                   // nueva ubicación
+                    Storage::delete('public/' . $oldPath);           // ubicación antigua (storage)
                 }
-                $file = $request->file('imagen_' . $i);
+                $file      = $request->file('imagen_' . $i);
                 $extension = $file->extension();
                 $file_name = 'IMG' . $i . '_' . Str::random(10) . '.' . $extension;
-                Storage::putFileAs('public/' . $route, $file, $file_name);
+                $dir       = public_path($route);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+                $file->move($dir, $file_name);
                 $producto->{'imagen_' . $i} = $route . '/' . $file_name;
             }
         }
+        // ── CPANEL: FIN ── update() imágenes ──
         $producto->save();
 
         DB::commit();
@@ -307,6 +323,8 @@ public function subirFichaTecnica(Request $request, $producto)
             'especificaciones' => $especificaciones
         ]);
     }
+    // CPANEL: INICIO - BLOQUE A COPIAR A CPANEL (app/Http/Controllers/ProductoController.php::guardar)
+    // Copiar desde esta línea hasta la marca CPANEL: FIN y pegar en cPanel
     public function guardar(Request $request)
     {
         $validator = \Validator::make($request->all(), [
@@ -409,6 +427,7 @@ public function subirFichaTecnica(Request $request, $producto)
 
         $producto->save();
     }
+    // CPANEL: FIN - BLOQUE A COPIAR A CPANEL (app/Http/Controllers/ProductoController.php::guardar)
 
     public function todos(Request $request)
     {
@@ -454,6 +473,8 @@ public function subirFichaTecnica(Request $request, $producto)
         ;
     }
 
+    // CPANEL: INICIO - BLOQUE A COPIAR A CPANEL (app/Http/Controllers/ProductoController.php::modificar)
+    // Copiar desde esta línea hasta la marca CPANEL: FIN y pegar en cPanel
     public function modificar(Request $request)
     {
         $validator = \Validator::make($request->all(), [
@@ -576,6 +597,7 @@ public function subirFichaTecnica(Request $request, $producto)
         $producto->linea_producto        = mb_strtoupper($request->linea_producto);
         $producto->save();
     }
+    // CPANEL: FIN - BLOQUE A COPIAR A CPANEL (app/Http/Controllers/ProductoController.php::modificar)
 
     public function mdlEliminarProducto(Request $request)
     {

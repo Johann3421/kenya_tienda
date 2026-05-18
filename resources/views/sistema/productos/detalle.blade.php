@@ -116,25 +116,36 @@
     <br>
     <div class="row">
         <div class="col-lg-4 mb-5">
+                {{-- CPANEL: INICIO - BLOQUE A COPIAR A CPANEL (resources/views/sistema/productos/detalle.blade.php) --}}
                 @php
-                    // Prioridad de imagen: imagen_1 > imagen (antiguo) > modelo->img_mod > categoria->img_cat > default
-                    if (!empty($producto->imagen_1)) {
-                        $imagen = asset('storage/' . $producto->imagen_1);
-                    } elseif (!empty($producto->imagen)) {
-                        $imagen = asset('storage/' . $producto->imagen);
-                    } elseif ($producto->modelo && !empty($producto->modelo->img_mod)) {
-                        $imagen = asset('storage/' . $producto->modelo->img_mod);
+                    // Prioridad: imagen_1 > imagen (antiguo) > modelo > categoría > default
+                    // Cadena de 3 intentos: nueva ruta → antigua storage → imagen del modelo
+                    $modelImg = asset('producto.jpg');
+                    if ($producto->modelo && !empty($producto->modelo->img_mod)) {
+                        $modelImg = asset('storage/' . $producto->modelo->img_mod);
                     } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_cat)) {
-                        $imagen = asset('storage/' . $producto->getCategoria->img_cat);
+                        $modelImg = asset('storage/' . $producto->getCategoria->img_cat);
+                    }
+                    if (!empty($producto->imagen_1)) {
+                        $imagen         = asset($producto->imagen_1);               // nueva: public/PRODUCTOS/
+                        $imagenFallback = asset('storage/' . $producto->imagen_1);  // antigua: storage/PRODUCTOS/
+                        $imagenFallback2 = $modelImg;                               // 3er nivel: imagen del modelo
+                    } elseif (!empty($producto->imagen)) {
+                        $imagen          = asset('storage/' . $producto->imagen);
+                        $imagenFallback  = $modelImg;
+                        $imagenFallback2 = asset('producto.jpg');
                     } else {
-                        $imagen = asset('producto.jpg');
+                        $imagen          = $modelImg;
+                        $imagenFallback  = asset('producto.jpg');
+                        $imagenFallback2 = asset('producto.jpg');
                     }
                     $altText = $producto->nombre ?? 'Producto';
                 @endphp
+                {{-- CPANEL: FIN - BLOQUE A COPIAR A CPANEL (resources/views/sistema/productos/detalle.blade.php) --}}
 
                 <div class="product-image-container">
                     <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}"
-                         onerror="this.src='{{ asset('producto.jpg') }}'">
+                        onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imagenFallback }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imagenFallback2 }}';}else{this.onerror=null;}">
                 </div>
         </div>
 

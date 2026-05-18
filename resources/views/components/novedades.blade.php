@@ -255,20 +255,30 @@
         <div class="novedades-carousel-wrapper">
             <div class="novedades-carousel-track">
                 @foreach ($novedades as $prod)
+                    {{-- CPANEL: INICIO - BLOQUE A COPIAR A CPANEL (resources/views/components/novedades.blade.php) --}}
                     @php
-                        // Prioridad de imagen: imagen_1 > imagen (antiguo) > modelo->img_mod > categoria->img_cat > default
-                        if (!empty($prod->imagen_1)) {
-                            $imagen = asset('storage/' . $prod->imagen_1);
-                        } elseif (!empty($prod->imagen)) {
-                            $imagen = asset('storage/' . $prod->imagen);
-                        } elseif ($prod->modelo && !empty($prod->modelo->img_mod)) {
-                            $imagen = asset('storage/' . $prod->modelo->img_mod);
+                        // Imagen del modelo como fallback si la imagen del producto falla
+                        $modelImg = asset('producto.jpg');
+                        if ($prod->modelo && !empty($prod->modelo->img_mod)) {
+                            $modelImg = asset('storage/' . $prod->modelo->img_mod);
                         } elseif ($prod->getCategoria && !empty($prod->getCategoria->img_cat)) {
-                            $imagen = asset('storage/' . $prod->getCategoria->img_cat);
+                            $modelImg = asset('storage/' . $prod->getCategoria->img_cat);
+                        }
+                        if (!empty($prod->imagen_1)) {
+                            $imagen    = asset($prod->imagen_1);
+                            $imagenFb  = asset('storage/' . $prod->imagen_1);
+                            $imagenFb2 = $modelImg;
+                        } elseif (!empty($prod->imagen)) {
+                            $imagen    = asset('storage/' . $prod->imagen);
+                            $imagenFb  = $modelImg;
+                            $imagenFb2 = asset('producto.jpg');
                         } else {
-                            $imagen = asset('producto.jpg');
+                            $imagen    = $modelImg;
+                            $imagenFb  = asset('producto.jpg');
+                            $imagenFb2 = asset('producto.jpg');
                         }
                     @endphp
+                    {{-- CPANEL: FIN - BLOQUE A COPIAR A CPANEL (resources/views/components/novedades.blade.php) --}}
 
                     <div class="novedades-carousel-item filter-{{ $prod->categoria_id }}">
                         <div class="novedades-product-card">
@@ -277,7 +287,8 @@
                                 <img src="{{ $imagen }}"
                                      class="novedades-product-image"
                                      alt="{{ $prod->nombre }}"
-                                     loading="lazy">
+                                     loading="lazy"
+                                     onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imagenFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imagenFb2 }}';}else{this.onerror=null;}">"
 
                                 <div class="novedades-image-overlay">
                                     @if ($prod->categoria_id && $prod->getCategoria)
