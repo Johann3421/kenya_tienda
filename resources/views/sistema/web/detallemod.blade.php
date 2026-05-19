@@ -28,6 +28,7 @@
         $productosQuery = $modelo
             ->productos()
             ->where('pagina_web', 'SI')
+            ->noSuspendido()
             ->with(['modelo', 'filtros']);
 
         // Aplicar filtros si existen
@@ -53,6 +54,7 @@
     $productosQuery = $modelo
         ->productos()
         ->where('pagina_web', 'SI')
+        ->noSuspendido()
         ->with(['modelo', 'filtros']);
 
     // Aplicar filtros si existen
