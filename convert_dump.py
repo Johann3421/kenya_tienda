@@ -6,7 +6,8 @@ TABLA_WHITELIST = {
     'banners', 'banner_medios', 'asides', 'configuraciones',
     'almacenamiento', 'users', 'roles', 'permissions', 
     'model_has_roles', 'role_has_permissions', 'model_has_permissions',
-    'marcas', 'procesador', 'tarjetavideo', 'ram', 'ofimatica'
+    'marcas', 'procesador', 'tarjetavideo', 'ram', 'ofimatica',
+    'producto_filtros'
 }
 
 def unescape_mysql(s):
