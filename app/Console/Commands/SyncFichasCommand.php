@@ -46,6 +46,24 @@ class SyncFichasCommand extends Command
         'VGA:'                           => 'video_vga',
     ];
 
+    /** Etiquetas legibles para la tabla especificaciones */
+    const SPEC_LABELS = [
+        'procesador'          => 'Procesador',
+        'ram'                 => 'RAM',
+        'almacenamiento'      => 'Almacenamiento',
+        'conectividad'        => 'Conectividad LAN',
+        'conectividad_wlan'   => 'Conectividad WLAN',
+        'conectividad_usb'    => 'Conectividad USB',
+        'video_vga'           => 'Salida VGA',
+        'video_hdmi'          => 'Salida HDMI',
+        'sistema_operativo'   => 'Sistema Operativo',
+        'unidad_optica'       => 'Unidad Óptica',
+        'teclado'             => 'Teclado',
+        'mouse'               => 'Mouse',
+        'suite_ofimatica'     => 'Suite Ofimática',
+        'garantia_de_fabrica' => 'Garantía de Fábrica',
+    ];
+
     /** Caché modelo_group → modelo_id */
     private array $modelosCache    = [];
     /** Caché categoria_api → categoria_id */
@@ -125,6 +143,9 @@ class SyncFichasCommand extends Command
 
             if (!$dryRun) {
                 DB::table('productos')->where('id', $producto->id)->update($data);
+                if (!$soloVig && !empty($specs)) {
+                    $this->syncEspecificaciones($producto->id, $specs);
+                }
             }
 
             $updated++;
@@ -245,12 +266,42 @@ class SyncFichasCommand extends Command
         }
 
         if (!$dryRun) {
-            DB::table('productos')->insert($data);
+            $newId = DB::table('productos')->insertGetId($data);
+            $this->syncEspecificaciones($newId, $specs);
         }
 
         $tag = $dryRun ? '[dry-run] Crearía' : 'Creado';
         $this->line("  <info>{$tag}: {$nombre}</info>");
         return true;
+    }
+
+    // ─── Sincronizar tabla especificaciones ────────────────────────────────────
+
+    /**
+     * Borra las especificaciones existentes del producto y las recrea
+     * a partir del array $specs (columna → valor).
+     */
+    private function syncEspecificaciones(int $productoId, array $specs): void
+    {
+        DB::table('especificaciones')->where('producto_id', $productoId)->delete();
+
+        $rows = [];
+        $now  = now();
+        foreach (self::SPEC_LABELS as $col => $label) {
+            if (!empty($specs[$col])) {
+                $rows[] = [
+                    'campo'       => $label,
+                    'descripcion' => $specs[$col],
+                    'producto_id' => $productoId,
+                    'created_at'  => $now,
+                    'updated_at'  => $now,
+                ];
+            }
+        }
+
+        if (!empty($rows)) {
+            DB::table('especificaciones')->insert($rows);
+        }
     }
 
     // ─── Suspender productos de modelos PC sin codigo_pc ─────────────────────
