@@ -380,12 +380,9 @@ class SyncFichasCommand extends Command
         ];
         $pattern = $patterns[$key] ?? '%' . $key . '%';
 
-        // Intentar en tabla 'categorias' (nombre o descripcion)
+        // Intentar en tabla 'categorias' (solo columna nombre)
         $row = DB::table('categorias')
-            ->where(function ($q) use ($pattern) {
-                $q->whereRaw("UPPER(nombre) LIKE ?", [$pattern])
-                  ->orWhereRaw("UPPER(descripcion) LIKE ?", [$pattern]);
-            })
+            ->whereRaw("UPPER(nombre) LIKE ?", [$pattern])
             ->first();
 
         $id = $row ? (int) $row->id : null;
