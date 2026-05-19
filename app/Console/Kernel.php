@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\SyncKenyaProducts::class,
+        Commands\SyncFichasCommand::class,
     ];
 
     /**
@@ -24,8 +25,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Ejecutar la sincronización todos los días a las 2 AM
+        // Sincronización legacy
         $schedule->command('kenya:sync-products')->dailyAt('02:00');
+
+        // Sincronización de fichas Peru Compras: cada lunes a las 06:00
+        // --crear   → crea nuevos productos para fichas que no tienen match en BD
+        $schedule->command('sync:fichas --crear')
+            ->weeklyOn(1, '06:00')
+            ->withoutOverlapping()
+            ->appendOutputTo(storage_path('logs/sync-fichas.log'));
     }
 
     /**
