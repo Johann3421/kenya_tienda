@@ -4,7 +4,9 @@ import sys
 TABLA_WHITELIST = {
     'categorias', 'modelos', 'productos', 'especificaciones',
     'banners', 'banner_medios', 'asides', 'configuraciones',
-    'almacenamiento'
+    'almacenamiento', 'users', 'roles', 'permissions', 
+    'model_has_roles', 'role_has_permissions', 'model_has_permissions',
+    'marcas', 'procesador', 'tarjetavideo', 'ram', 'ofimatica'
 }
 
 def unescape_mysql(s):

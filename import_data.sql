@@ -1245,6 +1245,118 @@ VALUES
 ON CONFLICT DO NOTHING;
 
 
+-- Tabla: model_has_permissions
+INSERT INTO "model_has_permissions" ("permission_id", "model_type", "model_id")
+VALUES
+(19, 'App\User', 1)
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: model_has_roles
+INSERT INTO "model_has_roles" ("role_id", "model_type", "model_id")
+VALUES
+(1, 'App\User', 1),
+(1, 'App\User', 5),
+(1, 'App\User', 6),
+(1, 'App\User', 8),
+(2, 'App\User', 9)
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: ofimatica
+INSERT INTO "ofimatica" ("id", "ofimatica", "created_at", "updated_at")
+VALUES
+(1, 'MICROSOFT OFFICE HOME & BUSINESS 2021', NULL, NULL),
+(2, 'MICROSOFT OFFICE PROFESSIONAL 2019', NULL, NULL),
+(3, 'NO', NULL, NULL),
+(4, 'MICROSOFT OFFICE HOME & BUSINESS 2019', NULL, NULL),
+(5, 'MICROSOFT OFFICE PROFESSIONAL 2021', NULL, NULL),
+(8, 'OFFICE 365 PERSONAL', NULL, NULL),
+(9, 'MICROSOFT OFFICE HOME & BUSINESS 2024', NULL, NULL),
+(10, 'LIBREOFFICE 7.4', NULL, NULL)
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: permissions
+INSERT INTO "permissions" ("id", "name", "guard_name", "created_at", "updated_at")
+VALUES
+(1, 'inicio', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(2, 'servicio_tecnico', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(3, 'pedidos', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(4, 'ventas', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(5, 'productos', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(6, 'clientes', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(7, 'proveedores', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(8, 'codigo_barras', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(9, 'perfiles', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(10, 'usuarios', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(11, 'pagina_web', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(12, 'configuracion', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(13, 'producto_drivers', 'web', '2022-11-27 00:11:16', '2022-11-27 00:11:16'),
+(14, 'manual', 'web', '2022-11-27 00:11:16', '2022-11-27 00:11:16'),
+(15, 'garantia', 'web', '2022-11-27 00:11:16', '2022-11-27 00:11:16'),
+(16, 'categorias', 'web', '2022-11-27 00:11:16', '2022-11-27 00:11:16'),
+(17, 'modelos', 'web', '2022-11-27 00:11:16', '2022-11-27 00:11:16'),
+(18, 'producto_drivers_ruta', 'web', '2022-11-27 00:11:16', '2022-11-27 00:11:16'),
+(19, 'admin_paginas', 'web', '2025-06-02 15:30:37', '2025-06-02 15:30:37')
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: procesador
+INSERT INTO "procesador" ("id", "nom_pros", "created_at", "updated_at")
+VALUES
+(1, 'INTEL CORE I7-11700 2.50 GHZ', NULL, '2023-12-15 13:03:12'),
+(2, 'INTEL CORE I7-10700 2.90 GHZ', NULL, NULL),
+(3, 'INTEL CORE I5-11400 2.60 GHZ', NULL, '2023-12-15 13:03:14'),
+(4, 'INTEL CORE I5-10400 2.90 GHZ', NULL, NULL),
+(5, 'INTEL CORE I7-9700 3.00 GHZ', NULL, NULL),
+(6, 'INTEL CORE I9-11900K 3.50 GHZ', NULL, NULL),
+(7, 'INTEL CORE I5-10600K 4.10 GHZ', NULL, NULL),
+(8, 'INTEL CORE I7-11700F 2.50 GHZ', NULL, NULL),
+(9, 'INTEL CORE I9-10900K 3.70 GHZ', NULL, NULL),
+(10, 'INTEL CORE I3-10100 3.60 GHZ', NULL, NULL),
+(11, 'INTEL CORE I9-12900K 3.20 GHZ', NULL, NULL),
+(12, 'INTEL CORE I5-10400F 2.90 GHZ', NULL, NULL),
+(13, 'INTEL CORE I9 10900 2.80 GHZ', NULL, NULL),
+(14, 'INTEL CORE I7-12700F 2.10 GHZ', NULL, NULL),
+(15, 'AMD RYZEN 5 5600X 3.70 GHZ', NULL, NULL),
+(16, 'INTEL CORE I5-12400 2.50 GHZ', NULL, NULL),
+(17, 'INTEL CORE I3-10105 3.70 GHZ', NULL, NULL),
+(18, 'AMD RYZEN 7 5700X 3.40 GHZ', NULL, NULL),
+(19, 'INTEL CORE I3-10100F 3.60 GHZ', NULL, NULL),
+(20, 'AMD RYZEN 7 5700G 3.80', NULL, NULL),
+(21, 'AMD RYZEN 7 5700G 3.80', NULL, NULL),
+(22, 'AMD RYZEN 7 5700G 3.80 GHZ', NULL, NULL),
+(23, 'INTEL CORE 17-11700 3.60 GHZ', NULL, NULL),
+(24, 'INTEL CORE I5-12600K 3.70 GHZ', NULL, NULL),
+(25, 'INTEL CORE I7-12700K 3.60 GHZ', NULL, NULL),
+(26, 'INTEL CORE I5-11400F 2.60 GHZ', NULL, NULL),
+(27, 'INTEL CORE I7-12700 2.10GHZ', NULL, NULL),
+(28, 'INTEL CORE I3-12100 3.30 GHZ', NULL, NULL),
+(29, 'INTEL CORE I3-12100F 3.30 GHZ', NULL, NULL),
+(30, 'INTEL CORE I7-11700K 3.60 GHZ', NULL, NULL),
+(31, 'AMD RYZEN 5 5600G 3.90 GHZ', NULL, NULL),
+(32, 'INTEL CORE I5-12400F 2.50 GHZ', NULL, NULL),
+(33, 'AMD RYZEN 9 5900X 3.70 GHZ', NULL, NULL),
+(34, 'INTEL CORE I7-9700K 3.60 GHZ', NULL, NULL),
+(35, 'INTEL CORE I3-9100F 3.60 GHZ', NULL, NULL),
+(36, 'INTEL CORE I9-9900K 3.60 GHZ', NULL, NULL),
+(37, 'INTEL CORE I3-9100 3.60 GHZ', NULL, NULL),
+(38, 'INTEL CORE I5-9400 2.90 GHZ', NULL, NULL),
+(39, 'INTEL CORE I7-8700K 3.70 GHZ', NULL, NULL),
+(40, 'INTEL CORE I5-8400 2.80 GHZ', NULL, NULL),
+(41, 'INTEL CORE I7-13700 2.10 GHZ', NULL, NULL),
+(42, 'PRUEBA', NULL, NULL),
+(43, 'INTEL CORE I5-13400 2.50 GHZ', NULL, NULL),
+(44, 'INTEL CORE I7-14700 2.10 GHZ', NULL, NULL),
+(45, 'INTEL CORE I9-14900K 3.20 GHZ', NULL, NULL),
+(46, 'INTEL CORE I5-14400 2.50 GHZ', NULL, NULL),
+(47, 'INTEL CORE I3-13100 3.40 GHZ', NULL, NULL),
+(48, 'INTEL CORE I7-14700K 3.40 GHZ', NULL, NULL),
+(49, 'INTEL CORE ULTRA 9 285K 3.70 GHZ', NULL, NULL)
+ON CONFLICT DO NOTHING;
+
+
 -- Tabla: productos
 INSERT INTO "productos" ("id", "nombre", "nombre_secundario", "descripcion", "especificaciones", "nro_parte", "procesador", "ram", "almacenamiento", "conectividad", "conectividad_wlan", "conectividad_usb", "video_vga", "video_hdmi", "sistema_operativo", "unidad_optica", "teclado", "mouse", "suite_ofimatica", "garantia_de_fabrica", "unidad", "marca", "empaque_de_fabrica", "certificacion", "moneda", "precio_unitario", "precio_compra", "precio_anterior", "tipo_afectacion", "tipo_afectacion_compra", "stock_inicial", "stock_minimo", "fecha_vencimiento", "codigo_barras", "codigo_interno", "codigo_sunat", "linea_producto", "incluye_igv", "imagen_1", "imagen_2", "imagen_3", "imagen_4", "imagen_5", "imagen", "ficha", "categoria", "categoria_id", "marca_id", "pagina_web", "modelo_id", "created_at", "updated_at", "ficha_tecnica", "tarjetavideo", "Tipo de suministro", "Modelo", "Color", "Descripción", "Rendimiento", "Garantia", "Sistema RAEE", "Certificaciones", "Empaque", "Número de parte", "Dimensiones", "especificaciones_json", "filtros_ids")
 VALUES
@@ -3345,6 +3457,91 @@ VALUES
 (2701, 'WORKSTATION KENYA PROWORK WS90 (PC9K20XT23-V16)', NULL, NULL, 'undefined', 'PC9K20XT23-V16', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '20', NULL, NULL, NULL, NULL, '', '', '', '', NULL, 'PRODUCTOS/2701/IMG1_89SL6TA0vh.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SI', 11, '2026-04-14 16:17:35', '2026-04-14 16:17:38', 'pdfs/soporte_2701_Rv10TzgShA.pdf', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2702, 'COMPUTADORA KENYA EZENT S70 (E7CD792NWXHX3)', NULL, NULL, 'undefined', 'E7CD792NWXHX3', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '20', NULL, NULL, NULL, NULL, '', '', '', '', NULL, 'PRODUCTOS/2702/IMG1_FBmcGxse06.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SI', 12, '2026-04-22 17:40:39', '2026-04-22 17:40:45', 'pdfs/soporte_2702_kzljAhl1uW.pdf', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (2703, 'COMPUTADORA KENYA EZENT EZENT S7000 (E87G20WD13-SFF)', NULL, NULL, 'undefined', 'E87G20WD13-SFF', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', NULL, NULL, 'null', 'null', NULL, NULL, NULL, NULL, '20', NULL, NULL, NULL, NULL, '', '', '', '', NULL, 'PRODUCTOS/2703/IMG1_DqKvn3i45Y.png', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'SI', 12, '2026-05-15 15:14:48', '2026-05-18 16:20:42', 'pdfs/soporte_2703_4nGy8hwnER.pdf', 'null', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: ram
+INSERT INTO "ram" ("id", "nom_ram", "created_at", "updated_at")
+VALUES
+(1, '64 GB DDR4 3200 400 MHZ', NULL, NULL),
+(2, '16 GB DDR4 2666 333 MHZ', NULL, NULL),
+(3, '8 GB DDR4 2666 333 MHZ', NULL, NULL),
+(4, '8 GB DDR4 3200 400 MHZ', NULL, NULL),
+(5, '32 GB DDR4 3200 400 MHZ', NULL, NULL),
+(6, '16 GB DDR4 3200 400 MHZ', NULL, NULL),
+(7, '32 GB DDR4 2666 333 MHZ', NULL, NULL),
+(8, '32 GB DDR5 4800 600 MHZ', NULL, NULL),
+(9, '64 GB DDR4 2666 333 MHZ', NULL, NULL),
+(10, '4 GB DDR4 2666 333 MHZ', NULL, NULL),
+(11, '16 GB DDR5 4800 600 MHZ', NULL, NULL),
+(12, '64 GB DDR5 4800 600 MHZ', NULL, NULL),
+(13, '64 GB DDR5 4800 600 MHZ', NULL, NULL),
+(14, '16 GB DDR4 2933 366 MHZ', NULL, NULL),
+(15, '8 GB DDR4 2933 366 MHZ', NULL, NULL),
+(16, '4 GB DDR4 2400 300 MHZ', NULL, NULL),
+(17, '8 GB DDR5 4800 600 MHZ', NULL, NULL),
+(18, '128 GB DDR5 4800 600 MHZ', NULL, NULL),
+(19, '32 GB DDR5 4800 2400 MHZ', NULL, NULL),
+(20, '16 GB DDR5 5600 2800 MHZ', NULL, NULL),
+(21, '64 GB DDR5 5600 2800 MHZ', NULL, NULL),
+(22, '32 GB DDR5 5600 2800 MHZ', NULL, NULL)
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: roles
+INSERT INTO "roles" ("id", "name", "guard_name", "created_at", "updated_at")
+VALUES
+(1, 'administrador', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(2, 'soporte', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(3, 'vendedor', 'web', '2022-11-27 00:11:15', '2022-11-27 00:11:15')
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: role_has_permissions
+INSERT INTO "role_has_permissions" ("permission_id", "role_id")
+VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1),
+(13, 1),
+(14, 1),
+(15, 1),
+(16, 1),
+(17, 1),
+(18, 1),
+(1, 2),
+(2, 2),
+(4, 2),
+(6, 2),
+(7, 2),
+(8, 2),
+(1, 3),
+(3, 3),
+(4, 3),
+(5, 3),
+(6, 3),
+(7, 3),
+(8, 3)
+ON CONFLICT DO NOTHING;
+
+
+-- Tabla: users
+INSERT INTO "users" ("id", "dni", "nombres", "ape_paterno", "ape_materno", "telefono", "email", "email_verified_at", "username", "password", "activo", "remember_token", "created_at", "updated_at")
+VALUES
+(1, '12345678', 'ADMINISTRADOR', 'DEL SISTEMA', 'KENYA', '962828989', 'kenya@gmail.com', NULL, 'kenya', '$2y$10$hv1LfT//XnWpowgOzfLsXet0ulglQ1585xbTH/ezKgkgnORb4g7VW', 'SI', 'z8QQkEWfgLe81qT6qQPZaIPD5qjOEdQRhMqHgoPLQypsIdlzeslnkh0OBEwQ', '2022-11-27 00:11:15', '2022-11-27 00:11:15'),
+(5, '77082454', 'ESTALIN C.', 'HUAMALI', 'ALCANTARA', '930874291', 'huamalialcantara@gmail.com', NULL, 'HUAMALI', '$2y$10$UVRFdnTYdy.QEPxTFISpnOuSFdjFBMS3O1dPgQd5iT6VrOKmCVQD.', 'SI', NULL, '2025-06-02 17:35:12', '2025-06-09 16:58:03'),
+(6, '42376782', 'JOSE CARLOS', 'AGUILAR', 'SEGOVIA', '922694285', 'jcaguilar@kenya.com.pe', NULL, 'AGUILAR', '$2y$10$rKkhO698irf3bMzhXWQpaeR.Fni6jJL3xy24t2Jlza.WreBl5UzM2', 'SI', NULL, '2025-06-02 17:39:53', '2025-06-02 17:39:53'),
+(8, '74217001', 'JHORDAN  ANDERSSON', 'ALMERCO', 'JAUREGUI', '933573985', 'jhordan2402@gmail.com', NULL, 'ANDERSSON', '$2y$10$hFTYhHbYPRBMiijwMuIIreNH6izCECMErMKfMe/GuGyR9.UgsWBzi', 'SI', NULL, '2025-06-09 16:56:41', '2025-06-09 16:56:41'),
+(9, '73113322', 'YOSIMAR', 'MASACHE', 'LLACSAHUANGA', '987654321', 'kenya@suporte.com', NULL, 'YOSIMAR', '$2y$10$Wj/FxaCqcdRin1grEPaide03y8z.9ny2h.BnLhsRrDxQldwQphhma', 'SI', NULL, '2025-09-16 17:59:18', '2025-09-16 17:59:18')
 ON CONFLICT DO NOTHING;
 
 
