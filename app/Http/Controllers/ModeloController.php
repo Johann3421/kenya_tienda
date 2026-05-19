@@ -27,7 +27,7 @@ class ModeloController extends Controller
         $modelos = Modelo::join('categorias AS cat', 'modelos.categoria_id', '=', 'cat.id')
             ->select('modelos.id', 'modelos.descripcion', 'cat.nombre AS categoria_descripcion', 'modelos.activo', 'cat.id AS categoria_id', 'modelos.img_mod')
             ->where('modelos.descripcion', 'LIKE', "%{$request->search}%")
-            ->orWhere('modelos.id', 'LIKE', "%{$request->search}%");
+            ->orWhereRaw("modelos.id::text LIKE ?", ["%{$request->search}%"]);
 
         $modelos = $modelos->paginate(10);
 
@@ -50,7 +50,7 @@ class ModeloController extends Controller
 
         $categorias = Categoria::select('id','nombre')
             ->where('nombre', 'LIKE', '%'.$request->search.'%')
-            ->orWhere('id', 'LIKE', '%'.$request->search.'%')
+            ->orWhereRaw("id::text LIKE ?", ['%'.$request->search.'%'])
             ->get();
 
         return [

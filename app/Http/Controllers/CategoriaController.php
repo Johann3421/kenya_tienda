@@ -24,7 +24,7 @@ class CategoriaController extends Controller
     {
 
         $categoria = Categoria::with('getModelo')->where('nombre', 'LIKE', "%{$request->search}%")
-            ->orWhere('id', 'LIKE', "%{$request->search}%");
+            ->orWhereRaw("id::text LIKE ?", ["%{$request->search}%"]);
 
         $categoria = $categoria->paginate(10);
 
