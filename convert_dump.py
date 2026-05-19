@@ -4,17 +4,17 @@ import sys
 TABLA_WHITELIST = {
     'categorias', 'modelos', 'productos', 'especificaciones',
     'banners', 'banner_medios', 'asides', 'configuraciones',
-    'almacenamiento', 'users', 'roles', 'permissions', 
+    'almacenamiento', 'users', 'roles', 'permissions',
     'model_has_roles', 'role_has_permissions', 'model_has_permissions',
     'marcas', 'procesador', 'tarjetavideo', 'ram', 'ofimatica',
-    'producto_filtros'
+    'producto_filtros', 'garantia'
 }
 
 def unescape_mysql(s):
     # Primero convertimos los booleanos binarios de MySQL a Postgres
     s = s.replace("b'0'", 'FALSE')
     s = s.replace("b'1'", 'TRUE')
-    
+
     # Reemplazamos los escapes de MySQL a sintaxis estándar de Postgres
     # El orden es importante.
     s = s.replace("\\'", "''")   # \' -> ''
@@ -22,7 +22,14 @@ def unescape_mysql(s):
     s = s.replace('\\n', '\n')   # \n -> literal newline
     s = s.replace('\\r', '\r')   # \r -> literal carriage return
     s = s.replace('\\\\', '\\')  # \\ -> \
-    
+
+    # Normalizar valores booleanos tipo string para PostgreSQL (case-sensitive)
+    # Solo reemplaza cuando el valor exacto es 'Si', 'No', 'si', 'no' como token SQL
+    s = re.sub(r"'Si'", "'SI'", s)
+    s = re.sub(r"'No'", "'NO'", s)
+    s = re.sub(r"'si'", "'SI'", s)
+    s = re.sub(r"'no'", "'NO'", s)
+
     return s
 
 def convert(src_path: str, dst_path: str):
@@ -61,26 +68,26 @@ def convert(src_path: str, dst_path: str):
             if line.startswith('--') or line.startswith('/*!') or line.startswith('CREATE TABLE') or line.startswith('INSERT INTO') or line.startswith('ALTER TABLE') or line.strip() == '':
                 # Si el buffer no está vacío, lo procesamos (significa que terminó sin ; en la misma línea o no lo detectamos bien)
                 pass # El buffer se procesa cuando vemos el ; final
-            
+
             buffer.append(line)
-            
+
             # Verificamos si la línea termina el INSERT
             if line.strip().endswith(';'):
                 # Terminó este INSERT
                 values_block = ''.join(buffer)
                 # Remover el punto y coma final para poner nuestro ON CONFLICT
                 values_block = values_block.strip()[:-1]
-                
+
                 # Desescapar todo
                 values_block = unescape_mysql(values_block)
-                
+
                 sql = (
                     f"\n-- Tabla: {current_table}\n"
                     f"INSERT INTO \"{current_table}\" ({cols_str})\n"
                     f"VALUES\n{values_block}\nON CONFLICT DO NOTHING;\n"
                 )
                 out_lines.append(sql)
-                
+
                 current_table = None
                 cols_str = None
                 buffer = []

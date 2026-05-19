@@ -38,8 +38,8 @@ class GarantiaController extends Controller
             )
             ->where(function ($query) use ($search) {
                 $query->where('garantia.garantia', 'LIKE', '%' . $search . '%')
-                    ->orWhere('garantia.id', 'LIKE', '%' . $search . '%')
-                    ->orWhere('garantia.serie', 'LIKE', '%' . $search . '%'); // <-- Añade esta línea
+                    ->orWhereRaw("garantia.id::text LIKE ?", ["%{$search}%"])
+                    ->orWhere('garantia.serie', 'LIKE', '%' . $search . '%');
             });
 
         // Filtro por estado de barra
@@ -138,7 +138,7 @@ class GarantiaController extends Controller
 
         $producto = Producto::select('id', 'nombre')
             ->where('nombre', 'LIKE', '%' . $request->search . '%')
-            ->orWhere('id', 'LIKE', '%' . $request->search . '%')
+            ->orWhereRaw("id::text LIKE ?", ["%{$request->search}%"])
             ->get();
 
         return [
