@@ -13,7 +13,7 @@ class LandingProductos extends Controller
     {
         $categorias = Categoria::orderBy('nombre', 'ASC')->with('Productos')->get();
         $modelo = Modelo::orderBy('id', 'ASC')->with('Productos')->get();
-        $productos = Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->take(15)->get();
+        $productos = Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->noSuspendido()->take(15)->get();
 
         return view('welcome', compact('categorias', 'productos','modelo'));
     }
@@ -21,11 +21,13 @@ class LandingProductos extends Controller
     {
         if ($request->id) {
             $productos = Producto::with('getCategoria', 'getMarca','getModelo')->where('pagina_web', 'SI')
+                                    ->noSuspendido()
                                     ->where('categoria_id', $request->id)
                                     ->where('modelo_id', $request->id)
                                     ->orderBy('nombre', 'ASC')->paginate(8);
         } else {
             $productos = Producto::where('pagina_web', 'SI')
+                ->noSuspendido()
                 ->orderBy('nombre', 'ASC')->paginate(8);
         }
         if ($request->search) {
@@ -58,6 +60,7 @@ class LandingProductos extends Controller
     {
         $productos = Producto::with('getCategoria', 'getMarca','getModelo')
             ->where('pagina_web', 'SI')
+            ->noSuspendido()
             ->orderBy('nombre', 'ASC');
         if ($request->categoria_id) {
             $productos->where('categoria_id', $request->categoria_id);

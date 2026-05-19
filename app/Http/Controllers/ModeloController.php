@@ -209,7 +209,7 @@ class ModeloController extends Controller
     public function getModelosConProductos()
     {
         $modelos = Modelo::with(['productos' => function($query) {
-            $query->where('pagina_web', 'SI');
+            $query->where('pagina_web', 'SI')->noSuspendido();
         }])->get();
 
         return response()->json([

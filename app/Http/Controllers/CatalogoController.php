@@ -57,7 +57,7 @@ class CatalogoController extends Controller
 {
     $modelo = Modelo::with('getProducto')->findOrFail($id);
     $producto = Producto::with('getModelo')->findOrFail($id);
-    $productos = Producto::with('getModelo')->where('modelo_id', $id)->where('pagina_web', 'SI')->take(15)->get();
+    $productos = Producto::with('getModelo')->where('modelo_id', $id)->where('pagina_web', 'SI')->noSuspendido()->take(15)->get();
     $modelos = Modelo::with('getProducto')->get();
     $categorias = Categoria::where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
 
@@ -78,6 +78,7 @@ class CatalogoController extends Controller
     // ✅ Añadir novedades aquí
     $novedades = Producto::orderBy('created_at', 'DESC')
         ->where('pagina_web', 'SI')
+        ->noSuspendido()
         ->whereNull('precio_anterior')
         ->take(16)
         ->get();
@@ -96,6 +97,7 @@ class CatalogoController extends Controller
     {
         $productos = Producto::with('getCategoria', 'getMarca','getModelo')
             ->where('pagina_web', 'SI')
+            ->noSuspendido()
             ->orderBy('nombre', 'ASC');
 
         if($request->modelo_id) {
@@ -329,6 +331,7 @@ class CatalogoController extends Controller
     {
         $productos = Producto::with('getCategoria', 'getMarca')
             ->where('pagina_web', 'SI')
+            ->noSuspendido()
             ->orderBy('nombre', 'ASC');
 
         if ($request->nombre) {
