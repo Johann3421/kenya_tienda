@@ -16,13 +16,13 @@ return new class extends Migration
         });
 
         // Índice para búsquedas rápidas por codigo_pc
-        Schema::table('productos', function (Blueprint $table) {
-            $sm = Schema::getConnection()->getDoctrineSchemaManager();
-            $indexes = array_keys($sm->listTableIndexes('productos'));
-            if (!in_array('idx_productos_codigo_pc', $indexes, true)) {
+        try {
+            Schema::table('productos', function (Blueprint $table) {
                 $table->index('codigo_pc', 'idx_productos_codigo_pc');
-            }
-        });
+            });
+        } catch (\Exception $e) {
+            // El índice ya existe — ignorar
+        }
     }
 
     public function down(): void
