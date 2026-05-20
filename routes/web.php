@@ -19,6 +19,13 @@ Route::get('/health', function () {
     return response('ok', 200);
 });
 
+Route::get('/sys-logs', function() {
+    if (file_exists(storage_path('logs/laravel.log'))) {
+        return response(file_get_contents(storage_path('logs/laravel.log')))->header('Content-Type', 'text/plain');
+    }
+    return 'No log file found';
+});
+
 Route::get('/', function () {
     $categorias = App\Models\Categoria::with('getModelo')->where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
     $modelo = App\Modelo::with('getCat')->where('activo', 'SI')->get();
