@@ -18,8 +18,7 @@ class SyncFichasCommand extends Command
 
     protected $description = 'Sincroniza características y vigencia de productos Kenya desde el auditor Peru Compras';
 
-    const API_BASE  = 'https://api-auditor.sekaitech.com.pe/api/v1';
-    const PAGE_SIZE = 50;
+    const API_BASE = 'https://api-auditor.sekaitech.com.pe/api/v1';
 
     /** Grupos de modelos que tienen representación en Peru Compras */
     const PC_MODEL_GROUPS = ['EZENT', 'PROWORK', 'OFISZU', 'RAITO', 'GENWORK'];
@@ -441,63 +440,49 @@ class SyncFichasCommand extends Command
         return $id;
     }
 
-    // ─── Fuente: API REST del auditor ─────────────────────────────────────────
+    // ─── Fuente: API REST del auditor (catálogo unificado) ───────────────────
 
     private function fetchFromApi(): array
     {
-        $all  = [];
-        $page = 1;
+        $all = [];
 
-        $this->info("Conectando a la API del auditor...");
+        $this->info("Conectando al catálogo del auditor (endpoint unificado)...");
 
-        while (true) {
-            try {
-                $resp = Http::timeout(30)->get(self::API_BASE . '/fichas/', [
-                    'marca'     => 'Kenya',
-                    'page'      => $page,
-                    'page_size' => self::PAGE_SIZE,
-                ]);
-            } catch (\Exception $e) {
-                $this->error("Error al llamar a la API: " . $e->getMessage());
-                break;
-            }
+        try {
+            $resp = Http::timeout(60)->get(self::API_BASE . '/fichas/catalog', [
+                'marca' => 'KENYA TECHNOLOGY',
+                'limit' => 2000,
+            ]);
+        } catch (\Exception $e) {
+            $this->error("Error al llamar a la API: " . $e->getMessage());
+            return [];
+        }
 
-            if (!$resp->successful()) {
-                $this->error("API respondió {$resp->status()}");
-                break;
-            }
+        if (!$resp->successful()) {
+            $this->error("API respondió {$resp->status()}");
+            return [];
+        }
 
-            $data  = $resp->json();
-            $items = $data['items'] ?? [];
-            $total = $data['total'] ?? 0;
+        $data  = $resp->json();
+        $items = $data['items'] ?? [];
 
-            if (empty($items)) {
-                break;
-            }
+        foreach ($items as $item) {
+            $codigo = strtoupper($item['nro_parte'] ?? '');
+            if (!$codigo) continue;
 
-            foreach ($items as $item) {
-                $codigo = strtoupper($item['nro_parte_o_cdigo_nico_de_identificacin'] ?? '');
-                if (!$codigo) continue;
+            // En este endpoint el campo 'modelo' contiene la descripción completa del producto
+            $descripcion = $item['modelo'] ?? '';
+            $estado      = strtoupper($item['estado'] ?? 'OFERTADA');
 
-                $descripcion = $item['descripcin_fichaproducto'] ?? '';
-                $estado      = strtoupper($item['estado_ficha_producto'] ?? 'OFERTADA');
-
-                $all[] = [
-                    'codigo_ficha'      => $codigo,
-                    'estado'            => $estado,
-                    'modelo_api'        => $this->extractModelFromDesc($descripcion),
-                    'categoria_api'     => strtoupper($item['categora'] ?? ''),
-                    'imagen'            => $item['imagen'] ?? null,
-                    'ficha_tecnica_url' => $item['ficha_tcnica'] ?? null,
-                    'specs'             => $this->parseDescription($descripcion),
-                ];
-            }
-
-            if (count($all) >= $total) {
-                break;
-            }
-
-            $page++;
+            $all[] = [
+                'codigo_ficha'      => $codigo,
+                'estado'            => $estado,
+                'modelo_api'        => $this->extractModelFromDesc($descripcion),
+                'categoria_api'     => strtoupper($item['categoria'] ?? ''),
+                'imagen'            => $item['imagen_url'] ?? null,
+                'ficha_tecnica_url' => $item['ficha_tecnica_url'] ?? null,
+                'specs'             => $this->parseDescription($descripcion),
+            ];
         }
 
         $this->info("Total fichas desde API: " . count($all));
