@@ -39,6 +39,7 @@
             'procesador',
             'ram',
             'almacenamiento',
+            'tarjetavideo',
             'sistema_operativo',
             'unidad_optica',
             'conectividad',
@@ -47,11 +48,14 @@
             'video_vga',
             'video_hdmi',
             'suite_ofimatica',
+            'teclado',
+            'mouse',
         ];
 
         foreach ($specFields as $field) {
             if (request()->filled($field)) {
-                $productosQuery->where($field, request($field));
+                $valores = explode(',', request($field));
+                $productosQuery->whereIn($field, $valores);
             }
         }
 
