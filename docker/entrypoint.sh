@@ -25,4 +25,7 @@ if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
     php artisan migrate --force
 fi
 
+# Iniciar el daemon cron para el scheduler de Laravel
+service cron start || cron &
+
 exec "$@"

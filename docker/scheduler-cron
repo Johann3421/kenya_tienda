@@ -1,0 +1,4 @@
+# Laravel Scheduler - ejecuta cada minuto y Laravel decide qué correr
+# sync:fichas --crear --suspender-sin-ficha corre cada lunes 06:00 Lima (11:00 UTC)
+* * * * * www-data cd /var/www/html && php artisan schedule:run >> /var/log/scheduler.log 2>&1
+

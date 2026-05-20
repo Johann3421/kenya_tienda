@@ -28,10 +28,11 @@ class Kernel extends ConsoleKernel
         // Sincronización legacy
         $schedule->command('kenya:sync-products')->dailyAt('02:00');
 
-        // Sincronización de fichas Peru Compras: cada lunes a las 06:00
-        // --crear   → crea nuevos productos para fichas que no tienen match en BD
-        $schedule->command('sync:fichas --crear')
-            ->weeklyOn(1, '06:00')
+        // Sincronización de fichas Peru Compras: cada lunes a las 06:00 (hora Lima, UTC-5)
+        // --crear               → crea productos para fichas sin match en BD
+        // --suspender-sin-ficha → suspende productos de modelos PC sin codigo_pc
+        $schedule->command('sync:fichas --crear --suspender-sin-ficha')
+            ->weeklyOn(1, '11:00')  // 06:00 Lima = 11:00 UTC
             ->withoutOverlapping()
             ->appendOutputTo(storage_path('logs/sync-fichas.log'));
     }

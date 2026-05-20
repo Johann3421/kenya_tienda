@@ -8,6 +8,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         git \
         unzip \
+        cron \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
@@ -48,6 +49,10 @@ RUN composer dump-autoload --optimize \
     && chmod +x /usr/local/bin/kenya-entrypoint \
     && mkdir -p storage/app/public storage/framework/cache storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
     && chown -R www-data:www-data storage bootstrap/cache
+
+# Cron para el scheduler de Laravel (cada lunes sync:fichas)
+COPY docker/scheduler-cron /etc/cron.d/kenya-scheduler
+RUN chmod 0644 /etc/cron.d/kenya-scheduler
 
 EXPOSE 80
 
