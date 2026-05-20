@@ -461,8 +461,8 @@
                                                             @php
                                                                 // Obtener solo el nombre del archivo
                                                                 $imageFile = basename($banner->imagen_path);
-                                                                // Construir la ruta correcta (banners/nombrearchivo)
-                                                                $fullPath = 'banners/' . $imageFile;
+                                                                // Construir la ruta correcta
+                                                                $fullPath = 'storage/banners/' . $imageFile;
                                                             @endphp
 
                                                             @if (file_exists(public_path($fullPath)))

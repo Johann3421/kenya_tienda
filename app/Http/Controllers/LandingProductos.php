@@ -66,7 +66,7 @@ class LandingProductos extends Controller
             $productos->where('categoria_id', $request->categoria_id);
         }
 
-        
+
 
         $productos = $productos->paginate(8);
 

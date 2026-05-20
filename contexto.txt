@@ -1,0 +1,213 @@
+# Kenya Tienda — Walkthrough de Migración MySQL → PostgreSQL
+
+## 📋 Contexto del Proyecto
+
+**Aplicación:** Kenya Tienda — E-commerce Laravel (PHP 8.x)
+**Entorno de producción:** VPS con Dokploy (Docker)
+**Contenedores:** `kenya_app` (PHP/Apache) y `kenya_db` (PostgreSQL)
+**Problema original:** El panel de administración y la página principal no cargaban ningún dato después de la migración de MySQL a PostgreSQL.
+
+---
+
+## 🗂️ Archivos Clave del Proyecto
+
+| Archivo | Propósito |
+|---|---|
+| `kenyacom_kenya (7).sql` | Dump original de MySQL (fuente de verdad) |
+| `import_data.sql` | Dump convertido compatible con PostgreSQL (generado por script) |
+| `convert_dump.py` | Script Python de conversión MySQL → PostgreSQL |
+| `docker-compose.yml` | Configuración de los contenedores Docker |
+| `.env` | Variables de entorno (conexión a Postgres) |
+| `.dockerignore` | Lista blanca/negra de archivos para el contenedor |
+
+---
+
+## 🔴 Problemas Encontrados y Soluciones Aplicadas
+
+### Problema 1: Error de sintaxis JSON en el dump de MySQL
+
+**Síntoma:**
+```
+ERROR: invalid input syntax for type json
+DETAIL: Token "\" is invalid.
+```
+
+**Causa:** MySQL exporta arrays JSON con comillas escapadas (`\"`), que PostgreSQL no acepta.
+
+**Solución:** Se creó el script `convert_dump.py` que procesa el dump de MySQL y:
+1. Convierte la sintaxis de backticks a comillas dobles para nombres de tablas/columnas.
+2. Desescapa las comillas JSON.
+3. Agrega `ON CONFLICT DO NOTHING` para idempotencia.
+4. Desactiva temporalmente las FK constraints con `SET session_replication_role = 'replica'`.
+
+---
+
+### Problema 2: `import_data.sql` no accesible en el contenedor
+
+**Síntoma:** `cat: /var/www/html/import_data.sql: No such file or directory`
+
+**Causa:** El archivo estaba siendo ignorado por `.dockerignore`.
+
+**Solución:** Se agregó excepción en `.dockerignore`:
+```
+!import_data.sql
+```
+
+**Archivo modificado:** [.dockerignore](file:///c:\xampp\htdocs\kenya_tienda\.dockerignore)
+
+---
+
+### Problema 3: Migraciones de Laravel fallaban (tablas duplicadas)
+
+**Síntoma:** `ERROR: relation "especificaciones" already exists`
+
+**Solución:** Se envolvieron las migraciones críticas con guardas de existencia:
+
+```php
+if (!Schema::hasTable('especificaciones')) {
+    Schema::create('especificaciones', function (Blueprint $table) { ... });
+}
+```
+
+**Archivos modificados:**
+- [2024_01_01_000000_create_especificaciones_table.php](file:///c:\xampp\htdocs\kenya_tienda\database\migrations\2024_01_01_000000_create_especificaciones_table.php)
+- [2024_01_01_000001_create_pagina_estados_table.php](file:///c:\xampp\htdocs\kenya_tienda\database\migrations\2024_01_01_000001_create_pagina_estados_table.php)
+- [2026_01_29_120000_add_piezas_retiradas_to_soportes_table.php](file:///c:\xampp\htdocs\kenya_tienda\database\migrations\2026_01_29_120000_add_piezas_retiradas_to_soportes_table.php)
+
+---
+
+### Problema 4: Error LIKE en columnas enteras
+
+**Síntoma:** `ERROR: operator does not exist: integer ~~ text`
+
+**Causa:** PostgreSQL no permite `LIKE` sobre columnas `integer` (a diferencia de MySQL).
+
+**Solución:** Cast explícito a texto con `::text`:
+
+```php
+// Antes
+->where('id', 'LIKE', "%{$request->search}%")
+
+// Después
+->orWhereRaw("id::text LIKE ?", ["%{$request->search}%"])
+```
+
+**Archivos modificados:**
+- [CategoriaController.php](file:///c:\xampp\htdocs\kenya_tienda\app\Http\Controllers\CategoriaController.php) — Método `buscar()`
+- [ModeloController.php](file:///c:\xampp\htdocs\kenya_tienda\app\Http\Controllers\ModeloController.php) — Métodos `buscar()` y `buscar_categorias()`
+
+> [!NOTE]
+> Este mismo patrón debe aplicarse a: `ProductoDriversController`, `ManualController`, `GarantiaController`, etc.
+
+---
+
+### Problema 5: Menú de administración vacío (sin apartados)
+
+**Síntoma:** El panel cargaba pero el menú lateral no mostraba ningún módulo.
+
+**Causa:** El menú usa directivas `@can('permiso')` de Spatie Laravel Permission. La `TABLA_WHITELIST` del script `convert_dump.py` no incluía las tablas de autenticación, por lo que `roles`, `permissions`, `model_has_roles`, etc. quedaban vacías.
+
+**Solución:** Se amplió la `TABLA_WHITELIST` en `convert_dump.py`:
+
+```python
+TABLA_WHITELIST = {
+    'categorias', 'modelos', 'productos', 'especificaciones',
+    'banners', 'banner_medios', 'asides', 'configuraciones',
+    'almacenamiento', 'users', 'roles', 'permissions',
+    'model_has_roles', 'role_has_permissions', 'model_has_permissions',
+    'marcas', 'procesador', 'tarjetavideo', 'ram', 'ofimatica'
+}
+```
+
+**Archivo modificado:** [convert_dump.py](file:///c:\xampp\htdocs\kenya_tienda\convert_dump.py)
+
+---
+
+### Problema 6: Categorías y productos vacíos en la página principal
+
+**Síntoma:** Menú admin OK, pero la página pública y la lista de categorías en admin aparecían vacías.
+
+**Causa Raíz:** MySQL exporta valores booleanos de texto como `'Si'`/`'No'` (primera letra mayúscula). PostgreSQL es **case-sensitive**, y Laravel busca `'SI'`/`'NO'` en mayúsculas.
+
+```php
+// No retorna nada si en BD existe 'Si' en lugar de 'SI'
+Categoria::where('activo', 'SI')->get();
+Producto::where('pagina_web', 'SI')->get();
+```
+
+**Solución inmediata — normalizar datos en la BD de producción:**
+```bash
+sudo docker exec -i kenya_db psql -U kenya_app -d kenya_tienda -c "UPDATE categorias SET activo = UPPER(activo);"
+sudo docker exec -i kenya_db psql -U kenya_app -d kenya_tienda -c "UPDATE modelos SET activo = UPPER(activo);"
+sudo docker exec -i kenya_db psql -U kenya_app -d kenya_tienda -c "UPDATE productos SET pagina_web = UPPER(pagina_web);"
+```
+
+**Solución permanente — normalización en `convert_dump.py`:**
+```python
+if val == 'Si' or val == 'si':
+    val = 'SI'
+elif val == 'No' or val == 'no':
+    val = 'NO'
+```
+
+**Archivo modificado:** [convert_dump.py](file:///c:\xampp\htdocs\kenya_tienda\convert_dump.py)
+
+---
+
+## 🚀 Flujo de Trabajo para Futuros Re-Imports
+
+1. Exporta el dump de MySQL desde desarrollo.
+2. Coloca el dump en `c:\xampp\htdocs\kenya_tienda\`.
+3. Ejecuta el script de conversión:
+   ```bash
+   python convert_dump.py
+   ```
+4. Sube los cambios a Git:
+   ```bash
+   git add convert_dump.py import_data.sql
+   git commit -m "feat: actualizar dump de base de datos"
+   git push
+   ```
+5. Espera 1-2 minutos para que Dokploy reconstruya el contenedor.
+6. Importa en producción:
+   ```bash
+   sudo docker exec kenya_app cat /var/www/html/import_data.sql | sudo docker exec -i kenya_db psql -U kenya_app -d kenya_tienda
+   ```
+7. Limpia la caché de Laravel:
+   ```bash
+   sudo docker exec kenya_app php artisan cache:clear
+   sudo docker exec kenya_app php artisan config:clear
+   sudo docker exec kenya_app php artisan view:clear
+   ```
+
+---
+
+## ⚠️ Pendientes y Tareas Futuras
+
+- [ ] Aplicar `id::text LIKE` a todos los controladores con búsqueda por ID: `ProductoDriversController`, `ManualController`, `GarantiaController`, `BarrasController`, etc.
+- [ ] Revisar 404 en imágenes de `/banners/` y `/storage/` — verificar rutas de almacenamiento Docker.
+- [ ] Ejecutar `sudo docker exec kenya_app php artisan storage:link` para habilitar acceso web a archivos subidos.
+- [ ] Normalizar el resto de columnas booleanas en producción (`conectividad`, `video_vga`, `video_hdmi`, `garantia_de_fabrica`, etc. en tabla `productos`).
+
+---
+
+## 🔑 Referencia Rápida de Comandos en VPS
+
+```bash
+# Ver logs en tiempo real del contenedor PHP
+sudo docker logs --tail 100 -f kenya_app
+
+# Ejecutar comando artisan en el contenedor
+sudo docker exec kenya_app php artisan <comando>
+
+# Conectarse a PostgreSQL directamente
+sudo docker exec -it kenya_db psql -U kenya_app -d kenya_tienda
+
+# Importar dump SQL
+sudo docker exec kenya_app cat /var/www/html/import_data.sql | sudo docker exec -i kenya_db psql -U kenya_app -d kenya_tienda
+
+# Limpiar caché completo de Laravel
+sudo docker exec kenya_app php artisan cache:clear && \
+sudo docker exec kenya_app php artisan config:clear && \
+sudo docker exec kenya_app php artisan view:clear
+```

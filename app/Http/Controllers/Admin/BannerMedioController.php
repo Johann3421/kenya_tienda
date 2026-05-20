@@ -42,14 +42,14 @@ class BannerMedioController extends Controller
         $image = $request->file('imagen');
         $imageName = time().'_'.Str::slug($validated['titulo'] ?? 'banner').'.'.$image->getClientOriginalExtension();
 
-        // Crear directorio si no existe
-        if (!File::exists(public_path('banners'))) {
-            File::makeDirectory(public_path('banners'), 0755, true);
+        // Crear directorio si no existe en storage
+        if (!File::exists(public_path('storage/banners'))) {
+            File::makeDirectory(public_path('storage/banners'), 0755, true);
         }
 
-        // Mover la imagen a public/banners
-        $image->move(public_path('banners'), $imageName);
-        $imagePath = 'banners/'.$imageName;
+        // Mover la imagen
+        $image->move(public_path('storage/banners'), $imageName);
+        $imagePath = 'storage/banners/'.$imageName;
 
         // Crear el banner
         $banner = BannerMedio::create([
@@ -96,8 +96,8 @@ class BannerMedioController extends Controller
 
         // Guardar nueva imagen
         $imageName = time().'_'.Str::slug($request->titulo ?? 'banner').'.'.$request->imagen->extension();
-        $request->imagen->move(public_path('banners'), $imageName);
-        $validated['imagen_path'] = 'banners/'.$imageName;
+        $request->imagen->move(public_path('storage/banners'), $imageName);
+        $validated['imagen_path'] = 'storage/banners/'.$imageName;
     }
 
     $bannerMedio->update($validated);
