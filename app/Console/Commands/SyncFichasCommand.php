@@ -510,8 +510,7 @@ class SyncFichasCommand extends Command
             if (isset($videoMap[$codigo])) {
                 $graficosRaw = $videoMap[$codigo]['graficos'] ?? null;
                 if ($graficosRaw) {
-                    // Corregir doble-codificación UTF-8 del API ("Â®" → "®")
-                    $specs['graficos'] = mb_convert_encoding($graficosRaw, 'ISO-8859-1', 'UTF-8');
+                    $specs['graficos'] = $this->fixEncoding($graficosRaw);
                 }
                 // Preferir URL de ficha desde video-specs si está disponible
                 $fichaUrl = $videoMap[$codigo]['ficha_tecnica_url'] ?? $fichaUrl;
@@ -566,6 +565,32 @@ class SyncFichasCommand extends Command
             'ficha_tecnica_url' => $f['ficha_tecnica_url'] ?? null,
             'specs'             => $f['specs'] ?? [],
         ], $raw);
+    }
+
+    // ─── Encoding helper ─────────────────────────────────────────────────────
+
+    /**
+     * Corrige strings con encoding incorrecto provenientes del API:
+     *  - Bytes Latin-1 crudos (0xAE para ®) → convierte desde ISO-8859-1 a UTF-8
+     *  - Doble-codificación UTF-8 ("Â®" en lugar de "®") → deshace la capa extra
+     */
+    private function fixEncoding(?string $str): ?string
+    {
+        if (!$str) return null;
+
+        if (!mb_check_encoding($str, 'UTF-8')) {
+            // Contiene bytes no-UTF8 (ej. 0xAE solo) → interpretar como Latin-1
+            return mb_convert_encoding($str, 'UTF-8', 'ISO-8859-1');
+        }
+
+        // Válido UTF-8: intentar deshacer doble-codificación
+        // ("Â®" = U+00C2 U+00AE → ISO-8859-1 bytes C2 AE → UTF-8 válido para ®)
+        $decoded = mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8');
+        if (mb_check_encoding($decoded, 'UTF-8')) {
+            return $decoded;
+        }
+
+        return $str; // no era doble-codificado, devolver original
     }
 
     // ─── Parser de descripción ────────────────────────────────────────────────
