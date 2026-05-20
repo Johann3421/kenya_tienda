@@ -21,7 +21,7 @@ class SyncFichasCommand extends Command
     const API_BASE = 'https://api-auditor.sekaitech.com.pe/api/v1';
 
     /** Grupos de modelos que tienen representación en Peru Compras */
-    const PC_MODEL_GROUPS = ['EZENT', 'PROWORK', 'OFISZU', 'RAITO', 'GENWORK'];
+    const PC_MODEL_GROUPS = ['EZENT', 'PROWORK', 'OFISZU', 'RAITO', 'GENWORK', 'HENKO'];
 
     // Tokens del texto de descripción → columna en productos
     // Orden importa: tokens más largos primero para evitar matches parciales
@@ -359,6 +359,7 @@ class SyncFichasCommand extends Command
             'procesador'          => 'procesador',
             'ram'                 => 'ram',
             'almacenamiento'      => 'almacenamiento',
+            'graficos'            => 'tarjetavideo',
             'conectividad'        => 'conectividad',
             'conectividad_wlan'   => 'conectividad_wlan',
             'conectividad_usb'    => 'conectividad_usb',
