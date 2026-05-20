@@ -29,6 +29,15 @@ class ControlRutasController extends Controller
             ->unique('ruta')
             ->values();
 
+        // Arreglo automático para secuencias de PostgreSQL (común al migrar de MySQL)
+        if (config('database.default') === 'pgsql') {
+            try {
+                \Illuminate\Support\Facades\DB::statement("SELECT setval('pagina_estados_id_seq', (SELECT COALESCE(MAX(id), 1) FROM pagina_estados) + 1, false);");
+            } catch (\Exception $e) {
+                // Ignorar si la secuencia no existe
+            }
+        }
+
         // Sincroniza las rutas con la base de datos
         foreach ($routes as $pagina) {
             PaginaEstado::firstOrCreate(

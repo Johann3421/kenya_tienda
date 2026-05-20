@@ -17,16 +17,7 @@ if (app()->environment('local')) {
 
 Route::get('/health', function () {
     return response('ok', 200);
-});
 
-Route::get('/sys-logs', function() {
-    try {
-        $controller = app()->make(\App\Http\Controllers\Sistema\ControlRutasController::class);
-        return $controller->index();
-    } catch (\Throwable $e) {
-        return response("Exception: " . $e->getMessage() . "\nFile: " . $e->getFile() . ":" . $e->getLine() . "\n\nTrace:\n" . $e->getTraceAsString())->header('Content-Type', 'text/plain');
-    }
-});
 
 Route::get('/', function () {
     $categorias = App\Models\Categoria::with('getModelo')->where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
