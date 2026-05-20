@@ -20,10 +20,12 @@ Route::get('/health', function () {
 });
 
 Route::get('/sys-logs', function() {
-    if (file_exists(storage_path('logs/laravel.log'))) {
-        return response(file_get_contents(storage_path('logs/laravel.log')))->header('Content-Type', 'text/plain');
+    try {
+        $controller = app()->make(\App\Http\Controllers\Sistema\ControlRutasController::class);
+        return $controller->index();
+    } catch (\Throwable $e) {
+        return response("Exception: " . $e->getMessage() . "\nFile: " . $e->getFile() . ":" . $e->getLine() . "\n\nTrace:\n" . $e->getTraceAsString())->header('Content-Type', 'text/plain');
     }
-    return 'No log file found';
 });
 
 Route::get('/', function () {
