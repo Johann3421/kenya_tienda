@@ -162,9 +162,22 @@
         </div>
         @endif
 
+        <!-- Filtro Tarjeta de Video -->
+        @if(isset($tarjetas_video) && $tarjetas_video->count() > 0)
+        <div class="filtro-group">
+            <label for="tarjeta_video">Tarjeta de Video</label>
+            <select name="tarjeta_video" id="tarjeta_video" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+                <option value="">Todas</option>
+                @foreach($tarjetas_video as $tv)
+                    <option value="{{ $tv }}" {{ request('tarjeta_video') == $tv ? 'selected' : '' }}>{{ $tv }}</option>
+                @endforeach
+            </select>
+        </div>
+        @endif
+
         <!-- Botón Limpiar Filtros -->
         <div class="filtro-group">
-            <a href="{{ route('catalogo') }}?{{ http_build_query(collect(request()->query())->except(['procesador', 'memoria_ram', 'almacenamiento', 'sistema_operativo', 'unidad_optica', 'conectividad_lan', 'conectividad_wlan', 'conectividad_usb', 'conectividad_vga', 'conectividad_hdmi', 'ofimatica', 'perifericos'])->toArray()) }}" class="btn btn-secondary btn-sm">Limpiar Filtros</a>
+            <a href="{{ route('catalogo') }}?{{ http_build_query(collect(request()->query())->except(['procesador', 'memoria_ram', 'almacenamiento', 'sistema_operativo', 'unidad_optica', 'conectividad_lan', 'conectividad_wlan', 'conectividad_usb', 'conectividad_vga', 'conectividad_hdmi', 'ofimatica', 'perifericos', 'tarjeta_video'])->toArray()) }}" class="btn btn-secondary btn-sm">Limpiar Filtros</a>
         </div>
     </form>
 </div>

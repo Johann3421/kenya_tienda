@@ -40,6 +40,7 @@
     $conectividad_hdmi = request('conectividad_hdmi');
     $ofimatica = request('ofimatica');
     $perifericos = request('perifericos');
+    $tarjeta_video = request('tarjeta_video');
 
     // Consulta base
     $productosQuery = Producto::query();
@@ -115,6 +116,11 @@
             $q->where('campo', 'Periféricos')->where('descripcion', $perifericos);
         });
     }
+    if ($tarjeta_video) {
+        $productosQuery->whereHas('especificaciones', function($q) use ($tarjeta_video) {
+            $q->where('campo', 'Gráficos')->where('descripcion', $tarjeta_video);
+        });
+    }
 
     // Aplicar ordenación
     switch ($orden) {
@@ -148,6 +154,7 @@
     $conectividades_hdmi = DB::table('especificaciones')->where('campo', 'Conectividad HDMI')->distinct()->pluck('descripcion')->sort();
     $ofimaticas = DB::table('especificaciones')->where('campo', 'Ofimática')->distinct()->pluck('descripcion')->sort();
     $perifericos_list = DB::table('especificaciones')->where('campo', 'Periféricos')->distinct()->pluck('descripcion')->sort();
+    $tarjetas_video = DB::table('especificaciones')->where('campo', 'Gráficos')->distinct()->pluck('descripcion')->sort();
 
     // Paginar resultados (con eager loading si es necesario)
     $productos = $productosQuery->with('modelo')->paginate(9);
@@ -175,7 +182,8 @@
                         'conectividades_vga' => $conectividades_vga,
                         'conectividades_hdmi' => $conectividades_hdmi,
                         'ofimaticas' => $ofimaticas,
-                        'perifericos_list' => $perifericos_list
+                        'perifericos_list' => $perifericos_list,
+                        'tarjetas_video' => $tarjetas_video
                     ])
                 </div>
                 <div class="col-lg-9">
@@ -231,8 +239,10 @@
                     @forelse($productos as $producto)
                         <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
                             <div class="product-card">
-                                @if (($producto->stock ?? 100) <= 0)
-                                    <!-- Stock por defecto 100 -->
+                                @php
+                                    $stock = $producto->stock ?? '>= 50';
+                                @endphp
+                                @if ($stock === 0 || $stock === '0')
                                     <div class="product-badge out-of-stock">Agotado</div>
                                 @elseif(isset($producto->created_at) && \Carbon\Carbon::parse($producto->created_at)->diffInDays(now()) <= 30)
                                     <div class="product-badge">Nuevo</div>
@@ -287,9 +297,9 @@
                                         <p><strong>Parte:</strong> {{ $producto->nro_parte ?? 'N/A' }}</p>
                                         <p><strong>Stock:</strong>
                                             @php
-                                                $stock = $producto->stock ?? 100; // Valor por defecto 100
+                                                $stock = $producto->stock ?? '>= 50'; // Valor por defecto
                                             @endphp
-                                            @if ($stock > 0)
+                                            @if ($stock !== 0 && $stock !== '0')
                                                 <span class="in-stock">{{ $stock }} unidades</span>
                                             @else
                                                 <span class="out-of-stock">No disponible</span>
