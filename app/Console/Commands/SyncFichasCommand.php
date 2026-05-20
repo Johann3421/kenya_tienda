@@ -50,6 +50,7 @@ class SyncFichasCommand extends Command
         'procesador'          => 'Procesador',
         'ram'                 => 'RAM',
         'almacenamiento'      => 'Almacenamiento',
+        'graficos'            => 'Gráficos',
         'conectividad'        => 'Conectividad LAN',
         'conectividad_wlan'   => 'Conectividad WLAN',
         'conectividad_usb'    => 'Conectividad USB',
@@ -440,39 +441,81 @@ class SyncFichasCommand extends Command
         return $id;
     }
 
-    // ─── Fuente: API REST del auditor (catálogo unificado) ───────────────────
+    // ─── Fuente: APIs del auditor (catálogo + video-specs fusionados) ──────────
 
     private function fetchFromApi(): array
     {
-        $all = [];
+        $this->info("Obteniendo fichas del auditor...");
 
-        $this->info("Conectando al catálogo del auditor (endpoint unificado)...");
+        // 1. Video-specs: nro_parte, graficos, ficha_tecnica_url, modelo (descripción), categoria
+        $videoMap = [];
+        try {
+            $resp = Http::timeout(60)->get(self::API_BASE . '/fichas/video-specs');
+            if ($resp->successful()) {
+                foreach ($resp->json()['items'] ?? [] as $item) {
+                    $code = strtoupper($item['nro_parte'] ?? '');
+                    if ($code) {
+                        $videoMap[$code] = $item;
+                    }
+                }
+                $this->info("Video-specs: " . count($videoMap) . " fichas");
+            } else {
+                $this->warn("video-specs respondió " . $resp->status());
+            }
+        } catch (\Exception $e) {
+            $this->warn("No se pudo obtener video-specs: " . $e->getMessage());
+        }
 
+        // 2. Catálogo: nro_parte, estado, imagen_url, modelo (descripción), categoria
+        $catalogItems = [];
         try {
             $resp = Http::timeout(60)->get(self::API_BASE . '/fichas/catalog', [
                 'marca' => 'KENYA TECHNOLOGY',
                 'limit' => 2000,
             ]);
+            if ($resp->successful()) {
+                $catalogItems = $resp->json()['items'] ?? [];
+                $this->info("Catálogo: " . count($catalogItems) . " fichas");
+            } else {
+                $this->warn("catalog respondió " . $resp->status());
+            }
         } catch (\Exception $e) {
-            $this->error("Error al llamar a la API: " . $e->getMessage());
+            $this->warn("No se pudo obtener catálogo: " . $e->getMessage());
+        }
+
+        // Fallback: si catalog falla usar video-specs como base
+        if (empty($catalogItems) && !empty($videoMap)) {
+            $catalogItems = array_values($videoMap);
+        }
+
+        if (empty($catalogItems)) {
+            $this->error("No se obtuvieron fichas de ningún endpoint.");
             return [];
         }
 
-        if (!$resp->successful()) {
-            $this->error("API respondió {$resp->status()}");
-            return [];
-        }
-
-        $data  = $resp->json();
-        $items = $data['items'] ?? [];
-
-        foreach ($items as $item) {
+        $all = [];
+        foreach ($catalogItems as $item) {
             $codigo = strtoupper($item['nro_parte'] ?? '');
             if (!$codigo) continue;
 
-            // En este endpoint el campo 'modelo' contiene la descripción completa del producto
+            // 'modelo' en ambos endpoints contiene la descripción completa del producto
             $descripcion = $item['modelo'] ?? '';
             $estado      = strtoupper($item['estado'] ?? 'OFERTADA');
+
+            // Parsear specs desde la descripción
+            $specs = $this->parseDescription($descripcion);
+
+            // Fusionar graficos desde video-specs
+            $fichaUrl = $item['ficha_tecnica_url'] ?? null;
+            if (isset($videoMap[$codigo])) {
+                $graficosRaw = $videoMap[$codigo]['graficos'] ?? null;
+                if ($graficosRaw) {
+                    // Corregir doble-codificación UTF-8 del API ("Â®" → "®")
+                    $specs['graficos'] = mb_convert_encoding($graficosRaw, 'ISO-8859-1', 'UTF-8');
+                }
+                // Preferir URL de ficha desde video-specs si está disponible
+                $fichaUrl = $videoMap[$codigo]['ficha_tecnica_url'] ?? $fichaUrl;
+            }
 
             $all[] = [
                 'codigo_ficha'      => $codigo,
@@ -480,12 +523,12 @@ class SyncFichasCommand extends Command
                 'modelo_api'        => $this->extractModelFromDesc($descripcion),
                 'categoria_api'     => strtoupper($item['categoria'] ?? ''),
                 'imagen'            => $item['imagen_url'] ?? null,
-                'ficha_tecnica_url' => $item['ficha_tecnica_url'] ?? null,
-                'specs'             => $this->parseDescription($descripcion),
+                'ficha_tecnica_url' => $fichaUrl,
+                'specs'             => $specs,
             ];
         }
 
-        $this->info("Total fichas desde API: " . count($all));
+        $this->info("Total fichas fusionadas: " . count($all));
         return $all;
     }
 
