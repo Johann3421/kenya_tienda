@@ -17,8 +17,7 @@ if (app()->environment('local')) {
 
 Route::get('/health', function () {
     return response('ok', 200);
-
-
+});
 Route::get('/', function () {
     $categorias = App\Models\Categoria::with('getModelo')->where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
     $modelo = App\Modelo::with('getCat')->where('activo', 'SI')->get();
