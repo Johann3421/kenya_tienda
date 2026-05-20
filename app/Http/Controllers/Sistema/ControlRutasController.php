@@ -17,7 +17,7 @@ class ControlRutasController extends Controller
                 $uri = $route->uri();
                 // Excluye rutas de admin, api, login, logout, y rutas internas
                 return !preg_match('#^(admin|api|login|logout|register|password|_ignition|sanctum|telescope|horizon)#', $uri)
-                    && !str_contains($uri, '{') // Excluye rutas con parámetros dinámicos
+                    && !\Illuminate\Support\Str::contains($uri, '{') // Excluye rutas con parámetros dinámicos
                     && $route->methods()[0] === 'GET'; // Solo GET principales
             })
             ->map(function ($route) {
