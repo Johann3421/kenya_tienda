@@ -154,6 +154,61 @@ elif val == 'No' or val == 'no':
 
 ---
 
+### Problema 7: Filtros fallaban por espacios en blanco en URLs
+**Síntoma:** Consultas con `whereIn` devolvían 0 resultados cuando la URL tenía parámetros como `?tarjetavideo= +`.
+**Solución:** Se implementó limpieza de arrays en `detallemod.blade.php`:
+```php
+$valores = array_filter(array_map('trim', explode(',', request($field))));
+```
+**Archivo modificado:** `detallemod.blade.php`
+
+---
+
+### Problema 8: Filtros laterales mostraban opciones de productos suspendidos
+**Síntoma:** El aside de filtros mostraba opciones (ej. procesadores, RAM) de productos que ya no estaban disponibles o estaban marcados como "SUSPENDIDA".
+**Solución:** Se actualizó `Producto::scopeNoSuspendido` para usar un enfoque de lista negra (`whereNotIn('vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA'])`). Luego se aplicó el scope `noSuspendido()` a las consultas del aside.
+**Archivos modificados:** `Producto.php`, `aside-detallemod.blade.php`
+
+---
+
+### Problema 9: Filtro de "Tarjeta de Video" vacío para productos nuevos
+**Síntoma:** Al aplicar filtros por tarjeta de video devolvía pocos o ningún resultado.
+**Causa:** El script de sincronización con Peru Compras guardaba "Gráficos" en la tabla genérica `especificaciones` pero olvidaba mapearlo a la columna `tarjetavideo` de la tabla `productos` que usa el filtro frontend.
+**Solución:** Se añadió `'graficos' => 'tarjetavideo'` al `$fieldMap` en la función `mergeSpecs`.
+**Archivo modificado:** `SyncFichasCommand.php`
+*(Requiere correr: `php artisan sync:fichas --suspender-sin-ficha` en producción para re-poblar).*
+
+---
+
+### Problema 10: Modelos antiguos (ej. Henko) seguían visibles
+**Síntoma:** Productos de la marca/modelo Henko que ya no estaban en Peru Compras seguían viéndose en la web.
+**Causa:** El script `SyncFichasCommand` tiene una lista blanca `PC_MODEL_GROUPS` de modelos a los que se les aplica la regla de "suspender si no están en la API". El modelo `HENKO` no estaba en esa lista.
+**Solución:** Se añadió `'HENKO'` al arreglo `PC_MODEL_GROUPS`.
+**Archivo modificado:** `SyncFichasCommand.php`
+
+---
+
+### Problema 11: Mejoras UI en `/catalogo`
+**Solicitud:** Mostrar filtro de Tarjeta de Video y cambiar el texto de stock por defecto.
+**Solución:** Se agregó la UI del filtro de tarjeta de video debajo de Almacenamiento y se actualizó el texto de fallback de `100` a `≥ 50 unidades`.
+**Archivos modificados:** `Catalogo.blade.php`, `aside-catalogo.blade.php`
+
+---
+
+### Problema 12: Error de PostgreSQL al filtrar garantías por colores
+**Síntoma:** Error 500 al filtrar garantías por estado (verde, naranja, rojo). Error SQL de Postgres.
+**Causa:** PostgreSQL devuelve un `integer` (días) al restar dos fechas, pero el código (pensado para MySQL) usaba `EXTRACT(day FROM (fecha1 - fecha2))`. Postgres lanzaba error porque no puede extraer un día de un `integer`.
+**Solución:** Se eliminó la envoltura `EXTRACT` y se aplicó un cast `::numeric` para que la división de porcentajes de vida útil mantuviera decimales correctos.
+```sql
+-- Antes
+EXTRACT(day FROM (LEAST(?::date, "fecha_Vencimiento"::date) - garantia.fecha_venta::date))
+-- Después
+(LEAST(?::date, "fecha_Vencimiento"::date) - garantia.fecha_venta::date)::numeric
+```
+**Archivo modificado:** `GarantiaController.php`
+
+---
+
 ## 🚀 Flujo de Trabajo para Futuros Re-Imports
 
 1. Exporta el dump de MySQL desde desarrollo.
