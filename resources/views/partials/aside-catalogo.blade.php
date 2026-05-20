@@ -45,6 +45,19 @@
         </div>
         @endif
 
+        <!-- Filtro Tarjeta de Video -->
+        @if(isset($tarjetas_video) && $tarjetas_video->count() > 0)
+        <div class="filtro-group">
+            <label for="tarjeta_video">Tarjeta de Video</label>
+            <select name="tarjeta_video" id="tarjeta_video" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+                <option value="">Todas</option>
+                @foreach($tarjetas_video as $tv)
+                    <option value="{{ $tv }}" {{ request('tarjeta_video') == $tv ? 'selected' : '' }}>{{ $tv }}</option>
+                @endforeach
+            </select>
+        </div>
+        @endif
+
         <!-- Filtro Sistema Operativo -->
         @if($sistemas_operativos->count() > 0)
         <div class="filtro-group">
@@ -157,19 +170,6 @@
                 <option value="">Todos</option>
                 @foreach($perifericos_list as $per)
                     <option value="{{ $per }}" {{ request('perifericos') == $per ? 'selected' : '' }}>{{ $per }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
-        <!-- Filtro Tarjeta de Video -->
-        @if(isset($tarjetas_video) && $tarjetas_video->count() > 0)
-        <div class="filtro-group">
-            <label for="tarjeta_video">Tarjeta de Video</label>
-            <select name="tarjeta_video" id="tarjeta_video" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
-                <option value="">Todas</option>
-                @foreach($tarjetas_video as $tv)
-                    <option value="{{ $tv }}" {{ request('tarjeta_video') == $tv ? 'selected' : '' }}>{{ $tv }}</option>
                 @endforeach
             </select>
         </div>

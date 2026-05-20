@@ -240,7 +240,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
                             <div class="product-card">
                                 @php
-                                    $stock = $producto->stock ?? '>= 50';
+                                    $stock = $producto->stock ?? '≥ 50';
                                 @endphp
                                 @if ($stock === 0 || $stock === '0')
                                     <div class="product-badge out-of-stock">Agotado</div>
@@ -297,7 +297,7 @@
                                         <p><strong>Parte:</strong> {{ $producto->nro_parte ?? 'N/A' }}</p>
                                         <p><strong>Stock:</strong>
                                             @php
-                                                $stock = $producto->stock ?? '>= 50'; // Valor por defecto
+                                                $stock = $producto->stock ?? '≥ 50'; // Valor por defecto
                                             @endphp
                                             @if ($stock !== 0 && $stock !== '0')
                                                 <span class="in-stock">{{ $stock }} unidades</span>
