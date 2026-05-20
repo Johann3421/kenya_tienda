@@ -20,61 +20,43 @@
         use Illuminate\Support\Str;
 
         $modeloId = request()->route('id') ?? request()->route('modelo');
-        $modelo = Modelo::with(['productos.filtros', 'productos.modelo'])->findOrFail($modeloId);
-
-        $filtrosActivos = collect(request()->except('page'));
+        $modelo = Modelo::findOrFail($modeloId);
 
         // Consulta base con paginación
         $productosQuery = $modelo
             ->productos()
             ->where('pagina_web', 'SI')
             ->noSuspendido()
-            ->with(['modelo', 'filtros']);
+            ->with(['modelo']);
 
-        // Aplicar filtros si existen
-        if ($filtrosActivos->isNotEmpty()) {
-            foreach ($filtrosActivos as $filtroNombre => $valores) {
-                $valores = is_array($valores) ? $valores : explode(',', $valores);
+        // Filtro por nombre del producto
+        if (request()->filled('nombre')) {
+            $productosQuery->where('nombre', 'LIKE', '%' . request('nombre') . '%');
+        }
 
-                $productosQuery->whereHas('filtros', function ($q) use ($filtroNombre, $valores) {
-                    $q->whereIn('opcion', $valores)->whereRaw('LOWER(nombre_aside) = ?', [strtolower($filtroNombre)]);
-                });
+        // Filtros dinámicos basados en especificaciones técnicas de productos
+        $specFields = [
+            'procesador',
+            'ram',
+            'almacenamiento',
+            'sistema_operativo',
+            'unidad_optica',
+            'conectividad',
+            'conectividad_wlan',
+            'conectividad_usb',
+            'video_vga',
+            'video_hdmi',
+            'suite_ofimatica',
+        ];
+
+        foreach ($specFields as $field) {
+            if (request()->filled($field)) {
+                $productosQuery->where($field, request($field));
             }
         }
 
         $productos = $productosQuery->paginate(9)->appends(request()->query());
     @endphp
-    @php
-    $modeloId = request()->route('id') ?? request()->route('modelo');
-    $modelo = Modelo::with(['productos.filtros', 'productos.modelo'])->findOrFail($modeloId);
-
-    $filtrosActivos = collect(request()->except('page', 'nombre')); // Excluir 'nombre' del resto de filtros
-
-    // Consulta base con paginación
-    $productosQuery = $modelo
-        ->productos()
-        ->where('pagina_web', 'SI')
-        ->noSuspendido()
-        ->with(['modelo', 'filtros']);
-
-    // Aplicar filtros si existen
-    if ($filtrosActivos->isNotEmpty()) {
-        foreach ($filtrosActivos as $filtroNombre => $valores) {
-            $valores = is_array($valores) ? $valores : explode(',', $valores);
-
-            $productosQuery->whereHas('filtros', function ($q) use ($filtroNombre, $valores) {
-                $q->whereIn('opcion', $valores)->whereRaw('LOWER(nombre_aside) = ?', [strtolower($filtroNombre)]);
-            });
-        }
-    }
-
-    // Filtro por nombre del producto
-    if (request()->filled('nombre')) {
-        $productosQuery->where('nombre', 'LIKE', '%' . request('nombre') . '%');
-    }
-
-    $productos = $productosQuery->paginate(9)->appends(request()->query());
-@endphp
 
     <div style="background-color: #f1f1f1; height: 50px; margin-top: 72px;">
         <div class="container">
@@ -99,7 +81,7 @@
     placeholder="Ingrese el nombre" v-on:keyup="Filtrar(search, 'nombre')">
                     </div>
                     <aside>
-                        @include('partials.aside-normal')
+                        @include('partials.aside-detallemod', ['id' => $modeloId])
                     </aside>
 
                 </div>
