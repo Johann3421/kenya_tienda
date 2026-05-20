@@ -51,8 +51,8 @@ class GarantiaController extends Controller
                     $remainingExpression = "CASE
                         WHEN garantia.fecha_venta IS NULL OR {$end} IS NULL THEN NULL
                         ELSE 100 - (
-                            EXTRACT(day FROM (LEAST(?::date, {$end}::date) - garantia.fecha_venta::date)) /
-                            NULLIF(EXTRACT(day FROM ({$end}::date - garantia.fecha_venta::date)), 0) * 100
+                            (LEAST(?::date, {$end}::date) - garantia.fecha_venta::date)::numeric /
+                            NULLIF({$end}::date - garantia.fecha_venta::date, 0)::numeric * 100
                         )
                     END";
 
