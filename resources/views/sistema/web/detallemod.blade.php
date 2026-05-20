@@ -54,8 +54,10 @@
 
         foreach ($specFields as $field) {
             if (request()->filled($field)) {
-                $valores = explode(',', request($field));
-                $productosQuery->whereIn($field, $valores);
+                $valores = array_filter(array_map('trim', explode(',', request($field))));
+                if (!empty($valores)) {
+                    $productosQuery->whereIn($field, array_values($valores));
+                }
             }
         }
 

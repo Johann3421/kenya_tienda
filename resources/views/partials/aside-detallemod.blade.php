@@ -25,11 +25,16 @@
         $values = Producto::select($col)
             ->where('modelo_id', $modId)
             ->where('pagina_web', 'SI')
+            ->noSuspendido()
             ->distinct()
             ->whereNotNull($col)
-            ->whereNotIn($col, ['', 'null', 'NULL', 'none', 'NONE', 'N/A', 'n/a'])
+            ->whereRaw("TRIM($col) NOT IN ('', 'null', 'NULL', 'none', 'NONE', 'N/A', 'n/a', 'NO APLICA', 'N.A.')")
             ->orderBy($col)
-            ->pluck($col);
+            ->pluck($col)
+            ->map(fn($v) => trim($v))
+            ->filter(fn($v) => $v !== '')
+            ->unique()
+            ->values();
         if ($values->isNotEmpty()) {
             $specs[$col] = ['label' => $label, 'options' => $values];
         }

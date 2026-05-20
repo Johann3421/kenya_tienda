@@ -86,12 +86,12 @@ public function filtros()
 
     /**
      * Scope: excluye productos con vigencia SUSPENDIDA.
-     * Productos sin vigencia (NULL) se consideran visibles.
+     * Productos sin vigencia (NULL) o con cualquier otro estado se consideran visibles.
      */
     public function scopeNoSuspendido($query)
     {
         return $query->where(function ($q) {
-            $q->whereNull('vigencia')->orWhere('vigencia', 'OFERTADA');
+            $q->whereNull('vigencia')->orWhereNotIn('vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
         });
     }
 
