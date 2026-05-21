@@ -764,12 +764,21 @@
                                     elseif (str_contains($bt, 'PROWORK'))  $heroFont = "'ProworkFont', sans-serif";
                                     elseif (str_contains($bt, 'RAITO'))    $heroFont = "'RaitoFont', sans-serif";
                                     else                                   $heroFont = "'Kenyav1', sans-serif";
+
+                                    // Si el título empieza con "KENYA " separar para que
+                                    // "KENYA" use Kenyav1 y el resto use la fuente de marca
+                                    $tituloRaw = $banner->titulo ?? '';
+                                    $tituloColor = $banner->titulo_color ?? '#ffffff';
+                                    if (preg_match('/^(KENYA\s+)(.+)$/iu', $tituloRaw, $m)) {
+                                        $tituloHtml = '<span style="font-family:\'Kenyav1\',sans-serif;color:' . e($tituloColor) . '">' . e($m[1]) . '</span>'
+                                                    . '<span style="font-family:' . $heroFont . ';color:' . e($tituloColor) . '">' . e($m[2]) . '</span>';
+                                    } else {
+                                        $tituloHtml = '<span style="color:' . e($tituloColor) . ';font-family:' . $heroFont . '">' . e($tituloRaw) . '</span>';
+                                    }
                                 @endphp
                                 <!-- Título PRINCIPAL (Enorme y destacado) -->
-                                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px; font-family: {{ $heroFont }};"
-                                    class="animate__animated animate__fadeInDown">
-                                    <span style="color: {{ $banner->titulo_color }};">{{ $banner->titulo }}</span>
-                                </h2>
+                                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px;"
+                                    class="animate__animated animate__fadeInDown">{!! $tituloHtml !!}</h2>
 
                                 <!-- Subtítulo (Blanco y muy legible) -->
                                 <h3 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: #ffffff; margin-top: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); letter-spacing: 0.8px;"
