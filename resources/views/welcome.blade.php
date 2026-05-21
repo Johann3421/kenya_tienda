@@ -26,28 +26,28 @@
         /* Tipografías de líneas de producto Kenya */
         @font-face {
             font-family: 'EzentFont';
-            src: url('{{ asset("TIPOGRAFIA KENYA/EZENT/Ezent-Regular.ttf") }}') format('truetype'),
-                 url('{{ asset("TIPOGRAFIA KENYA/EZENT/Ezent-Regular.otf") }}') format('opentype');
+            src: url('/TIPOGRAFIA%20KENYA/EZENT/Ezent-Regular.ttf') format('truetype'),
+                 url('/TIPOGRAFIA%20KENYA/EZENT/Ezent-Regular.otf') format('opentype');
         }
         @font-face {
             font-family: 'GenworkFont';
-            src: url('{{ asset("TIPOGRAFIA KENYA/GENWORK/Genwork-Regular.ttf") }}') format('truetype'),
-                 url('{{ asset("TIPOGRAFIA KENYA/GENWORK/Genwork-Regular.otf") }}') format('opentype');
+            src: url('/TIPOGRAFIA%20KENYA/GENWORK/Genwork-Regular.ttf') format('truetype'),
+                 url('/TIPOGRAFIA%20KENYA/GENWORK/Genwork-Regular.otf') format('opentype');
         }
         @font-face {
             font-family: 'OfiszuFont';
-            src: url('{{ asset("TIPOGRAFIA KENYA/OFISZU Y HENKO/OfiszuYHenko-Regular.ttf") }}') format('truetype'),
-                 url('{{ asset("TIPOGRAFIA KENYA/OFISZU Y HENKO/OfiszuYHenko-Regular.otf") }}') format('opentype');
+            src: url('/TIPOGRAFIA%20KENYA/OFISZU%20Y%20HENKO/OfiszuYHenko-Regular.ttf') format('truetype'),
+                 url('/TIPOGRAFIA%20KENYA/OFISZU%20Y%20HENKO/OfiszuYHenko-Regular.otf') format('opentype');
         }
         @font-face {
             font-family: 'ProworkFont';
-            src: url('{{ asset("TIPOGRAFIA KENYA/PROWORK/Prowork-Regular.ttf") }}') format('truetype'),
-                 url('{{ asset("TIPOGRAFIA KENYA/PROWORK/Prowork-Regular.otf") }}') format('opentype');
+            src: url('/TIPOGRAFIA%20KENYA/PROWORK/Prowork-Regular.ttf') format('truetype'),
+                 url('/TIPOGRAFIA%20KENYA/PROWORK/Prowork-Regular.otf') format('opentype');
         }
         @font-face {
             font-family: 'RaitoFont';
-            src: url('{{ asset("TIPOGRAFIA KENYA/RAITO/Raito-Regular.ttf") }}') format('truetype'),
-                 url('{{ asset("TIPOGRAFIA KENYA/RAITO/Raito-Regular.otf") }}') format('opentype');
+            src: url('/TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.ttf') format('truetype'),
+                 url('/TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.otf') format('opentype');
         }
 
         /* Clases de marca para aplicar cada tipografía */
