@@ -9,7 +9,8 @@
             <li class="kenya-active"><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li>
+            {{-- Sorteo temporalmente oculto en producción --}}
+            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
             <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
     </nav>
@@ -240,7 +241,7 @@
                         <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
                             <div class="product-card">
                                 @php
-                                    $stock = $producto->stock ?? '≥ 50';
+                                    $stock = $producto->stock ?? '≥ 20';
                                 @endphp
                                 @if ($stock === 0 || $stock === '0')
                                     <div class="product-badge out-of-stock">Agotado</div>
@@ -297,7 +298,7 @@
                                         <p><strong>Parte:</strong> {{ $producto->nro_parte ?? 'N/A' }}</p>
                                         <p><strong>Stock:</strong>
                                             @php
-                                                $stock = $producto->stock ?? '≥ 50'; // Valor por defecto
+                                                $stock = $producto->stock ?? '≥ 20'; // Valor por defecto
                                             @endphp
                                             @if ($stock !== 0 && $stock !== '0')
                                                 <span class="in-stock">{{ $stock }} unidades</span>

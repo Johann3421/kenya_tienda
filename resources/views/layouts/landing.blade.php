@@ -169,7 +169,8 @@ header, footer {
                 <li><a href="{{ route('catalogo') }}">Catalogo</a></li>
                 <li><a href="{{ route('novedades') }}">Novedades</a></li>
                 <li><a href="{{ route('consultar.garantia') }}">Soporte</a></li>
-                <li><a href="{{ route('serial.draw') }}">🎁 Sorteo</a></li>
+                {{-- Sorteo temporalmente oculto en producción --}}
+                {{-- <li><a href="{{ route('serial.draw') }}">🎁 Sorteo</a></li> --}}
                 <li><a href="{{ route('contactenos') }}">Contáctenos</a></li>
             </ul>
         </nav>

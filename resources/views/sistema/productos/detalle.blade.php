@@ -89,7 +89,8 @@
             <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catalogo</a></li>
             <li class="kenya-active"><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li>
+            {{-- Sorteo temporalmente oculto en producción --}}
+            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
             <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
     </nav>

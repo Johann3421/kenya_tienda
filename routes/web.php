@@ -151,9 +151,10 @@ Route::view('/Novedades', 'Novedades')->name('novedades');
 Route::view('/Contactenos', 'Contactenos')->name('contactenos');
 Route::view('/Reclamaciones', 'Reclamaciones')->name('reclamaciones');
 
-Route::get('/sorteo', [SerialDrawController::class, 'index'])->name('serial.draw');
-Route::post('/sorteo', [SerialDrawController::class, 'store'])->name('serial.draw.store');
-Route::post('/sorteo/claim', [SerialDrawController::class, 'claim'])->name('serial.draw.claim');
+// Sorteo temporalmente oculto en producción — redirige al inicio
+Route::get('/sorteo', fn() => redirect('/'))->name('serial.draw');
+Route::post('/sorteo', fn() => redirect('/'))->name('serial.draw.store');
+Route::post('/sorteo/claim', fn() => redirect('/'))->name('serial.draw.claim');
 
 Route::post('/reclamaciones/enviar', [ReclamacionController::class, 'enviar']);
 

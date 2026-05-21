@@ -8,7 +8,8 @@
             <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catalogo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li>
+            {{-- Sorteo temporalmente oculto en producción --}}
+            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
             <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
     </nav>
@@ -21,6 +22,41 @@
             font-family: 'Kenyav1';
             src: url('/Kenyav1-Regular.otf') format('opentype');
         }
+
+        /* Tipografías de líneas de producto Kenya */
+        @font-face {
+            font-family: 'EzentFont';
+            src: url('{{ asset("TIPOGRAFIA KENYA/EZENT/Ezent-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA KENYA/EZENT/Ezent-Regular.otf") }}') format('opentype');
+        }
+        @font-face {
+            font-family: 'GenworkFont';
+            src: url('{{ asset("TIPOGRAFIA KENYA/GENWORK/Genwork-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA KENYA/GENWORK/Genwork-Regular.otf") }}') format('opentype');
+        }
+        @font-face {
+            font-family: 'OfiszuFont';
+            src: url('{{ asset("TIPOGRAFIA KENYA/OFISZU Y HENKO/OfiszuYHenko-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA KENYA/OFISZU Y HENKO/OfiszuYHenko-Regular.otf") }}') format('opentype');
+        }
+        @font-face {
+            font-family: 'ProworkFont';
+            src: url('{{ asset("TIPOGRAFIA KENYA/PROWORK/Prowork-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA KENYA/PROWORK/Prowork-Regular.otf") }}') format('opentype');
+        }
+        @font-face {
+            font-family: 'RaitoFont';
+            src: url('{{ asset("TIPOGRAFIA KENYA/RAITO/Raito-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA KENYA/RAITO/Raito-Regular.otf") }}') format('opentype');
+        }
+
+        /* Clases de marca para aplicar cada tipografía */
+        .brand-ezent    .prod-title, .brand-ezent    .prod-overlay-text { font-family: 'EzentFont', sans-serif; }
+        .brand-genwork  .prod-title, .brand-genwork  .prod-overlay-text { font-family: 'GenworkFont', sans-serif; }
+        .brand-ofiszu   .prod-title, .brand-ofiszu   .prod-overlay-text { font-family: 'OfiszuFont', sans-serif; }
+        .brand-henko    .prod-title, .brand-henko    .prod-overlay-text { font-family: 'OfiszuFont', sans-serif; }
+        .brand-prowork  .prod-title, .brand-prowork  .prod-overlay-text { font-family: 'ProworkFont', sans-serif; }
+        .brand-raito    .prod-title, .brand-raito    .prod-overlay-text { font-family: 'RaitoFont', sans-serif; }
 
         .site-width {
             margin: 0 auto;
@@ -816,7 +852,17 @@
                 </div>
                 <div class="row prod-filter-container" style="justify-content: center">
                     @foreach ($modelo as $mod)
-                        <div class="col-lg-3 col-md-4 prod-filter-item filter-{{ $mod->categoria_id }}">
+                        @php
+                            $modNombre = strtoupper($mod->descripcion ?? $mod->nombre ?? '');
+                            $brandClass = '';
+                            if (str_contains($modNombre, 'EZENT'))        $brandClass = 'brand-ezent';
+                            elseif (str_contains($modNombre, 'GENWORK'))  $brandClass = 'brand-genwork';
+                            elseif (str_contains($modNombre, 'OFISZU'))   $brandClass = 'brand-ofiszu';
+                            elseif (str_contains($modNombre, 'HENKO'))    $brandClass = 'brand-henko';
+                            elseif (str_contains($modNombre, 'PROWORK'))  $brandClass = 'brand-prowork';
+                            elseif (str_contains($modNombre, 'RAITO'))    $brandClass = 'brand-raito';
+                        @endphp
+                        <div class="col-lg-3 col-md-4 prod-filter-item filter-{{ $mod->categoria_id }} {{ $brandClass }}">
                             <div class="prod-card-container">
                                 <div class="prod-image-wrapper" style="margin: 0 auto;">
                                     @if ($mod->img_mod)
