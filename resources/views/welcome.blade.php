@@ -754,8 +754,19 @@
                         @endif
                         <div class="carousel-container" style="text-align: center;">
                             <div class="carousel-content container">
+                                @php
+                                    // Seleccionar tipografía de marca según el título del banner
+                                    $bt = strtoupper($banner->titulo ?? '');
+                                    if (str_contains($bt, 'EZENT'))        $heroFont = "'EzentFont', sans-serif";
+                                    elseif (str_contains($bt, 'GENWORK'))  $heroFont = "'GenworkFont', sans-serif";
+                                    elseif (str_contains($bt, 'OFISZU'))   $heroFont = "'OfiszuFont', sans-serif";
+                                    elseif (str_contains($bt, 'HENKO'))    $heroFont = "'OfiszuFont', sans-serif";
+                                    elseif (str_contains($bt, 'PROWORK'))  $heroFont = "'ProworkFont', sans-serif";
+                                    elseif (str_contains($bt, 'RAITO'))    $heroFont = "'RaitoFont', sans-serif";
+                                    else                                   $heroFont = "'Kenyav1', sans-serif";
+                                @endphp
                                 <!-- Título PRINCIPAL (Enorme y destacado) -->
-                                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px; font-family: 'Kenyav1', sans-serif;"
+                                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px; font-family: {{ $heroFont }};"
                                     class="animate__animated animate__fadeInDown">
                                     <span style="color: {{ $banner->titulo_color }};">{{ $banner->titulo }}</span>
                                 </h2>
