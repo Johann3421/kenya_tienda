@@ -300,7 +300,10 @@ public function subirFichaTecnica(Request $request, $producto)
     public function detalle($id)
     {
         $producto = Producto::findOrFail($id);
-        $especificaciones = Especificacion::where('producto_id', $id)->get();
+        $especificaciones = Especificacion::where('producto_id', $id)
+            ->get()
+            ->filter(fn($e) => strtolower(trim($e->descripcion ?? '')) !== 'no')
+            ->values();
 
         return view('sistema.productos.detalle', [
             'producto' => $producto,
