@@ -21,7 +21,7 @@ class SyncFichasCommand extends Command
     const API_BASE = 'https://api-auditor.sekaitech.com.pe/api/v1';
 
     /** Grupos de modelos que tienen representación en Peru Compras */
-    const PC_MODEL_GROUPS = ['EZENT', 'PROWORK', 'OFISZU', 'RAITO', 'GENWORK', 'HENKO'];
+    const PC_MODEL_GROUPS = ['EZENT', 'PROWORK', 'OFISZU', 'RAITO', 'GENWORK'];
 
     // Tokens del texto de descripción → columna en productos
     // Orden importa: tokens más largos primero para evitar matches parciales
@@ -47,6 +47,7 @@ class SyncFichasCommand extends Command
 
     /** Etiquetas legibles para la tabla especificaciones */
     const SPEC_LABELS = [
+        // ── Computadoras / PCs ──────────────────────────────────────────────
         'procesador'          => 'Procesador',
         'ram'                 => 'RAM',
         'almacenamiento'      => 'Almacenamiento',
@@ -62,6 +63,18 @@ class SyncFichasCommand extends Command
         'mouse'               => 'Mouse',
         'suite_ofimatica'     => 'Suite Ofimática',
         'garantia_de_fabrica' => 'Garantía de Fábrica',
+        // ── Monitores ───────────────────────────────────────────────────────
+        'tamano_pantalla'     => 'Tamaño de Pantalla',
+        'panel'               => 'Panel',
+        'resolucion'          => 'Resolución',
+        'contraste'           => 'Contraste',
+        'brillo'              => 'Brillo',
+        'tiempo_respuesta'    => 'Tiempo de Respuesta',
+        'hdmi'                => 'HDMI',
+        'displayport'         => 'DisplayPort',
+        'soporte_vesa'        => 'Soporte VESA',
+        'accesorios'          => 'Accesorios',
+        'otros'               => 'Características Adicionales',
     ];
 
     /** Caché modelo_group → modelo_id */
@@ -359,7 +372,6 @@ class SyncFichasCommand extends Command
             'procesador'          => 'procesador',
             'ram'                 => 'ram',
             'almacenamiento'      => 'almacenamiento',
-            'graficos'            => 'tarjetavideo',
             'conectividad'        => 'conectividad',
             'conectividad_wlan'   => 'conectividad_wlan',
             'conectividad_usb'    => 'conectividad_usb',
@@ -502,15 +514,23 @@ class SyncFichasCommand extends Command
             // 'modelo' en ambos endpoints contiene la descripción completa del producto
             $descripcion = $item['modelo'] ?? '';
             $estado      = strtoupper($item['estado'] ?? 'OFERTADA');
+            $categoria   = strtoupper($item['categoria'] ?? '');
 
-            // Parsear specs desde la descripción
+            // Parsear specs desde la descripción (PCs y productos sin specs directas)
             $specs = $this->parseDescription($descripcion);
 
-            // Fusionar graficos desde video-specs
+            // Para monitores (y cualquier producto), el API ya devuelve specs pre-computadas.
+            // Tienen prioridad sobre el parser de texto — se fusionan encima.
+            $apiSpecs = $item['specs'] ?? [];
+            if (!empty($apiSpecs)) {
+                $specs = array_merge($specs, $apiSpecs);
+            }
+
+            // Fusionar graficos desde video-specs (solo aplica a PCs)
             $fichaUrl = $item['ficha_tecnica_url'] ?? null;
             if (isset($videoMap[$codigo])) {
                 $graficosRaw = $videoMap[$codigo]['graficos'] ?? null;
-                if ($graficosRaw) {
+                if ($graficosRaw && $categoria !== 'MONITOR') {
                     $specs['graficos'] = $this->fixEncoding($graficosRaw);
                 }
                 // Preferir URL de ficha desde video-specs si está disponible
