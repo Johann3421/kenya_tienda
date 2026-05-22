@@ -300,14 +300,75 @@ public function subirFichaTecnica(Request $request, $producto)
     public function detalle($id)
     {
         $producto = Producto::findOrFail($id);
+
+        // Orden canónico de specs (cubre monitores y PCs)
+        $specPriority = [
+            // ── Monitores ──────────────────────────────────────
+            'Tamaño de Pantalla'          => 1,
+            'Tecnología de Pantalla'      => 2,
+            'Panel'                       => 3,
+            'Relación de Aspecto'         => 4,
+            'Resolución'                  => 5,
+            'Contraste'                   => 6,
+            'Brillo'                      => 7,
+            'Ángulo de Visión'            => 8,
+            'Tiempo de Respuesta'         => 9,
+            'Conectividad LAN'            => 10,
+            'Conectividad WLAN'           => 11,
+            'Conectividad USB'            => 12,
+            'Salida VGA'                  => 13,
+            'HDMI'                        => 14,
+            'DisplayPort'                 => 15,
+            'Alimentación'                => 16,
+            'Garantía de Fábrica'         => 17,
+            'Empaque'                     => 18,
+            'Accesorios'                  => 19,
+            'Características Adicionales' => 20,
+            // ── PCs ────────────────────────────────────────────
+            'Procesador'                  => 30,
+            'RAM'                         => 31,
+            'Almacenamiento'              => 32,
+            'Gráficos'                    => 33,
+            'Sistema Operativo'           => 34,
+            'Unidad Óptica'               => 35,
+            'Teclado'                     => 36,
+            'Mouse'                       => 37,
+            'Suite Ofimática'             => 38,
+            'Salida HDMI'                 => 39,
+            'Soporte VESA'                => 40,
+        ];
+
         $especificaciones = Especificacion::where('producto_id', $id)
             ->get()
             ->filter(fn($e) => strtolower(trim($e->descripcion ?? '')) !== 'no')
+            ->sortBy(fn($e) => $specPriority[$e->campo] ?? 99)
             ->values();
 
+        // Resumen para la parte superior (4 campos más relevantes)
+        // Monitores: Tamaño → Panel → Salidas → Garantía
+        // PCs: los primeros 4 del orden ya definido
+        $isMonitor = $especificaciones->firstWhere('campo', 'Tamaño de Pantalla') !== null;
+        if ($isMonitor) {
+            $resumen = collect();
+            foreach (['Tamaño de Pantalla', 'Panel'] as $campo) {
+                $f = $especificaciones->firstWhere('campo', $campo);
+                if ($f) $resumen->push($f);
+            }
+            foreach (['HDMI', 'DisplayPort', 'Salida HDMI', 'Salida VGA'] as $campo) {
+                $f = $especificaciones->firstWhere('campo', $campo);
+                if ($f) $resumen->push($f);
+            }
+            $f = $especificaciones->firstWhere('campo', 'Garantía de Fábrica');
+            if ($f) $resumen->push($f);
+            $especificacionesResumen = $resumen->unique('campo')->take(4);
+        } else {
+            $especificacionesResumen = $especificaciones->take(4);
+        }
+
         return view('sistema.productos.detalle', [
-            'producto' => $producto,
-            'especificaciones' => $especificaciones
+            'producto'                => $producto,
+            'especificaciones'        => $especificaciones,
+            'especificacionesResumen' => $especificacionesResumen,
         ]);
     }
     public function guardar(Request $request)

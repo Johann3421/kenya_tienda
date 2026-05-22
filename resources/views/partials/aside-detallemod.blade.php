@@ -39,6 +39,36 @@
             $specs[$col] = ['label' => $label, 'options' => $values];
         }
     }
+
+    // Filtros para monitores: specs almacenadas en tabla especificaciones
+    $monitorSpecMap = [
+        'espec_tamano'      => 'Tamaño de Pantalla',
+        'espec_panel'       => 'Panel',
+        'espec_hdmi'        => 'HDMI',
+        'espec_displayport' => 'DisplayPort',
+        'espec_garantia'    => 'Garantía de Fábrica',
+    ];
+    foreach ($monitorSpecMap as $paramKey => $campo) {
+        $values = \DB::table('especificaciones')
+            ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
+            ->where('productos.modelo_id', $modId)
+            ->where('productos.pagina_web', 'SI')
+            ->where(function ($q) {
+                $q->whereNull('productos.vigencia')
+                  ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
+            })
+            ->where('especificaciones.campo', $campo)
+            ->whereRaw("LOWER(TRIM(especificaciones.descripcion)) != 'no'")
+            ->whereRaw("TRIM(especificaciones.descripcion) != ''")
+            ->distinct()
+            ->orderBy('especificaciones.descripcion')
+            ->pluck('especificaciones.descripcion')
+            ->filter(fn($v) => trim($v) !== '')
+            ->values();
+        if ($values->isNotEmpty()) {
+            $specs[$paramKey] = ['label' => $campo, 'options' => $values];
+        }
+    }
 @endphp
 
 <div class="aside-catalogo-container">

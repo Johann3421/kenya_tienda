@@ -62,6 +62,25 @@
             }
         }
 
+        // Filtros para monitores: specs almacenadas en tabla especificaciones
+        $monitorSpecMap = [
+            'espec_tamano'      => 'Tamaño de Pantalla',
+            'espec_panel'       => 'Panel',
+            'espec_hdmi'        => 'HDMI',
+            'espec_displayport' => 'DisplayPort',
+            'espec_garantia'    => 'Garantía de Fábrica',
+        ];
+        foreach ($monitorSpecMap as $paramKey => $campo) {
+            if (request()->filled($paramKey)) {
+                $valores = array_filter(array_map('trim', explode(',', request($paramKey))));
+                if (!empty($valores)) {
+                    $productosQuery->whereHas('especificaciones', function ($q) use ($campo, $valores) {
+                        $q->where('campo', $campo)->whereIn('descripcion', array_values($valores));
+                    });
+                }
+            }
+        }
+
         $productos = $productosQuery->paginate(9)->appends(request()->query());
     @endphp
 

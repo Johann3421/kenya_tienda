@@ -156,7 +156,7 @@
                     <div>
                         <table>
                             <tbody>
-                                @forelse($especificaciones->take(4) as $espec)
+                                @forelse($especificacionesResumen as $espec)
                                 <tr>
                                     <td>{{ $espec->campo }}</td>
                                     <td>: {{ $espec->descripcion }}</td>
