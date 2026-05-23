@@ -200,7 +200,6 @@ header, footer {
                 <div class="kenya-footer-col">
                     <h3 class="kenya-footer-heading">Atención al cliente</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="{{ route('consultar.garantia') }}">Soporte técnico</a></li>
                         <li><a href="{{ route('consultar.garantia') }}">Consulta el estado de tu Producto</a></li>
                         <li><a href="{{ route('contactenos') }}">Preguntas frecuentes</a></li>
                         <li><a href="{{ route('consultar.garantia') }}#terms">Términos y condiciones de garantía</a></li>

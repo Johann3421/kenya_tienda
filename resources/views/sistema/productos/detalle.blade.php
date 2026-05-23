@@ -150,6 +150,22 @@
         </div>
 
         <div class="col-lg-8" id="producto_detalle">
+            @php
+                $isMonitor = false;
+                $specTam = $especificaciones->firstWhere('campo', 'Tamaño de Pantalla') ?? null;
+                if ($specTam) {
+                    $isMonitor = true;
+                } elseif (optional($producto->getCategoria)->nombre) {
+                    $isMonitor = stripos(optional($producto->getCategoria)->nombre, 'monitor') !== false;
+                }
+            @endphp
+
+            @if($isMonitor)
+                <div class="monitor-pretitle" style="font-size:14px; color:#555; margin-bottom:6px; font-weight:600;">
+                    {{ 'MONITOR' }} @if(optional($producto->getModelo)->nombre) • {{ optional($producto->getModelo)->nombre }} @endif @if($producto->nro_parte) • N° Parte: {{ $producto->nro_parte }} @endif
+                </div>
+            @endif
+
             <h2 class="" style="font-weight: bold; font-size: 36px; font-family: Arial">{{$producto->nombre}}</h2>
             <div class="carousel-descripcion mb-3 row" style="padding: 15px;">
                 <div class="col-md-8">

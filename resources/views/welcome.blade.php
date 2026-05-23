@@ -781,10 +781,13 @@
                                     class="animate__animated animate__fadeInDown">{!! $tituloHtml !!}</h2>
 
                                 <!-- Subtítulo (Blanco y muy legible) -->
+                                @php $bannerDesc = trim((string)($banner->descripcion ?? '')); @endphp
+                                @if ($bannerDesc !== '' && strtolower($bannerDesc) !== 'especialistas en soporte técnico')
                                 <h3 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: #ffffff; margin-top: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); letter-spacing: 0.8px;"
                                     class="animate__animated animate__fadeInDown">
                                     {{ $banner->descripcion }}
                                 </h3>
+                                @endif
 
                                 <!-- Descripción (Texto grande y claro) -->
                                 <p style="text-align: center; font-size: 1.8rem; font-weight: 400; color: #f8f8f8; margin-top: 25px; max-width: 900px; margin-left: auto; margin-right: auto; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); line-height: 1.4;"
