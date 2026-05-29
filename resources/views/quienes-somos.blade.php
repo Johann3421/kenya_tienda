@@ -136,7 +136,7 @@
             <div class="col-lg-7" style="max-width: 600px;">
                 <h1 class="title-section">Quiénes Somos</h1>
                 <p class="subtitle">
-                    Somos KENYA TECHNOLOGY, líderes en soluciones tecnológicas de alto rendimiento, diseño y garantía.
+                    En KENYA TECHNOLOGY diseñamos y desarrollamos computadoras de alto rendimiento para usuarios y empresas que buscan potencia, estabilidad y confianza. Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo. Nuestra pasión por la innovación nos impulsa a crear computadoras preparadas para las exigencias actuales y del futuro, fortaleciendo el crecimiento tecnológico nacional con productos confiables y de alto desempeño.
                 </p>
             </div>
             <div class="col-lg-5" style="max-width: 600px; flex: none;">
@@ -157,9 +157,7 @@
                     </div>
                     <h3 class="fw-bold mb-3">Misión</h3>
                     <p class="subtitle mb-0">
-                        Dedicación a la innovacion tecnologica para brindar la mejor
-                        experiencia a nuestros clientes en soluciones TI en sus desafios
-                        actuales y para el futuro.
+                        En KENYA TECHNOLOGY diseñamos y desarrollamos computadoras de alto rendimiento para usuarios y empresas que buscan potencia, estabilidad y confianza. Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo. Nuestra pasión por la innovación nos impulsa a crear computadoras preparadas para las exigencias actuales y del futuro, fortaleciendo el crecimiento tecnológico nacional con productos confiables y de alto desempeño.
                     </p>
                 </div>
             </div>
@@ -170,8 +168,7 @@
                     </div>
                     <h3 class="fw-bold mb-3">Visión</h3>
                     <p class="subtitle mb-0">
-                        Ser la marca peruana de tecnología más confiable y reconocida en el mercado nacional e
-                        internacional.
+                        En KENYA TECHNOLOGY diseñamos y desarrollamos computadoras de alto rendimiento para usuarios y empresas que buscan potencia, estabilidad y confianza. Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo. Nuestra pasión por la innovación nos impulsa a crear computadoras preparadas para las exigencias actuales y del futuro, fortaleciendo el crecimiento tecnológico nacional con productos confiables y de alto desempeño.
                     </p>
                 </div>
             </div>
@@ -186,11 +183,7 @@
                     </div>
                     <h3 class="fw-bold mb-3 text-center">Nuestra Historia</h3>
                     <p class="subtitle text-center">
-                        Desde nuestros inicios, KENYA TECHNOLOGY se ha basado en ofrecer
-                        soluciones tecnológicas personalizadas y completas.
-                        Con una trayectoria de innovación y compromiso,
-                        acompañamos a nuestros clientes en su desarrollo digital,
-                        promoviendo el crecimiento tecnologico nacional y de calidad.
+                        Desde nuestros inicios, en KENYA TECHNOLOGY apostamos por crear computadoras de alto desempeño adaptadas a las necesidades de un mercado en constante evolución. Con una trayectoria basada en innovación, calidad y compromiso, hemos acompañado a miles de usuarios ofreciendo equipos ensamblados con tecnología moderna, excelente rendimiento y altos estándares de calidad. Hoy continuamos creciendo como una marca peruana enfocada en desarrollar computadoras confiables, eficientes y preparadas para el futuro.
                     </p>
                 </div>
             </div>
