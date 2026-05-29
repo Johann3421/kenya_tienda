@@ -157,7 +157,7 @@
                     </div>
                     <h3 class="fw-bold mb-3">Misión</h3>
                     <p class="subtitle mb-0">
-                        En KENYA TECHNOLOGY diseñamos y desarrollamos computadoras de alto rendimiento para usuarios y empresas que buscan potencia, estabilidad y confianza. Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo. Nuestra pasión por la innovación nos impulsa a crear computadoras preparadas para las exigencias actuales y del futuro, fortaleciendo el crecimiento tecnológico nacional con productos confiables y de alto desempeño.
+                        Desarrollar computadoras de alto rendimiento que brinden potencia, eficiencia y confiabilidad, ofreciendo a nuestros clientes la mejor experiencia tecnológica en cada equipo KENYA TECHNOLOGY.
                     </p>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                     </div>
                     <h3 class="fw-bold mb-3">Visión</h3>
                     <p class="subtitle mb-0">
-                        En KENYA TECHNOLOGY diseñamos y desarrollamos computadoras de alto rendimiento para usuarios y empresas que buscan potencia, estabilidad y confianza. Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo. Nuestra pasión por la innovación nos impulsa a crear computadoras preparadas para las exigencias actuales y del futuro, fortaleciendo el crecimiento tecnológico nacional con productos confiables y de alto desempeño.
+                        Ser la marca peruana de computadoras más reconocida y confiable a nivel nacional e internacional, destacando por nuestra innovación, calidad y rendimiento.
                     </p>
                 </div>
             </div>
