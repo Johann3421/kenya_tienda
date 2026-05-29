@@ -44,7 +44,9 @@
     $tarjeta_video = request('tarjeta_video');
 
     // Consulta base
-    $productosQuery = Producto::query();
+    $productosQuery = Producto::query()
+        ->where('pagina_web', 'SI')
+        ->noSuspendido();
 
     // Aplicar filtro de búsqueda
     if ($busqueda) {
@@ -119,7 +121,8 @@
     }
     if ($tarjeta_video) {
         $productosQuery->whereHas('especificaciones', function($q) use ($tarjeta_video) {
-            $q->where('campo', 'Gráficos')->where('descripcion', $tarjeta_video);
+            $q->whereIn('campo', ['Gráficos', 'Graficos', 'Tarjeta de Video', 'TARJETA DE VIDEO'])
+              ->where('descripcion', $tarjeta_video);
         });
     }
 
@@ -140,7 +143,12 @@
     }
 
     // Obtener modelos activos para el dropdown
-    $modelos = Modelo::where('activo', 'Si')->orderBy('descripcion')->get();
+    $modelos = Modelo::whereRaw("UPPER(activo) = 'SI'")
+        ->whereHas('getProducto', function ($q) {
+            $q->where('pagina_web', 'SI')->noSuspendido();
+        })
+        ->orderBy('descripcion')
+        ->get();
 
     // Obtener opciones para filtros de especificaciones desde la tabla especificaciones
     $procesadores = DB::table('especificaciones')->where('campo', 'Procesador')->distinct()->pluck('descripcion')->sort();
@@ -155,7 +163,20 @@
     $conectividades_hdmi = DB::table('especificaciones')->where('campo', 'Conectividad HDMI')->distinct()->pluck('descripcion')->sort();
     $ofimaticas = DB::table('especificaciones')->where('campo', 'Ofimática')->distinct()->pluck('descripcion')->sort();
     $perifericos_list = DB::table('especificaciones')->where('campo', 'Periféricos')->distinct()->pluck('descripcion')->sort();
-    $tarjetas_video = DB::table('especificaciones')->where('campo', 'Gráficos')->distinct()->pluck('descripcion')->sort();
+    $tarjetas_video = DB::table('especificaciones')
+        ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
+        ->where('productos.pagina_web', 'SI')
+        ->where(function ($q) {
+            $q->whereNull('productos.vigencia')
+              ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
+        })
+        ->whereIn('especificaciones.campo', ['Gráficos', 'Graficos', 'Tarjeta de Video', 'TARJETA DE VIDEO'])
+        ->whereNotNull('especificaciones.descripcion')
+        ->whereRaw("TRIM(especificaciones.descripcion) != ''")
+        ->whereRaw("LOWER(TRIM(especificaciones.descripcion)) NOT IN ('no', 'n/a', 'no aplica')")
+        ->distinct()
+        ->orderBy('especificaciones.descripcion')
+        ->pluck('especificaciones.descripcion');
 
     // Paginar resultados (con eager loading si es necesario)
     $productos = $productosQuery->with('modelo')->paginate(9);

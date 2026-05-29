@@ -755,19 +755,21 @@
                         <div class="carousel-container" style="text-align: center;">
                             <div class="carousel-content container">
                                 @php
+                                    // Reemplazo temporal solicitado de marca en hero
+                                    $tituloRaw = preg_replace('/\\bHENKO\\b/iu', 'PROWORK', (string)($banner->titulo ?? ''));
+
                                     // Seleccionar tipografía de marca según el título del banner
-                                    $bt = strtoupper($banner->titulo ?? '');
+                                    $bt = strtoupper($tituloRaw);
                                     if (str_contains($bt, 'EZENT'))        $heroFont = "'EzentFont', sans-serif";
                                     elseif (str_contains($bt, 'GENWORK'))  $heroFont = "'GenworkFont', sans-serif";
                                     elseif (str_contains($bt, 'OFISZU'))   $heroFont = "'OfiszuFont', sans-serif";
-                                    elseif (str_contains($bt, 'HENKO'))    $heroFont = "'OfiszuFont', sans-serif";
+                                    elseif (str_contains($bt, 'HENKO'))    $heroFont = "'ProworkFont', sans-serif";
                                     elseif (str_contains($bt, 'PROWORK'))  $heroFont = "'ProworkFont', sans-serif";
                                     elseif (str_contains($bt, 'RAITO'))    $heroFont = "'RaitoFont', sans-serif";
                                     else                                   $heroFont = "'Kenyav1', sans-serif";
 
                                     // Si el título empieza con "KENYA " separar para que
                                     // "KENYA" use Kenyav1 y el resto use la fuente de marca
-                                    $tituloRaw = $banner->titulo ?? '';
                                     $tituloColor = $banner->titulo_color ?? '#ffffff';
                                     if (preg_match('/^(KENYA\s+)(.+)$/iu', $tituloRaw, $m)) {
                                         $tituloHtml = '<span style="font-family:\'Kenyav1\',sans-serif;color:' . e($tituloColor) . '">' . e($m[1]) . '</span>'

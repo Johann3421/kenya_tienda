@@ -9,7 +9,8 @@
             <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
             <li class="kenya-active"><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li>
+            {{-- Sorteo temporalmente oculto en producción --}}
+            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
             <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
     </nav>
@@ -27,7 +28,9 @@
     $orden = request('orden', 'newest');
 
     // Consulta base
-    $productosQuery = Producto::query();
+    $productosQuery = Producto::query()
+        ->where('pagina_web', 'SI')
+        ->noSuspendido();
 
     // Aplicar filtro de búsqueda
     if ($busqueda) {
@@ -56,7 +59,12 @@
     }
 
     // Obtener modelos activos para el dropdown
-    $modelos = Modelo::where('activo', 'Si')->orderBy('descripcion')->get();
+    $modelos = Modelo::whereRaw("UPPER(activo) = 'SI'")
+        ->whereHas('getProducto', function ($q) {
+            $q->where('pagina_web', 'SI')->noSuspendido();
+        })
+        ->orderBy('descripcion')
+        ->get();
 
     // Paginar resultados (con eager loading si es necesario)
     $productos = $productosQuery->with('modelo')->paginate(9);

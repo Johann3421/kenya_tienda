@@ -20,7 +20,12 @@ Route::get('/health', function () {
 });
 Route::get('/', function () {
     $categorias = App\Models\Categoria::with('getModelo')->where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
-    $modelo = App\Modelo::with('getCat')->where('activo', 'SI')->get();
+    $modelo = App\Modelo::with('getCat')
+        ->where('activo', 'SI')
+        ->whereHas('getProducto', function ($q) {
+            $q->where('pagina_web', 'SI')->noSuspendido();
+        })
+        ->get();
     // $productos = App\Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->get();
     $productos = App\Producto::with('getModelo')->orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->get();
     $ofertas = App\Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->where('precio_anterior', '!=', null)->get();
