@@ -120,9 +120,15 @@
         });
     }
     if ($tarjeta_video) {
-        $productosQuery->whereHas('especificaciones', function($q) use ($tarjeta_video) {
-            $q->whereIn('campo', ['Gráficos', 'Graficos', 'Tarjeta de Video', 'TARJETA DE VIDEO'])
-              ->where('descripcion', $tarjeta_video);
+        $productosQuery->where(function ($query) use ($tarjeta_video) {
+            $query->whereHas('especificaciones', function ($q) use ($tarjeta_video) {
+                $q->where(function ($specQ) {
+                    $specQ->whereRaw("LOWER(TRIM(campo)) IN ('gráficos', 'graficos', 'tarjeta de video')")
+                          ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%gráf%'")
+                          ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%graf%'")
+                          ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%tarjeta%video%'");
+                })->where('descripcion', $tarjeta_video);
+            })->orWhere('tarjetavideo', $tarjeta_video);
         });
     }
 
@@ -163,20 +169,40 @@
     $conectividades_hdmi = DB::table('especificaciones')->where('campo', 'Conectividad HDMI')->distinct()->pluck('descripcion')->sort();
     $ofimaticas = DB::table('especificaciones')->where('campo', 'Ofimática')->distinct()->pluck('descripcion')->sort();
     $perifericos_list = DB::table('especificaciones')->where('campo', 'Periféricos')->distinct()->pluck('descripcion')->sort();
-    $tarjetas_video = DB::table('especificaciones')
+    $tarjetas_video_specs = DB::table('especificaciones')
         ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
-        ->where('productos.pagina_web', 'SI')
+        ->whereRaw("UPPER(productos.pagina_web) = 'SI'")
         ->where(function ($q) {
             $q->whereNull('productos.vigencia')
               ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
         })
-        ->whereIn('especificaciones.campo', ['Gráficos', 'Graficos', 'Tarjeta de Video', 'TARJETA DE VIDEO'])
+        ->where(function ($q) {
+            $q->whereRaw("LOWER(TRIM(especificaciones.campo)) IN ('gráficos', 'graficos', 'tarjeta de video')")
+              ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%gráf%'")
+              ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%graf%'")
+              ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%tarjeta%video%'");
+        })
         ->whereNotNull('especificaciones.descripcion')
         ->whereRaw("TRIM(especificaciones.descripcion) != ''")
         ->whereRaw("LOWER(TRIM(especificaciones.descripcion)) NOT IN ('no', 'n/a', 'no aplica')")
         ->distinct()
         ->orderBy('especificaciones.descripcion')
         ->pluck('especificaciones.descripcion');
+
+    $tarjetas_video_columna = Producto::query()
+        ->whereRaw("UPPER(pagina_web) = 'SI'")
+        ->noSuspendido()
+        ->whereNotNull('tarjetavideo')
+        ->whereRaw("TRIM(tarjetavideo) != ''")
+        ->pluck('tarjetavideo');
+
+    $tarjetas_video = $tarjetas_video_specs
+        ->merge($tarjetas_video_columna)
+        ->map(fn($v) => trim((string) $v))
+        ->filter(fn($v) => $v !== '' && !in_array(mb_strtolower($v), ['no', 'n/a', 'no aplica'], true))
+        ->unique()
+        ->sort()
+        ->values();
 
     // Paginar resultados (con eager loading si es necesario)
     $productos = $productosQuery->with('modelo')->paginate(9);

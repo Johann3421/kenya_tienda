@@ -73,7 +73,7 @@
 
 <div class="aside-catalogo-container">
     <h4 class="aside-title-custom">Filtros por Especificaciones</h4>
-    
+
     <aside>
         @foreach($specs as $campo => $spec)
             @php
