@@ -31,6 +31,17 @@ class SyncFichasCommand extends Command
         'SUITE OFIMATICA:'               => 'suite_ofimatica',
         'SIST. OPER:'                    => 'sistema_operativo',
         'SISTEMA OPERATIVO:'             => 'sistema_operativo',
+        'TIPO DE SUMINISTRO:'            => 'tipo_suministro',
+        'DESCRIPCION:'                   => 'descripcion_toner',
+        'DESCRIPCIÓN:'                   => 'descripcion_toner',
+        'MODELO:'                        => 'modelo_toner',
+        'COLOR:'                         => 'color_toner',
+        'RENDIMIENTO:'                   => 'rendimiento',
+        'SIST. MANEJO RAEE:'             => 'sistema_raee',
+        'SISTEMA DE MANEJO DE RAEE:'     => 'sistema_raee',
+        'CERTIFICACIONES:'               => 'certificaciones',
+        'EMPAQUE:'                       => 'empaque',
+        'DIMENSIONES:'                   => 'dimensiones',
         'UNIDAD OPTICA:'                 => 'unidad_optica',
         'PROCESADOR:'                    => 'procesador',
         'ALMACENAMIENTO:'                => 'almacenamiento',
@@ -50,6 +61,20 @@ class SyncFichasCommand extends Command
     // Se usan para completar campos que no llegan en descripción/API.
     const PDF_SPEC_TOKENS = [
         // Variante sin ':' porque muchos PDF extraídos no respetan delimitadores
+        'TIPO DE SUMINISTRO'             => 'tipo_suministro',
+        'DESCRIPCION'                    => 'descripcion_toner',
+        'DESCRIPCIÓN'                    => 'descripcion_toner',
+        'MODELO'                         => 'modelo_toner',
+        'COLOR'                          => 'color_toner',
+        'RENDIMIENTO'                    => 'rendimiento',
+        'SISTEMA DE MANEJO DE RAEE'      => 'sistema_raee',
+        'SIST. MANEJO RAEE'              => 'sistema_raee',
+        'UNIDAD CAJA'                    => 'unidad',
+        'NUMERO DE PARTE'                => 'numero_parte_ref',
+        'NÚMERO DE PARTE'                => 'numero_parte_ref',
+        'N° DE PARTE'                    => 'numero_parte_ref',
+        'Nº DE PARTE'                    => 'numero_parte_ref',
+        'DIMENSIONES'                    => 'dimensiones',
         'FORMATO'                        => 'formato',
         'PROCESADOR'                     => 'procesador',
         'MEMORIA RAM'                    => 'ram',
@@ -111,6 +136,16 @@ class SyncFichasCommand extends Command
         'empaque'             => 'Empaque',
         'certificaciones'     => 'Certificaciones',
         'accesorios_otros'    => 'Accesorios y Otros',
+        // ── Tóner ───────────────────────────────────────────────────────────
+        'tipo_suministro'     => 'Tipo de suministro',
+        'modelo_toner'        => 'Modelo',
+        'color_toner'         => 'Color',
+        'descripcion_toner'   => 'Descripción',
+        'rendimiento'         => 'Rendimiento',
+        'sistema_raee'        => 'Sistema RAEE',
+        'unidad'              => 'Unidad',
+        'numero_parte_ref'    => 'Número de parte',
+        'dimensiones'         => 'Dimensiones',
         // ── Monitores ───────────────────────────────────────────────────────
         'tamano_pantalla'     => 'Tamaño de Pantalla',
         'panel'               => 'Panel',
@@ -473,7 +508,7 @@ class SyncFichasCommand extends Command
             return $specs;
         }
 
-        if (!$this->shouldExtractPdfSpecs($specs)) {
+        if (!$this->shouldExtractPdfSpecs($specs, $categoria)) {
             return $specs;
         }
 
@@ -482,7 +517,12 @@ class SyncFichasCommand extends Command
             return $specs;
         }
 
+        $allowed = array_flip($this->allowedSpecKeysByCategory($categoria));
+
         foreach ($fromPdf as $key => $value) {
+            if (!isset($allowed[$key])) {
+                continue;
+            }
             if (empty($specs[$key]) && !empty($value)) {
                 $specs[$key] = $value;
             }
@@ -491,23 +531,38 @@ class SyncFichasCommand extends Command
         return $specs;
     }
 
-    private function shouldExtractPdfSpecs(array $specs): bool
+    private function shouldExtractPdfSpecs(array $specs, string $categoria): bool
     {
-        $wanted = [
-            'graficos', 'sistema_operativo', 'suite_ofimatica',
-            'formato', 'sonido', 'chipset', 'puertos_minimos',
-            'slot_expansion', 'fuente_poder', 'empaque',
-            'certificaciones', 'accesorios_otros',
-        ];
+        $wanted = $this->allowedSpecKeysByCategory($categoria);
 
         foreach ($wanted as $key) {
             $val = strtoupper(trim((string) ($specs[$key] ?? '')));
-            if ($val === '' || $val === 'NO' || $val === 'N/A') {
+            if ($val === '' || $val === 'N/A' || $val === '-') {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private function allowedSpecKeysByCategory(string $categoria): array
+    {
+        $cat = strtoupper(trim($categoria));
+
+        if ($cat === 'TONER') {
+            return [
+                'tipo_suministro', 'modelo_toner', 'color_toner', 'descripcion_toner',
+                'rendimiento', 'garantia_de_fabrica', 'sistema_raee', 'certificaciones',
+                'empaque', 'unidad', 'numero_parte_ref', 'dimensiones',
+            ];
+        }
+
+        return [
+            'graficos', 'sistema_operativo', 'suite_ofimatica',
+            'formato', 'sonido', 'chipset', 'puertos_minimos',
+            'slot_expansion', 'fuente_poder', 'empaque',
+            'certificaciones', 'accesorios_otros',
+        ];
     }
 
     private function extractSpecsFromPdfUrl(string $pdfUrl): array
@@ -680,6 +735,8 @@ class SyncFichasCommand extends Command
             'ESTACION DE TRABAJO'       => '%TRABAJO%',
             'LAPTOP'                    => '%LAPTOP%',
             'COMPUTADORA PORTATIL'      => '%PORTATIL%',
+            'TONER'                     => '%TONER%',
+            'TONNER'                    => '%TONER%',
             'SCANNER'                   => '%SCAN%',
         ];
         $pattern = $patterns[$key] ?? '%' . $key . '%';
@@ -736,6 +793,12 @@ class SyncFichasCommand extends Command
             $this->warn("No se pudo obtener catálogo: " . $e->getMessage());
         }
 
+        // 2b. Catálogo de tóneres KENYA (fuera del filtro de marca principal)
+        $tonerItems = $this->fetchTonerCatalogItems();
+        if (!empty($tonerItems)) {
+            $catalogItems = array_merge($catalogItems, $tonerItems);
+        }
+
         // Fallback: si catalog falla usar video-specs como base
         if (empty($catalogItems) && !empty($videoMap)) {
             $catalogItems = array_values($videoMap);
@@ -759,6 +822,10 @@ class SyncFichasCommand extends Command
             // Parsear specs desde la descripción (PCs y productos sin specs directas)
             $specs = $this->parseDescription($descripcion);
 
+            if ($categoria === 'TONER') {
+                $specs = $this->enrichTonerSpecsFromDescription($specs, $descripcion, $codigo);
+            }
+
             // Para monitores (y cualquier producto), el API ya devuelve specs pre-computadas.
             // Tienen prioridad sobre el parser de texto — se fusionan encima.
             $apiSpecs = $item['specs'] ?? [];
@@ -770,7 +837,7 @@ class SyncFichasCommand extends Command
             $fichaUrl = $item['ficha_tecnica_url'] ?? null;
             if (isset($videoMap[$codigo])) {
                 $graficosRaw = $videoMap[$codigo]['graficos'] ?? null;
-                if ($graficosRaw && $categoria !== 'MONITOR') {
+                if ($graficosRaw && !in_array($categoria, ['MONITOR', 'TONER'], true)) {
                     $specs['graficos'] = $this->fixEncoding($graficosRaw);
                 }
                 // Preferir URL de ficha desde video-specs si está disponible
@@ -780,7 +847,7 @@ class SyncFichasCommand extends Command
             $all[] = [
                 'codigo_ficha'      => $codigo,
                 'estado'            => $estado,
-                'modelo_api'        => $this->extractModelFromDesc($descripcion),
+                'modelo_api'        => $categoria === 'TONER' ? 'TONER' : $this->extractModelFromDesc($descripcion),
                 'categoria_api'     => strtoupper($item['categoria'] ?? ''),
                 'imagen'            => $item['imagen_url'] ?? null,
                 'ficha_tecnica_url' => $fichaUrl,
@@ -790,6 +857,80 @@ class SyncFichasCommand extends Command
 
         $this->info("Total fichas fusionadas: " . count($all));
         return $all;
+    }
+
+    private function fetchTonerCatalogItems(): array
+    {
+        try {
+            $resp = Http::timeout(60)->get(self::API_BASE . '/fichas/catalog', [
+                'categoria' => 'TONER',
+                'search'    => 'KENYA',
+                'limit'     => 2000,
+            ]);
+
+            if ($resp->successful()) {
+                $items = $resp->json()['items'] ?? [];
+                if (!empty($items)) {
+                    $this->info("Catálogo tóner: " . count($items) . " fichas");
+                }
+                return $items;
+            }
+
+            $this->warn("catalog tóner respondió " . $resp->status());
+        } catch (\Exception $e) {
+            $this->warn("No se pudo obtener catálogo tóner: " . $e->getMessage());
+        }
+
+        return [];
+    }
+
+    private function enrichTonerSpecsFromDescription(array $specs, string $descripcion, string $codigo): array
+    {
+        if (empty($specs['tipo_suministro'])) {
+            $specs['tipo_suministro'] = 'Toner';
+        }
+
+        if (empty($specs['numero_parte_ref'])) {
+            $specs['numero_parte_ref'] = $codigo;
+        }
+
+        if (empty($specs['color_toner'])) {
+            if (preg_match('/\b(NEGRO|AMARILLO|MAGENTA|CIAN|CYAN)\b/ui', $descripcion, $m)) {
+                $specs['color_toner'] = ucfirst(strtolower($m[1]));
+            }
+        }
+
+        if (!empty($specs['sistema_raee'])) {
+            $specs['sistema_raee'] = trim(preg_replace('/\b' . preg_quote($codigo, '/') . '\b/i', '', $specs['sistema_raee']));
+        }
+
+        if (!empty($specs['garantia_de_fabrica'])) {
+            $specs['garantia_de_fabrica'] = trim((string) preg_replace(
+                '/CAJA\s*X\s*\d+\s*UNIDAD(?:ES)?/iu',
+                '',
+                $specs['garantia_de_fabrica']
+            ));
+        }
+
+        if (empty($specs['modelo_toner'])) {
+            if (preg_match('/KENYA\s+([A-Z0-9\-\s]+?)\s+' . preg_quote($codigo, '/') . '$/iu', $descripcion, $m)) {
+                $specs['modelo_toner'] = trim($m[1]);
+            }
+        }
+
+        if (empty($specs['empaque'])) {
+            if (preg_match('/CAJA\s*X\s*\d+\s*UNIDAD(?:ES)?/iu', $descripcion, $m)) {
+                $specs['empaque'] = $m[0];
+            }
+        }
+
+        if (empty($specs['unidad'])) {
+            if (preg_match('/CAJA\s*X\s*(\d+\s*UNIDAD(?:ES)?)/iu', $descripcion, $m)) {
+                $specs['unidad'] = $m[1];
+            }
+        }
+
+        return $specs;
     }
 
     /**

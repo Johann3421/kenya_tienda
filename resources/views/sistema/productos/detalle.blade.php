@@ -121,8 +121,17 @@
                 // Detección de modelos tonner (ID 10 o descripción contiene 'tonner')
                 $isTonner = $producto->modelo && (
                     $producto->modelo->id == 10 ||
-                    stripos($producto->modelo->descripcion ?? '', 'tonner') !== false
+                    stripos($producto->modelo->descripcion ?? '', 'tonner') !== false ||
+                    stripos($producto->modelo->descripcion ?? '', 'toner') !== false
                 );
+
+                if (!$isTonner) {
+                    $categoriaNombre = optional($producto->getCategoria)->nombre ?? '';
+                    $isTonner = stripos($categoriaNombre, 'tonner') !== false
+                        || stripos($categoriaNombre, 'toner') !== false
+                        || stripos($producto->nombre ?? '', 'tonner') !== false
+                        || stripos($producto->nombre ?? '', 'toner') !== false;
+                }
 
                 // Lógica de imágenes priorizada
                 $imagen = $isTonner
@@ -159,11 +168,28 @@
                     $isMonitor = stripos(optional($producto->getCategoria)->nombre, 'monitor') !== false;
                 }
 
+                $isToner = false;
+                if ($producto->modelo && $producto->modelo->id == 10) {
+                    $isToner = true;
+                }
+                if (!$isToner) {
+                    $modeloNombre = optional($producto->modelo)->descripcion ?? '';
+                    $categoriaNombre = optional($producto->getCategoria)->nombre ?? '';
+                    $productoNombre = $producto->nombre ?? '';
+
+                    $isToner = stripos($modeloNombre, 'tonner') !== false
+                        || stripos($modeloNombre, 'toner') !== false
+                        || stripos($categoriaNombre, 'tonner') !== false
+                        || stripos($categoriaNombre, 'toner') !== false
+                        || stripos($productoNombre, 'tonner') !== false
+                        || stripos($productoNombre, 'toner') !== false;
+                }
+
                 // Normalizar y filtrar especificaciones válidas
                 $specsList = [];
                 foreach ($especificaciones as $s) {
                     $desc = trim(strtolower($s->descripcion ?? ''));
-                    if ($desc === 'no' || $desc === '') continue;
+                    if ($desc === '') continue;
                     $specsList[] = $s;
                 }
 
@@ -212,7 +238,34 @@
 
                 // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
                 $topOrdered = [];
-                if (!$isMonitor) {
+                if ($isToner) {
+                    $topOrdered = [
+                        (object) [
+                            'campo' => 'Tipo de suministro',
+                            'descripcion' => $getSpecValue(['/tipo de suministro|suministro|formato/'])
+                                ?? $getProductValue(['Tipo de suministro'])
+                                ?? 'No especificado',
+                        ],
+                        (object) [
+                            'campo' => 'Color',
+                            'descripcion' => $getSpecValue(['/^color$/', '/color/'])
+                                ?? $getProductValue(['Color'])
+                                ?? 'No especificado',
+                        ],
+                        (object) [
+                            'campo' => 'Rendimiento',
+                            'descripcion' => $getSpecValue(['/rendimiento|p[aá]ginas|paginas/'])
+                                ?? $getProductValue(['Rendimiento'])
+                                ?? 'No especificado',
+                        ],
+                        (object) [
+                            'campo' => 'Garantia',
+                            'descripcion' => $getSpecValue(['/garant[ií]a|g\.\s*f/'])
+                                ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])
+                                ?? 'No especificado',
+                        ],
+                    ];
+                } elseif (!$isMonitor) {
                     $topOrdered = [
                         (object) [
                             'campo' => 'Procesador',
@@ -243,7 +296,7 @@
             @endphp
 
             <h2 class="" style="font-weight: bold; font-size: 36px; font-family: Arial">
-                @if($isMonitor) MONITOR @endif {{ $producto->nombre }}
+                @if($isMonitor) MONITOR @elseif($isToner) TONER @endif {{ $producto->nombre }}
             </h2>
 
             <div class="carousel-descripcion mb-3 row" style="padding: 15px;">
@@ -347,6 +400,35 @@
                         <td></td>
                         <td>{{ $producto->nro_parte ?? 'No especificado' }}</td>
                     </tr>
+                @elseif($isToner)
+                    @php
+                        $finalRows = [
+                            ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte']) ?? $getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/'])],
+                            ['label' => 'Modelo', 'value' => $getSpecValue(['/^modelo$/', '/modelo/']) ?? $getProductValue(['Modelo']) ?? optional($producto->modelo)->descripcion],
+                            ['label' => 'Tipo de suministro', 'value' => $getSpecValue(['/tipo de suministro|suministro|formato/']) ?? $getProductValue(['Tipo de suministro'])],
+                            ['label' => 'Color', 'value' => $getSpecValue(['/^color$/', '/color/']) ?? $getProductValue(['Color'])],
+                            ['label' => 'Descripción', 'value' => $getSpecValue(['/descrip/']) ?? $getProductValue(['Descripción'])],
+                            ['label' => 'Rendimiento', 'value' => $getSpecValue(['/rendimiento|p[aá]ginas|paginas/']) ?? $getProductValue(['Rendimiento'])],
+                            ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a|g\.\s*f/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
+                            ['label' => 'Sistema RAEE', 'value' => $getSpecValue(['/raee|manejo/']) ?? $getProductValue(['Sistema RAEE'])],
+                            ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
+                            ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|caja\s*x/']) ?? $getProductValue(['Empaque'])],
+                            ['label' => 'Unidad', 'value' => $getSpecValue(['/^unidad$/', '/unidad\s*caja|caja\s*x/'])],
+                            ['label' => 'Dimensiones', 'value' => $getSpecValue(['/dimensi/']) ?? $getProductValue(['Dimensiones'])],
+                        ];
+                    @endphp
+
+                    @forelse($finalRows as $fr)
+                    <tr>
+                        <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
+                        <td></td>
+                        <td>{{ $fr['value'] ?? 'No especificado' }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td>
+                    </tr>
+                    @endforelse
                 @else
                     @php
                         // Datos que hoy llegan del sync API:
