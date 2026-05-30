@@ -27,6 +27,8 @@ class SyncFichasCommand extends Command
     // Tokens del texto de descripción → columna en productos
     // Orden importa: tokens más largos primero para evitar matches parciales
     const SPEC_TOKENS = [
+        'TIPO DE SUMINISTRO DE IMPRESION:' => 'tipo_suministro',
+        'TIPO DE SUMINISTRO DE IMPRESIÓN:' => 'tipo_suministro',
         'SUITE OFIMATICA PRE-INSTALADA:' => 'suite_ofimatica',
         'SUITE OFIMATICA:'               => 'suite_ofimatica',
         'SIST. OPER:'                    => 'sistema_operativo',
@@ -61,14 +63,20 @@ class SyncFichasCommand extends Command
     // Se usan para completar campos que no llegan en descripción/API.
     const PDF_SPEC_TOKENS = [
         // Variante sin ':' porque muchos PDF extraídos no respetan delimitadores
+        'TIPO DE SUMINISTRO DE IMPRESION' => 'tipo_suministro',
+        'TIPO DE SUMINISTRO DE IMPRESIÓN' => 'tipo_suministro',
         'TIPO DE SUMINISTRO'             => 'tipo_suministro',
         'DESCRIPCION'                    => 'descripcion_toner',
         'DESCRIPCIÓN'                    => 'descripcion_toner',
         'MODELO'                         => 'modelo_toner',
         'COLOR'                          => 'color_toner',
+        'RENDIMIENTO APROXIMADO'         => 'rendimiento',
         'RENDIMIENTO'                    => 'rendimiento',
         'SISTEMA DE MANEJO DE RAEE'      => 'sistema_raee',
         'SIST. MANEJO RAEE'              => 'sistema_raee',
+        'NUMERO DE PARTE DEL FABRICANTE' => 'numero_parte_ref',
+        'NÚMERO DE PARTE DEL FABRICANTE' => 'numero_parte_ref',
+        'UNIDADES POR CAJA'              => 'unidad',
         'UNIDAD CAJA'                    => 'unidad',
         'NUMERO DE PARTE'                => 'numero_parte_ref',
         'NÚMERO DE PARTE'                => 'numero_parte_ref',
@@ -205,6 +213,7 @@ class SyncFichasCommand extends Command
         $suspended = 0;
         $ofertados = 0;
         $pdfEnriched = 0;
+        $tonerPdfBackfilled = 0;
 
         $bar = $this->output->createProgressBar($totalUnique);
         $bar->start();
@@ -218,6 +227,9 @@ class SyncFichasCommand extends Command
             if (!$soloVig) {
                 $specsBefore = $specs;
                 $specs = $this->enrichSpecsFromPdfIfNeeded($specs, $pdfUrl, $categoriaApi);
+                if ($categoriaApi === 'TONER') {
+                    $specs = $this->normalizeTonerSpecs($specs, $codigo);
+                }
                 $ficha['specs'] = $specs; // aplica también para --crear
                 if ($specs !== $specsBefore) {
                     $pdfEnriched++;
@@ -272,6 +284,11 @@ class SyncFichasCommand extends Command
         $bar->finish();
         $this->newLine();
 
+        // — Backfill para tóneres existentes en BD desde su propia ficha PDF —
+        if (!$soloVig) {
+            $tonerPdfBackfilled = $this->backfillExistingTonerSpecsFromStoredPdf($dryRun);
+        }
+
         // — Suspender productos de modelos PC sin codigo_pc (los "viejos") —
         $suspendidosViejos = 0;
         if ($suspenderSinFicha) {
@@ -288,6 +305,7 @@ class SyncFichasCommand extends Command
                 ['SUSPENDIDOS (ficha)',   $suspended],
                 ['OFERTADOS (ficha)',     $ofertados],
                 ['Completados desde PDF', $pdfEnriched],
+                ['Tóneres completados (PDF local)', $dryRun ? "(dry-run) serían {$tonerPdfBackfilled}" : $tonerPdfBackfilled],
                 ['Suspendidos sin ficha', $dryRun ? "(dry-run) serían {$suspendidosViejos}" : $suspendidosViejos],
             ]
         );
@@ -301,7 +319,7 @@ class SyncFichasCommand extends Command
             $this->warn("Modo dry-run: no se escribió nada en la BD.");
         } else {
             $this->info("Sincronización completada.");
-            Log::info('sync:fichas', compact('updated', 'creados', 'noMatch', 'suspended', 'pdfEnriched', 'suspendidosViejos'));
+            Log::info('sync:fichas', compact('updated', 'creados', 'noMatch', 'suspended', 'pdfEnriched', 'tonerPdfBackfilled', 'suspendidosViejos'));
         }
 
         return self::SUCCESS;
@@ -603,6 +621,87 @@ class SyncFichasCommand extends Command
         }
     }
 
+    private function extractSpecsFromPdfReference(?string $pdfRef): array
+    {
+        $ref = trim((string) $pdfRef);
+        if ($ref === '') {
+            return [];
+        }
+
+        // Si viene como URL, intentar HTTP primero y luego fallback por ruta local.
+        if (preg_match('/^https?:\/\//i', $ref)) {
+            $remote = $this->extractSpecsFromPdfUrl($ref);
+            if (!empty($remote)) {
+                return $remote;
+            }
+
+            $path = parse_url($ref, PHP_URL_PATH);
+            if (is_string($path) && $path !== '') {
+                return $this->extractSpecsFromPdfReference($path);
+            }
+
+            return [];
+        }
+
+        $cacheKey = 'local:' . $ref;
+        if (array_key_exists($cacheKey, $this->pdfSpecsCache)) {
+            return $this->pdfSpecsCache[$cacheKey];
+        }
+
+        $binary = $this->readLocalPdfBinary($ref);
+        if ($binary === null) {
+            $this->pdfSpecsCache[$cacheKey] = [];
+            return [];
+        }
+
+        $specs = $this->parsePdfBinaryToSpecs($binary);
+        $this->pdfSpecsCache[$cacheKey] = $specs;
+        return $specs;
+    }
+
+    private function readLocalPdfBinary(string $pdfRef): ?string
+    {
+        $ref = str_replace('\\', '/', trim($pdfRef));
+        if ($ref === '') {
+            return null;
+        }
+
+        $candidates = [];
+
+        if (str_starts_with($ref, '/storage/')) {
+            $relative = ltrim(substr($ref, strlen('/storage/')), '/');
+            $candidates[] = storage_path('app/public/' . $relative);
+        }
+
+        if (str_starts_with($ref, 'storage/')) {
+            $relative = ltrim(substr($ref, strlen('storage/')), '/');
+            $candidates[] = storage_path('app/public/' . $relative);
+        }
+
+        $candidates[] = storage_path('app/public/' . ltrim($ref, '/'));
+        $candidates[] = public_path(ltrim($ref, '/'));
+        $candidates[] = base_path(ltrim($ref, '/'));
+
+        $checked = [];
+        foreach ($candidates as $path) {
+            if (isset($checked[$path])) {
+                continue;
+            }
+            $checked[$path] = true;
+
+            if (!is_file($path) || !is_readable($path)) {
+                continue;
+            }
+
+            $binary = @file_get_contents($path);
+            if ($binary !== false && $binary !== '') {
+                return $binary;
+            }
+        }
+
+        return null;
+    }
+
     private function parsePdfBinaryToSpecs(string $pdfBinary): array
     {
         if ($pdfBinary === '') {
@@ -619,11 +718,21 @@ class SyncFichasCommand extends Command
             return [];
         }
 
-        return $this->parseTokenizedText(
+        $specs = $this->parseTokenizedText(
             $text,
             self::PDF_SPEC_TOKENS,
             ['UNIDAD KENYA TECHNOLOGY', 'SIST. MANEJO RAEE', 'WWW.', 'HTTP://', 'HTTPS://']
         );
+
+        // Fallback robusto para PDFs de tóner con etiquetas variantes.
+        $tonerSpecs = $this->parseTonerSpecsFromText($text);
+        foreach ($tonerSpecs as $key => $value) {
+            if (empty($specs[$key]) && !empty($value)) {
+                $specs[$key] = $value;
+            }
+        }
+
+        return $specs;
     }
 
     private function getPdfParser(): PdfParser
@@ -644,11 +753,78 @@ class SyncFichasCommand extends Command
         $fixed = trim((string) $fixed, ":;,. ");
 
         $upper = strtoupper((string) $fixed);
-        if ($fixed === '' || $upper === 'N/A' || $upper === '-') {
+        if (
+            $fixed === ''
+            || in_array($upper, ['N/A', '-', 'NULL', 'NO ESPECIFICADO', 'NO APLICA'], true)
+        ) {
             return null;
         }
 
         return $fixed;
+    }
+
+    private function parseTonerSpecsFromText(string $text): array
+    {
+        $specs = [];
+        $flat = preg_replace('/\s+/u', ' ', trim((string) ($this->fixEncoding($text) ?? $text)));
+        if ($flat === '') {
+            return $specs;
+        }
+
+        $labels = implode('|', [
+            'TIPO\s+DE\s+SUMINISTRO(?:\s+DE\s+IMPRESI[ÓO]N)?',
+            'DESCRIPCI[ÓO]N',
+            'MODELO(?:\s+DE\s+SUMINISTRO)?',
+            '\bCOLOR\b',
+            'RENDIMIENTO(?:\s+APROXIMADO)?',
+            'GARANT[ÍI]A(?:\s+DE\s+F[ÁA]BRICA)?',
+            'SIST(?:EMA)?\.?\s+DE\s+MANEJO\s+DE\s+RAEE',
+            'SIST\.\s*MANEJO\s*RAEE',
+            'CERTIFICACIONES?',
+            'EMPAQUE',
+            'UNIDAD(?:ES)?\s+POR\s+CAJA',
+            'UNIDAD\s+CAJA',
+            'N[ÚU]MERO\s+DE\s+PARTE(?:\s+DEL\s+FABRICANTE)?',
+            'NRO\.?\s+DE\s+PARTE',
+            'N[°º]\s*DE\s*PARTE',
+            'DIMENSIONES?',
+        ]);
+
+        $patternMap = [
+            'tipo_suministro' => ['TIPO\s+DE\s+SUMINISTRO(?:\s+DE\s+IMPRESI[ÓO]N)?'],
+            'descripcion_toner' => ['DESCRIPCI[ÓO]N'],
+            'modelo_toner' => ['MODELO(?:\s+DE\s+SUMINISTRO)?'],
+            'color_toner' => ['\bCOLOR\b'],
+            'rendimiento' => ['RENDIMIENTO(?:\s+APROXIMADO)?'],
+            'garantia_de_fabrica' => ['GARANT[ÍI]A(?:\s+DE\s+F[ÁA]BRICA)?'],
+            'sistema_raee' => ['SIST(?:EMA)?\.?\s+DE\s+MANEJO\s+DE\s+RAEE', 'SIST\.\s*MANEJO\s*RAEE'],
+            'certificaciones' => ['CERTIFICACIONES?'],
+            'empaque' => ['EMPAQUE'],
+            'unidad' => ['UNIDAD(?:ES)?\s+POR\s+CAJA', 'UNIDAD\s+CAJA'],
+            'numero_parte_ref' => [
+                'N[ÚU]MERO\s+DE\s+PARTE(?:\s+DEL\s+FABRICANTE)?',
+                'NRO\.?\s+DE\s+PARTE',
+                'N[°º]\s*DE\s*PARTE',
+            ],
+            'dimensiones' => ['DIMENSIONES?'],
+        ];
+
+        foreach ($patternMap as $key => $patterns) {
+            foreach ($patterns as $pattern) {
+                $regex = '/(?:^|\b)' . $pattern . '\s*[:\-]?\s*(.+?)(?=\b(?:' . $labels . ')\b|$)/iu';
+                if (!preg_match($regex, $flat, $m)) {
+                    continue;
+                }
+
+                $value = $this->sanitizeSpecValue($m[1] ?? '');
+                if ($value !== null) {
+                    $specs[$key] = $value;
+                    break;
+                }
+            }
+        }
+
+        return $specs;
     }
 
     private function parseTokenizedText(string $text, array $tokenMap, array $endMarkers = []): array
@@ -694,6 +870,185 @@ class SyncFichasCommand extends Command
         }
 
         return $specs;
+    }
+
+    private function backfillExistingTonerSpecsFromStoredPdf(bool $dryRun): int
+    {
+        $rows = DB::table('productos')
+            ->leftJoin('modelos', 'modelos.id', '=', 'productos.modelo_id')
+            ->leftJoin('categorias', 'categorias.id', '=', 'productos.categoria_id')
+            ->select([
+                'productos.id',
+                'productos.nro_parte',
+                'productos.ficha_tecnica',
+                'productos.garantia_de_fabrica',
+                'modelos.descripcion as modelo_desc',
+                'categorias.nombre as categoria_nombre',
+            ])
+            ->whereNotNull('productos.ficha_tecnica')
+            ->whereRaw("TRIM(productos.ficha_tecnica) != ''")
+            ->where(function ($q) {
+                $q->where('productos.modelo_id', 10)
+                    ->orWhereRaw("LOWER(COALESCE(modelos.descripcion, '')) LIKE '%toner%'")
+                    ->orWhereRaw("LOWER(COALESCE(modelos.descripcion, '')) LIKE '%tonner%'")
+                    ->orWhereRaw("LOWER(COALESCE(categorias.nombre, '')) LIKE '%toner%'")
+                    ->orWhereRaw("LOWER(COALESCE(categorias.nombre, '')) LIKE '%tonner%'");
+            })
+            ->get();
+
+        if ($rows->isEmpty()) {
+            return 0;
+        }
+
+        $updated = 0;
+        foreach ($rows as $row) {
+            $rawSpecs = $this->extractSpecsFromPdfReference((string) $row->ficha_tecnica);
+            if (empty($rawSpecs)) {
+                continue;
+            }
+
+            $specs = $this->normalizeTonerSpecs($rawSpecs, (string) ($row->nro_parte ?? ''));
+            if (empty($specs)) {
+                continue;
+            }
+
+            if (!$this->hasTonerSpecChanges((int) $row->id, $specs, (string) ($row->garantia_de_fabrica ?? ''))) {
+                continue;
+            }
+
+            $updated++;
+            if ($dryRun) {
+                continue;
+            }
+
+            $this->upsertTonerEspecificaciones((int) $row->id, $specs);
+
+            if (!empty($specs['garantia_de_fabrica'])) {
+                DB::table('productos')
+                    ->where('id', (int) $row->id)
+                    ->update([
+                        'garantia_de_fabrica' => $specs['garantia_de_fabrica'],
+                        'updated_at' => now(),
+                    ]);
+            }
+        }
+
+        return $updated;
+    }
+
+    private function normalizeTonerSpecs(array $specs, string $nroParte = ''): array
+    {
+        $allowed = array_flip($this->allowedSpecKeysByCategory('TONER'));
+        $clean = [];
+
+        foreach ($specs as $key => $value) {
+            if (!isset($allowed[$key])) {
+                continue;
+            }
+
+            $sanitized = $this->sanitizeSpecValue((string) $value);
+            if ($sanitized !== null) {
+                $clean[$key] = $sanitized;
+            }
+        }
+
+        $code = strtoupper(trim($nroParte));
+        if ($code !== '' && empty($clean['numero_parte_ref'])) {
+            $clean['numero_parte_ref'] = $code;
+        }
+
+        if (empty($clean['tipo_suministro'])) {
+            $clean['tipo_suministro'] = 'Toner';
+        }
+
+        if (!empty($clean['sistema_raee']) && $code !== '') {
+            $clean['sistema_raee'] = trim((string) preg_replace('/\b' . preg_quote($code, '/') . '\b/i', '', $clean['sistema_raee']));
+        }
+
+        if (!empty($clean['empaque'])) {
+            $clean['empaque'] = trim((string) preg_replace(
+                '/\bSIST(?:EMA)?\.?\s+DE\s+MANEJO\s+DE\s+RAEE.*$/iu',
+                '',
+                $clean['empaque']
+            ));
+        }
+
+        if (!empty($clean['garantia_de_fabrica'])) {
+            $clean['garantia_de_fabrica'] = trim((string) preg_replace('/CAJA\s*X\s*\d+\s*UNIDAD(?:ES)?/iu', '', $clean['garantia_de_fabrica']));
+            $clean['garantia_de_fabrica'] = $this->sanitizeSpecValue($clean['garantia_de_fabrica']) ?? '';
+        }
+
+        if (!empty($clean['unidad'])) {
+            if (preg_match('/(\d+\s*UNIDAD(?:ES)?)/iu', $clean['unidad'], $m)) {
+                $clean['unidad'] = $m[1];
+            }
+        }
+
+        if (empty($clean['unidad']) && !empty($clean['empaque'])) {
+            if (preg_match('/(\d+\s*UNIDAD(?:ES)?)/iu', $clean['empaque'], $m)) {
+                $clean['unidad'] = $m[1];
+            }
+        }
+
+        return array_filter($clean, fn($v) => trim((string) $v) !== '');
+    }
+
+    private function hasTonerSpecChanges(int $productoId, array $newSpecs, string $productoGarantia): bool
+    {
+        $existing = DB::table('especificaciones')
+            ->where('producto_id', $productoId)
+            ->pluck('descripcion', 'campo')
+            ->toArray();
+
+        foreach ($this->allowedSpecKeysByCategory('TONER') as $key) {
+            $label = self::SPEC_LABELS[$key] ?? null;
+            if (!$label || empty($newSpecs[$key])) {
+                continue;
+            }
+
+            $current = trim((string) ($existing[$label] ?? ''));
+            if ($current !== trim((string) $newSpecs[$key])) {
+                return true;
+            }
+        }
+
+        if (!empty($newSpecs['garantia_de_fabrica'])) {
+            $garantiaActual = trim((string) $productoGarantia);
+            if ($garantiaActual !== trim((string) $newSpecs['garantia_de_fabrica'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function upsertTonerEspecificaciones(int $productoId, array $specs): void
+    {
+        $now = now();
+
+        foreach ($this->allowedSpecKeysByCategory('TONER') as $key) {
+            $label = self::SPEC_LABELS[$key] ?? null;
+            if (!$label) {
+                continue;
+            }
+
+            $value = $this->sanitizeSpecValue((string) ($specs[$key] ?? ''));
+            if ($value === null) {
+                continue;
+            }
+
+            DB::table('especificaciones')->updateOrInsert(
+                [
+                    'producto_id' => $productoId,
+                    'campo' => $label,
+                ],
+                [
+                    'descripcion' => $value,
+                    'updated_at' => $now,
+                    'created_at' => $now,
+                ]
+            );
+        }
     }
 
     // ─── Helpers modelo / categoría ──────────────────────────────────────────
@@ -824,6 +1179,7 @@ class SyncFichasCommand extends Command
 
             if ($categoria === 'TONER') {
                 $specs = $this->enrichTonerSpecsFromDescription($specs, $descripcion, $codigo);
+                $specs = $this->normalizeTonerSpecs($specs, $codigo);
             }
 
             // Para monitores (y cualquier producto), el API ya devuelve specs pre-computadas.

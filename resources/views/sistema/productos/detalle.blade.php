@@ -210,6 +210,10 @@
                         return null;
                     }
 
+                    if (in_array(strtoupper($text), ['NULL', 'N/A', '-', 'NO ESPECIFICADO', 'NO APLICA'], true)) {
+                        return null;
+                    }
+
                     return $text;
                 };
 
