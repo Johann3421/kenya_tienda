@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Smalot\PdfParser\Parser as PdfParser;
 
 class SyncFichasCommand extends Command
 {
@@ -45,6 +46,44 @@ class SyncFichasCommand extends Command
         'VGA:'                           => 'video_vga',
     ];
 
+    // Tokens encontrados en ficha técnica PDF → clave de especificación
+    // Se usan para completar campos que no llegan en descripción/API.
+    const PDF_SPEC_TOKENS = [
+        'FORMATO:'                       => 'formato',
+        'PROCESADOR:'                    => 'procesador',
+        'MEMORIA RAM:'                   => 'ram',
+        'RAM:'                           => 'ram',
+        'ALMACENAMIENTO:'                => 'almacenamiento',
+        'GRAFICOS:'                      => 'graficos',
+        'GRÁFICOS:'                      => 'graficos',
+        'TARJETA GRAFICA:'               => 'graficos',
+        'TARJETA GRÁFICA:'               => 'graficos',
+        'SISTEMA OPERATIVO:'             => 'sistema_operativo',
+        'SUITE OFIMATICA PRE-INSTALADA:' => 'suite_ofimatica',
+        'SUITE OFIMATICA:'               => 'suite_ofimatica',
+        'SUITE OFIMÁTICA:'               => 'suite_ofimatica',
+        'SONIDO:'                        => 'sonido',
+        'CHIPSET:'                       => 'chipset',
+        'LAN:'                           => 'conectividad',
+        'WLAN:'                          => 'conectividad_wlan',
+        'USB:'                           => 'conectividad_usb',
+        'VGA:'                           => 'video_vga',
+        'HDMI:'                          => 'video_hdmi',
+        'PUERTOS MINIMOS:'               => 'puertos_minimos',
+        'PUERTOS MÍNIMOS:'               => 'puertos_minimos',
+        'SLOT DE EXPANSION:'             => 'slot_expansion',
+        'SLOT DE EXPANSIÓN:'             => 'slot_expansion',
+        'FUENTE DE PODER:'               => 'fuente_poder',
+        'GARANTIA DE FABRICA:'           => 'garantia_de_fabrica',
+        'GARANTÍA DE FÁBRICA:'           => 'garantia_de_fabrica',
+        'GARANTIA:'                      => 'garantia_de_fabrica',
+        'GARANTÍA:'                      => 'garantia_de_fabrica',
+        'EMPAQUE:'                       => 'empaque',
+        'CERTIFICACIONES:'               => 'certificaciones',
+        'ACCESORIOS:'                    => 'accesorios_otros',
+        'OTROS:'                         => 'accesorios_otros',
+    ];
+
     /** Etiquetas legibles para la tabla especificaciones */
     const SPEC_LABELS = [
         // ── Computadoras / PCs ──────────────────────────────────────────────
@@ -63,6 +102,15 @@ class SyncFichasCommand extends Command
         'mouse'               => 'Mouse',
         'suite_ofimatica'     => 'Suite Ofimática',
         'garantia_de_fabrica' => 'Garantía de Fábrica',
+        'formato'             => 'Formato',
+        'sonido'              => 'Sonido',
+        'chipset'             => 'Chipset',
+        'puertos_minimos'     => 'Puertos Mínimos',
+        'slot_expansion'      => 'Slot de Expansión',
+        'fuente_poder'        => 'Fuente de Poder',
+        'empaque'             => 'Empaque',
+        'certificaciones'     => 'Certificaciones',
+        'accesorios_otros'    => 'Accesorios y Otros',
         // ── Monitores ───────────────────────────────────────────────────────
         'tamano_pantalla'     => 'Tamaño de Pantalla',
         'panel'               => 'Panel',
@@ -81,6 +129,10 @@ class SyncFichasCommand extends Command
     private array $modelosCache    = [];
     /** Caché categoria_api → categoria_id */
     private array $categoriasCache = [];
+    /** Parser de PDF (instancia única) */
+    private ?PdfParser $pdfParser = null;
+    /** Caché URL PDF → specs extraídas */
+    private array $pdfSpecsCache = [];
 
     // ─── Entry point ──────────────────────────────────────────────────────────
 
@@ -117,6 +169,7 @@ class SyncFichasCommand extends Command
         $noMatch   = 0;
         $suspended = 0;
         $ofertados = 0;
+        $pdfEnriched = 0;
 
         $bar = $this->output->createProgressBar($totalUnique);
         $bar->start();
@@ -124,6 +177,17 @@ class SyncFichasCommand extends Command
         foreach ($deduped as $codigo => $ficha) {
             $estado = strtoupper($ficha['estado'] ?? 'OFERTADA');
             $specs  = $ficha['specs'] ?? [];
+            $categoriaApi = strtoupper($ficha['categoria_api'] ?? '');
+            $pdfUrl = $ficha['ficha_tecnica_url'] ?? null;
+
+            if (!$soloVig) {
+                $specsBefore = $specs;
+                $specs = $this->enrichSpecsFromPdfIfNeeded($specs, $pdfUrl, $categoriaApi);
+                $ficha['specs'] = $specs; // aplica también para --crear
+                if ($specs !== $specsBefore) {
+                    $pdfEnriched++;
+                }
+            }
 
             $producto = $this->findProducto($codigo);
 
@@ -188,6 +252,7 @@ class SyncFichasCommand extends Command
                 ['Sin match en BD',       $noMatch - $creados],
                 ['SUSPENDIDOS (ficha)',   $suspended],
                 ['OFERTADOS (ficha)',     $ofertados],
+                ['Completados desde PDF', $pdfEnriched],
                 ['Suspendidos sin ficha', $dryRun ? "(dry-run) serían {$suspendidosViejos}" : $suspendidosViejos],
             ]
         );
@@ -201,7 +266,7 @@ class SyncFichasCommand extends Command
             $this->warn("Modo dry-run: no se escribió nada en la BD.");
         } else {
             $this->info("Sincronización completada.");
-            Log::info('sync:fichas', compact('updated', 'creados', 'noMatch', 'suspended', 'suspendidosViejos'));
+            Log::info('sync:fichas', compact('updated', 'creados', 'noMatch', 'suspended', 'pdfEnriched', 'suspendidosViejos'));
         }
 
         return self::SUCCESS;
@@ -372,6 +437,7 @@ class SyncFichasCommand extends Command
             'procesador'          => 'procesador',
             'ram'                 => 'ram',
             'almacenamiento'      => 'almacenamiento',
+            'graficos'            => 'tarjetavideo',
             'conectividad'        => 'conectividad',
             'conectividad_wlan'   => 'conectividad_wlan',
             'conectividad_usb'    => 'conectividad_usb',
@@ -399,6 +465,178 @@ class SyncFichasCommand extends Command
                 $data[$dbCol] = $val;
             }
         }
+    }
+
+    private function enrichSpecsFromPdfIfNeeded(array $specs, ?string $pdfUrl, string $categoria): array
+    {
+        if (strtoupper($categoria) === 'MONITOR' || empty($pdfUrl)) {
+            return $specs;
+        }
+
+        if (!$this->shouldExtractPdfSpecs($specs)) {
+            return $specs;
+        }
+
+        $fromPdf = $this->extractSpecsFromPdfUrl($pdfUrl);
+        if (empty($fromPdf)) {
+            return $specs;
+        }
+
+        foreach ($fromPdf as $key => $value) {
+            if (empty($specs[$key]) && !empty($value)) {
+                $specs[$key] = $value;
+            }
+        }
+
+        return $specs;
+    }
+
+    private function shouldExtractPdfSpecs(array $specs): bool
+    {
+        $wanted = [
+            'graficos', 'sistema_operativo', 'suite_ofimatica',
+            'formato', 'sonido', 'chipset', 'puertos_minimos',
+            'slot_expansion', 'fuente_poder', 'empaque',
+            'certificaciones', 'accesorios_otros',
+        ];
+
+        foreach ($wanted as $key) {
+            $val = strtoupper(trim((string) ($specs[$key] ?? '')));
+            if ($val === '' || $val === 'NO' || $val === 'N/A') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function extractSpecsFromPdfUrl(string $pdfUrl): array
+    {
+        $url = trim($pdfUrl);
+        if ($url === '') {
+            return [];
+        }
+
+        if (array_key_exists($url, $this->pdfSpecsCache)) {
+            return $this->pdfSpecsCache[$url];
+        }
+
+        if (!preg_match('/^https?:\/\//i', $url)) {
+            $this->pdfSpecsCache[$url] = [];
+            return [];
+        }
+
+        try {
+            $resp = Http::timeout(30)->retry(1, 250)->get($url);
+            if (!$resp->successful()) {
+                $this->pdfSpecsCache[$url] = [];
+                return [];
+            }
+
+            $contentType = strtolower((string) $resp->header('Content-Type', ''));
+            if ($contentType !== '' && str_contains($contentType, 'html') && !str_contains($contentType, 'pdf')) {
+                $this->pdfSpecsCache[$url] = [];
+                return [];
+            }
+
+            $specs = $this->parsePdfBinaryToSpecs((string) $resp->body());
+            $this->pdfSpecsCache[$url] = $specs;
+            return $specs;
+        } catch (\Throwable $e) {
+            $this->pdfSpecsCache[$url] = [];
+            return [];
+        }
+    }
+
+    private function parsePdfBinaryToSpecs(string $pdfBinary): array
+    {
+        if ($pdfBinary === '') {
+            return [];
+        }
+
+        try {
+            $text = $this->getPdfParser()->parseContent($pdfBinary)->getText();
+        } catch (\Throwable $e) {
+            return [];
+        }
+
+        if (!$text) {
+            return [];
+        }
+
+        return $this->parseTokenizedText(
+            $text,
+            self::PDF_SPEC_TOKENS,
+            ['UNIDAD KENYA TECHNOLOGY', 'SIST. MANEJO RAEE', 'WWW.', 'HTTP://', 'HTTPS://']
+        );
+    }
+
+    private function getPdfParser(): PdfParser
+    {
+        if ($this->pdfParser === null) {
+            $this->pdfParser = new PdfParser();
+        }
+
+        return $this->pdfParser;
+    }
+
+    private function sanitizeSpecValue(string $value): ?string
+    {
+        $fixed = $this->fixEncoding($value) ?? '';
+        $fixed = preg_replace('/\s+/u', ' ', trim($fixed));
+        $fixed = trim((string) $fixed, ":;,. ");
+
+        $upper = strtoupper((string) $fixed);
+        if ($fixed === '' || $upper === 'NO' || $upper === 'N/A' || $upper === '-') {
+            return null;
+        }
+
+        return $fixed;
+    }
+
+    private function parseTokenizedText(string $text, array $tokenMap, array $endMarkers = []): array
+    {
+        $specs = [];
+        $upper = mb_strtoupper($text, 'UTF-8');
+
+        $positions = [];
+        foreach (array_keys($tokenMap) as $token) {
+            $pattern = '/(?<![A-ZÁÉÍÓÚÑ])' . preg_quote($token, '/') . '/u';
+            if (preg_match($pattern, $upper, $m, PREG_OFFSET_CAPTURE)) {
+                $positions[$token] = $m[0][1];
+            }
+        }
+
+        asort($positions);
+        $tokenList  = array_keys($positions);
+        $tokenCount = count($tokenList);
+
+        for ($i = 0; $i < $tokenCount; $i++) {
+            $token = $tokenList[$i];
+            $specKey = $tokenMap[$token];
+            $start = $positions[$token] + strlen($token);
+
+            if ($i + 1 < $tokenCount) {
+                $end = $positions[$tokenList[$i + 1]];
+            } else {
+                $end = strlen($text);
+                foreach ($endMarkers as $marker) {
+                    $markerPos = stripos($text, $marker, $start);
+                    if ($markerPos !== false && $markerPos < $end) {
+                        $end = $markerPos;
+                    }
+                }
+            }
+
+            $raw = substr($text, $start, max(0, $end - $start));
+            $value = $this->sanitizeSpecValue($raw);
+
+            if ($value !== null && !isset($specs[$specKey])) {
+                $specs[$specKey] = $value;
+            }
+        }
+
+        return $specs;
     }
 
     // ─── Helpers modelo / categoría ──────────────────────────────────────────
@@ -619,46 +857,10 @@ class SyncFichasCommand extends Command
 
     private function parseDescription(string $text): array
     {
-        $specs = [];
-        $upper = strtoupper($text);
-
-        $positions = [];
-        foreach (array_keys(self::SPEC_TOKENS) as $token) {
-            $pos = strpos($upper, $token);
-            if ($pos !== false) {
-                $positions[$token] = $pos;
-            }
-        }
-        asort($positions);
-
-        $tokenList  = array_keys($positions);
-        $tokenCount = count($tokenList);
-
-        for ($i = 0; $i < $tokenCount; $i++) {
-            $token = $tokenList[$i];
-            $col   = self::SPEC_TOKENS[$token];
-            $start = $positions[$token] + strlen($token);
-
-            if ($i + 1 < $tokenCount) {
-                $raw = substr($text, $start, $positions[$tokenList[$i + 1]] - $start);
-            } else {
-                // Último token: cortar antes de "UNIDAD KENYA TECHNOLOGY" o "SIST. MANEJO RAEE"
-                $end = strlen($text);
-                foreach (['UNIDAD KENYA TECHNOLOGY', 'SIST. MANEJO RAEE'] as $marker) {
-                    $p = stripos($text, $marker, $start);
-                    if ($p !== false && $p < $end) {
-                        $end = $p;
-                    }
-                }
-                $raw = substr($text, $start, $end - $start);
-            }
-
-            $val = trim($raw);
-            if ($val !== '' && !isset($specs[$col])) {
-                $specs[$col] = $val;
-            }
-        }
-
-        return $specs;
+        return $this->parseTokenizedText(
+            $text,
+            self::SPEC_TOKENS,
+            ['UNIDAD KENYA TECHNOLOGY', 'SIST. MANEJO RAEE']
+        );
     }
 }
