@@ -49,39 +49,39 @@ class SyncFichasCommand extends Command
     // Tokens encontrados en ficha técnica PDF → clave de especificación
     // Se usan para completar campos que no llegan en descripción/API.
     const PDF_SPEC_TOKENS = [
-        'FORMATO:'                       => 'formato',
-        'PROCESADOR:'                    => 'procesador',
-        'MEMORIA RAM:'                   => 'ram',
-        'RAM:'                           => 'ram',
-        'ALMACENAMIENTO:'                => 'almacenamiento',
-        'GRAFICOS:'                      => 'graficos',
-        'GRÁFICOS:'                      => 'graficos',
-        'TARJETA GRAFICA:'               => 'graficos',
-        'TARJETA GRÁFICA:'               => 'graficos',
-        'SISTEMA OPERATIVO:'             => 'sistema_operativo',
-        'SUITE OFIMATICA PRE-INSTALADA:' => 'suite_ofimatica',
-        'SUITE OFIMATICA:'               => 'suite_ofimatica',
-        'SUITE OFIMÁTICA:'               => 'suite_ofimatica',
-        'SONIDO:'                        => 'sonido',
-        'CHIPSET:'                       => 'chipset',
-        'LAN:'                           => 'conectividad',
-        'WLAN:'                          => 'conectividad_wlan',
-        'USB:'                           => 'conectividad_usb',
-        'VGA:'                           => 'video_vga',
-        'HDMI:'                          => 'video_hdmi',
-        'PUERTOS MINIMOS:'               => 'puertos_minimos',
-        'PUERTOS MÍNIMOS:'               => 'puertos_minimos',
-        'SLOT DE EXPANSION:'             => 'slot_expansion',
-        'SLOT DE EXPANSIÓN:'             => 'slot_expansion',
-        'FUENTE DE PODER:'               => 'fuente_poder',
-        'GARANTIA DE FABRICA:'           => 'garantia_de_fabrica',
-        'GARANTÍA DE FÁBRICA:'           => 'garantia_de_fabrica',
-        'GARANTIA:'                      => 'garantia_de_fabrica',
-        'GARANTÍA:'                      => 'garantia_de_fabrica',
-        'EMPAQUE:'                       => 'empaque',
-        'CERTIFICACIONES:'               => 'certificaciones',
-        'ACCESORIOS:'                    => 'accesorios_otros',
-        'OTROS:'                         => 'accesorios_otros',
+        // Variante sin ':' porque muchos PDF extraídos no respetan delimitadores
+        'FORMATO'                        => 'formato',
+        'PROCESADOR'                     => 'procesador',
+        'MEMORIA RAM'                    => 'ram',
+        'RAM'                            => 'ram',
+        'ALMACENAMIENTO'                 => 'almacenamiento',
+        'GRAFICOS'                       => 'graficos',
+        'GRÁFICOS'                       => 'graficos',
+        'TARJETA GRAFICA'                => 'graficos',
+        'TARJETA GRÁFICA'                => 'graficos',
+        'SISTEMA OPERATIVO'              => 'sistema_operativo',
+        'SUITE OFIMATICA PRE-INSTALADA'  => 'suite_ofimatica',
+        'SUITE OFIMATICA'                => 'suite_ofimatica',
+        'SUITE OFIMÁTICA'                => 'suite_ofimatica',
+        'SONIDO'                         => 'sonido',
+        'CHIPSET'                        => 'chipset',
+        'LAN'                            => 'conectividad',
+        'WLAN'                           => 'conectividad_wlan',
+        'PUERTOS MINIMOS'                => 'puertos_minimos',
+        'PUERTOS MÍNIMOS'                => 'puertos_minimos',
+        'SLOT DE EXPANSION'              => 'slot_expansion',
+        'SLOT DE EXPANSIÓN'              => 'slot_expansion',
+        'FUENTE DE PODER'                => 'fuente_poder',
+        'GARANTIA DE FABRICA'            => 'garantia_de_fabrica',
+        'GARANTÍA DE FÁBRICA'            => 'garantia_de_fabrica',
+        'GARANTIA'                       => 'garantia_de_fabrica',
+        'GARANTÍA'                       => 'garantia_de_fabrica',
+        'EMPAQUE'                        => 'empaque',
+        'CERTIFICACIONES'                => 'certificaciones',
+        'ACCESORIOS Y OTROS'             => 'accesorios_otros',
+        'ACCESORIOSY OTROS'              => 'accesorios_otros',
+        'ACCESORIOS'                     => 'accesorios_otros',
+        'OTROS'                          => 'accesorios_otros',
     ];
 
     /** Etiquetas legibles para la tabla especificaciones */
@@ -584,10 +584,12 @@ class SyncFichasCommand extends Command
     {
         $fixed = $this->fixEncoding($value) ?? '';
         $fixed = preg_replace('/\s+/u', ' ', trim($fixed));
+        // Quitar marcadores de nota al pie típicos de fichas (¹ ² ³)
+        $fixed = preg_replace('/^[\x{00B9}\x{00B2}\x{00B3}]+\s*/u', '', $fixed);
         $fixed = trim((string) $fixed, ":;,. ");
 
         $upper = strtoupper((string) $fixed);
-        if ($fixed === '' || $upper === 'NO' || $upper === 'N/A' || $upper === '-') {
+        if ($fixed === '' || $upper === 'N/A' || $upper === '-') {
             return null;
         }
 
@@ -601,7 +603,7 @@ class SyncFichasCommand extends Command
 
         $positions = [];
         foreach (array_keys($tokenMap) as $token) {
-            $pattern = '/(?<![A-ZÁÉÍÓÚÑ])' . preg_quote($token, '/') . '/u';
+            $pattern = '/(?<![A-ZÁÉÍÓÚÑ])' . preg_quote($token, '/') . '(?![A-ZÁÉÍÓÚÑ])/u';
             if (preg_match($pattern, $upper, $m, PREG_OFFSET_CAPTURE)) {
                 $positions[$token] = $m[0][1];
             }

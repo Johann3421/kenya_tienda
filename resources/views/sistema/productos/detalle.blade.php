@@ -180,7 +180,7 @@
                     }
 
                     $text = trim((string) $value);
-                    if ($text === '' || strtolower($text) === 'no') {
+                    if ($text === '') {
                         return null;
                     }
 
