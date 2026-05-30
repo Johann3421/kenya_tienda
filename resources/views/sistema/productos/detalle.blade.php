@@ -158,28 +158,81 @@
                 } elseif (optional($producto->getCategoria)->nombre) {
                     $isMonitor = stripos(optional($producto->getCategoria)->nombre, 'monitor') !== false;
                 }
+
+                // Normalizar y filtrar especificaciones válidas
+                $specsList = [];
+                foreach ($especificaciones as $s) {
+                    $desc = trim(strtolower($s->descripcion ?? ''));
+                    if ($desc === 'no' || $desc === '') continue;
+                    $specsList[] = $s;
+                }
+
+                $findSpec = function($pattern) use ($specsList) {
+                    foreach ($specsList as $sp) {
+                        if (preg_match($pattern, strtolower($sp->campo))) return $sp;
+                    }
+                    return null;
+                };
+
+                // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
+                $topOrdered = [];
+                if (!$isMonitor) {
+                    $topPatterns = [
+                        'Procesador' => '/procesador|cpu|intel|amd/',
+                        'Memoria RAM' => '/memoria|ram/',
+                        'Almacenamiento' => '/almacenamiento|disco|hdd|ssd|nvme|storage/',
+                        'Gráficos' => '/graf|gpu|tarjeta|video|tarjeta de video|tarjeta gráfica/',
+                    ];
+
+                    foreach ($topPatterns as $label => $pat) {
+                        $found = $findSpec($pat);
+                        if ($found) $topOrdered[] = (object)['campo' => $label, 'descripcion' => $found->descripcion];
+                    }
+
+                    // Rellenar con los primeros specs disponibles hasta 4 items
+                    foreach ($specsList as $s) {
+                        if (count($topOrdered) >= 4) break;
+                        $exists = false;
+                        foreach ($topOrdered as $t) {
+                            if (strtolower($t->campo) === strtolower($s->campo)) { $exists = true; break; }
+                        }
+                        if (!$exists) $topOrdered[] = (object)['campo' => $s->campo, 'descripcion' => $s->descripcion];
+                    }
+                }
             @endphp
 
             <h2 class="" style="font-weight: bold; font-size: 36px; font-family: Arial">
                 @if($isMonitor) MONITOR @endif {{ $producto->nombre }}
             </h2>
+
             <div class="carousel-descripcion mb-3 row" style="padding: 15px;">
                 <div class="col-md-8">
-                    <div>
-                        <table>
+                    <div class="table-responsive">
+                        <table class="table table-borderless mb-0">
                             <tbody>
-                                @forelse($especificacionesResumen as $espec)
-                                <tr>
-                                    <td>{{ $espec->campo }}</td>
-                                    <td>: {{ $espec->descripcion }}</td>
-                                </tr>
-                                @empty
-                                <tr>
-                                    <td colspan="2" class="text-center text-muted">Aún no tiene especificaciones</td>
-                                </tr>
-                                @endforelse
-
-
+                                @if($isMonitor)
+                                    @forelse($especificacionesResumen as $espec)
+                                    <tr>
+                                        <td style="min-width:160px;font-weight:600">{{ $espec->campo }}</td>
+                                        <td>: {{ $espec->descripcion }}</td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted">Aún no tiene especificaciones</td>
+                                    </tr>
+                                    @endforelse
+                                @else
+                                    @forelse($topOrdered as $espec)
+                                    <tr>
+                                        <td style="min-width:160px;font-weight:700">{{ $espec->campo }}</td>
+                                        <td>: {{ $espec->descripcion }}</td>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted">Aún no tiene especificaciones</td>
+                                    </tr>
+                                    @endforelse
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -225,36 +278,89 @@
             </div>
         </div>
     </div>
-    <table class="table">
-        <thead>
-            <tr style="background-color: #EF9614;">
-                <th><i class="fa-solid fa-box"></i> Especificaciones Técnicas</th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($especificaciones as $espec)
-            <tr>
-                <td>{{ $espec->campo }}</td>
-                <td></td>
-                <td>{{ $espec->descripcion }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td>
-            </tr>
-            @endforelse
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr style="background-color: #EF9614;">
+                    <th><i class="fa-solid fa-box"></i> Especificaciones Técnicas</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    // Orden completo solicitado
+                    $fullOrder = [
+                        ['label' => 'Número de Parte', 'type' => 'product', 'field' => 'nro_parte'],
+                        ['label' => 'Modelo', 'type' => 'product_model'],
+                        ['label' => 'Formato', 'pattern' => '/formato|factor|formato/'],
+                        ['label' => 'Procesador', 'pattern' => '/procesador|cpu|intel|amd/'],
+                        ['label' => 'Memoria Ram', 'pattern' => '/memoria|ram/'],
+                        ['label' => 'Almacenamiento', 'pattern' => '/almacenamiento|disco|hdd|ssd|nvme|storage/'],
+                        ['label' => 'Sistema Operativo', 'pattern' => '/sistema operativo|os|windows|linux/'],
+                        ['label' => 'Suite Ofimática', 'pattern' => '/ofimatica|office|suite/'],
+                        ['label' => 'Gráficos', 'pattern' => '/graf|gpu|tarjeta|video|tarjeta de video|tarjeta gráfica/'],
+                        ['label' => 'Sonido', 'pattern' => '/sonido|audio/'],
+                        ['label' => 'Chipset', 'pattern' => '/chipset/'],
+                        ['label' => 'Lan', 'pattern' => '/lan|ethernet|red/'],
+                        ['label' => 'Wlan', 'pattern' => '/wlan|wifi|wireless/'],
+                        ['label' => 'Puertos Mínimos', 'pattern' => '/puertos|minimo|puertos minimos|puertos m[ií]nimos/'],
+                        ['label' => 'Slot de Expansión', 'pattern' => '/slot|expansi|pci|m\.2/'],
+                        ['label' => 'Fuente de Poder', 'pattern' => '/fuente|psu|power supply/'],
+                        ['label' => 'Garantia', 'pattern' => '/garantia|garant[ií]a/'],
+                        ['label' => 'Empaque', 'pattern' => '/empaque|packag/'],
+                        ['label' => 'Certificaciones', 'pattern' => '/certific|iso/'],
+                        ['label' => 'Accesorios y Otros', 'pattern' => '/accesorio|otros|observaciones|incluye/'],
+                    ];
 
-            <!-- Campo fijo -->
-            <tr>
-                <td>Número de Parte</td>
-                <td></td>
-                <td>{{ $producto->nro_parte ?? 'No especificado' }}</td>
-            </tr>
-        </tbody>
-    </table>
+                    $used = [];
+                    $finalRows = [];
+
+                    foreach ($fullOrder as $row) {
+                        $value = null;
+                        if (isset($row['type']) && $row['type'] === 'product') {
+                            $value = $producto->{$row['field']} ?? null;
+                        } elseif (isset($row['type']) && $row['type'] === 'product_model') {
+                            $value = optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? null;
+                        } else {
+                            $found = $findSpec($row['pattern']);
+                            if ($found) {
+                                $value = $found->descripcion;
+                                $used[] = $found->id ?? ($found->campo . '_' . $found->descripcion);
+                            }
+                        }
+
+                        // fallbacks
+                        if (!$value && $row['label'] === 'Gráficos') {
+                            $value = $producto->tarjetavideo ?? null;
+                        }
+
+                        $finalRows[] = ['label' => $row['label'], 'value' => $value ?: 'No especificado'];
+                    }
+
+                    // Añadir especificaciones no listadas al final bajo Accesorios y Otros
+                    foreach ($specsList as $s) {
+                        $key = $s->id ?? ($s->campo . '_' . $s->descripcion);
+                        if (!in_array($key, $used)) {
+                            $finalRows[] = ['label' => $s->campo, 'value' => $s->descripcion];
+                        }
+                    }
+                @endphp
+
+                @forelse($finalRows as $fr)
+                <tr>
+                    <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
+                    <td></td>
+                    <td>{{ $fr['value'] }}</td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 <br>
 @endsection
