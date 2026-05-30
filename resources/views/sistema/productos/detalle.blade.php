@@ -174,30 +174,71 @@
                     return null;
                 };
 
+                $cleanValue = function($value) {
+                    if ($value === null) {
+                        return null;
+                    }
+
+                    $text = trim((string) $value);
+                    if ($text === '' || strtolower($text) === 'no') {
+                        return null;
+                    }
+
+                    return $text;
+                };
+
+                $getProductValue = function(array $fields) use ($producto, $cleanValue) {
+                    foreach ($fields as $field) {
+                        $value = $cleanValue($producto->{$field} ?? null);
+                        if ($value !== null) {
+                            return $value;
+                        }
+                    }
+                    return null;
+                };
+
+                $getSpecValue = function(array $patterns) use ($findSpec, $cleanValue) {
+                    foreach ($patterns as $pattern) {
+                        $found = $findSpec($pattern);
+                        if ($found) {
+                            $value = $cleanValue($found->descripcion ?? null);
+                            if ($value !== null) {
+                                return $value;
+                            }
+                        }
+                    }
+                    return null;
+                };
+
                 // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
                 $topOrdered = [];
                 if (!$isMonitor) {
-                    $topPatterns = [
-                        'Procesador' => '/procesador|cpu|intel|amd/',
-                        'Memoria RAM' => '/memoria|ram/',
-                        'Almacenamiento' => '/almacenamiento|disco|hdd|ssd|nvme|storage/',
-                        'Gráficos' => '/graf|gpu|tarjeta|video|tarjeta de video|tarjeta gráfica/',
+                    $topOrdered = [
+                        (object) [
+                            'campo' => 'Procesador',
+                            'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/'])
+                                ?? $getProductValue(['procesador'])
+                                ?? 'No especificado',
+                        ],
+                        (object) [
+                            'campo' => 'Memoria Ram',
+                            'descripcion' => $getSpecValue(['/memoria|ram/'])
+                                ?? $getProductValue(['ram'])
+                                ?? 'No especificado',
+                        ],
+                        (object) [
+                            'campo' => 'Almacenamiento',
+                            'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/'])
+                                ?? $getProductValue(['almacenamiento'])
+                                ?? 'No especificado',
+                        ],
+                        (object) [
+                            'campo' => 'Gráficos',
+                            'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/'])
+                                ?? $getProductValue(['tarjetavideo'])
+                                ?? 'No especificado',
+                        ],
                     ];
-
-                    foreach ($topPatterns as $label => $pat) {
-                        $found = $findSpec($pat);
-                        if ($found) $topOrdered[] = (object)['campo' => $label, 'descripcion' => $found->descripcion];
-                    }
-
-                    // Rellenar con los primeros specs disponibles hasta 4 items
-                    foreach ($specsList as $s) {
-                        if (count($topOrdered) >= 4) break;
-                        $exists = false;
-                        foreach ($topOrdered as $t) {
-                            if (strtolower($t->campo) === strtolower($s->campo)) { $exists = true; break; }
-                        }
-                        if (!$exists) $topOrdered[] = (object)['campo' => $s->campo, 'descripcion' => $s->descripcion];
-                    }
                 }
             @endphp
 
@@ -288,76 +329,66 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    // Orden completo solicitado
-                    $fullOrder = [
-                        ['label' => 'Número de Parte', 'type' => 'product', 'field' => 'nro_parte'],
-                        ['label' => 'Modelo', 'type' => 'product_model'],
-                        ['label' => 'Formato', 'pattern' => '/formato|factor|formato/'],
-                        ['label' => 'Procesador', 'pattern' => '/procesador|cpu|intel|amd/'],
-                        ['label' => 'Memoria Ram', 'pattern' => '/memoria|ram/'],
-                        ['label' => 'Almacenamiento', 'pattern' => '/almacenamiento|disco|hdd|ssd|nvme|storage/'],
-                        ['label' => 'Sistema Operativo', 'pattern' => '/sistema operativo|os|windows|linux/'],
-                        ['label' => 'Suite Ofimática', 'pattern' => '/ofimatica|office|suite/'],
-                        ['label' => 'Gráficos', 'pattern' => '/graf|gpu|tarjeta|video|tarjeta de video|tarjeta gráfica/'],
-                        ['label' => 'Sonido', 'pattern' => '/sonido|audio/'],
-                        ['label' => 'Chipset', 'pattern' => '/chipset/'],
-                        ['label' => 'Lan', 'pattern' => '/lan|ethernet|red/'],
-                        ['label' => 'Wlan', 'pattern' => '/wlan|wifi|wireless/'],
-                        ['label' => 'Puertos Mínimos', 'pattern' => '/puertos|minimo|puertos minimos|puertos m[ií]nimos/'],
-                        ['label' => 'Slot de Expansión', 'pattern' => '/slot|expansi|pci|m\.2/'],
-                        ['label' => 'Fuente de Poder', 'pattern' => '/fuente|psu|power supply/'],
-                        ['label' => 'Garantia', 'pattern' => '/garantia|garant[ií]a/'],
-                        ['label' => 'Empaque', 'pattern' => '/empaque|packag/'],
-                        ['label' => 'Certificaciones', 'pattern' => '/certific|iso/'],
-                        ['label' => 'Accesorios y Otros', 'pattern' => '/accesorio|otros|observaciones|incluye/'],
-                    ];
+                @if($isMonitor)
+                    @forelse($especificaciones as $espec)
+                    <tr>
+                        <td style="min-width:200px;font-weight:600">{{ $espec->campo }}</td>
+                        <td></td>
+                        <td>{{ $espec->descripcion }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td>
+                    </tr>
+                    @endforelse
 
-                    $used = [];
-                    $finalRows = [];
+                    <tr>
+                        <td style="min-width:200px;font-weight:600">Número de Parte</td>
+                        <td></td>
+                        <td>{{ $producto->nro_parte ?? 'No especificado' }}</td>
+                    </tr>
+                @else
+                    @php
+                        // Datos que hoy llegan del sync API:
+                        // procesador, ram, almacenamiento, graficos, conectividad, conectividad_wlan,
+                        // conectividad_usb, video_vga, video_hdmi, sistema_operativo,
+                        // suite_ofimatica, garantia_de_fabrica (+ tarjetavideo legacy)
+                        $finalRows = [
+                            ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
+                            ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
+                            ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
+                            ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
+                            ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
+                            ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
+                            ['label' => 'Sistema Operativo', 'value' => $getSpecValue(['/sistema operativo|\bos\b|windows|linux/']) ?? $getProductValue(['sistema_operativo'])],
+                            ['label' => 'Suite Ofimática', 'value' => $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica'])],
+                            ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
+                            ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/'])],
+                            ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/'])],
+                            ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
+                            ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
+                            ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
+                            ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2/'])],
+                            ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/'])],
+                            ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
+                            ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque'])],
+                            ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
+                            ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/'])],
+                        ];
+                    @endphp
 
-                    foreach ($fullOrder as $row) {
-                        $value = null;
-                        if (isset($row['type']) && $row['type'] === 'product') {
-                            $value = $producto->{$row['field']} ?? null;
-                        } elseif (isset($row['type']) && $row['type'] === 'product_model') {
-                            $value = optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? null;
-                        } else {
-                            $found = $findSpec($row['pattern']);
-                            if ($found) {
-                                $value = $found->descripcion;
-                                $used[] = $found->id ?? ($found->campo . '_' . $found->descripcion);
-                            }
-                        }
-
-                        // fallbacks
-                        if (!$value && $row['label'] === 'Gráficos') {
-                            $value = $producto->tarjetavideo ?? null;
-                        }
-
-                        $finalRows[] = ['label' => $row['label'], 'value' => $value ?: 'No especificado'];
-                    }
-
-                    // Añadir especificaciones no listadas al final bajo Accesorios y Otros
-                    foreach ($specsList as $s) {
-                        $key = $s->id ?? ($s->campo . '_' . $s->descripcion);
-                        if (!in_array($key, $used)) {
-                            $finalRows[] = ['label' => $s->campo, 'value' => $s->descripcion];
-                        }
-                    }
-                @endphp
-
-                @forelse($finalRows as $fr)
-                <tr>
-                    <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
-                    <td></td>
-                    <td>{{ $fr['value'] }}</td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td>
-                </tr>
-                @endforelse
+                    @forelse($finalRows as $fr)
+                    <tr>
+                        <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
+                        <td></td>
+                        <td>{{ $fr['value'] ?? 'No especificado' }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td>
+                    </tr>
+                    @endforelse
+                @endif
             </tbody>
         </table>
     </div>
