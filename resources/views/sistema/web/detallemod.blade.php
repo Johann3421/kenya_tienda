@@ -22,6 +22,10 @@
 
         $modeloId = request()->route('id') ?? request()->route('modelo');
         $modelo = Modelo::findOrFail($modeloId);
+        $modeloDescripcion = mb_strtolower((string) ($modelo->descripcion ?? ''));
+        $isTonerModel = ((int) ($modelo->id ?? 0) === 10)
+            || str_contains($modeloDescripcion, 'toner')
+            || str_contains($modeloDescripcion, 'tonner');
 
         // Consulta base con paginación
         $productosQuery = $modelo
@@ -35,48 +39,81 @@
             $productosQuery->where('nombre', 'LIKE', '%' . request('nombre') . '%');
         }
 
-        // Filtros dinámicos basados en especificaciones técnicas de productos
-        $specFields = [
-            'procesador',
-            'ram',
-            'almacenamiento',
-            'tarjetavideo',
-            'sistema_operativo',
-            'unidad_optica',
-            'conectividad',
-            'conectividad_wlan',
-            'conectividad_usb',
-            'video_vga',
-            'video_hdmi',
-            'suite_ofimatica',
-            'teclado',
-            'mouse',
-        ];
+        if ($isTonerModel) {
+            $tonerSpecMap = [
+                'tipo_suministro'      => 'Tipo de suministro',
+                'modelo_toner'         => 'Modelo',
+                'color_toner'          => 'Color',
+                'rendimiento_toner'    => 'Rendimiento',
+                'garantia_toner'       => 'Garantía de Fábrica',
+                'sistema_raee'         => 'Sistema RAEE',
+                'certificaciones_toner'=> 'Certificaciones',
+                'empaque_toner'        => 'Empaque',
+                'unidad_toner'         => 'Unidad',
+                'dimensiones_toner'    => 'Dimensiones',
+            ];
 
-        foreach ($specFields as $field) {
-            if (request()->filled($field)) {
-                $valores = array_filter(array_map('trim', explode(',', request($field))));
-                if (!empty($valores)) {
-                    $productosQuery->whereIn($field, array_values($valores));
+            foreach ($tonerSpecMap as $paramKey => $campo) {
+                if (request()->filled($paramKey)) {
+                    $valores = array_filter(array_map('trim', explode(',', request($paramKey))));
+                    if (!empty($valores)) {
+                        $productosQuery->whereHas('especificaciones', function ($q) use ($campo, $valores) {
+                            $q->where('campo', $campo)->whereIn('descripcion', array_values($valores));
+                        });
+                    }
                 }
             }
-        }
 
-        // Filtros para monitores: specs almacenadas en tabla especificaciones
-        $monitorSpecMap = [
-            'espec_tamano'      => 'Tamaño de Pantalla',
-            'espec_panel'       => 'Panel',
-            'espec_hdmi'        => 'HDMI',
-            'espec_displayport' => 'DisplayPort',
-            'espec_garantia'    => 'Garantía de Fábrica',
-        ];
-        foreach ($monitorSpecMap as $paramKey => $campo) {
-            if (request()->filled($paramKey)) {
-                $valores = array_filter(array_map('trim', explode(',', request($paramKey))));
+            if (request()->filled('numero_parte_toner')) {
+                $valores = array_filter(array_map('trim', explode(',', request('numero_parte_toner'))));
                 if (!empty($valores)) {
-                    $productosQuery->whereHas('especificaciones', function ($q) use ($campo, $valores) {
-                        $q->where('campo', $campo)->whereIn('descripcion', array_values($valores));
-                    });
+                    $productosQuery->whereIn('nro_parte', array_values($valores));
+                }
+            }
+        } else {
+            // Filtros dinámicos para PCs y categorías similares
+            $specFields = [
+                'procesador',
+                'ram',
+                'almacenamiento',
+                'tarjetavideo',
+                'sistema_operativo',
+                'unidad_optica',
+                'conectividad',
+                'conectividad_wlan',
+                'conectividad_usb',
+                'video_vga',
+                'video_hdmi',
+                'suite_ofimatica',
+                'teclado',
+                'mouse',
+            ];
+
+            foreach ($specFields as $field) {
+                if (request()->filled($field)) {
+                    $valores = array_filter(array_map('trim', explode(',', request($field))));
+                    if (!empty($valores)) {
+                        $productosQuery->whereIn($field, array_values($valores));
+                    }
+                }
+            }
+
+            // Filtros para monitores: specs almacenadas en tabla especificaciones
+            $monitorSpecMap = [
+                'espec_tamano'      => 'Tamaño de Pantalla',
+                'espec_panel'       => 'Panel',
+                'espec_hdmi'        => 'HDMI',
+                'espec_displayport' => 'DisplayPort',
+                'espec_garantia'    => 'Garantía de Fábrica',
+            ];
+            foreach ($monitorSpecMap as $paramKey => $campo) {
+                if (request()->filled($paramKey)) {
+                    $valores = array_filter(array_map('trim', explode(',', request($paramKey))));
+                    if (!empty($valores)) {
+                        $productosQuery->whereHas('especificaciones', function ($q) use ($campo, $valores) {
+                            $q->where('campo', $campo)->whereIn('descripcion', array_values($valores));
+                        });
+                    }
                 }
             }
         }
@@ -107,7 +144,7 @@
     placeholder="Ingrese el nombre" v-on:keyup="Filtrar(search, 'nombre')">
                     </div>
                     <aside>
-                        @include('partials.aside-detallemod', ['id' => $modeloId])
+                        @include('partials.aside-detallemod', ['id' => $modeloId, 'isTonerModel' => $isTonerModel])
                     </aside>
 
                 </div>
@@ -120,7 +157,10 @@
                                     <div class="portfolio-wrap" style="margin: 0 auto;">
     @php
         $isModelo10 = $prod->modelo && $prod->modelo->id == 10;
-        $isTonner = $prod->modelo && stripos($prod->modelo->descripcion ?? '', 'tonner') !== false;
+        $isTonner = $prod->modelo && (
+            stripos($prod->modelo->descripcion ?? '', 'tonner') !== false
+            || stripos($prod->modelo->descripcion ?? '', 'toner') !== false
+        );
 
         $img = ($isModelo10 || $isTonner)
             ? ($prod->imagen_1 ? asset('storage/' . $prod->imagen_1) : asset('producto.jpg'))

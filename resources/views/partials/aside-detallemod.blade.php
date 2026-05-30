@@ -1,72 +1,140 @@
 @php
     use App\Producto;
+    use App\Modelo;
 
     $modId = $id ?? (request()->route('id') ?? request()->route('modelo'));
 
-    $specFields = [
-        'procesador'       => 'Procesador',
-        'ram'              => 'Memoria RAM',
-        'almacenamiento'   => 'Almacenamiento',
-        'tarjetavideo'     => 'Tarjeta de Video',
-        'sistema_operativo'=> 'Sistema Operativo',
-        'unidad_optica'    => 'Unidad Óptica',
-        'conectividad'     => 'Conectividad LAN',
-        'conectividad_wlan'=> 'Conectividad WLAN',
-        'conectividad_usb' => 'Conectividad USB',
-        'video_vga'        => 'Salida VGA',
-        'video_hdmi'       => 'Salida HDMI',
-        'suite_ofimatica'  => 'Ofimática',
-        'teclado'          => 'Teclado',
-        'mouse'            => 'Mouse',
-    ];
+    $isTonerModel = isset($isTonerModel) ? (bool) $isTonerModel : false;
+    if (!$isTonerModel && $modId) {
+        $modeloTmp = Modelo::find($modId);
+        $modeloDesc = mb_strtolower((string) ($modeloTmp->descripcion ?? ''));
+        $isTonerModel = ((int) ($modeloTmp->id ?? 0) === 10)
+            || str_contains($modeloDesc, 'toner')
+            || str_contains($modeloDesc, 'tonner');
+    }
 
     $specs = [];
-    foreach ($specFields as $col => $label) {
-        $values = Producto::select($col)
+
+    if ($isTonerModel) {
+        $tonerSpecMap = [
+            'tipo_suministro'       => 'Tipo de suministro',
+            'modelo_toner'          => 'Modelo',
+            'color_toner'           => 'Color',
+            'rendimiento_toner'     => 'Rendimiento',
+            'garantia_toner'        => 'Garantía de Fábrica',
+            'sistema_raee'          => 'Sistema RAEE',
+            'certificaciones_toner' => 'Certificaciones',
+            'empaque_toner'         => 'Empaque',
+            'unidad_toner'          => 'Unidad',
+            'dimensiones_toner'     => 'Dimensiones',
+        ];
+
+        foreach ($tonerSpecMap as $paramKey => $campo) {
+            $values = \DB::table('especificaciones')
+                ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
+                ->where('productos.modelo_id', $modId)
+                ->where('productos.pagina_web', 'SI')
+                ->where(function ($q) {
+                    $q->whereNull('productos.vigencia')
+                      ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
+                })
+                ->where('especificaciones.campo', $campo)
+                ->whereRaw("TRIM(especificaciones.descripcion) NOT IN ('', 'null', 'NULL', 'none', 'NONE', 'N/A', 'n/a', '-', 'NO APLICA', 'N.A.')")
+                ->distinct()
+                ->orderBy('especificaciones.descripcion')
+                ->pluck('especificaciones.descripcion')
+                ->map(fn($v) => trim((string) $v))
+                ->filter(fn($v) => $v !== '')
+                ->unique()
+                ->values();
+
+            if ($values->isNotEmpty()) {
+                $specs[$paramKey] = ['label' => $campo, 'options' => $values];
+            }
+        }
+
+        $numeroParte = Producto::query()
             ->where('modelo_id', $modId)
             ->where('pagina_web', 'SI')
             ->noSuspendido()
+            ->whereNotNull('nro_parte')
+            ->whereRaw("TRIM(nro_parte) != ''")
             ->distinct()
-            ->whereNotNull($col)
-            ->whereRaw("TRIM($col) NOT IN ('', 'null', 'NULL', 'none', 'NONE', 'N/A', 'n/a', 'NO APLICA', 'N.A.')")
-            ->orderBy($col)
-            ->pluck($col)
-            ->map(fn($v) => trim($v))
+            ->orderBy('nro_parte')
+            ->pluck('nro_parte')
+            ->map(fn($v) => trim((string) $v))
             ->filter(fn($v) => $v !== '')
             ->unique()
             ->values();
-        if ($values->isNotEmpty()) {
-            $specs[$col] = ['label' => $label, 'options' => $values];
-        }
-    }
 
-    // Filtros para monitores: specs almacenadas en tabla especificaciones
-    $monitorSpecMap = [
-        'espec_tamano'      => 'Tamaño de Pantalla',
-        'espec_panel'       => 'Panel',
-        'espec_hdmi'        => 'HDMI',
-        'espec_displayport' => 'DisplayPort',
-        'espec_garantia'    => 'Garantía de Fábrica',
-    ];
-    foreach ($monitorSpecMap as $paramKey => $campo) {
-        $values = \DB::table('especificaciones')
-            ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
-            ->where('productos.modelo_id', $modId)
-            ->where('productos.pagina_web', 'SI')
-            ->where(function ($q) {
-                $q->whereNull('productos.vigencia')
-                  ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
-            })
-            ->where('especificaciones.campo', $campo)
-            ->whereRaw("LOWER(TRIM(especificaciones.descripcion)) != 'no'")
-            ->whereRaw("TRIM(especificaciones.descripcion) != ''")
-            ->distinct()
-            ->orderBy('especificaciones.descripcion')
-            ->pluck('especificaciones.descripcion')
-            ->filter(fn($v) => trim($v) !== '')
-            ->values();
-        if ($values->isNotEmpty()) {
-            $specs[$paramKey] = ['label' => $campo, 'options' => $values];
+        if ($numeroParte->isNotEmpty()) {
+            $specs['numero_parte_toner'] = ['label' => 'Número de parte', 'options' => $numeroParte];
+        }
+    } else {
+        $specFields = [
+            'procesador'       => 'Procesador',
+            'ram'              => 'Memoria RAM',
+            'almacenamiento'   => 'Almacenamiento',
+            'tarjetavideo'     => 'Tarjeta de Video',
+            'sistema_operativo'=> 'Sistema Operativo',
+            'unidad_optica'    => 'Unidad Óptica',
+            'conectividad'     => 'Conectividad LAN',
+            'conectividad_wlan'=> 'Conectividad WLAN',
+            'conectividad_usb' => 'Conectividad USB',
+            'video_vga'        => 'Salida VGA',
+            'video_hdmi'       => 'Salida HDMI',
+            'suite_ofimatica'  => 'Ofimática',
+            'teclado'          => 'Teclado',
+            'mouse'            => 'Mouse',
+        ];
+
+        foreach ($specFields as $col => $label) {
+            $values = Producto::select($col)
+                ->where('modelo_id', $modId)
+                ->where('pagina_web', 'SI')
+                ->noSuspendido()
+                ->distinct()
+                ->whereNotNull($col)
+                ->whereRaw("TRIM($col) NOT IN ('', 'null', 'NULL', 'none', 'NONE', 'N/A', 'n/a', 'NO APLICA', 'N.A.')")
+                ->orderBy($col)
+                ->pluck($col)
+                ->map(fn($v) => trim($v))
+                ->filter(fn($v) => $v !== '')
+                ->unique()
+                ->values();
+            if ($values->isNotEmpty()) {
+                $specs[$col] = ['label' => $label, 'options' => $values];
+            }
+        }
+
+        // Filtros para monitores: specs almacenadas en tabla especificaciones
+        $monitorSpecMap = [
+            'espec_tamano'      => 'Tamaño de Pantalla',
+            'espec_panel'       => 'Panel',
+            'espec_hdmi'        => 'HDMI',
+            'espec_displayport' => 'DisplayPort',
+            'espec_garantia'    => 'Garantía de Fábrica',
+        ];
+        foreach ($monitorSpecMap as $paramKey => $campo) {
+            $values = \DB::table('especificaciones')
+                ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
+                ->where('productos.modelo_id', $modId)
+                ->where('productos.pagina_web', 'SI')
+                ->where(function ($q) {
+                    $q->whereNull('productos.vigencia')
+                      ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
+                })
+                ->where('especificaciones.campo', $campo)
+                ->whereRaw("LOWER(TRIM(especificaciones.descripcion)) != 'no'")
+                ->whereRaw("TRIM(especificaciones.descripcion) != ''")
+                ->distinct()
+                ->orderBy('especificaciones.descripcion')
+                ->pluck('especificaciones.descripcion')
+                ->filter(fn($v) => trim($v) !== '')
+                ->values();
+            if ($values->isNotEmpty()) {
+                $specs[$paramKey] = ['label' => $campo, 'options' => $values];
+            }
         }
     }
 @endphp
