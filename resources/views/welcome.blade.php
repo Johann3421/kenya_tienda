@@ -71,6 +71,35 @@
             justify-content: center !important;
         }
 
+        /* Grid de categorías centrado y simétrico (4 items) */
+        #portfolio-flters {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            justify-content: center !important;
+            justify-items: center !important;
+            align-items: center !important;
+            gap: 20px !important;
+            width: 100% !important;
+            max-width: 900px !important;
+            margin: 0 auto 30px auto !important;
+            padding: 0 20px !important;
+            list-style: none !important;
+        }
+
+        @media (max-width: 991px) {
+            #portfolio-flters {
+                grid-template-columns: repeat(2, 1fr) !important;
+                max-width: 500px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #portfolio-flters {
+                grid-template-columns: repeat(2, 1fr) !important;
+                max-width: 320px !important;
+            }
+        }
+
         .contorno {
             border: 1px solid #cecece;
             border-radius: 2px;
