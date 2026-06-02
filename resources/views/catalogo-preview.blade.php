@@ -416,10 +416,12 @@
             const modeloSelect = document.getElementById('preview-modelo');
             const filtersContainer = document.getElementById('preview-filters');
             const productsContainer = document.getElementById('preview-products');
+            const filtersUrlBase = @json(url('catalogo/filters'));
+            const productsUrl = @json(url('catalogo/preview-products'));
 
             function fetchFilters(modeloId){
-                const url = modeloId ? `/catalogo/filters/${modeloId}` : `/catalogo/filters/`;
-                fetch(url).then(r => r.text()).then(html => {
+                const url = modeloId ? `${filtersUrlBase}/${modeloId}` : filtersUrlBase;
+                fetch(url, { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     filtersContainer.innerHTML = html;
                 }).catch(err => console.error(err));
             }
@@ -428,7 +430,7 @@
                 const params = new URLSearchParams(window.location.search);
                 const modelo = modeloSelect.value;
                 if (modelo) params.set('modelo', modelo); else params.delete('modelo');
-                fetch('/catalogo/preview-products?'+params.toString()).then(r => r.text()).then(html => {
+                fetch(productsUrl + '?' + params.toString(), { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     productsContainer.innerHTML = html;
                 }).catch(err => console.error(err));
             }
