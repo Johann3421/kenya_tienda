@@ -40,6 +40,10 @@ Route::post('catalogo/{id}/categoria', 'CatalogoController@categoria');
 
 
 Route::get('catalogo', 'CatalogoController@index')->name('catalogo');
+// Preview route for unified catalog (temporary)
+Route::get('catalogo-preview', function () {
+    return view('catalogo-preview');
+})->name('catalogo.preview');
 Route::post('catalogo/categoria', 'CatalogoController@categoria');
 Route::post('catalogo/buscar', 'CatalogoController@buscar');
 
@@ -441,5 +445,3 @@ Route::get('/limpiar-todo', function() {
     }
 });
 }
-
-
