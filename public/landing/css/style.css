@@ -963,7 +963,7 @@ section {
     margin: 0 auto 30px auto;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     justify-content: center;
     gap: 20px;
     width: 100%;
