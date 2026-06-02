@@ -46,7 +46,7 @@ Route::get('catalogo-preview', function () {
 })->name('catalogo.preview');
 
 // AJAX endpoints for preview
-Route::get('catalogo/filters/{id}', 'CatalogoController@previewFilters');
+Route::get('catalogo/filters/{id?}', 'CatalogoController@previewFilters');
 Route::get('catalogo/preview-products', 'CatalogoController@previewProducts');
 Route::post('catalogo/categoria', 'CatalogoController@categoria');
 Route::post('catalogo/buscar', 'CatalogoController@buscar');
