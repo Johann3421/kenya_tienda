@@ -757,112 +757,328 @@
         }
 
         /* FIN DE ESTILO DE NOVEDADES */
+
+        /* =====================================================
+           HERO LENOVO PE — Carrusel 100% ancho, 289px desktop
+           ===================================================== */
+        :root {
+            --hero-hover-bg-color: #000000;
+            --hero-hover-text-color: #ffffff;
+            --hero-btn-bg: #ffffff;
+            --hero-btn-text: #000000;
+            --hero-btn-border: #171717;
+            --hero-height: 289px;
+        }
+
+        /* Contenedor general del hero */
+        .lenovo-hero {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .lenovo-hero__viewport {
+            position: relative;
+            width: 100%;
+            height: var(--hero-height);
+            overflow: hidden;
+        }
+
+        /* Track que contiene los slides */
+        .lenovo-hero__track {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* Cada slide */
+        .lenovo-hero__slide {
+            position: relative;
+            flex: 0 0 100%;
+            width: 100%;
+            height: var(--hero-height);
+            overflow: hidden;
+        }
+
+        /* Capa 1 — Imagen de fondo */
+        .lenovo-hero__bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        /* Capa 2 — Máscara de enlace invisible */
+        .lenovo-hero__mask-link {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            text-decoration: none;
+        }
+
+        /* Capa 3 — Bloque de contenido (logo, subtítulo, titular, botones) */
+        .lenovo-hero__content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 55%;
+            height: 100%;
+            padding: 0 0 0 40px;
+            box-sizing: border-box;
+            color: #fff;
+        }
+
+        .lenovo-hero__logo {
+            max-height: 40px;
+            width: auto;
+            margin-bottom: 0;
+            object-fit: contain;
+        }
+
+        .lenovo-hero__subhead {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 8px 0 0 0;
+            color: #fff;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .lenovo-hero__headline {
+            font-size: 30px;
+            font-weight: 700;
+            line-height: 1.15;
+            margin: 6px 0 0 0;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+            max-width: 90%;
+        }
+
+        .lenovo-hero__buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 16px;
+        }
+
+        .lenovo-hero__btn {
+            display: inline-block;
+            padding: 14px 24px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 4px;
+            background-color: var(--hero-btn-bg);
+            color: var(--hero-btn-text);
+            border: 1px solid var(--hero-btn-border);
+            text-decoration: none;
+            transition: background-color 0.25s ease, color 0.25s ease;
+            cursor: pointer;
+        }
+
+        .lenovo-hero__btn:hover {
+            background-color: var(--hero-hover-bg-color);
+            color: var(--hero-hover-text-color);
+        }
+
+        /* Capa 4 — Controles del carrusel */
+        .lenovo-hero__arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            background: rgba(0,0,0,0.35);
+            border: none;
+            color: #fff;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.25s ease;
+        }
+
+        .lenovo-hero__arrow:hover {
+            background: rgba(0,0,0,0.65);
+        }
+
+        .lenovo-hero__arrow--prev { left: 16px; }
+        .lenovo-hero__arrow--next { right: 16px; }
+
+        .lenovo-hero__arrow i {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .lenovo-hero__dots-wrap {
+            position: absolute;
+            bottom: 16px;
+            left: 40px;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .lenovo-hero__dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .lenovo-hero__dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .lenovo-hero__dot.active {
+            background: #fff;
+            transform: scale(1.2);
+        }
+
+        .lenovo-hero__playpause {
+            background: transparent;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            padding: 4px 6px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .lenovo-hero__playpause:hover {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            :root { --hero-height: 240px; }
+            .lenovo-hero__content { max-width: 70%; padding-left: 24px; }
+            .lenovo-hero__headline { font-size: 24px; }
+            .lenovo-hero__dots-wrap { left: 24px; }
+        }
+
+        @media (max-width: 576px) {
+            :root { --hero-height: 200px; }
+            .lenovo-hero__content { max-width: 85%; padding-left: 16px; }
+            .lenovo-hero__headline { font-size: 18px; }
+            .lenovo-hero__subhead { font-size: 12px; }
+            .lenovo-hero__btn { padding: 10px 16px; font-size: 14px; }
+            .lenovo-hero__arrow { width: 36px; height: 36px; }
+            .lenovo-hero__arrow i { font-size: 18px; }
+            .lenovo-hero__dots-wrap { left: 16px; bottom: 10px; }
+        }
     </style>
 @endsection
 @section('content')
-    <!-- ======= Hero Section ======= -->
-    <section id="hero">
-        <div class="hero-container">
-                <!-- buscador movido al header -->
-                @php
-                    $slideDesc = 'COMPUTADORA de alto rendimiento, ha sido diseñada especialmente para operar en entornos extremos, agrestes y de alta exigencia, como regiones altoandinas con baja temperatura y polvo, Selva con alta humedad y áreas con condiciones climáticas adversas del Perú. Su construcción robusta, su sistema de refrigeración avanzada y sus componentes de nivel industrial garantizan estabilidad y potencia incluso en las condiciones más duras.';
-                @endphp
-            <div id="heroCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+    <!-- ======= Hero Section (Lenovo PE) ======= -->
+    <section id="hero" class="lenovo-hero">
+        <div class="lenovo-hero__viewport" id="lenovoHeroViewport">
+            <div class="lenovo-hero__track" id="lenovoHeroTrack">
+                @foreach ($banners as $banner)
+                    @php
+                        $totalSlides = $banners->count();
+                        $bgImg = $banner->imagen
+                            ? asset('storage/' . $banner->imagen)
+                            : asset('landing/img/slide/slide-' . ($loop->index + 1) . '.jpg');
 
-                <ol class="carousel-indicators" id="hero-carousel-indicators"></ol>
+                        // Reemplazo temporal HENKO -> PROWORK
+                        $tituloRaw = preg_replace('/\\bHENKO\\b/iu', 'PROWORK', (string)($banner->titulo ?? ''));
+                        $bt = strtoupper($tituloRaw);
+                        if (str_contains($bt, 'EZENT'))        $heroFont = "'EzentFont', sans-serif";
+                        elseif (str_contains($bt, 'GENWORK'))  $heroFont = "'GenworkFont', sans-serif";
+                        elseif (str_contains($bt, 'OFISZU'))   $heroFont = "'OfiszuFont', sans-serif";
+                        elseif (str_contains($bt, 'HENKO'))    $heroFont = "'ProworkFont', sans-serif";
+                        elseif (str_contains($bt, 'PROWORK'))  $heroFont = "'ProworkFont', sans-serif";
+                        elseif (str_contains($bt, 'RAITO'))    $heroFont = "'RaitoFont', sans-serif";
+                        else                                   $heroFont = "'Kenyav1', sans-serif";
 
-                <div class="carousel-inner" role="listbox" style="text-align: center;">
+                        $tituloColor = $banner->titulo_color ?? '#ffffff';
+                        if (preg_match('/^(KENYA\s+)(.+)$/iu', $tituloRaw, $m)) {
+                            $tituloHtml = '<span style="font-family:\'Kenyav1\',sans-serif;color:' . e($tituloColor) . '">' . e($m[1]) . '</span>'
+                                        . '<span style="font-family:' . $heroFont . ';color:' . e($tituloColor) . '">' . e($m[2]) . '</span>';
+                        } else {
+                            $tituloHtml = '<span style="color:' . e($tituloColor) . ';font-family:' . $heroFont . '">' . e($tituloRaw) . '</span>';
+                        }
 
-                    @foreach ($banners as $banner)
-                        @if ($banner->imagen)
-                            <div class="carousel-item @if ($loop->index == 0) active @endif"
-                                style="background-image: url('storage/{{ $banner->imagen }}');">
-                            @else
-                                <div class="carousel-item @if ($loop->index == 0) active @endif"
-                                    style="background-image: url('landing/img/slide/slide-{{ $loop->index + 1 }}.jpg');">
+                        $bannerDesc = trim((string)($banner->descripcion ?? ''));
+                        $showSubhead = $bannerDesc !== '' && strtolower($bannerDesc) !== 'especialistas en soporte técnico';
+                    @endphp
+
+                    <div class="lenovo-hero__slide"
+                         role="group"
+                         aria-roledescription="slide"
+                         aria-label="slide {{ $loop->index + 1 }} of {{ $totalSlides }}"
+                         @if($loop->index == 0) aria-hidden="false" @else aria-hidden="true" @endif>
+
+                        {{-- Capa 1: imagen de fondo --}}
+                        <img class="lenovo-hero__bg" src="{{ $bgImg }}" alt="">
+
+                        {{-- Capa 2: máscara de enlace invisible --}}
+                        @if($banner->link)
+                            <a class="lenovo-hero__mask-link" href="{{ $banner->link }}" aria-label="Ir a {{ $banner->link_nombre ?? 'banner' }}"></a>
+                        @else
+                            <span class="lenovo-hero__mask-link" aria-hidden="true"></span>
                         @endif
-                        <div class="carousel-container" style="text-align: center;">
-                            <div class="carousel-content container">
-                                @php
-                                    // Reemplazo temporal solicitado de marca en hero
-                                    $tituloRaw = preg_replace('/\\bHENKO\\b/iu', 'PROWORK', (string)($banner->titulo ?? ''));
 
-                                    // Seleccionar tipografía de marca según el título del banner
-                                    $bt = strtoupper($tituloRaw);
-                                    if (str_contains($bt, 'EZENT'))        $heroFont = "'EzentFont', sans-serif";
-                                    elseif (str_contains($bt, 'GENWORK'))  $heroFont = "'GenworkFont', sans-serif";
-                                    elseif (str_contains($bt, 'OFISZU'))   $heroFont = "'OfiszuFont', sans-serif";
-                                    elseif (str_contains($bt, 'HENKO'))    $heroFont = "'ProworkFont', sans-serif";
-                                    elseif (str_contains($bt, 'PROWORK'))  $heroFont = "'ProworkFont', sans-serif";
-                                    elseif (str_contains($bt, 'RAITO'))    $heroFont = "'RaitoFont', sans-serif";
-                                    else                                   $heroFont = "'Kenyav1', sans-serif";
+                        {{-- Capa 3: bloque de contenido --}}
+                        <div class="lenovo-hero__content">
+                            @if($showSubhead)
+                                <p class="lenovo-hero__subhead">{{ $banner->descripcion }}</p>
+                            @endif
 
-                                    // Si el título empieza con "KENYA " separar para que
-                                    // "KENYA" use Kenyav1 y el resto use la fuente de marca
-                                    $tituloColor = $banner->titulo_color ?? '#ffffff';
-                                    if (preg_match('/^(KENYA\s+)(.+)$/iu', $tituloRaw, $m)) {
-                                        $tituloHtml = '<span style="font-family:\'Kenyav1\',sans-serif;color:' . e($tituloColor) . '">' . e($m[1]) . '</span>'
-                                                    . '<span style="font-family:' . $heroFont . ';color:' . e($tituloColor) . '">' . e($m[2]) . '</span>';
-                                    } else {
-                                        $tituloHtml = '<span style="color:' . e($tituloColor) . ';font-family:' . $heroFont . '">' . e($tituloRaw) . '</span>';
-                                    }
-                                @endphp
-                                <!-- Título PRINCIPAL (Enorme y destacado) -->
-                                <h2 style="text-align: center; font-size: 4.5rem; font-weight: 900; text-shadow: 3px 3px 6px rgba(0,0,0,0.7); line-height: 1.1; margin-bottom: 20px;"
-                                    class="animate__animated animate__fadeInDown">{!! $tituloHtml !!}</h2>
+                            <h2 class="lenovo-hero__headline" role="heading" aria-level="2">{!! $tituloHtml !!}</h2>
 
-                                <!-- Subtítulo (Blanco y muy legible) -->
-                                @php $bannerDesc = trim((string)($banner->descripcion ?? '')); @endphp
-                                @if ($bannerDesc !== '' && strtolower($bannerDesc) !== 'especialistas en soporte técnico')
-                                <h3 style="text-align: center; font-size: 2.5rem; font-weight: 700; color: #ffffff; margin-top: 10px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); letter-spacing: 0.8px;"
-                                    class="animate__animated animate__fadeInDown">
-                                    {{ $banner->descripcion }}
-                                </h3>
-                                @endif
-
-                                <!-- Descripción (Texto grande y claro) -->
-                                <p style="text-align: center; font-size: 1.8rem; font-weight: 400; color: #f8f8f8; margin-top: 25px; max-width: 900px; margin-left: auto; margin-right: auto; text-shadow: 1px 1px 3px rgba(0,0,0,0.6); line-height: 1.4;"
-                                    class="animate__animated animate__fadeInDown">
-                                    {{ $banner->contenido }}
-                                </p>
-                                @php
-                                    // Ocultar slideDesc para banners que sean "toner" (o contengan la palabra toner)
-                                    $bannerText = trim((string)($banner->titulo ?? '') . ' ' . (string)($banner->descripcion ?? '') . ' ' . (string)($banner->contenido ?? ''));
-                                    $isToner = stripos($bannerText, 'toner') !== false || stripos($bannerText, 'tonner') !== false;
-                                @endphp
-                                @if (!$isToner)
-                                    <p class="hero-slide-desc animate__animated animate__fadeInUp" style="text-align:center"
-                                       data-full="{{ e($slideDesc) }}"
-                                       data-trunc="{{ e(Str::limit($slideDesc, 220)) }}">
-                                        {{ Str::limit($slideDesc, 220) }} <a href="#" class="slide-toggle" style="color:#fff; font-weight:600; margin-left:6px;">ver más</a>
-                                    </p>
-                                @endif
-
-                                @if ($banner->link)
-                                    <!-- Botón (Naranja vibrante y llamativo) -->
-                                    <div style="margin-top:18px;">
-                                        <a href="#" class="btn-get-started animate__animated animate__fadeInUp scrollto"
-                                           style="background-color: #ee7c31; border: none; padding: 12px 30px; font-size: 1.05rem; margin-top: 0; font-weight: 700; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.18); transition: all 0.3s ease; display: inline-block; color:#fff; text-decoration:none;">
-                                            {{ $banner->link_nombre }}
-                                        </a>
-                                    </div>
-                                @endif
-                            </div>
+                            @if($banner->link && $banner->link_nombre)
+                                <div class="lenovo-hero__buttons">
+                                    <a class="lenovo-hero__btn" href="{{ $banner->link }}">
+                                        {{ $banner->link_nombre }}
+                                    </a>
+                                </div>
+                            @endif
                         </div>
-                </div>
+                    </div>
                 @endforeach
             </div>
 
-            <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon icofont-rounded-left" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
-                <span class="carousel-control-next-icon icofont-rounded-right" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
+            {{-- Capa 4: controles del carrusel --}}
+            <button type="button" class="lenovo-hero__arrow lenovo-hero__arrow--prev" id="lenovoHeroPrev" aria-label="Previous slide">
+                <i class="bx bx-chevron-left" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="lenovo-hero__arrow lenovo-hero__arrow--next" id="lenovoHeroNext" aria-label="Next slide">
+                <i class="bx bx-chevron-right" aria-hidden="true"></i>
+            </button>
 
-        </div>
+            <div class="lenovo-hero__dots-wrap">
+                <div class="lenovo-hero__dots" id="lenovoHeroDots">
+                    @foreach ($banners as $banner)
+                        <button type="button"
+                                class="lenovo-hero__dot @if($loop->index == 0) active @endif"
+                                data-index="{{ $loop->index }}"
+                                aria-label="Go to slide {{ $loop->index + 1 }}"></button>
+                    @endforeach
+                </div>
+                <button type="button" class="lenovo-hero__playpause" id="lenovoHeroPlayPause" aria-label="Pause autoplay">
+                    <i class="bx bx-pause" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
     </section><!-- End Hero -->
 
@@ -1227,5 +1443,95 @@
         })();
     </script>
     <!-- FIN DEL SCRIPT DEL CARRUSEL DE NOVEDADES -->
+
+    <!-- SCRIPT HERO LENOVO PE -->
+    <script>
+        (function(){
+            const track   = document.getElementById('lenovoHeroTrack');
+            const slides  = track ? track.querySelectorAll('.lenovo-hero__slide') : [];
+            const dots    = document.querySelectorAll('.lenovo-hero__dot');
+            const prevBtn = document.getElementById('lenovoHeroPrev');
+            const nextBtn = document.getElementById('lenovoHeroNext');
+            const ppBtn   = document.getElementById('lenovoHeroPlayPause');
+            const viewport= document.getElementById('lenovoHeroViewport');
+
+            if (!track || slides.length === 0) return;
+
+            const total = slides.length;
+            let current = 0;
+            let isPlaying = true;
+            let autoTimer = null;
+            const AUTO_MS = 5000;
+
+            function goTo(idx) {
+                if (idx < 0) idx = total - 1;
+                if (idx >= total) idx = 0;
+                current = idx;
+                track.style.transform = 'translateX(-' + (current * 100) + '%)';
+                dots.forEach((d, i) => d.classList.toggle('active', i === current));
+                slides.forEach((s, i) => s.setAttribute('aria-hidden', i === current ? 'false' : 'true'));
+                if (prevBtn) prevBtn.setAttribute('aria-label', 'currently displaying item ' + (current + 1) + ' of ' + total);
+                if (nextBtn) nextBtn.setAttribute('aria-label', 'currently displaying item ' + (current + 1) + ' of ' + total);
+            }
+
+            function next() { goTo(current + 1); }
+            function prev() { goTo(current - 1); }
+
+            function startAuto() {
+                stopAuto();
+                autoTimer = setInterval(next, AUTO_MS);
+                isPlaying = true;
+                if (ppBtn) {
+                    ppBtn.innerHTML = '<i class="bx bx-pause" aria-hidden="true"></i>';
+                    ppBtn.setAttribute('aria-label', 'Pause autoplay');
+                }
+            }
+
+            function stopAuto() {
+                if (autoTimer) clearInterval(autoTimer);
+                autoTimer = null;
+                isPlaying = false;
+                if (ppBtn) {
+                    ppBtn.innerHTML = '<i class="bx bx-play" aria-hidden="true"></i>';
+                    ppBtn.setAttribute('aria-label', 'Play autoplay');
+                }
+            }
+
+            if (prevBtn) prevBtn.addEventListener('click', () => { prev(); startAuto(); });
+            if (nextBtn) nextBtn.addEventListener('click', () => { next(); startAuto(); });
+
+            dots.forEach((d) => {
+                d.addEventListener('click', () => {
+                    const i = parseInt(d.getAttribute('data-index'), 10) || 0;
+                    goTo(i);
+                    startAuto();
+                });
+            });
+
+            if (ppBtn) {
+                ppBtn.addEventListener('click', () => {
+                    if (isPlaying) stopAuto(); else startAuto();
+                });
+            }
+
+            if (viewport) {
+                viewport.addEventListener('mouseenter', stopAuto);
+                viewport.addEventListener('mouseleave', () => { if (!isPlaying) return; startAuto(); });
+            }
+
+            // Swipe básico
+            let tx = 0;
+            if (viewport) {
+                viewport.addEventListener('touchstart', (e) => { tx = e.changedTouches[0].screenX; }, { passive: true });
+                viewport.addEventListener('touchend', (e) => {
+                    const diff = tx - e.changedTouches[0].screenX;
+                    if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); startAuto(); }
+                });
+            }
+
+            goTo(0);
+            startAuto();
+        })();
+    </script>
 @endsection
 <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
