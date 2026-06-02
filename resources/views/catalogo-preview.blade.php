@@ -217,11 +217,24 @@
 
             <div class="row">
                 <div class="col-lg-3">
-                    {{-- Use detallemod filters here for the preview --}}
-                    @include('partials.aside-detallemod', ['id' => $modeloId ?? request('modelo')])
+                    <div style="margin-bottom:12px;">
+                        <label for="preview-modelo" style="font-weight:700">Seleccionar modelo</label>
+                        <select id="preview-modelo" class="form-control">
+                            <option value="">-- Todos los modelos --</option>
+                            @foreach($modelos as $m)
+                                <option value="{{ $m->id }}" {{ (request('modelo') == $m->id) ? 'selected' : '' }}>{{ $m->descripcion }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div id="preview-filters">
+                        @include('partials.aside-detallemod', ['id' => $modeloId ?? request('modelo')])
+                    </div>
                 </div>
                 <div class="col-lg-9">
-                    {{-- Rest of the Catalogo product grid copied verbatim --}}
+                    {{-- Product grid (loaded via partial) --}}
+                    <div id="preview-products">
+                        @include('partials.catalogo-products', ['productos' => $productos])
+                    </div>
                     <div class="catalog-filters">
                 <div class="row">
                     <div class="col-md-6">
@@ -395,4 +408,40 @@
         </div>
     </section>
 
+@endsection
+
+@section('js')
+    <script>
+        (function(){
+            const modeloSelect = document.getElementById('preview-modelo');
+            const filtersContainer = document.getElementById('preview-filters');
+            const productsContainer = document.getElementById('preview-products');
+
+            function fetchFilters(modeloId){
+                const url = modeloId ? `/catalogo/filters/${modeloId}` : `/catalogo/filters/`;
+                fetch(url).then(r => r.text()).then(html => {
+                    filtersContainer.innerHTML = html;
+                }).catch(err => console.error(err));
+            }
+
+            function fetchProducts(){
+                const params = new URLSearchParams(window.location.search);
+                const modelo = modeloSelect.value;
+                if (modelo) params.set('modelo', modelo); else params.delete('modelo');
+                fetch('/catalogo/preview-products?'+params.toString()).then(r => r.text()).then(html => {
+                    productsContainer.innerHTML = html;
+                }).catch(err => console.error(err));
+            }
+
+            if (modeloSelect){
+                modeloSelect.addEventListener('change', () => {
+                    fetchFilters(modeloSelect.value);
+                    fetchProducts();
+                });
+            }
+
+            // Initial load
+            fetchFilters(modeloSelect ? modeloSelect.value : '');
+        })();
+    </script>
 @endsection

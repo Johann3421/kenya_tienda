@@ -93,6 +93,53 @@ class CatalogoController extends Controller
 
 }
 
+    // Return the aside filters partial for a given modelo (used by preview AJAX)
+    public function previewFilters($id = null)
+    {
+        // The partial computes specs based on $id
+        return view('partials.aside-detallemod', ['id' => $id]);
+    }
+
+    // Return the products grid partial for preview with filters applied via query string
+    public function previewProducts(Request $request)
+    {
+        $productosQuery = \App\Producto::query()
+            ->where('pagina_web', 'SI')
+            ->noSuspendido();
+
+        if ($request->busqueda) {
+            $productosQuery->where('descripcion', 'LIKE', "%{$request->busqueda}%")->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
+        }
+
+        if ($request->modelo) {
+            $productosQuery->where('modelo_id', $request->modelo);
+        }
+
+        // Basic spec filters pass-through (same names used in Catalogo)
+        $specKeys = ['procesador','memoria_ram','almacenamiento','sistema_operativo','unidad_optica'];
+        foreach ($specKeys as $k) {
+            if ($request->filled($k)) {
+                $productosQuery->whereHas('especificaciones', function($q) use ($k, $request) {
+                    $q->where('campo', ucfirst(str_replace('_',' ',$k)))->where('descripcion', $request->$k);
+                });
+            }
+        }
+
+        // ordering
+        $orden = $request->orden ?? 'newest';
+        switch ($orden) {
+            case 'nombre_asc': $productosQuery->orderBy('descripcion','asc'); break;
+            case 'nombre_desc': $productosQuery->orderBy('descripcion','desc'); break;
+            case 'oldest': $productosQuery->orderBy('created_at','asc'); break;
+            case 'newest':
+            default: $productosQuery->orderBy('created_at','desc'); break;
+        }
+
+        $productos = $productosQuery->with('modelo')->paginate(9);
+
+        return view('partials.catalogo-products', compact('productos'));
+    }
+
     public function buscar(Request $request)
     {
         $productos = Producto::with('getCategoria', 'getMarca','getModelo')
