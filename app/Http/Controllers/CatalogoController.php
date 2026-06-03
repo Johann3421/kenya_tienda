@@ -143,6 +143,47 @@ class CatalogoController extends Controller
         return view('partials.catalogo-products', compact('productos'));
     }
 
+    // Return JSON suggestions for the intelligent search
+    public function previewSuggest(Request $request)
+    {
+        $q = trim((string) $request->get('q', ''));
+        $modelo = $request->get('modelo');
+
+        if ($q === '') {
+            return response()->json([]);
+        }
+
+        $query = \App\Producto::query()
+            ->select(['id', 'nombre', 'imagen_1', 'imagen', 'nro_parte'])
+            ->where('pagina_web', 'SI')
+            ->noSuspendido()
+            ->where(function ($s) use ($q) {
+                $s->where('nombre', 'LIKE', "%{$q}%")
+                  ->orWhere('descripcion', 'LIKE', "%{$q}%")
+                  ->orWhere('nro_parte', 'LIKE', "%{$q}%");
+            })
+            ->orderByRaw("CASE WHEN nombre LIKE ? THEN 0 ELSE 1 END", ["{$q}%"])
+            ->limit(8);
+
+        if ($modelo) {
+            $query->where('modelo_id', $modelo);
+        }
+
+        $results = $query->with('modelo')->get()->map(function ($p) {
+            $img = $p->imagen_1 ? asset('storage/' . $p->imagen_1) : ($p->imagen ? asset('storage/' . $p->imagen) : asset('producto.jpg'));
+            return [
+                'id' => $p->id,
+                'nombre' => (string) $p->nombre,
+                'nro_parte' => (string) $p->nro_parte,
+                'modelo' => $p->modelo ? ($p->modelo->descripcion ?? $p->modelo->nombre ?? '') : '',
+                'img' => $img,
+                'url' => url('producto/' . $p->id . '/detalle'),
+            ];
+        });
+
+        return response()->json($results);
+    }
+
     public function buscar(Request $request)
     {
         $productos = Producto::with('getCategoria', 'getMarca','getModelo')

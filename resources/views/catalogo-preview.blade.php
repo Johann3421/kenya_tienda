@@ -22,7 +22,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f9f9f9;
             min-height: 100vh;
-            margin-top: 2rem;
+            margin-top: 4rem;
         }
         .container {
             max-width: 1600px;
@@ -383,6 +383,12 @@
                 </div>
                 <div class="col-lg-9">
                     {{-- Product grid (loaded via partial) --}}
+                    <div style="margin-bottom:12px;">
+                        <div style="position:relative; max-width:600px;">
+                            <input id="preview-search" type="text" placeholder="Buscar productos por nombre o parte..." class="search-input form-control" aria-label="Buscar productos">
+                            <div id="preview-suggestions" style="position:absolute;left:0;right:0;z-index:40;background:#fff;border:1px solid #ddd;border-top:0;display:none;max-height:320px;overflow:auto;"></div>
+                        </div>
+                    </div>
                     <div id="preview-products">
                         @include('partials.catalogo-products', ['productos' => $productos])
                 </div>
@@ -401,6 +407,7 @@
             const productsContainer = document.getElementById('preview-products');
             const filtersUrlBase = @json(url('catalogo/filters'));
             const productsUrl = @json(url('catalogo/preview-products'));
+            const suggestUrl = @json(url('catalogo/preview-suggest'));
 
             function fetchFilters(modeloId){
                 const url = modeloId ? `${filtersUrlBase}/${modeloId}` : filtersUrlBase;
@@ -416,6 +423,75 @@
                 fetch(productsUrl + '?' + params.toString(), { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     productsContainer.innerHTML = html;
                 }).catch(err => console.error(err));
+            }
+
+            // Intelligent search (typeahead)
+            const searchInput = document.getElementById('preview-search');
+            const suggestionsBox = document.getElementById('preview-suggestions');
+            let suggestTimer = null;
+            let activeIndex = -1;
+
+            function hideSuggestions(){ suggestionsBox.style.display = 'none'; suggestionsBox.innerHTML = ''; activeIndex = -1; }
+
+            function renderSuggestions(items){
+                if (!items || items.length === 0) { hideSuggestions(); return; }
+                suggestionsBox.innerHTML = items.map((it, idx) => `\
+                    <div class="preview-suggestion-item" data-index="${idx}" data-url="${it.url}" style="display:flex;gap:8px;padding:8px;align-items:center;cursor:pointer;border-bottom:1px solid #f1f1f1;">\
+                        <img src="${it.img}" width="48" height="48" style="object-fit:cover;border-radius:4px;">\
+                        <div style="flex:1;">\
+                            <div style="font-weight:700;color:#222;">${it.nombre}</div>\
+                            <div style="font-size:12px;color:#666;margin-top:3px;">${it.modelo} · <small>${it.nro_parte}</small></div>\
+                        </div>\
+                    </div>`).join('');
+                suggestionsBox.style.display = 'block';
+            }
+
+            function fetchSuggest(q){
+                const modelo = modeloSelect ? modeloSelect.value : '';
+                const params = new URLSearchParams();
+                params.set('q', q);
+                if (modelo) params.set('modelo', modelo);
+                fetch(suggestUrl + '?' + params.toString(), { credentials: 'same-origin' })
+                    .then(r => r.json())
+                    .then(data => renderSuggestions(data))
+                    .catch(err => { console.error(err); hideSuggestions(); });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    const q = (e.target.value || '').trim();
+                    clearTimeout(suggestTimer);
+                    if (q.length === 0) { hideSuggestions(); fetchProducts(); return; }
+                    suggestTimer = setTimeout(() => fetchSuggest(q), 250);
+                });
+
+                // keyboard navigation
+                searchInput.addEventListener('keydown', (e) => {
+                    const items = suggestionsBox.querySelectorAll('.preview-suggestion-item');
+                    if (!items.length) return;
+                    if (e.key === 'ArrowDown') { e.preventDefault(); activeIndex = Math.min(activeIndex + 1, items.length - 1); items.forEach((it,i)=>it.style.background=i===activeIndex? '#f5f5f5':'' ); }
+                    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIndex = Math.max(activeIndex - 1, 0); items.forEach((it,i)=>it.style.background=i===activeIndex? '#f5f5f5':'' ); }
+                    else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (activeIndex >= 0 && items[activeIndex]) {
+                            window.location.href = items[activeIndex].dataset.url;
+                        } else {
+                            // trigger full search
+                            const q = (e.target.value || '').trim();
+                            const params = new URLSearchParams(window.location.search);
+                            if (q) params.set('busqueda', q); else params.delete('busqueda');
+                            if (modeloSelect && modeloSelect.value) params.set('modelo', modeloSelect.value); else params.delete('modelo');
+                            history.pushState({}, '', window.location.pathname + '?' + params.toString());
+                            fetchProducts(); hideSuggestions();
+                        }
+                    }
+                });
+
+                // click on suggestion
+                suggestionsBox.addEventListener('click', (e) => {
+                    const item = e.target.closest('.preview-suggestion-item');
+                    if (item) window.location.href = item.dataset.url;
+                });
             }
 
             if (modeloSelect){
