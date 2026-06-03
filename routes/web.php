@@ -35,18 +35,12 @@ Route::get('/', function () {
     //return $productos;
 });
 Route::get('catalogo/{id}/detallemod', 'CatalogoController@detallemod')->name('detallemod');
-Route::get('catalogo/{id}/modelo', 'CatalogoController@modeloPreview')->name('catalogo.modelo');
 Route::post('catalogo/{id}/buscar', 'CatalogoController@buscar');
 Route::post('catalogo/{id}/categoria', 'CatalogoController@categoria');
 
 
 Route::get('catalogo', 'CatalogoController@index')->name('catalogo');
-// Preview route for unified catalog (temporary)
-Route::get('catalogo-preview', function () {
-    return view('catalogo-preview');
-})->name('catalogo.preview');
-
-// AJAX endpoints for preview
+// AJAX endpoints for unified catalog
 Route::get('catalogo/filters/{id?}', 'CatalogoController@previewFilters');
 Route::get('catalogo/preview-products', 'CatalogoController@previewProducts');
 Route::get('catalogo/preview-suggest', 'CatalogoController@previewSuggest');

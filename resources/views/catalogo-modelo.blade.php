@@ -301,7 +301,7 @@
                     const newId = modeloSelect.value;
                     if (newId) {
                         fetchFilters(newId);
-                        window.location.href = @json(url('catalogo/')) + '/' + newId + '/modelo';
+                        window.location.href = @json(url('catalogo/')) + '/' + newId + '/detallemod';
                     } else {
                         filtersContainer.innerHTML =
                             '<p style="padding:15px;color:#666;font-size:14px;">Seleccione un modelo para ver los filtros disponibles.</p>';

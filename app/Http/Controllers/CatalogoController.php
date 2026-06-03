@@ -12,10 +12,49 @@ use App\Models\Aside;
 
 class CatalogoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $productos = Producto::all(); // O con cualquier filtro que necesites
-        return view('Catalogo', compact('productos'));
+        $modelos = \App\Modelo::whereRaw("UPPER(activo) = 'SI'")
+            ->whereHas('getProducto', function ($q) {
+                $q->where('pagina_web', 'SI')->noSuspendido();
+            })
+            ->orderBy('descripcion')
+            ->get();
+
+        $productosQuery = \App\Producto::query()
+            ->where('pagina_web', 'SI')
+            ->noSuspendido();
+
+        if ($request->busqueda) {
+            $productosQuery->where(function($q) use ($request) {
+                $q->where('descripcion', 'LIKE', "%{$request->busqueda}%")
+                  ->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
+            });
+        }
+        if ($request->modelo) {
+            $productosQuery->where('modelo_id', $request->modelo);
+        }
+
+        $specKeys = ['procesador','memoria_ram','almacenamiento','sistema_operativo','unidad_optica'];
+        foreach ($specKeys as $k) {
+            if ($request->filled($k)) {
+                $productosQuery->whereHas('especificaciones', function($q) use ($k, $request) {
+                    $q->where('campo', ucfirst(str_replace('_',' ',$k)))->where('descripcion', $request->$k);
+                });
+            }
+        }
+
+        $orden = $request->orden ?? 'newest';
+        switch ($orden) {
+            case 'nombre_asc': $productosQuery->orderBy('descripcion','asc'); break;
+            case 'nombre_desc': $productosQuery->orderBy('descripcion','desc'); break;
+            case 'oldest': $productosQuery->orderBy('created_at','asc'); break;
+            default: $productosQuery->orderBy('created_at','desc'); break;
+        }
+
+        $productos = $productosQuery->with('modelo')->paginate(9);
+
+        return view('catalogo-preview', compact('modelos', 'productos'));
     }
     public function categoria(Request $request)
     {
@@ -54,47 +93,6 @@ class CatalogoController extends Controller
         ];
     }
     public function detallemod($id)
-{
-    $modelo = Modelo::with('getProducto')->findOrFail($id);
-    $producto = Producto::with('getModelo')->findOrFail($id);
-    $productos = Producto::with('getModelo')->where('modelo_id', $id)->where('pagina_web', 'SI')->noSuspendido()->take(15)->get();
-    $modelos = Modelo::with('getProducto')->get();
-    $categorias = Categoria::where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
-
-    $productos_procesador = Producto::select('procesador')->where('modelo_id',$id)->distinct()->whereNotNull('procesador')->orderBy('procesador')->get();
-    $productos_ram = Producto::select('ram')->where('modelo_id',$id)->distinct()->whereNotNull('ram')->orderBy('ram')->get();
-    $productos_sistema_operativo = Producto::select('sistema_operativo')->where('modelo_id',$id)->distinct()->whereNotNull('sistema_operativo')->orderBy('sistema_operativo')->get();
-    $producto_almacenamiento = Producto::select('almacenamiento')->where('modelo_id',$id)->distinct()->whereNotNull('almacenamiento')->orderBy('almacenamiento')->get();
-    $producto_lan = Producto::select('conectividad')->where('modelo_id',$id)->distinct()->whereNotNull('conectividad')->orderBy('conectividad')->get();
-    $producto_wlan = Producto::select('conectividad_wlan')->where('modelo_id',$id)->distinct()->whereNotNull('conectividad_wlan')->orderBy('conectividad_wlan')->get();
-    $producto_usb = Producto::select('conectividad_usb')->where('modelo_id',$id)->distinct()->whereNotNull('conectividad_usb')->orderBy('conectividad_usb')->get();
-    $producto_vga = Producto::select('video_vga')->where('modelo_id',$id)->distinct()->whereNotNull('video_vga')->orderBy('video_vga')->get();
-    $producto_hdmi = Producto::select('video_hdmi')->where('modelo_id',$id)->distinct()->whereNotNull('video_hdmi')->orderBy('video_hdmi')->get();
-    $producto_unidades_opticas = Producto::select('unidad_optica')->where('modelo_id',$id)->distinct()->whereNotNull('unidad_optica')->orderBy('unidad_optica')->get();
-    $producto_teclados = Producto::select('teclado')->where('modelo_id',$id)->distinct()->whereNotNull('teclado')->orderBy('teclado')->get();
-    $producto_mouses = Producto::select('mouse')->where('modelo_id',$id)->distinct()->whereNotNull('mouse')->orderBy('mouse')->get();
-    $producto_suites = Producto::select('suite_ofimatica')->where('modelo_id',$id)->distinct()->whereNotNull('suite_ofimatica')->orderBy('suite_ofimatica')->get();
-
-    // ✅ Añadir novedades aquí
-    $novedades = Producto::orderBy('created_at', 'DESC')
-        ->where('pagina_web', 'SI')
-        ->noSuspendido()
-        ->whereNull('precio_anterior')
-        ->take(16)
-        ->get();
-
-    return view('sistema.web.detallemod', compact(
-        'producto','productos','categorias','modelo','modelos','id',
-        'productos_procesador','productos_ram','productos_sistema_operativo','producto_almacenamiento',
-        'producto_lan','producto_usb','producto_wlan','producto_vga','producto_hdmi','producto_unidades_opticas',
-        'producto_teclados','producto_mouses','producto_suites',
-        'novedades' // <- ¡Este es el que activa el carrusel!
-    ));
-
-}
-
-    // New unified catalog page pre-filtered by model
-    public function modeloPreview($id)
     {
         $modelo = \App\Modelo::findOrFail($id);
 
