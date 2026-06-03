@@ -158,6 +158,10 @@
                     </div>
                 </div>
 
+                <div class="filter-search-wrap" id="search_wrap_{{ $campo }}" style="display: {{ $isOpen ? 'block' : 'none' }};">
+                    <input type="text" class="filter-search-input" data-campo="{{ $campo }}" placeholder="Buscar {{ $spec['label'] }}..." style="width:100%; padding:4px 8px; font-size:12px; border:1px solid #ddd; border-radius:4px; outline:none; box-sizing:border-box;">
+                </div>
+
                 <ul id="list_{{ $campo }}" class="lista" style="{{ $isOpen ? 'display: block;' : 'display: none;' }}">
                     @foreach($spec['options'] as $opt)
                         @php
@@ -192,16 +196,30 @@
     function toggleFilter(campo) {
         const list = document.getElementById('list_' + campo);
         const icon = document.getElementById('icon_' + campo);
+        const searchWrap = document.getElementById('search_wrap_' + campo);
         if (list.style.display === 'none') {
             list.style.display = 'block';
             icon.classList.remove('fa-plus');
             icon.classList.add('fa-minus');
+            if (searchWrap) searchWrap.style.display = 'block';
         } else {
             list.style.display = 'none';
             icon.classList.remove('fa-minus');
             icon.classList.add('fa-plus');
+            if (searchWrap) { searchWrap.style.display = 'none'; }
         }
     }
+
+    document.querySelectorAll('.filter-search-input').forEach(function(input) {
+        input.addEventListener('input', function() {
+            const campo = this.dataset.campo;
+            const text = this.value.toLowerCase().trim();
+            document.querySelectorAll('#list_' + campo + ' .item_producto').forEach(function(li) {
+                const label = li.querySelector('label');
+                li.style.display = (!text || (label && label.textContent.toLowerCase().includes(text))) ? '' : 'none';
+            });
+        });
+    });
 
     function submitFilter(campo, valor, isChecked) {
         const params = new URLSearchParams(window.location.search);
@@ -269,5 +287,12 @@
 }
 .item_producto:last-child {
     border-bottom: none;
+}
+.filter-search-wrap {
+    padding: 4px 8px;
+}
+.filter-search-input:focus {
+    border-color: #ee7c31 !important;
+    box-shadow: 0 0 0 2px rgba(238,124,49,0.15);
 }
 </style>
