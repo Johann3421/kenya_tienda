@@ -36,4 +36,13 @@ public function asides()
     {
         return $this->img_mod ? asset('storage/'.$this->img_mod) : null;
     }
+
+    public function getPrefixAttribute()
+    {
+        $name = strtoupper($this->descripcion ?? $this->nombre ?? '');
+        if (str_contains($name, 'RAITO')) return 'Monitor';
+        if (str_contains($name, 'OFISZU') || str_contains($name, 'GENWORK') || str_contains($name, 'EZENT')) return 'Computadora';
+        if (str_contains($name, 'PROWORK')) return 'Workstation';
+        return '';
+    }
 }

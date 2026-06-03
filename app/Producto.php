@@ -84,6 +84,16 @@ public function filtros()
         ->toArray();
 }
 
+    public function getDisplayNameAttribute()
+    {
+        $name = $this->nombre ?? '';
+        if (!$this->relationLoaded('modelo')) {
+            return $name;
+        }
+        $prefix = $this->modelo ? $this->modelo->prefix : '';
+        return $prefix ? "{$prefix} {$name}" : $name;
+    }
+
     /**
      * Scope: excluye productos con vigencia SUSPENDIDA.
      * Productos sin vigencia (NULL) o con cualquier otro estado se consideran visibles.

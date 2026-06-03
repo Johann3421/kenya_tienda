@@ -40,7 +40,7 @@
                             }
                         @endphp
 
-                        <img src="{{ $img }}" alt="{{ $producto->nombre ?? 'Producto' }}" class="img-fluid"
+                        <img src="{{ $img }}" alt="{{ $producto->display_name ?? $producto->nombre ?? 'Producto' }}" class="img-fluid"
                              onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
 
                         <div class="product-actions">
@@ -55,7 +55,7 @@
                             {{ $producto->modelo->nombre ?? ($producto->modelo->descripcion ?? 'Sin categoría') }}
                         </span>
 
-                        <h3 class="product-title">{{ $producto->nombre ?? 'Nombre no disponible' }}</h3>
+                        <h3 class="product-title">{{ $producto->display_name ?? $producto->nombre ?? 'Nombre no disponible' }}</h3>
 
                         <div class="product-details">
                             <p><strong>Parte:</strong> {{ $producto->nro_parte ?? 'N/A' }}</p>

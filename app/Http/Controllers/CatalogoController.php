@@ -193,7 +193,7 @@ class CatalogoController extends Controller
             $img = $p->imagen_1 ? asset('storage/' . $p->imagen_1) : ($p->imagen ? asset('storage/' . $p->imagen) : asset('producto.jpg'));
             return [
                 'id' => $p->id,
-                'nombre' => (string) $p->nombre,
+                'nombre' => (string) ($p->display_name ?: $p->nombre),
                 'nro_parte' => (string) $p->nro_parte,
                 'modelo' => $p->modelo ? ($p->modelo->descripcion ?? $p->modelo->nombre ?? '') : '',
                 'img' => $img,
