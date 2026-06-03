@@ -314,12 +314,16 @@
                                     <tr>
                                         <td style="min-width:160px;font-weight:700;vertical-align:top">{{ $espec->campo }}</td>
                                         <td>
-                                            <div>: {{ $espec->descripcion }}</div>
-                                            @if($isDesktopOrWorkstation)
-                                            <div class="desc2-placeholder" style="font-size:0.85em;color:#999;margin-top:4px;font-style:italic;">
-                                                Descripción 2: Vacío
+                                            <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;">
+                                                <div style="flex:1;min-width:240px;">
+                                                    : {{ $espec->descripcion }}
+                                                </div>
+                                                @if($isDesktopOrWorkstation)
+                                                <div style="flex:1;min-width:240px;">
+                                                    <span style="font-size:0.85em;color:#999;font-style:italic;">Descripción 2: Vacío</span>
+                                                </div>
+                                                @endif
                                             </div>
-                                            @endif
                                         </td>
                                     </tr>
                                     @empty
