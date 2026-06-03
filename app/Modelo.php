@@ -40,9 +40,9 @@ public function asides()
     public function getPrefixAttribute()
     {
         $name = strtoupper($this->descripcion ?? $this->nombre ?? '');
-        if (str_contains($name, 'RAITO')) return 'Monitor';
-        if (str_contains($name, 'OFISZU') || str_contains($name, 'GENWORK') || str_contains($name, 'EZENT')) return 'Computadora';
-        if (str_contains($name, 'PROWORK')) return 'Workstation';
+        if (str_contains($name, 'RAITO')) return 'MONITOR';
+        if (str_contains($name, 'OFISZU') || str_contains($name, 'GENWORK') || str_contains($name, 'EZENT')) return 'COMPUTADORA';
+        if (str_contains($name, 'PROWORK')) return 'WORKSTATION';
         return '';
     }
 }
