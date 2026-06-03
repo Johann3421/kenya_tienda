@@ -268,7 +268,7 @@
                             <div class="novedades-image-container">
                                 <img src="{{ $imagen }}"
                                      class="novedades-product-image"
-                                     alt="{{ $prod->nombre }}"
+                                     alt="{{ $prod->display_name }}"
                                      loading="lazy">
 
                                 <div class="novedades-image-overlay">
@@ -281,7 +281,7 @@
                             <div class="novedades-product-details">
                                 <h6 class="novedades-product-title">
                                     <a href="{{ route('producto_detalle', $prod->id) }}">
-                                        {{ Str::limit($prod->nombre, 100) }}
+                                        {{ Str::limit($prod->display_name, 100) }}
                                     </a>
                                 </h6>
                             </div>

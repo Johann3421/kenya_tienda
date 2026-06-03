@@ -56,7 +56,7 @@ class SearchController extends Controller
 
             return [
                 'id' => $prod->id,
-                'nombre' => $prod->nombre,
+                'nombre' => (string) $prod->display_name,
                 'descripcion' =>
                     (isset($prod->descripcion) && $prod->descripcion) ? $prod->descripcion : ($prod->getModelo->descripcion ?? ''),
                 'img' => asset($img),

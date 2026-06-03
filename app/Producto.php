@@ -87,11 +87,15 @@ public function filtros()
     public function getDisplayNameAttribute()
     {
         $name = $this->nombre ?? '';
-        if (!$this->relationLoaded('modelo')) {
-            return $name;
+        if ($this->relationLoaded('modelo') && $this->modelo) {
+            $prefix = $this->modelo->prefix;
+            return $prefix ? "{$prefix} {$name}" : $name;
         }
-        $prefix = $this->modelo ? $this->modelo->prefix : '';
-        return $prefix ? "{$prefix} {$name}" : $name;
+        if ($this->relationLoaded('getModelo') && $this->getModelo) {
+            $prefix = $this->getModelo->prefix;
+            return $prefix ? "{$prefix} {$name}" : $name;
+        }
+        return $name;
     }
 
     /**

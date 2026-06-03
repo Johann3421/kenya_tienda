@@ -145,11 +145,7 @@
                             : asset('producto.jpg')));
 
                 // Texto alt mejorado
-                $altText = $isTonner
-                    ? "Imagen del producto " . $producto->nombre
-                    : ($producto->modelo
-                        ? "Imagen del modelo " . ($producto->modelo->nombre ?? '')
-                        : "Imagen del producto " . $producto->nombre);
+                $altText = "Imagen de " . $producto->display_name;
             @endphp
 
             <div class="product-image-container">
@@ -300,7 +296,7 @@
             @endphp
 
             <h2 class="" style="font-weight: bold; font-size: 36px; font-family: Arial">
-                @if($isMonitor) MONITOR @elseif($isToner) TONER @endif {{ $producto->nombre }}
+                {{ $producto->display_name }}
             </h2>
 
             <div class="carousel-descripcion mb-3 row" style="padding: 15px;">

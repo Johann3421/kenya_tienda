@@ -171,7 +171,7 @@
 
     <img src="{{ $img }}"
          class="img-fluid"
-         alt="Imagen de {{ $prod->nombre }}"
+         alt="Imagen de {{ $prod->display_name }}"
          loading="lazy"
          onerror="this.onerror=null;this.src='{{ asset('producto.jpg') }}'">
 </div>
@@ -179,7 +179,7 @@
 
                                     <div class="descripcion">
                                         <div class="text-center">
-                                            <h6>{{ Str::limit($prod->nombre, 100) }}</h6>
+                                            <h6>{{ Str::limit($prod->display_name, 100) }}</h6>
                                         </div>
                                     </div>
 
