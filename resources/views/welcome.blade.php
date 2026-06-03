@@ -314,12 +314,18 @@
         }
 
         .prod-title {
-            margin: 0;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            width: 100%;
+            font-size: clamp(0.8rem, 1.2vw, 1rem);
+            font-weight: 900;
             text-align: center;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            text-transform: uppercase;
+            color: #333;
+        }
+        .prod-prefix {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 400;
         }
 
         /* Botón de acción */
@@ -1177,16 +1183,19 @@
                                         <img src="{{ asset('producto.jpg') }}" class="img-fluid prod-main-image"
                                             alt="">
                                     @endif
-                                    @php $modDisplay = ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? ''); @endphp
                                     <div class="prod-image-overlay">
                                         @if ($mod->categoria_id)
-                                            <h6 class="prod-overlay-text" title="{{ $modDisplay }}">{{ Str::limit($modDisplay, 160) }}</h6>
+                                            <h6 class="prod-overlay-text" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
+                                                @if($mod->prefix)<span class="prod-prefix">{{ $mod->prefix }} </span>@endif{{ Str::limit($mod->descripcion ?? '', 160) }}
+                                            </h6>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="prod-details">
                                     <div class="prod-title-container">
-                                        <p class="prod-title" title="{{ $modDisplay }}">{{ Str::limit($modDisplay, 90) }}</p>
+                                        <p class="prod-title" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
+                                            @if($mod->prefix)<span class="prod-prefix">{{ $mod->prefix }} </span>@endif{{ Str::limit($mod->descripcion ?? '', 90) }}
+                                        </p>
                                     </div>
                                     <div class="prod-action-btn">
                                         <a href="{{ route('detallemod', $mod->id) }}"><i class='bx bx-shopping-bag'></i>
