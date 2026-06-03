@@ -769,7 +769,6 @@
             --hero-btn-border: #171717;
             --hero-height: 500px;
             --hero-top-offset: 96px;
-            --hero-side-gutter: 15px;
             --hero-max-width: 1600px;
         }
 
@@ -795,9 +794,9 @@
 
         .lenovo-hero__viewport {
             position: relative;
-            width: calc(100% - (var(--hero-side-gutter) * 2));
-            max-width: var(--hero-max-width);
-            margin: 0 auto;
+            width: 100%;
+            max-width: none;
+            margin: 0;
             height: 100%;
             min-height: var(--hero-height);
             overflow: hidden;
@@ -843,13 +842,18 @@
 
         /* Capa 3 — Bloque de contenido (logo, subtítulo, titular, botones) */
         .lenovo-hero__content {
-            position: relative;
+            position: absolute;
             z-index: 2;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            max-width: 55%;
+            width: min(var(--hero-max-width), calc(100% - 30px));
             height: 100%;
+            left: 50%;
+            top: 0;
+            right: auto;
+            bottom: auto;
+            transform: translateX(-50%);
             padding: 0 0 0 clamp(28px, 4vw, 64px);
             box-sizing: border-box;
             color: #fff;
@@ -942,7 +946,11 @@
         .lenovo-hero__dots-wrap {
             position: absolute;
             bottom: 16px;
-            left: clamp(28px, 4vw, 64px);
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            width: min(var(--hero-max-width), calc(100% - 30px));
+            padding-left: clamp(28px, 4vw, 64px);
             z-index: 3;
             display: flex;
             align-items: center;
@@ -990,26 +998,24 @@
             :root {
                 --hero-height: 380px;
                 --hero-top-offset: 82px;
-                --hero-side-gutter: 12px;
             }
-            .lenovo-hero__content { max-width: 70%; padding-left: 24px; }
+            .lenovo-hero__content { width: calc(100% - 24px); padding-left: 24px; }
             .lenovo-hero__headline { font-size: 26px; }
-            .lenovo-hero__dots-wrap { left: 24px; }
+            .lenovo-hero__dots-wrap { width: calc(100% - 24px); padding-left: 24px; }
         }
 
         @media (max-width: 576px) {
             :root {
                 --hero-height: 320px;
                 --hero-top-offset: 74px;
-                --hero-side-gutter: 10px;
             }
-            .lenovo-hero__content { max-width: 85%; padding-left: 16px; }
+            .lenovo-hero__content { width: calc(100% - 20px); padding-left: 16px; }
             .lenovo-hero__headline { font-size: 20px; }
             .lenovo-hero__subhead { font-size: 12px; }
             .lenovo-hero__btn { padding: 10px 16px; font-size: 14px; }
             .lenovo-hero__arrow { width: 36px; height: 36px; }
             .lenovo-hero__arrow i { font-size: 18px; }
-            .lenovo-hero__dots-wrap { left: 16px; bottom: 10px; }
+            .lenovo-hero__dots-wrap { width: calc(100% - 20px); padding-left: 16px; bottom: 10px; }
         }
     </style>
 @endsection
