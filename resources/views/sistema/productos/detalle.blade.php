@@ -181,7 +181,7 @@
                         || stripos($productoNombre, 'toner') !== false;
                 }
 
-                $isDesktopOrWorkstation = !$isMonitor && !$isToner && $producto->categoria_id && in_array($producto->categoria_id, [1, 3]);
+                $isDesktopOrWorkstation = !$isMonitor && !$isToner && $producto->modelo && $producto->modelo->categoria_id && in_array($producto->modelo->categoria_id, [1, 3]);
 
                 // Normalizar y filtrar especificaciones válidas
                 $specsList = [];
