@@ -327,7 +327,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             font-weight: 700;
             letter-spacing: 0.5px;
-            color: #000000;
             font-size: 0.85em;
         }
 
