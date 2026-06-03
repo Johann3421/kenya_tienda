@@ -54,7 +54,15 @@ class CatalogoController extends Controller
 
         $productos = $productosQuery->with('modelo')->paginate(9);
 
-        return view('catalogo-preview', compact('modelos', 'productos'));
+        $novedades = \App\Producto::with('modelo')
+            ->orderBy('created_at', 'DESC')
+            ->where('pagina_web', 'SI')
+            ->noSuspendido()
+            ->whereNull('precio_anterior')
+            ->take(16)
+            ->get();
+
+        return view('catalogo-preview', compact('modelos', 'productos', 'novedades'));
     }
     public function categoria(Request $request)
     {
@@ -110,7 +118,15 @@ class CatalogoController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(9);
 
-        return view('catalogo-modelo', compact('modelo', 'modelos', 'productos', 'id'));
+        $novedades = \App\Producto::with('modelo')
+            ->orderBy('created_at', 'DESC')
+            ->where('pagina_web', 'SI')
+            ->noSuspendido()
+            ->whereNull('precio_anterior')
+            ->take(16)
+            ->get();
+
+        return view('catalogo-modelo', compact('modelo', 'modelos', 'productos', 'id', 'novedades'));
     }
 
     // Return the aside filters partial for a given modelo (used by preview AJAX)

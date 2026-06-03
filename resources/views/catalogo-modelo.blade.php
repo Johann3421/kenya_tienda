@@ -203,6 +203,8 @@
             </div>
         </div>
     </section>
+
+    @include('components.novedades', ['novedades' => $novedades])
 @endsection
 
 @section('js')
@@ -311,4 +313,5 @@
             }
         })();
     </script>
+    <script src="{{ asset('js/detallemod.js') }}"></script>
 @endsection
