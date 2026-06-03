@@ -1177,15 +1177,16 @@
                                         <img src="{{ asset('producto.jpg') }}" class="img-fluid prod-main-image"
                                             alt="">
                                     @endif
+                                    @php $modDisplay = ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? ''); @endphp
                                     <div class="prod-image-overlay">
                                         @if ($mod->categoria_id)
-                                            <h6 class="prod-overlay-text" title="{{ $mod->descripcion }}">{{ Str::limit($mod->descripcion ?? '', 160) }}</h6>
+                                            <h6 class="prod-overlay-text" title="{{ $modDisplay }}">{{ Str::limit($modDisplay, 160) }}</h6>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="prod-details">
                                     <div class="prod-title-container">
-                                        <p class="prod-title" title="{{ $mod->descripcion }}">{{ Str::limit($mod->descripcion ?? '', 90) }}</p>
+                                        <p class="prod-title" title="{{ $modDisplay }}">{{ Str::limit($modDisplay, 90) }}</p>
                                     </div>
                                     <div class="prod-action-btn">
                                         <a href="{{ route('detallemod', $mod->id) }}"><i class='bx bx-shopping-bag'></i>
