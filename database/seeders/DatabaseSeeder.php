@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $inputFile = base_path('RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql');
-        
+
         if (!file_exists($inputFile)) {
             $this->command->info("No se encontró el archivo de respaldo para migrar.");
             return;
@@ -52,27 +52,27 @@ class DatabaseSeeder extends Seeder
                         $truncatedTables[] = $tableName;
                     }
                 }
-                
+
                 $inInsert = true;
                 $buffer = '';
             }
-            
+
             if ($inInsert) {
                 $buffer .= $line;
-                
+
                 // Si la línea termina en punto y coma, ejecutamos el bloque
                 if (substr(rtrim($line), -1) === ';') {
                     $inInsert = false;
-                    
+
                     // 1. Reemplazar comillas invertidas por comillas dobles (para identificadores Postgres)
                     $sql = str_replace('`', '"', $buffer);
-                    
+
                     // 2. Reemplazar escapes de MySQL por escapes de Postgres
                     $sql = str_replace("\\'", "''", $sql);
                     $sql = str_replace('\\"', '"', $sql);
                     $sql = str_replace('\\r\\n', "\r\n", $sql);
                     $sql = str_replace('\\n', "\n", $sql);
-                    
+
                     DB::unprepared($sql);
                     $total++;
                 }
