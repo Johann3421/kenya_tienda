@@ -768,6 +768,9 @@
             --hero-btn-text: #000000;
             --hero-btn-border: #171717;
             --hero-height: 500px;
+            --hero-top-offset: 96px;
+            --hero-side-gutter: 15px;
+            --hero-max-width: 1600px;
         }
 
         /* Sobrescribir el #hero viejo del style.css externo */
@@ -776,7 +779,7 @@
             height: var(--hero-height) !important;
             min-height: 400px !important;
             padding: 0 !important;
-            margin: 0 !important;
+            margin: var(--hero-top-offset) 0 0 0 !important;
             overflow: hidden !important;
             position: relative !important;
         }
@@ -792,7 +795,9 @@
 
         .lenovo-hero__viewport {
             position: relative;
-            width: 100%;
+            width: calc(100% - (var(--hero-side-gutter) * 2));
+            max-width: var(--hero-max-width);
+            margin: 0 auto;
             height: 100%;
             min-height: var(--hero-height);
             overflow: hidden;
@@ -845,7 +850,7 @@
             justify-content: center;
             max-width: 55%;
             height: 100%;
-            padding: 0 0 0 40px;
+            padding: 0 0 0 clamp(28px, 4vw, 64px);
             box-sizing: border-box;
             color: #fff;
         }
@@ -937,7 +942,7 @@
         .lenovo-hero__dots-wrap {
             position: absolute;
             bottom: 16px;
-            left: 40px;
+            left: clamp(28px, 4vw, 64px);
             z-index: 3;
             display: flex;
             align-items: center;
@@ -982,14 +987,22 @@
 
         /* Responsive */
         @media (max-width: 991px) {
-            :root { --hero-height: 380px; }
+            :root {
+                --hero-height: 380px;
+                --hero-top-offset: 82px;
+                --hero-side-gutter: 12px;
+            }
             .lenovo-hero__content { max-width: 70%; padding-left: 24px; }
             .lenovo-hero__headline { font-size: 26px; }
             .lenovo-hero__dots-wrap { left: 24px; }
         }
 
         @media (max-width: 576px) {
-            :root { --hero-height: 320px; }
+            :root {
+                --hero-height: 320px;
+                --hero-top-offset: 74px;
+                --hero-side-gutter: 10px;
+            }
             .lenovo-hero__content { max-width: 85%; padding-left: 16px; }
             .lenovo-hero__headline { font-size: 20px; }
             .lenovo-hero__subhead { font-size: 12px; }
