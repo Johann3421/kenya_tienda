@@ -181,6 +181,8 @@
                         || stripos($productoNombre, 'toner') !== false;
                 }
 
+                $isDesktopOrWorkstation = !$isMonitor && !$isToner && $producto->categoria_id && in_array($producto->categoria_id, [1, 3]);
+
                 // Normalizar y filtrar especificaciones válidas
                 $specsList = [];
                 foreach ($especificaciones as $s) {
@@ -266,32 +268,24 @@
                         ],
                     ];
                 } elseif (!$isMonitor) {
-                    $topOrdered = [
-                        (object) [
-                            'campo' => 'Procesador',
-                            'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/'])
-                                ?? $getProductValue(['procesador'])
-                                ?? 'No especificado',
-                        ],
-                        (object) [
-                            'campo' => 'Memoria Ram',
-                            'descripcion' => $getSpecValue(['/memoria|ram/'])
-                                ?? $getProductValue(['ram'])
-                                ?? 'No especificado',
-                        ],
-                        (object) [
-                            'campo' => 'Almacenamiento',
-                            'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/'])
-                                ?? $getProductValue(['almacenamiento'])
-                                ?? 'No especificado',
-                        ],
-                        (object) [
-                            'campo' => 'Gráficos',
-                            'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/'])
-                                ?? $getProductValue(['tarjetavideo'])
-                                ?? 'No especificado',
-                        ],
-                    ];
+                    if ($isDesktopOrWorkstation) {
+                        $topOrdered = [
+                            (object) ['campo' => 'Formato', 'descripcion' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Procesador', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Chipset', 'descripcion' => $getSpecValue(['/chipset/']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Controlador de Video', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Memoria Ram', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Almacenamiento', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Fuente de Poder', 'descripcion' => $getSpecValue(['/fuente|psu|power supply/']) ?? 'No especificado', 'descripcion2' => ''],
+                        ];
+                    } else {
+                        $topOrdered = [
+                            (object) ['campo' => 'Procesador', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Memoria Ram', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Almacenamiento', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Gráficos', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
+                        ];
+                    }
                 }
             @endphp
 
@@ -318,8 +312,13 @@
                                 @else
                                     @forelse($topOrdered as $espec)
                                     <tr>
-                                        <td style="min-width:160px;font-weight:700">{{ $espec->campo }}</td>
-                                        <td>: {{ $espec->descripcion }}</td>
+                                        <td style="min-width:160px;font-weight:700;vertical-align:top">{{ $espec->campo }}</td>
+                                        <td>
+                                            <div>: {{ $espec->descripcion }}</div>
+                                            @if($isDesktopOrWorkstation)
+                                            <div class="desc2-placeholder" style="font-size:0.85em;color:#999;margin-top:2px;">{{ $espec->descripcion2 ?: '' }}</div>
+                                            @endif
+                                        </td>
                                     </tr>
                                     @empty
                                     <tr>
