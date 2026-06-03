@@ -316,7 +316,9 @@
                                         <td>
                                             <div>: {{ $espec->descripcion }}</div>
                                             @if($isDesktopOrWorkstation)
-                                            <div class="desc2-placeholder" style="font-size:0.85em;color:#999;margin-top:2px;">{{ $espec->descripcion2 ?: '' }}</div>
+                                            <div class="desc2-placeholder" style="font-size:0.85em;color:#999;margin-top:4px;font-style:italic;">
+                                                Descripción 2: Vacío
+                                            </div>
                                             @endif
                                         </td>
                                     </tr>
