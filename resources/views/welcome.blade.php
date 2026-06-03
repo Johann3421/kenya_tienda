@@ -324,8 +324,11 @@
             color: #333;
         }
         .prod-prefix {
-            font-family: Arial, Helvetica, sans-serif;
-            font-weight: 400;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #ee7c31;
+            font-size: 0.85em;
         }
 
         /* Botón de acción */
