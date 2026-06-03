@@ -93,6 +93,28 @@ class CatalogoController extends Controller
 
 }
 
+    // New unified catalog page pre-filtered by model
+    public function modeloPreview($id)
+    {
+        $modelo = \App\Modelo::findOrFail($id);
+
+        $modelos = \App\Modelo::whereRaw("UPPER(activo) = 'SI'")
+            ->whereHas('getProducto', function ($q) {
+                $q->where('pagina_web', 'SI')->noSuspendido();
+            })
+            ->orderBy('descripcion')
+            ->get();
+
+        $productos = \App\Producto::with('modelo')
+            ->where('modelo_id', $id)
+            ->where('pagina_web', 'SI')
+            ->noSuspendido()
+            ->orderBy('created_at', 'desc')
+            ->paginate(9);
+
+        return view('catalogo-modelo', compact('modelo', 'modelos', 'productos', 'id'));
+    }
+
     // Return the aside filters partial for a given modelo (used by preview AJAX)
     public function previewFilters($id = null)
     {

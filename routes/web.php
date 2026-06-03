@@ -35,6 +35,7 @@ Route::get('/', function () {
     //return $productos;
 });
 Route::get('catalogo/{id}/detallemod', 'CatalogoController@detallemod')->name('detallemod');
+Route::get('catalogo/{id}/modelo', 'CatalogoController@modeloPreview')->name('catalogo.modelo');
 Route::post('catalogo/{id}/buscar', 'CatalogoController@buscar');
 Route::post('catalogo/{id}/categoria', 'CatalogoController@categoria');
 
