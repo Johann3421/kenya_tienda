@@ -174,6 +174,8 @@ Route::post('/reclamaciones/enviar', [ReclamacionController::class, 'enviar']);
 Route::prefix('admin/enriquecer-procesadores')
     ->name('enriquecer.')
     ->group(function () {
+        Route::get('/',        [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'index'])
+             ->name('index');
         Route::get('status',   [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'status'])
              ->name('status');
         Route::get('test',     [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'test'])
