@@ -135,101 +135,66 @@ def formatear_nanoreview(data: dict) -> str | None:
 # ─── Capa 2: Intel ARK ────────────────────────────────────────────────────────
 
 def buscar_intel_ark(nombre_raw: str) -> str | None:
-    """Solo se intenta para procesadores Intel."""
-    if "intel" not in nombre_raw.lower():
+    """
+    Intel ARK tiene un endpoint de búsqueda interno que devuelve JSON.
+    Ejemplo para 'INTEL CORE I7-14700':
+    https://ark.intel.com/libs/ark/services/auth/html/products.en.json?q=i7-14700
+    """
+    # Extraer solo el número de modelo (i7-14700, i5-13400, etc.)
+    match = re.search(r'(i\d-\d{4,5}[A-Z]*|xeon\s+\w+)', nombre_raw, re.IGNORECASE)
+    if not match:
         return None
+    
+    modelo = match.group(1).lower()  # "i7-14700"
+    url = f"https://ark.intel.com/libs/ark/services/auth/html/products.en.json?q={modelo}"
+    
     try:
-        url = f"https://ark.intel.com/libs/ark/services/auth/html/products.en.json?q={nombre_raw}"
-        r = requests.get(
-            url,
-            headers={"User-Agent": "Mozilla/5.0 (compatible; KenyaEnricher/1.0)"},
-            timeout=12,
-        )
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Accept': 'application/json',
+            'Referer': 'https://ark.intel.com/'
+        }
+        r = requests.get(url, headers=headers, timeout=15)
         if r.status_code == 200:
             data = r.json()
-            if isinstance(data, list) and len(data) > 0:
-                return formatear_intel_ark(data[0])
+            if data and isinstance(data, list) and len(data) > 0:
+                return formatear_desde_ark(data[0], nombre_raw)
     except Exception as e:
-        log.debug(f"Intel ARK error para '{nombre_raw}': {e}")
+        log.error(f"Intel ARK error para '{nombre_raw}': {e}")
+    
     return None
 
 
-def formatear_intel_ark(item: dict) -> str | None:
-    """Construye descripcion_2 desde un resultado de la API de Intel ARK."""
-    try:
-        cores   = item.get("CoreCount") or item.get("NumCores") or "?"
-        threads = item.get("ThreadCount") or item.get("NumThreads") or "?"
-        base    = item.get("ClockSpeedMhz", "")
-        boost   = item.get("ClockSpeedMaxMhz", "")
-        gpu     = item.get("GraphicsModel") or ""
-        socket  = item.get("SocketsSupported") or "?"
-        l2      = item.get("Cache", "?")
-        l3      = item.get("CacheMB", "?")
-        tdp     = item.get("TDP") or "?"
-        year    = item.get("LaunchDate", "?")
-
-        # Convertir MHz a GHz si necesario
-        def mhz_a_ghz(val):
-            try:
-                v = float(str(val).replace("MHz", "").replace("GHz", "").strip())
-                if v > 100:              # probablemente es MHz
-                    return round(v / 1000, 1)
-                return v
-            except Exception:
-                return val
-
-        base_ghz  = mhz_a_ghz(base)
-        boost_ghz = mhz_a_ghz(boost)
-        gpu_str   = f", {gpu}" if str(gpu).strip() else ""
-
-        return (
-            f"{cores} Núcleos, {threads} Hilos, "
-            f"{base_ghz} GHz Up To {boost_ghz} GHz"
-            f"{gpu_str}, "
-            f"{socket}, "
-            f"L2: {l2}, L3: {l3}, "
-            f"{tdp}W, {year}"
-        )
-    except Exception as e:
-        log.debug(f"formatear_intel_ark error: {e}")
-        return None
+def formatear_desde_ark(producto, nombre_raw):
+    """Extrae los campos clave del JSON de Intel ARK"""
+    specs = {}
+    for categoria, clave, valor in producto.get('specs', []):
+        specs[clave] = valor
+    
+    nucleos  = specs.get('# of Cores', '?')
+    hilos    = specs.get('# of Threads', '?')
+    base     = specs.get('Processor Base Frequency', '?').replace(' GHz', '')
+    boost    = specs.get('Max Turbo Frequency', '?').replace(' GHz', '')
+    l2       = specs.get('L2 Cache', '?')
+    l3       = specs.get('L3 Cache', '?')
+    tdp      = specs.get('TDP', '?').replace(' W', '')
+    socket   = specs.get('Sockets Supported', '?')
+    gpu      = specs.get('Processor Graphics', '')
+    year     = specs.get('Launch Date', '?')[:4]  # "Q4 2023" → "2023"
+    
+    gpu_str = f", {gpu}" if gpu and gpu != 'Not Included' else ''
+    
+    return (f"{nucleos} Núcleos, {hilos} Hilos, {base} GHz Up To {boost} GHz"
+            f"{gpu_str}, {socket}, L2: {l2}, L3: {l3}, {tdp}W, {year}")
 
 
 # ─── Capa 3: Claude (fallback) ────────────────────────────────────────────────
 
 def buscar_con_claude(nombre_raw: str) -> str | None:
-    client = get_anthropic_client()
-    if client is None:
-        return None
-    try:
-        resp = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=200,
-            messages=[
-                {
-                    "role": "user",
-                    "content": (
-                        f"Dame las especificaciones técnicas del procesador \"{nombre_raw}\" "
-                        f"en este formato EXACTO:\n"
-                        f"N Núcleos, N Hilos, X.X GHz Up To X.X GHz, [GPU integrada si tiene], SOCKET, L2: XMB, L3: XMB, XW, AÑO\n\n"
-                        f"Reglas:\n"
-                        f"- Solo ese dato. Sin texto adicional, sin explicaciones.\n"
-                        f"- Si el procesador no tiene GPU integrada, omite ese campo.\n"
-                        f"- Si no conoces algún campo, usa '?'.\n"
-                        f"- Usa punto como separador decimal (ej. 3.4 GHz, no 3,4 GHz)."
-                    ),
-                }
-            ],
-        )
-        texto = resp.content[0].text.strip()
-        # Validación básica: debe contener "Núcleos" o "Cores"
-        if "cleos" in texto or "GHz" in texto:
-            return texto
-        log.warning(f"Claude retornó respuesta inesperada para '{nombre_raw}': {texto!r}")
-        return texto   # igual lo guardamos
-    except Exception as e:
-        log.error(f"Claude error para '{nombre_raw}': {e}")
-        return None
+    # Claude desactivado intencionalmente.
+    # Las fuentes oficiales (Nanoreview + Intel ARK) deben funcionar primero.
+    log.warning(f"Todas las fuentes oficiales fallaron para: {nombre_raw}")
+    return None
 
 
 # ─── Orquestador ──────────────────────────────────────────────────────────────
