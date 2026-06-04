@@ -13,7 +13,7 @@ app.get('/scrape', async (req, res) => {
         return res.status(400).json({ error: 'Falta parámetro slug' });
     }
 
-    const url = `https://nanoreview.net/api/cpu/get?slug=${slug}`;
+    const url = `https://nanoreview.net/en/cpu/${slug}`;
     console.log(`[Scraper] Fetching: ${url}`);
 
     let browser;
@@ -49,14 +49,26 @@ app.get('/scrape', async (req, res) => {
             await page.waitForFunction('!document.title.includes("Just a moment")', { timeout: 20000 }).catch(() => {});
         }
         
-        const content = await page.evaluate(() => document.body.innerText);
+        const nextData = await page.evaluate(() => {
+            const script = document.getElementById('__NEXT_DATA__');
+            return script ? script.textContent : null;
+        });
+        
+        if (!nextData) {
+            console.log(`[Scraper] No se encontró __NEXT_DATA__ para ${slug}`);
+            return res.status(404).json({ error: 'Procesador no encontrado en Nanoreview (404)' });
+        }
         
         try {
-            const jsonData = JSON.parse(content);
-            res.json(jsonData);
+            const jsonData = JSON.parse(nextData);
+            
+            // La información del CPU suele estar en props.pageProps.cpu
+            const cpuData = jsonData?.props?.pageProps?.cpu || jsonData?.props?.pageProps || jsonData;
+            
+            res.json(cpuData);
         } catch (parseError) {
-            console.log(`[Scraper] Error parseando JSON:`, content.substring(0, 200));
-            res.status(500).json({ error: 'No se pudo extraer JSON', raw: content.substring(0, 500) });
+            console.log(`[Scraper] Error parseando JSON de __NEXT_DATA__`);
+            res.status(500).json({ error: 'No se pudo parsear el JSON de __NEXT_DATA__' });
         }
         
     } catch (error) {

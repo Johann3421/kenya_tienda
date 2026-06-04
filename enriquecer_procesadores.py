@@ -37,7 +37,7 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parent / ".env")
 
 # ─── Configuración de logging ──────────────────────────────────────────────────
-LOG_FILE = Path(__file__).parent / "enriquecer_procesadores.log"
+LOG_FILE = Path("/tmp/enriquecer_procesadores.log")
 
 logging.basicConfig(
     level=logging.INFO,
