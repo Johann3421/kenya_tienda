@@ -97,25 +97,17 @@ class EnriquecerProcesadoresController extends Controller
         return $json;
     }
 
-    /**
-     * Busca el último bloque JSON completo en el output del script.
-     * El script puede imprimir logs de texto antes del JSON final.
-     */
     private function extraerUltimoJson(string $output): ?array
     {
-        // Buscar el último '{' que abra un objeto JSON completo
-        $pos = strrpos($output, '{');
-        if ($pos === false) {
-            return null;
+        $offset = 0;
+        while (($pos = strpos($output, '{', $offset)) !== false) {
+            $candidato = substr($output, $pos);
+            $decoded = json_decode($candidato, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                return $decoded;
+            }
+            $offset = $pos + 1;
         }
-
-        $candidato = substr($output, $pos);
-        $decoded   = json_decode($candidato, true);
-
-        if (json_last_error() === JSON_ERROR_NONE) {
-            return $decoded;
-        }
-
         return null;
     }
 
