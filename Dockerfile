@@ -56,5 +56,19 @@ RUN chmod 0644 /etc/cron.d/kenya-scheduler
 
 EXPOSE 80
 
+# ── Python para enriquecer_procesadores.py / enriquecer_endpoint.py ──────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3 \
+        python3-pip \
+        python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --break-system-packages \
+        requests \
+        anthropic \
+        psycopg2-binary \
+        python-dotenv
+# ─────────────────────────────────────────────────────────────────────────────
+
 ENTRYPOINT ["kenya-entrypoint"]
 CMD ["apache2-foreground"]
