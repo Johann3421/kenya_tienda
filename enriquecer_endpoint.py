@@ -111,20 +111,22 @@ def cmd_test():
     for nombre in PROCESADORES_TEST:
         t0 = time.time()
         if nombre in cache:
-            desc   = cache[nombre]
-            fuente = fuentes.get(nombre, "cache")
+            desc        = cache[nombre]
+            fuente      = fuentes.get(nombre, "cache")
+            error_detalle = None
         else:
-            desc, fuente = enriquecer_procesador(nombre)
+            desc, fuente, error_detalle = enriquecer_procesador(nombre)
             if desc:
                 cache[nombre]   = desc
                 fuentes[nombre] = fuente
             time.sleep(0.5)
 
         resultados.append({
-            "procesador":    nombre,
-            "descripcion_2": desc,
-            "fuente":        fuente,
-            "ms":            round((time.time() - t0) * 1000),
+            "procesador":     nombre,
+            "descripcion_2":  desc,
+            "fuente":         fuente,
+            "error_detalle":  error_detalle,
+            "ms":             round((time.time() - t0) * 1000),
         })
 
     guardar_progreso(cache)
@@ -164,7 +166,7 @@ def cmd_dry_run(limit: int = 10):
             desc   = cache[nombre]
             fuente = fuentes.get(nombre, "cache")
         else:
-            desc, fuente = enriquecer_procesador(nombre)
+            desc, fuente, _ = enriquecer_procesador(nombre)
             if desc:
                 cache[nombre]   = desc
                 fuentes[nombre] = fuente
@@ -203,7 +205,7 @@ def cmd_run(limit: int | None = None):
     fuentes = cargar_fuentes()
 
     productos = obtener_productos(conn, solo_vacios=True, limit=limit)
-    stats = {"nanoreview": 0, "intel_ark": 0, "claude": 0, "fallido": 0, "cache": 0}
+    stats = {"techpowerup": 0, "intel_ark": 0, "groq": 0, "fallido": 0, "cache": 0}
     actualizados = 0
 
     try:
@@ -217,12 +219,13 @@ def cmd_run(limit: int | None = None):
                 fuente = fuentes.get(nombre, "cache")
                 stats["cache"] += 1
             else:
-                desc, fuente = enriquecer_procesador(nombre)
+                desc, fuente, _ = enriquecer_procesador(nombre)
                 time.sleep(0.5)
                 if desc:
                     cache[nombre]   = desc
                     fuentes[nombre] = fuente
-                    stats[fuente]  += 1
+                    stats.get(fuente, 0)  # safe get
+                    stats[fuente] = stats.get(fuente, 0) + 1
                 else:
                     stats["fallido"] += 1
                     continue

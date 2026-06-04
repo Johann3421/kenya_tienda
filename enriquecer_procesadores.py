@@ -90,7 +90,7 @@ def buscar_techpowerup(nombre_raw: str) -> str | None:
     q = urllib.parse.quote(nombre_raw.strip())
     url  = f"http://localhost:3000/scrape?q={q}"
     try:
-        r = requests.get(url, timeout=45)
+        r = requests.get(url, timeout=4)  # 4s max — si no responde, saltar a Groq
         if r.status_code == 200:
             data = r.json()
             resultado = formatear_techpowerup(data)
@@ -218,15 +218,16 @@ SYSTEM_PROMPT = (
 )
 
 
-def buscar_con_groq(nombre_raw: str, modelo: str = GROQ_MODEL) -> str | None:
+def buscar_con_groq(nombre_raw: str, modelo: str = GROQ_MODEL) -> tuple[str | None, str | None]:
     """
-    Llama a la API de Groq con el nombre del procesador y devuelve descripcion_2.
-    Maneja rate limit 429 con pausa larga y reintento automático.
+    Llama a la API de Groq con el nombre del procesador.
+    Retorna (descripcion_2, error_detalle).
     """
     api_key = os.getenv("GROQ_API_KEY", "")
     if not api_key:
-        log.warning("GROQ_API_KEY no configurada — saltando capa Groq.")
-        return None
+        msg = "GROQ_API_KEY no configurada en las variables de entorno"
+        log.warning(msg)
+        return None, msg
 
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -243,31 +244,50 @@ def buscar_con_groq(nombre_raw: str, modelo: str = GROQ_MODEL) -> str | None:
         "max_tokens":   256,
     }
 
+    ultimo_error = "Sin intentos realizados"
+
     for intento in range(3):
         try:
             r = requests.post(GROQ_API_URL, headers=headers, json=payload, timeout=30)
 
             if r.status_code == 429:
+                ultimo_error = f"HTTP 429 Rate limit. Esperando {GROQ_RETRY_WAIT}s..."
                 log.warning(f"Groq 429 (rate limit). Esperando {GROQ_RETRY_WAIT}s antes de reintentar...")
                 time.sleep(GROQ_RETRY_WAIT)
                 continue
 
             if r.status_code != 200:
-                log.debug(f"Groq HTTP {r.status_code}: {r.text[:200]}")
+                ultimo_error = f"HTTP {r.status_code}: {r.text[:300]}"
+                log.debug(f"Groq {ultimo_error}")
                 # Intentar con modelo fallback
                 if modelo == GROQ_MODEL:
-                    return buscar_con_groq(nombre_raw, GROQ_MODEL_FB)
-                return None
+                    resultado, err = buscar_con_groq(nombre_raw, GROQ_MODEL_FB)
+                    return resultado, err or ultimo_error
+                return None, ultimo_error
 
-            content = r.json()["choices"][0]["message"]["content"]
-            data = json.loads(content)
-            return formatear_groq(data)
+            try:
+                content = r.json()["choices"][0]["message"]["content"]
+                data = json.loads(content)
+                desc = formatear_groq(data)
+                if desc:
+                    return desc, None
+                else:
+                    ultimo_error = f"Groq respondió JSON pero los datos son insuficientes: {content[:200]}"
+                    return None, ultimo_error
+            except (KeyError, json.JSONDecodeError) as pe:
+                ultimo_error = f"Error parseando respuesta de Groq: {pe} | raw: {r.text[:200]}"
+                return None, ultimo_error
 
+        except requests.exceptions.Timeout:
+            ultimo_error = f"Timeout (intento {intento+1}/3) al conectar con Groq"
+            log.debug(ultimo_error)
+            time.sleep(2)
         except Exception as e:
-            log.debug(f"Groq error (intento {intento+1}): {e}")
+            ultimo_error = f"Excepción inesperada (intento {intento+1}/3): {type(e).__name__}: {e}"
+            log.debug(ultimo_error)
             time.sleep(2)
 
-    return None
+    return None, ultimo_error
 
 
 def formatear_groq(data: dict) -> str | None:
@@ -312,33 +332,34 @@ def formatear_groq(data: dict) -> str | None:
 
 # ─── Orquestador ──────────────────────────────────────────────────────────────
 
-def enriquecer_procesador(nombre_raw: str) -> tuple[str | None, str]:
+def enriquecer_procesador(nombre_raw: str) -> tuple[str | None, str, str | None]:
     """
-    Retorna (descripcion_2, fuente) donde fuente ∈ {'techpowerup', 'intel_ark', 'groq', 'fallido'}
+    Retorna (descripcion_2, fuente, error_detalle)
+    donde fuente ∈ {'techpowerup', 'intel_ark', 'groq', 'fallido'}
     """
     log.info(f"Procesando: {nombre_raw}")
 
-    # Capa 1: TechPowerUp
-    resultado = buscar_techpowerup(nombre_raw)
-    if resultado:
-        log.info(f"  ✓ TechPowerUp")
-        return resultado, "techpowerup"
+    # DIAGNÓSTICO: Capas 1 y 2 desactivadas temporalmente para aislar Groq
+    # TODO: Reactivar cuando Groq esté confirmado.
+    # resultado = buscar_techpowerup(nombre_raw)
+    # if resultado:
+    #     log.info(f"  ✓ TechPowerUp")
+    #     return resultado, "techpowerup", None
+    #
+    # if "intel" in nombre_raw.lower():
+    #     resultado = buscar_intel_ark(nombre_raw)
+    #     if resultado:
+    #         log.info(f"  ✓ Intel ARK")
+    #         return resultado, "intel_ark", None
 
-    # Capa 2: Intel ARK (solo Intel)
-    if "intel" in nombre_raw.lower():
-        resultado = buscar_intel_ark(nombre_raw)
-        if resultado:
-            log.info(f"  ✓ Intel ARK")
-            return resultado, "intel_ark"
-
-    # Capa 3: Groq LLM
-    resultado = buscar_con_groq(nombre_raw)
+    # Capa 3: Groq LLM (ejecutándose solo para diagnóstico)
+    resultado, error_groq = buscar_con_groq(nombre_raw)
     if resultado:
         log.info(f"  ✓ Groq ({GROQ_MODEL})")
-        return resultado, "groq"
+        return resultado, "groq", None
 
     log.warning(f"  ✗ Sin resultado para: {nombre_raw}")
-    return None, "fallido"
+    return None, "fallido", error_groq
 
 
 # ─── Base de datos PostgreSQL ──────────────────────────────────────────────────
@@ -478,7 +499,7 @@ def run(dry_run: bool = False, test: bool = False, solo_vacios: bool = True, lim
                 log.info(f"[{i}/{len(productos)}] Cache hit: {nombre}")
                 stats["cache"] += 1
             else:
-                descripcion_2, fuente = enriquecer_procesador(nombre)
+                descripcion_2, fuente, _ = enriquecer_procesador(nombre)
                 time.sleep(0.5)   # rate-limit cortés
 
                 if descripcion_2:
