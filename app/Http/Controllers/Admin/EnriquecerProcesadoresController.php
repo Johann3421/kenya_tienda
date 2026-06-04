@@ -184,6 +184,16 @@ class EnriquecerProcesadoresController extends Controller
         }
 
         $resultado = $this->ejecutarScript(['test']);
+        
+        // ADD DIAGNOSTIC INFO TO THE RESULT
+        $resultado['DEBUG_PHP_ENV'] = env('GROQ_API_KEY', 'env()_is_empty');
+        $resultado['DEBUG_PHP_GETENV'] = getenv('GROQ_API_KEY') ?: 'getenv()_is_empty';
+        $resultado['DEBUG_FILE_EXISTS'] = file_exists($this->baseDir . '/.env') ? 'yes' : 'no';
+        if (file_exists($this->baseDir . '/.env')) {
+            $resultado['DEBUG_FILE_CONTENT'] = substr(file_get_contents($this->baseDir . '/.env'), -200);
+        }
+        $resultado['DEBUG_PYTHON_GROQ'] = $this->getGroqApiKey() ?: 'getGroqApiKey_is_empty';
+
         $codigo    = ($resultado['ok'] ?? false) ? 200 : 500;
 
         return response()->json($resultado, $codigo);
