@@ -69,9 +69,16 @@ class EnriquecerProcesadoresController extends Controller
         $argStr  = implode(' ', array_map('escapeshellarg', $args));
         $timeout = (int) $this->timeoutSeconds;
 
-        // Recuperar la llave de la caché de configuración y enviarla al entorno del shell
-        $groqKey = escapeshellarg(config('services.groq.api_key', ''));
-        $cmd = "cd {$this->baseDir} && env GROQ_API_KEY={$groqKey} timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
+        // SOLUCIÓN NUCLEAR: escribir la key en /tmp/.groq_key antes de llamar a Python
+        // config('groq.api_key') tiene un fallback hardcodeado que funciona aunque Dokploy
+        // no inyecte la variable al proceso PHP-FPM.
+        $groqKey = config('groq.api_key', '');
+        if ($groqKey) {
+            file_put_contents('/tmp/.groq_key', $groqKey);
+            chmod('/tmp/.groq_key', 0600);
+        }
+        $groqKeyEsc = escapeshellarg($groqKey);
+        $cmd = "cd {$this->baseDir} && env GROQ_API_KEY={$groqKeyEsc} timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
 
         $output = shell_exec($cmd);
 
@@ -162,13 +169,11 @@ class EnriquecerProcesadoresController extends Controller
         $resultado = $this->ejecutarScript(['test']);
         
         // ADD DIAGNOSTIC INFO TO THE RESULT
-        $resultado['DEBUG_PHP_ENV'] = env('GROQ_API_KEY', 'env()_is_empty');
-        $resultado['DEBUG_PHP_CONFIG'] = config('services.groq.api_key', 'config()_is_empty');
+        $resultado['DEBUG_PHP_ENV']    = env('GROQ_API_KEY', 'env()_is_empty');
+        $resultado['DEBUG_PHP_CONFIG'] = config('groq.api_key', 'config(groq)_is_empty');
         $resultado['DEBUG_PHP_GETENV'] = getenv('GROQ_API_KEY') ?: 'getenv()_is_empty';
         $resultado['DEBUG_FILE_EXISTS'] = file_exists($this->baseDir . '/.env') ? 'yes' : 'no';
-        if (file_exists($this->baseDir . '/.env')) {
-            $resultado['DEBUG_FILE_CONTENT'] = substr(file_get_contents($this->baseDir . '/.env'), -200);
-        }
+        $resultado['DEBUG_TMP_KEY'] = file_exists('/tmp/.groq_key') ? substr(file_get_contents('/tmp/.groq_key'), 0, 8) . '...' : 'no_tmp_key';
 
         $codigo    = ($resultado['ok'] ?? false) ? 200 : 500;
 

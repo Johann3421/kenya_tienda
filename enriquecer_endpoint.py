@@ -36,6 +36,14 @@ sys.path.insert(0, str(BASE_DIR))
 from dotenv import load_dotenv
 load_dotenv(BASE_DIR / ".env", override=True)
 
+# NUCLEAR FALLBACK: leer key de /tmp/.groq_key si la variable de entorno está vacía
+_tmp_key = BASE_DIR.parent.parent / "tmp" / ".groq_key"  # fallback
+_tmp_key_2 = __import__('pathlib').Path('/tmp/.groq_key')
+if not os.getenv('GROQ_API_KEY') and _tmp_key_2.exists():
+    _k = _tmp_key_2.read_text(encoding='utf-8').strip()
+    if _k:
+        os.environ['GROQ_API_KEY'] = _k
+
 
 # ─── Respuesta JSON helpers ───────────────────────────────────────────────────
 

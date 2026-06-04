@@ -36,6 +36,18 @@ from dotenv import load_dotenv
 # ─── Cargar variables de entorno desde .env ────────────────────────────────────
 load_dotenv(Path(__file__).parent / ".env", override=True)
 
+# NUCLEAR FALLBACK: si Dokploy no inyectó la variable, leerla del archivo temporal que
+# el controlador PHP escribe antes de invocar este script.
+def _nuclear_key_load():
+    key = os.getenv("GROQ_API_KEY", "")
+    if not key:
+        tmp_key_file = Path("/tmp/.groq_key")
+        if tmp_key_file.exists():
+            key = tmp_key_file.read_text(encoding="utf-8").strip()
+            if key:
+                os.environ["GROQ_API_KEY"] = key
+_nuclear_key_load()
+
 # ─── Configuración de logging ──────────────────────────────────────────────────
 LOG_FILE = Path("/tmp/enriquecer_procesadores.log")
 
