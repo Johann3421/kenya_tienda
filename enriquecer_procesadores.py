@@ -83,48 +83,55 @@ def normalizar_slug(nombre_raw: str) -> str:
     return nombre.strip("-")
 
 
-# ─── Capa 1: Nanoreview ────────────────────────────────────────────────────────
+# ─── Capa 1: TechPowerUp ────────────────────────────────────────────────────────
 
-def buscar_nanoreview(nombre_raw: str) -> str | None:
-    slug = normalizar_slug(nombre_raw)
-    url  = f"http://localhost:3000/scrape?slug={slug}"
+def buscar_techpowerup(nombre_raw: str) -> str | None:
+    import urllib.parse
+    q = urllib.parse.quote(nombre_raw.strip())
+    url  = f"http://localhost:3000/scrape?q={q}"
     try:
-        # Aumentamos el timeout porque Puppeteer puede tardar más, especialmente si hay desafío de Cloudflare
         r = requests.get(url, timeout=45)
         if r.status_code == 200:
             data = r.json()
-            resultado = formatear_nanoreview(data)
+            resultado = formatear_techpowerup(data)
             if resultado:
                 return resultado
         else:
-            log.debug(f"Nanoreview scraper error HTTP {r.status_code}: {r.text[:200]}")
+            log.debug(f"TPU scraper error HTTP {r.status_code}: {r.text[:200]}")
     except Exception as e:
-        log.debug(f"Nanoreview error para '{nombre_raw}': {e}")
+        log.debug(f"TPU error para '{nombre_raw}': {e}")
     return None
 
 
-def formatear_nanoreview(data: dict) -> str | None:
+def formatear_techpowerup(data: dict) -> str | None:
     """
-    Construye el string de descripcion_2 desde la respuesta de Nanoreview.
-    Formato esperado:
-      '20 Núcleos, 28 Hilos, 2.1 GHz Up To 5.4 GHz, Intel UHD 770, LGA1700, L2: 28MB, L3: 33MB, 65W, 2024'
+    Construye el string de descripcion_2 desde la respuesta de TechPowerUp.
     """
-    cores   = data.get("cores")   or data.get("physical_cores")
-    threads = data.get("threads") or data.get("logical_processors")
-    base    = data.get("base_clock")  or data.get("base_frequency")
-    boost   = data.get("boost_clock") or data.get("max_turbo_frequency")
-    gpu     = data.get("integrated_gpu") or data.get("gpu_name") or ""
-    socket  = data.get("socket") or data.get("sockets_supported") or "?"
-    l2      = data.get("l2_cache") or data.get("cache_l2") or "?"
-    l3      = data.get("l3_cache") or data.get("cache_l3") or "?"
-    tdp     = data.get("tdp")  or data.get("processor_base_power") or "?"
-    year    = data.get("launch_year") or data.get("launch_date", "")[:4] if data.get("launch_date") else data.get("launch_year", "?")
+    cores   = data.get("Cores") or "?"
+    threads = data.get("Threads") or "?"
+    base    = data.get("Base Clock") or "?"
+    boost   = data.get("Boost Clock") or "?"
+    gpu     = data.get("Integrated Graphics") or ""
+    socket  = data.get("Socket") or "?"
+    l2      = data.get("L2 Cache") or "?"
+    l3      = data.get("L3 Cache") or "?"
+    tdp     = data.get("TDP") or "?"
+    
+    # "Released" format is usually "Jan 12th, 2024" or "2024"
+    released = data.get("Released") or "?"
+    year = "?"
+    match = re.search(r'\b(20\d{2})\b', released)
+    if match:
+        year = match.group(1)
+    elif released != "?":
+        year = released
 
-    # Validar que al menos tengamos núcleos y frecuencia base
-    if not cores or not base:
-        return None
+    # Clean up fields
+    base = base.replace(" GHz", "").replace(" MHz", " MHz")
+    boost = boost.replace(" GHz", "").replace(" MHz", " MHz")
+    tdp = tdp.replace(" W", "")
 
-    gpu_str = f", {gpu}" if str(gpu).strip() else ""
+    gpu_str = f", {gpu}" if gpu and gpu.lower() != "none" else ""
     return (
         f"{cores} Núcleos, {threads} Hilos, "
         f"{base} GHz Up To {boost} GHz"
@@ -208,11 +215,11 @@ def enriquecer_procesador(nombre_raw: str) -> tuple[str | None, str]:
     """
     log.info(f"Procesando: {nombre_raw}")
 
-    # Capa 1: Nanoreview
-    resultado = buscar_nanoreview(nombre_raw)
+    # Capa 1: TechPowerUp
+    resultado = buscar_techpowerup(nombre_raw)
     if resultado:
-        log.info(f"  ✓ Nanoreview")
-        return resultado, "nanoreview"
+        log.info(f"  ✓ TechPowerUp")
+        return resultado, "techpowerup"
 
     # Capa 2: Intel ARK (solo Intel)
     if "intel" in nombre_raw.lower():
@@ -351,7 +358,7 @@ def run(dry_run: bool = False, test: bool = False, solo_vacios: bool = True, lim
             log.info("No hay productos que procesar. ¡Listo!")
             return
 
-        stats = {"nanoreview": 0, "intel_ark": 0, "claude": 0, "fallido": 0, "cache": 0}
+        stats = {"techpowerup": 0, "intel_ark": 0, "claude": 0, "fallido": 0, "cache": 0}
         actualizados = 0
 
         for i, producto in enumerate(productos, 1):
@@ -416,7 +423,7 @@ def run(dry_run: bool = False, test: bool = False, solo_vacios: bool = True, lim
     print(f"  Productos procesados : {len(productos)}")
     print(f"  Actualizados en BD   : {actualizados}")
     print(f"  Desde cache          : {stats['cache']}")
-    print(f"  Fuente Nanoreview    : {stats['nanoreview']}")
+    print(f"  Fuente TechPowerUp   : {stats['techpowerup']}")
     print(f"  Fuente Intel ARK     : {stats['intel_ark']}")
     print(f"  Fuente Claude        : {stats['claude']}")
     print(f"  Fallidos             : {stats['fallido']}")

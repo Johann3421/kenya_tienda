@@ -224,13 +224,9 @@ class EnriquecerProcesadoresController extends Controller
         $resultados = [];
 
         foreach ($procesadores as $nombre) {
-            // Reproducir exactamente la lógica de normalización del script
-            $slug = strtolower(trim($nombre));
-            $slug = preg_replace('/\s+/', '-', $slug);
-            $slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
-
             // Usar el microservicio local de Node.js (Puppeteer Stealth)
-            $url = "http://localhost:3000/scrape?slug={$slug}";
+            $q = urlencode(trim($nombre));
+            $url = "http://localhost:3000/scrape?q={$q}";
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -243,7 +239,6 @@ class EnriquecerProcesadoresController extends Controller
 
             $resultados[] = [
                 'procesador' => $nombre,
-                'slug_generado' => $slug,
                 'url_consultada' => $url,
                 'http_code' => $httpCode,
                 'curl_error' => $curlError ?: null,
