@@ -101,10 +101,13 @@ class EnriquecerProcesadoresController extends Controller
     {
         $offset = 0;
         while (($pos = strpos($output, '{', $offset)) !== false) {
-            $candidato = substr($output, $pos);
-            $decoded = json_decode($candidato, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                return $decoded;
+            $lastBrace = strrpos($output, '}');
+            if ($lastBrace > $pos) {
+                $candidato = substr($output, $pos, $lastBrace - $pos + 1);
+                $decoded = json_decode($candidato, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return $decoded;
+                }
             }
             $offset = $pos + 1;
         }
