@@ -168,7 +168,7 @@ class EnriquecerProcesadoresController extends Controller
         $resultado['DEBUG_FILE_EXISTS'] = file_exists($this->baseDir . '/.env') ? 'yes' : 'no';
         if (file_exists($this->baseDir . '/.env')) {
             $resultado['DEBUG_FILE_CONTENT'] = substr(file_get_contents($this->baseDir . '/.env'), -200);
-
+        }
 
         $codigo    = ($resultado['ok'] ?? false) ? 200 : 500;
 
