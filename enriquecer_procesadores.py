@@ -351,20 +351,20 @@ def enriquecer_procesador(nombre_raw: str) -> tuple[str | None, str, str | None]
     """
     log.info(f"Procesando: {nombre_raw}")
 
-    # DIAGNÓSTICO: Capas 1 y 2 desactivadas temporalmente para aislar Groq
-    # TODO: Reactivar cuando Groq esté confirmado.
-    # resultado = buscar_techpowerup(nombre_raw)
-    # if resultado:
-    #     log.info(f"  ✓ TechPowerUp")
-    #     return resultado, "techpowerup", None
-    #
-    # if "intel" in nombre_raw.lower():
-    #     resultado = buscar_intel_ark(nombre_raw)
-    #     if resultado:
-    #         log.info(f"  ✓ Intel ARK")
-    #         return resultado, "intel_ark", None
+    # Capa 1: TechPowerUp (Puppeteer + DuckDuckGo, timeout 4s)
+    resultado = buscar_techpowerup(nombre_raw)
+    if resultado:
+        log.info(f"  ✓ TechPowerUp")
+        return resultado, "techpowerup", None
 
-    # Capa 3: Groq LLM (ejecutándose solo para diagnóstico)
+    # Capa 2: Intel ARK (solo Intel)
+    if "intel" in nombre_raw.lower():
+        resultado = buscar_intel_ark(nombre_raw)
+        if resultado:
+            log.info(f"  ✓ Intel ARK")
+            return resultado, "intel_ark", None
+
+    # Capa 3: Groq LLM (fallback definitivo)
     resultado, error_groq = buscar_con_groq(nombre_raw)
     if resultado:
         log.info(f"  ✓ Groq ({GROQ_MODEL})")
