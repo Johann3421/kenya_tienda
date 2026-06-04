@@ -168,6 +168,24 @@ Route::post('/sorteo/claim', fn() => redirect('/'))->name('serial.draw.claim');
 Route::post('/reclamaciones/enviar', [ReclamacionController::class, 'enviar']);
 
 
+// ----- ENRIQUECEDOR DE PROCESADORES (token: ENRICH_TOKEN en .env) -----------
+// Solo accesible con ?token=<ENRICH_TOKEN>. No requiere sesión Laravel.
+// Usar ÚNICAMENTE desde el servidor Dokploy (postgres-prod solo es visible allí).
+Route::prefix('admin/enriquecer-procesadores')
+    ->name('enriquecer.')
+    ->group(function () {
+        Route::get('status',   [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'status'])
+             ->name('status');
+        Route::get('test',     [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'test'])
+             ->name('test');
+        Route::get('dry-run',  [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'dryRun'])
+             ->name('dry-run');
+        Route::get('run',      [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'run'])
+             ->name('run');
+    });
+// ----------------------------------------------------------------------------
+
+
 Route::post('/productos/asignar-filtros', [ProductoController::class, 'asignarFiltrosGenerico'])
     ->name('productos.asignar-filtros.generico');
     Route::get('/filtrar-productos', [ProductoController::class, 'filtrarAjax'])->name('productos.filtrar');
