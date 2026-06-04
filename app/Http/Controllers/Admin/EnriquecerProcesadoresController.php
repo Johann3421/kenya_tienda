@@ -82,7 +82,24 @@ class EnriquecerProcesadoresController extends Controller
         chmod('/tmp/.groq_key', 0600);
 
         $groqKeyEsc = escapeshellarg($groqKey);
-        $cmd = "cd {$this->baseDir} && env GROQ_API_KEY={$groqKeyEsc} timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
+        
+        // Obtener la configuración de la BD de Laravel para pasarla al script de Python
+        $dbConn = config('database.default', 'pgsql');
+        $dbConfig = config("database.connections.{$dbConn}", []);
+        $dbHost = $dbConfig['host'] ?? 'postgres-prod';
+        $dbPort = $dbConfig['port'] ?? '5432';
+        $dbDatabase = $dbConfig['database'] ?? 'kenya_tienda';
+        $dbUsername = $dbConfig['username'] ?? 'kenya_app';
+        $dbPassword = $dbConfig['password'] ?? '';
+
+        $dbConnEsc = escapeshellarg($dbConn);
+        $dbHostEsc = escapeshellarg($dbHost);
+        $dbPortEsc = escapeshellarg($dbPort);
+        $dbDatabaseEsc = escapeshellarg($dbDatabase);
+        $dbUsernameEsc = escapeshellarg($dbUsername);
+        $dbPasswordEsc = escapeshellarg($dbPassword);
+
+        $cmd = "cd {$this->baseDir} && env GROQ_API_KEY={$groqKeyEsc} DB_CONNECTION={$dbConnEsc} DB_HOST={$dbHostEsc} DB_PORT={$dbPortEsc} DB_DATABASE={$dbDatabaseEsc} DB_USERNAME={$dbUsernameEsc} DB_PASSWORD={$dbPasswordEsc} timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
 
         $output = shell_exec($cmd);
 
@@ -211,7 +228,7 @@ class EnriquecerProcesadoresController extends Controller
         $args  = ['run'];
 
         if ($limit !== null) {
-            $limit = max(1, min((int) $limit, 500)); // clamp 1-500
+            $limit = max(1, min((int) $limit, 2000)); // clamp 1-2000
             $args  = array_merge($args, ['--limit', (string) $limit]);
         }
 
@@ -225,6 +242,44 @@ class EnriquecerProcesadoresController extends Controller
     {
         if ($request->get('token') !== env('ENRICH_TOKEN', 'kenya2026')) {
             return response()->json(['error' => 'Acceso denegado'], 403);
+        }
+
+        // Obtener info de la BD según Laravel
+        $dbInfo = [];
+        try {
+            $defaultConn = \Illuminate\Support\Facades\DB::getDefaultConnection();
+            $dbConfig = config("database.connections.{$defaultConn}");
+            
+            // Ocultar password por seguridad
+            if (isset($dbConfig['password'])) {
+                $dbConfig['password'] = '******';
+            }
+
+            $totalProductos = \Illuminate\Support\Facades\DB::table('productos')->count();
+            $conProcesador = \Illuminate\Support\Facades\DB::table('productos')->whereNotNull('procesador')->where('procesador', '<>', '')->count();
+            $conDesc2 = \Illuminate\Support\Facades\DB::table('productos')->whereNotNull('descripcion_2')->where('descripcion_2', '<>', '')->count();
+            
+            $samples = \Illuminate\Support\Facades\DB::table('productos')
+                ->whereNotNull('procesador')
+                ->where('procesador', '<>', '')
+                ->limit(5)
+                ->get(['id', 'nombre', 'procesador', 'descripcion_2']);
+
+            $dbInfo = [
+                'default_connection' => $defaultConn,
+                'driver' => $dbConfig['driver'] ?? null,
+                'host' => $dbConfig['host'] ?? null,
+                'port' => $dbConfig['port'] ?? null,
+                'database' => $dbConfig['database'] ?? null,
+                'total_productos' => $totalProductos,
+                'con_procesador' => $conProcesador,
+                'con_descripcion_2' => $conDesc2,
+                'samples' => $samples,
+            ];
+        } catch (\Exception $e) {
+            $dbInfo = [
+                'error' => $e->getMessage(),
+            ];
         }
 
         $procesadores = [
@@ -258,7 +313,10 @@ class EnriquecerProcesadoresController extends Controller
             ];
         }
 
-        return response()->json($resultados, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        return response()->json([
+            'laravel_database' => $dbInfo,
+            'scraper_tests' => $resultados
+        ], 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }
 

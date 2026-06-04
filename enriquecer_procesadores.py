@@ -377,25 +377,63 @@ def enriquecer_procesador(nombre_raw: str) -> tuple[str | None, str, str | None]
 # ─── Base de datos PostgreSQL ──────────────────────────────────────────────────
 
 def conectar_db():
-    """Abre una conexión psycopg2 a PostgreSQL usando las vars de entorno."""
-    try:
-        import psycopg2
-    except ImportError:
-        log.error("psycopg2 no instalado. Ejecuta: pip install psycopg2-binary")
-        sys.exit(1)
-
-    host     = os.getenv("DB_HOST", "postgres-prod")   # nombre del contenedor en Dokploy
-    port     = int(os.getenv("DB_PORT", "5432"))
+    """Abre una conexión a la BD según la configuración (PostgreSQL o MySQL)."""
+    db_conn  = os.getenv("DB_CONNECTION", "pgsql").lower()
+    host     = os.getenv("DB_HOST", "postgres-prod")
+    port_str = os.getenv("DB_PORT")
     dbname   = os.getenv("DB_DATABASE", "kenya_tienda")
-    user     = os.getenv("DB_USERNAME", "kenya_app")   # DB_USERNAME, no DB_USER
+    user     = os.getenv("DB_USERNAME", "kenya_app")
     password = os.getenv("DB_PASSWORD", "")
 
-    conn = psycopg2.connect(
-        host=host, port=port, dbname=dbname, user=user, password=password
-    )
-    conn.autocommit = False
-    log.info(f"Conectado a PostgreSQL: {user}@{host}:{port}/{dbname}")
-    return conn
+    if db_conn == "mysql":
+        default_port = 3306
+        port = int(port_str) if port_str else default_port
+        
+        # Intentar importar algún conector MySQL
+        try:
+            import pymysql
+            pymysql.install_as_MySQLdb()
+        except ImportError:
+            pass
+
+        try:
+            import MySQLdb
+            conn = MySQLdb.connect(
+                host=host, port=port, db=dbname, user=user, passwd=password, charset='utf8mb4'
+            )
+            # En MySQLdb / PyMySQL, autocommit se desactiva por defecto o se configura así:
+            conn.autocommit(False)
+            log.info(f"Conectado a MySQL: {user}@{host}:{port}/{dbname}")
+            return conn
+        except ImportError:
+            try:
+                import mysql.connector
+                conn = mysql.connector.connect(
+                    host=host, port=port, database=dbname, user=user, password=password, charset='utf8'
+                )
+                conn.autocommit = False
+                log.info(f"Conectado a MySQL (mysql-connector): {user}@{host}:{port}/{dbname}")
+                return conn
+            except ImportError:
+                log.error("Para usar MySQL necesitas instalar pymysql, mysqlclient o mysql-connector-python. Ejecuta: pip install pymysql")
+                sys.exit(1)
+    else:
+        # Default: pgsql / PostgreSQL
+        try:
+            import psycopg2
+        except ImportError:
+            log.error("psycopg2 no instalado. Ejecuta: pip install psycopg2-binary")
+            sys.exit(1)
+
+        default_port = 5432
+        port = int(port_str) if port_str else default_port
+
+        conn = psycopg2.connect(
+            host=host, port=port, dbname=dbname, user=user, password=password
+        )
+        conn.autocommit = False
+        log.info(f"Conectado a PostgreSQL: {user}@{host}:{port}/{dbname}")
+        return conn
 
 
 def obtener_productos(conn, solo_vacios: bool = True, limit: int | None = None) -> list[dict]:
