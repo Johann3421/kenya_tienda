@@ -56,6 +56,30 @@ class EnriquecerProcesadoresController extends Controller
     // Ejecutor del script Python
     // ─────────────────────────────────────────────────────────────────────────
 
+    private function getGroqApiKey(): string
+    {
+        // 1. Intentar variables de entorno nativas (bypass Laravel cache)
+        $key = getenv('GROQ_API_KEY');
+        if ($key) return $key;
+
+        if (!empty($_SERVER['GROQ_API_KEY'])) return $_SERVER['GROQ_API_KEY'];
+        if (!empty($_ENV['GROQ_API_KEY'])) return $_ENV['GROQ_API_KEY'];
+
+        // 2. Leer físicamente el archivo .env (Dokploy a veces no lo exporta a shell_exec)
+        $envFile = $this->baseDir . '/.env';
+        if (file_exists($envFile)) {
+            $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), 'GROQ_API_KEY=') === 0) {
+                    $parts = explode('=', $line, 2);
+                    return trim($parts[1] ?? '', " \t\n\r\0\x0B\"'");
+                }
+            }
+        }
+
+        return '';
+    }
+
     /**
      * Ejecuta enriquecer_endpoint.py con los argumentos dados
      * y retorna el JSON parseado.
@@ -69,8 +93,9 @@ class EnriquecerProcesadoresController extends Controller
         $argStr  = implode(' ', array_map('escapeshellarg', $args));
         $timeout = (int) $this->timeoutSeconds;
 
-        // Cambiar al directorio base
-        $cmd = "cd {$this->baseDir} && timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
+        // Cambiar al directorio base y pasar variables de entorno explícitamente a Python
+        $groqKey = escapeshellarg($this->getGroqApiKey());
+        $cmd = "cd {$this->baseDir} && env GROQ_API_KEY={$groqKey} timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
 
         $output = shell_exec($cmd);
 
