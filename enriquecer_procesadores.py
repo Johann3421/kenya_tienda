@@ -5,9 +5,9 @@ enriquecer_procesadores.py
 Rellena el campo `descripcion_2` de la tabla `productos` con las specs
 técnicas del procesador, usando tres fuentes en cascada:
 
-  1. Nanoreview API  → https://nanoreview.net/api/cpu/get?slug={slug}
-  2. Intel ARK API   → solo para procesadores Intel
-  3. Claude (fallback final)
+  1. TechPowerUp (Puppeteer via Node.js microservice)
+  2. Intel ARK  → solo para procesadores Intel
+  3. Groq LLM   → llama-3.3-70b-versatile, con manejo de rate limits (429)
 
 Uso:
     python enriquecer_procesadores.py                  # procesa todos
@@ -198,20 +198,123 @@ def formatear_desde_ark(producto, nombre_raw):
             f"{gpu_str}, {socket}, L2: {l2}, L3: {l3}, {tdp}W, {year}")
 
 
-# ─── Capa 3: Claude (fallback) ────────────────────────────────────────────────
+# ─── Capa 3: Groq LLM (fallback) ─────────────────────────────────────────────
 
-def buscar_con_claude(nombre_raw: str) -> str | None:
-    # Claude desactivado intencionalmente.
-    # Las fuentes oficiales (Nanoreview + Intel ARK) deben funcionar primero.
-    log.warning(f"Todas las fuentes oficiales fallaron para: {nombre_raw}")
+GROQ_API_URL   = "https://api.groq.com/openai/v1/chat/completions"
+GROQ_MODEL     = "llama-3.3-70b-versatile"
+GROQ_MODEL_FB  = "mixtral-8x7b-32768"   # fallback si el primero falla
+GROQ_SLEEP     = 3                        # segundos entre cada petición (evita 429)
+GROQ_RETRY_WAIT = 65                      # segundos a esperar si hay 429
+
+SYSTEM_PROMPT = (
+    "Eres un experto en hardware de computadoras. "
+    "Te daré el nombre de un procesador (CPU). "
+    "Debes devolver ÚNICAMENTE un objeto JSON válido con estas claves: "
+    '"nucleos" (int), "hilos" (int), "base_clock" (string, incluir GHz), '
+    '"boost_clock" (string, incluir GHz), "l2_cache" (string, incluir MB/KB), '
+    '"l3_cache" (string, incluir MB/KB), "tdp" (string, incluir W), '
+    '"socket" (string), "gpu_integrada" (string o null), "year" (int o null). '
+    "Si no conoces el dato exacto, pon null. No incluyas texto fuera del JSON."
+)
+
+
+def buscar_con_groq(nombre_raw: str, modelo: str = GROQ_MODEL) -> str | None:
+    """
+    Llama a la API de Groq con el nombre del procesador y devuelve descripcion_2.
+    Maneja rate limit 429 con pausa larga y reintento automático.
+    """
+    api_key = os.getenv("GROQ_API_KEY", "")
+    if not api_key:
+        log.warning("GROQ_API_KEY no configurada — saltando capa Groq.")
+        return None
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type":  "application/json",
+    }
+    payload = {
+        "model": modelo,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user",   "content": nombre_raw},
+        ],
+        "response_format": {"type": "json_object"},
+        "temperature": 0,
+        "max_tokens":   256,
+    }
+
+    for intento in range(3):
+        try:
+            r = requests.post(GROQ_API_URL, headers=headers, json=payload, timeout=30)
+
+            if r.status_code == 429:
+                log.warning(f"Groq 429 (rate limit). Esperando {GROQ_RETRY_WAIT}s antes de reintentar...")
+                time.sleep(GROQ_RETRY_WAIT)
+                continue
+
+            if r.status_code != 200:
+                log.debug(f"Groq HTTP {r.status_code}: {r.text[:200]}")
+                # Intentar con modelo fallback
+                if modelo == GROQ_MODEL:
+                    return buscar_con_groq(nombre_raw, GROQ_MODEL_FB)
+                return None
+
+            content = r.json()["choices"][0]["message"]["content"]
+            data = json.loads(content)
+            return formatear_groq(data)
+
+        except Exception as e:
+            log.debug(f"Groq error (intento {intento+1}): {e}")
+            time.sleep(2)
+
     return None
+
+
+def formatear_groq(data: dict) -> str | None:
+    """
+    Convierte la respuesta de Groq al formato descripcion_2.
+    Ejemplo: '8 Núcleos, 16 Hilos, 4.2 GHz Up To 5.1 GHz, Intel UHD 770, AM5, L2: 8MB, L3: 16MB, 65W, 2023'
+    """
+    nucleos = data.get("nucleos")
+    hilos   = data.get("hilos")
+    base    = data.get("base_clock") or "?"
+    boost   = data.get("boost_clock") or "?"
+    l2      = data.get("l2_cache") or "?"
+    l3      = data.get("l3_cache") or "?"
+    tdp     = data.get("tdp") or "?"
+    socket  = data.get("socket") or "?"
+    gpu     = data.get("gpu_integrada") or ""
+    year    = data.get("year") or "?"
+
+    # Validar datos mínimos
+    if not nucleos or not base or base == "?":
+        return None
+
+    # Limpiar GHz redundante si ya viene incluido
+    def limpiar_clock(v):
+        v = str(v).replace(" GHz", "").replace(" ghz", "").strip()
+        return f"{v} GHz"
+
+    # Limpiar W redundante del TDP
+    tdp_val = str(tdp).replace("W", "").replace(" ", "").strip()
+
+    gpu_str = f", {gpu}" if gpu and str(gpu).lower() not in ("", "none", "null", "no") else ""
+
+    return (
+        f"{nucleos} Núcleos, {hilos} Hilos, "
+        f"{limpiar_clock(base)} Up To {limpiar_clock(boost)}"
+        f"{gpu_str}, "
+        f"{socket}, "
+        f"L2: {l2}, L3: {l3}, "
+        f"{tdp_val}W, {year}"
+    )
 
 
 # ─── Orquestador ──────────────────────────────────────────────────────────────
 
 def enriquecer_procesador(nombre_raw: str) -> tuple[str | None, str]:
     """
-    Retorna (descripcion_2, fuente) donde fuente ∈ {'nanoreview', 'intel_ark', 'claude', 'fallido'}
+    Retorna (descripcion_2, fuente) donde fuente ∈ {'techpowerup', 'intel_ark', 'groq', 'fallido'}
     """
     log.info(f"Procesando: {nombre_raw}")
 
@@ -228,11 +331,11 @@ def enriquecer_procesador(nombre_raw: str) -> tuple[str | None, str]:
             log.info(f"  ✓ Intel ARK")
             return resultado, "intel_ark"
 
-    # Capa 3: Claude
-    resultado = buscar_con_claude(nombre_raw)
+    # Capa 3: Groq LLM
+    resultado = buscar_con_groq(nombre_raw)
     if resultado:
-        log.info(f"  ✓ Claude (fallback)")
-        return resultado, "claude"
+        log.info(f"  ✓ Groq ({GROQ_MODEL})")
+        return resultado, "groq"
 
     log.warning(f"  ✗ Sin resultado para: {nombre_raw}")
     return None, "fallido"
@@ -358,7 +461,7 @@ def run(dry_run: bool = False, test: bool = False, solo_vacios: bool = True, lim
             log.info("No hay productos que procesar. ¡Listo!")
             return
 
-        stats = {"techpowerup": 0, "intel_ark": 0, "claude": 0, "fallido": 0, "cache": 0}
+        stats = {"techpowerup": 0, "intel_ark": 0, "groq": 0, "fallido": 0, "cache": 0}
         actualizados = 0
 
         for i, producto in enumerate(productos, 1):
@@ -386,6 +489,10 @@ def run(dry_run: bool = False, test: bool = False, solo_vacios: bool = True, lim
                     stats["fallido"] += 1
                     log.warning(f"Sin datos para: {nombre}")
                     continue
+
+                # Sleep cortés: mayor si usamos Groq para respetar el rate limit
+                sleep_s = GROQ_SLEEP if fuente == "groq" else 0.5
+                time.sleep(sleep_s)
 
             # ── Actualizar BD (si hay id real) ──
             if pid is not None and descripcion_2:
