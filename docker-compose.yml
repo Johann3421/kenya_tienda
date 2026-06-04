@@ -39,8 +39,9 @@ services:
       POSTGRES_DB: ${DB_DATABASE:-kenya_tienda}
       POSTGRES_USER: ${DB_USERNAME:-kenya_app}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-mypassword}
-    ports:
-      - "5432:5432"
+    # NO exponer públicamente — la app se conecta via red interna Docker
+    # ports:
+    #   - "5432:5432"
     volumes:
       - db_data_v2:/var/lib/postgresql/data
     healthcheck:
