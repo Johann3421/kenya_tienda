@@ -70,5 +70,15 @@ RUN pip3 install --break-system-packages \
         python-dotenv
 # ─────────────────────────────────────────────────────────────────────────────
 
+# ── Node.js & Chromium para Scraper de Nanoreview ────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends curl gnupg \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs chromium \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY scraper /var/www/scraper
+RUN cd /var/www/scraper && npm install
+# ─────────────────────────────────────────────────────────────────────────────
+
 ENTRYPOINT ["kenya-entrypoint"]
 CMD ["apache2-foreground"]

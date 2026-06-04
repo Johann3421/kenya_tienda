@@ -28,4 +28,11 @@ fi
 # Iniciar el daemon cron para el scheduler de Laravel
 service cron start || cron &
 
+# Iniciar microservicio Node.js (Scraper de Nanoreview)
+if [ -d "/var/www/scraper" ]; then
+    echo "Iniciando scraper microservice en segundo plano..."
+    cd /var/www/scraper && npm start &
+    cd /var/www/html
+fi
+
 exec "$@"

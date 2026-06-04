@@ -87,14 +87,17 @@ def normalizar_slug(nombre_raw: str) -> str:
 
 def buscar_nanoreview(nombre_raw: str) -> str | None:
     slug = normalizar_slug(nombre_raw)
-    url  = f"https://nanoreview.net/api/cpu/get?slug={slug}"
+    url  = f"http://localhost:3000/scrape?slug={slug}"
     try:
-        r = requests.get(url, timeout=10, headers={"User-Agent": "KenyaEnricher/1.0"})
+        # Aumentamos el timeout porque Puppeteer puede tardar más, especialmente si hay desafío de Cloudflare
+        r = requests.get(url, timeout=45)
         if r.status_code == 200:
             data = r.json()
             resultado = formatear_nanoreview(data)
             if resultado:
                 return resultado
+        else:
+            log.debug(f"Nanoreview scraper error HTTP {r.status_code}: {r.text[:200]}")
     except Exception as e:
         log.debug(f"Nanoreview error para '{nombre_raw}': {e}")
     return None

@@ -229,13 +229,13 @@ class EnriquecerProcesadoresController extends Controller
             $slug = preg_replace('/\s+/', '-', $slug);
             $slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
 
-            $url = "https://nanoreview.net/api/cpu/get?slug={$slug}";
+            // Usar el microservicio local de Node.js (Puppeteer Stealth)
+            $url = "http://localhost:3000/scrape?slug={$slug}";
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+            curl_setopt($ch, CURLOPT_TIMEOUT, 45); // Puppeteer puede tardar más
             $response = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $curlError = curl_error($ch);
