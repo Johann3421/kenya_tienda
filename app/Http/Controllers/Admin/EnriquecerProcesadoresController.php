@@ -69,9 +69,8 @@ class EnriquecerProcesadoresController extends Controller
         $argStr  = implode(' ', array_map('escapeshellarg', $args));
         $timeout = (int) $this->timeoutSeconds;
 
-        // Cambiar al directorio base y pasar variables de entorno explícitamente a Python
-        $groqKey = escapeshellarg(env('GROQ_API_KEY', ''));
-        $cmd = "cd {$this->baseDir} && env GROQ_API_KEY={$groqKey} timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
+        // Cambiar al directorio base
+        $cmd = "cd {$this->baseDir} && timeout {$timeout} {$python} {$script} {$argStr} 2>&1";
 
         $output = shell_exec($cmd);
 

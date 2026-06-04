@@ -34,7 +34,7 @@ import requests
 from dotenv import load_dotenv
 
 # ─── Cargar variables de entorno desde .env ────────────────────────────────────
-load_dotenv(Path(__file__).parent / ".env")
+load_dotenv(Path(__file__).parent / ".env", override=True)
 
 # ─── Configuración de logging ──────────────────────────────────────────────────
 LOG_FILE = Path("/tmp/enriquecer_procesadores.log")
