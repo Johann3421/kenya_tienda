@@ -13,6 +13,15 @@ fi
 
 chown -R www-data:www-data storage bootstrap/cache || true
 
+# Persist GROQ_API_KEY para el enriquecedor de procesadores
+# (el controlador PHP y el script Python lo leen de /tmp/.groq_key
+#  para no depender del config:cache de Laravel)
+if [ -n "${GROQ_API_KEY:-}" ]; then
+    printf '%s' "$GROQ_API_KEY" > /tmp/.groq_key
+    chmod 600 /tmp/.groq_key
+    chown www-data:www-data /tmp/.groq_key
+fi
+
 php artisan storage:link || true
 
 if [ "${APP_ENV:-production}" = "production" ]; then
