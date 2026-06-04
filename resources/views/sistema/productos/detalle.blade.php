@@ -318,7 +318,15 @@
                                             <table style="width:100%;border-collapse:collapse;">
                                                 <tr>
                                                     <td style="padding:0;vertical-align:top;width:50%;">: {{ $espec->descripcion }}</td>
-                                                    <td style="padding:0 0 0 14px;vertical-align:top;width:50%;"><span style="font-size:0.85em;color:#999;font-style:italic;">Descripción 2: Vacío</span></td>
+                                                    <td style="padding:0 0 0 14px;vertical-align:top;width:50%;">
+                                                        <span style="font-size:0.85em;color:#999;font-style:italic;">
+                                                            @if(strtolower($espec->campo) === 'procesador')
+                                                                Descripción 2: {{ $producto->descripcion_2 ?: 'Vacío' }}
+                                                            @else
+                                                                Descripción 2: Vacío
+                                                            @endif
+                                                        </span>
+                                                    </td>
                                                 </tr>
                                             </table>
                                             @else
