@@ -213,4 +213,50 @@ class EnriquecerProcesadoresController extends Controller
 
         return response()->json($resultado, $codigo);
     }
+
+    public function diagnostico(Request $request)
+    {
+        if ($request->get('token') !== env('ENRICH_TOKEN', 'kenya2026')) {
+            return response()->json(['error' => 'Acceso denegado'], 403);
+        }
+
+        $procesadores = [
+            'INTEL CORE I7-14700',
+            'AMD RYZEN 7 8700G',
+            'AMD RYZEN 5 5600X',
+        ];
+
+        $resultados = [];
+
+        foreach ($procesadores as $nombre) {
+            // Reproducir exactamente la lógica de normalización del script
+            $slug = strtolower(trim($nombre));
+            $slug = preg_replace('/\s+/', '-', $slug);
+            $slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
+
+            $url = "https://nanoreview.net/api/cpu/get?slug={$slug}";
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            $resultados[] = [
+                'procesador' => $nombre,
+                'slug_generado' => $slug,
+                'url_consultada' => $url,
+                'http_code' => $httpCode,
+                'curl_error' => $curlError ?: null,
+                'respuesta_cruda' => $response ? substr($response, 0, 500) : null,
+            ];
+        }
+
+        return response()->json($resultados, 200, [], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
 }
+

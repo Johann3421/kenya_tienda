@@ -182,6 +182,8 @@ Route::prefix('admin/enriquecer-procesadores')
              ->name('dry-run');
         Route::get('run',      [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'run'])
              ->name('run');
+        Route::get('diagnostico', [\App\Http\Controllers\Admin\EnriquecerProcesadoresController::class, 'diagnostico'])
+             ->name('diagnostico');
     });
 // ----------------------------------------------------------------------------
 
