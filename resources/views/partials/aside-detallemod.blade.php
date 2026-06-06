@@ -88,8 +88,35 @@
             'mouse'            => 'Mouse',
         ];
 
+        /**
+         * Normaliza el nombre de una tarjeta de video extrayendo su forma canónica:
+         * conserva marca + modelo + VRAM y elimina sufijos de marketing como
+         * OC, Gaming, Edition, Windforce, TUF, etc.
+         *
+         * Ejemplos:
+         *   "NVIDIA RTX 4060 8GB OC Edition" → "NVIDIA RTX 4060 8GB"
+         *   "AMD RX 6600 XT 8GB Gaming X"    → "AMD RX 6600 XT 8GB"
+         *   "Intel UHD 770"                  → "Intel UHD 770"  (sin cambio)
+         */
+        $normalizarTV = function(string $v): string {
+            $v = trim($v);
+            // Caso 1: si tiene VRAM (ej. "8GB", "12 GB") conservar solo hasta ahí
+            if (preg_match('/^(.+?\d+\s*GB)/i', $v, $m)) {
+                return trim($m[1]);
+            }
+            // Caso 2: sin VRAM → eliminar sufijos de marketing conocidos
+            $v = preg_replace(
+                '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
+                . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
+                . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
+                '',
+                $v
+            );
+            return trim($v);
+        };
+
         foreach ($specFields as $col => $label) {
-            $values = Producto::select($col)
+            $rawValues = Producto::select($col)
                 ->where('modelo_id', $modId)
                 ->where('pagina_web', 'SI')
                 ->noSuspendido()
@@ -102,9 +129,27 @@
                 ->filter(fn($v) => $v !== '')
                 ->unique()
                 ->values();
-            if ($values->isNotEmpty()) {
-                $specs[$col] = ['label' => $label, 'options' => $values];
+
+            if ($rawValues->isEmpty()) {
+                continue;
             }
+
+            // Para tarjeta de video: normalizar y deduplicar por forma canónica
+            if ($col === 'tarjetavideo') {
+                $normSet = [];
+                foreach ($rawValues as $raw) {
+                    $norm = $normalizarTV($raw);
+                    if (!isset($normSet[$norm])) {
+                        $normSet[$norm] = true;
+                    }
+                }
+                ksort($normSet); // orden alfabético
+                $values = collect(array_keys($normSet))->values();
+            } else {
+                $values = $rawValues;
+            }
+
+            $specs[$col] = ['label' => $label, 'options' => $values];
         }
 
         // Filtros para monitores: specs almacenadas en tabla especificaciones
