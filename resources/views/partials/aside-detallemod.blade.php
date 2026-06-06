@@ -89,27 +89,30 @@
         ];
 
         /**
-         * Normaliza el nombre de una tarjeta de video extrayendo su forma canónica:
-         * conserva marca + modelo + VRAM y elimina sufijos de marketing como
-         * OC, Gaming, Edition, Windforce, TUF, etc.
+         * Normaliza el nombre de una tarjeta de video:
+         * SOLO elimina sufijos de marketing que aparecen INMEDIATAMENTE después
+         * de la especificación de VRAM (ej. "8GB OC", "8GB Gaming X").
+         *
+         * Preserva intacto todo lo demás:
+         *   "Dedicado", "Integrado", valores simples de VRAM ("4 GB"), etc.
          *
          * Ejemplos:
          *   "NVIDIA RTX 4060 8GB OC Edition" → "NVIDIA RTX 4060 8GB"
          *   "AMD RX 6600 XT 8GB Gaming X"    → "AMD RX 6600 XT 8GB"
+         *   "4 GB DEDICADO"                  → "4 GB DEDICADO"  (sin cambio)
+         *   "8 GB"                           → "8 GB"           (sin cambio)
          *   "Intel UHD 770"                  → "Intel UHD 770"  (sin cambio)
          */
         $normalizarTV = function(string $v): string {
             $v = trim($v);
-            // Caso 1: si tiene VRAM (ej. "8GB", "12 GB") conservar solo hasta ahí
-            if (preg_match('/^(.+?\d+\s*GB)/i', $v, $m)) {
-                return trim($m[1]);
-            }
-            // Caso 2: sin VRAM → eliminar sufijos de marketing conocidos
+            // Eliminar sufijos de marketing que vienen justo después del VRAM (XGB o X GB).
+            // Sólo actúa si hay un patrón "número + GB" en el valor.
+            // Preserva: "Dedicado", "Integrado", "Shared", números solos, etc.
             $v = preg_replace(
-                '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
-                . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
+                '/(\d+\s*GB)\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|'
+                . 'VISION|WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
                 . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
-                '',
+                '$1',
                 $v
             );
             return trim($v);

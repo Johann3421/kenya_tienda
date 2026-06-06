@@ -91,19 +91,17 @@
 
             /**
              * La misma función de normalización que usa aside-detallemod.blade.php.
-             * Extrae la forma canónica del nombre de una GPU:
-             * mantiene marca + modelo + VRAM y elimina sufijos de marketing.
+             * SOLO elimina sufijos de marketing que aparecen INMEDIATAMENTE después
+             * de la especificación de VRAM (ej. "8GB OC", "8GB Gaming X").
+             * Preserva: "Dedicado", "Integrado", valores simples de VRAM, etc.
              */
             $normalizarTV = function(string $v): string {
                 $v = trim($v);
-                if (preg_match('/^(.+?\d+\s*GB)/i', $v, $m)) {
-                    return trim($m[1]);
-                }
                 $v = preg_replace(
-                    '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
-                    . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
+                    '/(\b\d+\s*GB)\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|'
+                    . 'VISION|WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
                     . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
-                    '',
+                    '$1',
                     $v
                 );
                 return trim($v);
