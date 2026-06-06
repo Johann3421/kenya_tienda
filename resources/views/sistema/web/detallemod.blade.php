@@ -58,9 +58,7 @@
                     $valores = array_filter(array_map('trim', explode(',', request($paramKey))));
                     if (!empty($valores)) {
                         $productosQuery->whereHas('especificaciones', function ($q) use ($campo, $valores) {
-                            $placeholders = implode(',', array_fill(0, count($valores), '?'));
-                            $q->where('campo', $campo)
-                              ->whereRaw("TRIM(descripcion) IN ($placeholders)", array_values($valores));
+                            $q->where('campo', $campo)->whereIn('descripcion', array_values($valores));
                         });
                     }
                 }
@@ -69,8 +67,7 @@
             if (request()->filled('numero_parte_toner')) {
                 $valores = array_filter(array_map('trim', explode(',', request('numero_parte_toner'))));
                 if (!empty($valores)) {
-                    $placeholders = implode(',', array_fill(0, count($valores), '?'));
-                    $productosQuery->whereRaw("TRIM(nro_parte) IN ($placeholders)", array_values($valores));
+                    $productosQuery->whereIn('nro_parte', array_values($valores));
                 }
             }
         } else {
@@ -92,13 +89,58 @@
                 'mouse',
             ];
 
+            /**
+             * La misma función de normalización que usa aside-detallemod.blade.php.
+             * Extrae la forma canónica del nombre de una GPU:
+             * mantiene marca + modelo + VRAM y elimina sufijos de marketing.
+             */
+            $normalizarTV = function(string $v): string {
+                $v = trim($v);
+                if (preg_match('/^(.+?\d+\s*GB)/i', $v, $m)) {
+                    return trim($m[1]);
+                }
+                $v = preg_replace(
+                    '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
+                    . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
+                    . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
+                    '',
+                    $v
+                );
+                return trim($v);
+            };
+
             foreach ($specFields as $field) {
-                if (request()->filled($field)) {
-                    $valores = array_filter(array_map('trim', explode(',', request($field))));
-                    if (!empty($valores)) {
-                        $placeholders = implode(',', array_fill(0, count($valores), '?'));
-                        $productosQuery->whereRaw("TRIM($field) IN ($placeholders)", array_values($valores));
+                if (!request()->filled($field)) {
+                    continue;
+                }
+
+                $valores = array_filter(array_map('trim', explode(',', request($field))));
+                if (empty($valores)) {
+                    continue;
+                }
+
+                if ($field === 'tarjetavideo') {
+                    // Los valores en la URL son formas normalizadas (ej. "NVIDIA RTX 4060 8GB").
+                    // Expandimos a todos los valores crudos de la BD que normalizan a lo mismo.
+                    $todosLosCrudos = \App\Producto::where('modelo_id', $modeloId)
+                        ->whereNotNull('tarjetavideo')
+                        ->whereRaw("TRIM(tarjetavideo) != ''")
+                        ->distinct()
+                        ->pluck('tarjetavideo')
+                        ->map(fn($v) => trim($v))
+                        ->filter(fn($v) => $v !== '')
+                        ->values();
+
+                    $expandidos = $todosLosCrudos
+                        ->filter(fn($raw) => in_array($normalizarTV($raw), $valores, true))
+                        ->values()
+                        ->toArray();
+
+                    if (!empty($expandidos)) {
+                        $productosQuery->whereIn('tarjetavideo', $expandidos);
                     }
+                } else {
+                    $productosQuery->whereIn($field, array_values($valores));
                 }
             }
 
@@ -115,9 +157,7 @@
                     $valores = array_filter(array_map('trim', explode(',', request($paramKey))));
                     if (!empty($valores)) {
                         $productosQuery->whereHas('especificaciones', function ($q) use ($campo, $valores) {
-                            $placeholders = implode(',', array_fill(0, count($valores), '?'));
-                            $q->where('campo', $campo)
-                              ->whereRaw("TRIM(descripcion) IN ($placeholders)", array_values($valores));
+                            $q->where('campo', $campo)->whereIn('descripcion', array_values($valores));
                         });
                     }
                 }
