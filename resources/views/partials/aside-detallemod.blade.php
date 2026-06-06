@@ -88,38 +88,8 @@
             'mouse'            => 'Mouse',
         ];
 
-        /**
-         * Normaliza el nombre de una tarjeta de video:
-         * SOLO elimina sufijos de marketing que aparecen INMEDIATAMENTE después
-         * de la especificación de VRAM (ej. "8GB OC", "8GB Gaming X").
-         *
-         * Preserva intacto todo lo demás:
-         *   "Dedicado", "Integrado", valores simples de VRAM ("4 GB"), etc.
-         *
-         * Ejemplos:
-         *   "NVIDIA RTX 4060 8GB OC Edition" → "NVIDIA RTX 4060 8GB"
-         *   "AMD RX 6600 XT 8GB Gaming X"    → "AMD RX 6600 XT 8GB"
-         *   "4 GB DEDICADO"                  → "4 GB DEDICADO"  (sin cambio)
-         *   "8 GB"                           → "8 GB"           (sin cambio)
-         *   "Intel UHD 770"                  → "Intel UHD 770"  (sin cambio)
-         */
-        $normalizarTV = function(string $v): string {
-            $v = trim($v);
-            // Eliminar sufijos de marketing que vienen justo después del VRAM (XGB o X GB).
-            // Sólo actúa si hay un patrón "número + GB" en el valor.
-            // Preserva: "Dedicado", "Integrado", "Shared", números solos, etc.
-            $v = preg_replace(
-                '/(\d+\s*GB)\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|'
-                . 'VISION|WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
-                . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
-                '$1',
-                $v
-            );
-            return trim($v);
-        };
-
         foreach ($specFields as $col => $label) {
-            $rawValues = Producto::select($col)
+            $values = Producto::select($col)
                 ->where('modelo_id', $modId)
                 ->where('pagina_web', 'SI')
                 ->noSuspendido()
@@ -133,26 +103,9 @@
                 ->unique()
                 ->values();
 
-            if ($rawValues->isEmpty()) {
-                continue;
+            if ($values->isNotEmpty()) {
+                $specs[$col] = ['label' => $label, 'options' => $values];
             }
-
-            // Para tarjeta de video: normalizar y deduplicar por forma canónica
-            if ($col === 'tarjetavideo') {
-                $normSet = [];
-                foreach ($rawValues as $raw) {
-                    $norm = $normalizarTV($raw);
-                    if (!isset($normSet[$norm])) {
-                        $normSet[$norm] = true;
-                    }
-                }
-                ksort($normSet); // orden alfabético
-                $values = collect(array_keys($normSet))->values();
-            } else {
-                $values = $rawValues;
-            }
-
-            $specs[$col] = ['label' => $label, 'options' => $values];
         }
 
         // Filtros para monitores: specs almacenadas en tabla especificaciones
