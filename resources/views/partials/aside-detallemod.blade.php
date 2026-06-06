@@ -100,18 +100,25 @@
          */
         $normalizarTV = function(string $v): string {
             $v = trim($v);
+            // Quitar la palabra "dedicado" y similares
+            $v = preg_replace('/\bdedicad[oa]s?\b/i', '', $v);
+            $v = trim($v);
+
             // Caso 1: si tiene VRAM (ej. "8GB", "12 GB") conservar solo hasta ahí
-            if (preg_match('/^(.+?\d+\s*GB)/i', $v, $m)) {
-                return trim($m[1]);
+            if (preg_match('/^(.*?\d+\s*GB)/i', $v, $m)) {
+                $v = trim($m[1]);
+            } else {
+                // Caso 2: sin VRAM → eliminar sufijos de marketing conocidos
+                $v = preg_replace(
+                    '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
+                    . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
+                    . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
+                    '',
+                    $v
+                );
             }
-            // Caso 2: sin VRAM → eliminar sufijos de marketing conocidos
-            $v = preg_replace(
-                '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
-                . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
-                . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
-                '',
-                $v
-            );
+            // Consolidar espaciado de GB (ej. "4 GB" o "4  GB" -> "4GB")
+            $v = preg_replace('/(\d+)\s*GB/i', '$1GB', $v);
             return trim($v);
         };
 
