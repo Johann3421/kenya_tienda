@@ -111,8 +111,9 @@
         }
 
         .p-nombre {
-            font-family: "Poppins", sans-serif;
+            font-family: "Inter", sans-serif;
             color: #444;
+            font-weight: 600;
         }
 
         .p-nombre:hover {

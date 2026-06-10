@@ -236,8 +236,8 @@
             margin: 0;
             font-size: 1.1rem;
             display: table;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
         }
 
         .form-hint {

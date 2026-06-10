@@ -38,7 +38,7 @@
         height: 80px;
         background: #141414;
         color: #fff;
-        font-family: 'Poppins', sans-serif;
+        font-family: 'Inter', sans-serif;
         font-size: 20px;
         font-weight: 500;
         border: none;
@@ -289,7 +289,7 @@
                 }
             @endphp
 
-            <h2 class="" style="font-weight: 700; font-size: 36px; font-family: 'Poppins', sans-serif">
+            <h2 class="" style="font-weight: 700; font-size: 36px; font-family: 'Inter', sans-serif">
                 {{ $producto->display_name }}
             </h2>
 

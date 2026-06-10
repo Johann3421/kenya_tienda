@@ -321,8 +321,8 @@
 
     .descripcion h6 {
         font-size: 1rem;
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
         text-align: center;
         margin: 0;
         color: var(--text-color);
@@ -330,7 +330,7 @@
     }
 
     .p-nombre {
-        font-family: "Poppins", sans-serif;
+        font-family: "Inter", sans-serif;
         color: var(--text-color);
         transition: color 0.3s ease;
     }

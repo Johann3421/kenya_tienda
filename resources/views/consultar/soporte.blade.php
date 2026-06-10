@@ -26,7 +26,8 @@
         .E6 { background-color: #0077ff; }
 
         pre {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
             padding: 5px 10px;
             margin-bottom: 0;
         }
