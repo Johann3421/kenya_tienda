@@ -35,14 +35,7 @@ class CatalogoController extends Controller
             $productosQuery->where('modelo_id', $request->modelo);
         }
 
-        $specKeys = ['procesador','memoria_ram','almacenamiento','sistema_operativo','unidad_optica'];
-        foreach ($specKeys as $k) {
-            if ($request->filled($k)) {
-                $productosQuery->whereHas('especificaciones', function($q) use ($k, $request) {
-                    $q->where('campo', ucfirst(str_replace('_',' ',$k)))->where('descripcion', $request->$k);
-                });
-            }
-        }
+        $this->applySpecFilters($productosQuery, $request);
 
         $orden = $request->orden ?? 'newest';
         switch ($orden) {
@@ -64,6 +57,44 @@ class CatalogoController extends Controller
 
         return view('catalogo-preview', compact('modelos', 'productos', 'novedades'));
     }
+
+    private function applySpecFilters($query, Request $request)
+    {
+        $directColumns = [
+            'procesador', 'ram', 'almacenamiento', 'tarjetavideo',
+            'sistema_operativo', 'unidad_optica', 'conectividad_wlan',
+            'video_vga', 'video_hdmi', 'suite_ofimatica',
+        ];
+
+        foreach ($directColumns as $col) {
+            if ($request->filled($col)) {
+                $values = array_map('trim', explode(',', $request->$col));
+                $values = array_filter($values, fn($v) => $v !== '');
+                if (!empty($values)) {
+                    $query->whereIn($col, $values);
+                }
+            }
+        }
+
+        $monitorSpecs = [
+            'espec_tamano'      => 'Tamaño de Pantalla',
+            'espec_panel'       => 'Panel',
+            'espec_hdmi'        => 'HDMI',
+            'espec_displayport' => 'DisplayPort',
+            'espec_garantia'    => 'Garantía de Fábrica',
+        ];
+
+        foreach ($monitorSpecs as $param => $campo) {
+            if ($request->filled($param)) {
+                $values = array_map('trim', explode(',', $request->$param));
+                $query->whereHas('especificaciones', function($q) use ($campo, $values) {
+                    $q->where('campo', $campo)
+                      ->whereIn('descripcion', $values);
+                });
+            }
+        }
+    }
+
     public function categoria(Request $request)
     {
         if ($request->id) {
@@ -100,7 +131,7 @@ class CatalogoController extends Controller
             'productos' => $productos
         ];
     }
-    public function detallemod($id)
+    public function detallemod($id, Request $request)
     {
         $modelo = \App\Modelo::findOrFail($id);
 
@@ -111,12 +142,21 @@ class CatalogoController extends Controller
             ->orderBy('descripcion')
             ->get();
 
-        $productos = \App\Producto::with('modelo')
+        $productosQuery = \App\Producto::with('modelo')
             ->where('modelo_id', $id)
             ->where('pagina_web', 'SI')
-            ->noSuspendido()
-            ->orderBy('created_at', 'desc')
-            ->paginate(9);
+            ->noSuspendido();
+
+        if ($request->busqueda) {
+            $productosQuery->where(function($q) use ($request) {
+                $q->where('descripcion', 'LIKE', "%{$request->busqueda}%")
+                  ->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
+            });
+        }
+
+        $this->applySpecFilters($productosQuery, $request);
+
+        $productos = $productosQuery->orderBy('created_at', 'desc')->paginate(9);
 
         $novedades = \App\Producto::with('modelo')
             ->orderBy('created_at', 'DESC')
@@ -147,22 +187,17 @@ class CatalogoController extends Controller
             ->noSuspendido();
 
         if ($request->busqueda) {
-            $productosQuery->where('descripcion', 'LIKE', "%{$request->busqueda}%")->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
+            $productosQuery->where(function($q) use ($request) {
+                $q->where('descripcion', 'LIKE', "%{$request->busqueda}%")
+                  ->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
+            });
         }
 
         if ($request->modelo) {
             $productosQuery->where('modelo_id', $request->modelo);
         }
 
-        // Basic spec filters pass-through (same names used in Catalogo)
-        $specKeys = ['procesador','memoria_ram','almacenamiento','sistema_operativo','unidad_optica'];
-        foreach ($specKeys as $k) {
-            if ($request->filled($k)) {
-                $productosQuery->whereHas('especificaciones', function($q) use ($k, $request) {
-                    $q->where('campo', ucfirst(str_replace('_',' ',$k)))->where('descripcion', $request->$k);
-                });
-            }
-        }
+        $this->applySpecFilters($productosQuery, $request);
 
         // ordering
         $orden = $request->orden ?? 'newest';
