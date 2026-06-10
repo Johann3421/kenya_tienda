@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Modelo;
+use App\Modelo;
 use App\Models\Categoria;
 
 class ModeloController extends Controller
@@ -208,7 +208,7 @@ class ModeloController extends Controller
     }
     public function getModelosConProductos()
     {
-        $modelos = Modelo::with(['productos' => function($query) {
+        $modelos = Modelo::with(['Productos' => function($query) {
             $query->where('pagina_web', 'SI')->noSuspendido();
         }])->get();
 

@@ -1142,7 +1142,6 @@
                                 </div>
                             </li>
                             @foreach ($categorias as $cat)
-                                @if(!in_array($cat->id, [4, 5]))
                                 <li data-filter=".filter-{{ $cat->id }}">
                                     <div class="card" style="width: 8rem;">
                                         @if ($cat->img_url)
@@ -1157,14 +1156,12 @@
                                         </div>
                                     </div>
                                 </li>
-                                @endif
                             @endforeach
                         </ul>
                     </div>
                 </div>
                 <div class="row prod-filter-container" style="justify-content: center">
                     @foreach ($modelo as $mod)
-                        @if(!in_array($mod->categoria_id, [4, 5]))
                         @php
                             $modNombre = strtoupper($mod->descripcion ?? $mod->nombre ?? '');
                             $brandClass = '';
@@ -1206,7 +1203,6 @@
                                 </div>
                             </div>
                         </div>
-                        @endif
                     @endforeach
                 </div>
             </div>
