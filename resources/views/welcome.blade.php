@@ -111,7 +111,7 @@
         }
 
         .p-nombre {
-            font-family: "Raleway", sans-serif;
+            font-family: "Poppins", sans-serif;
             color: #444;
         }
 
@@ -324,7 +324,7 @@
             color: #333;
         }
         .prod-prefix {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             font-weight: 700;
             letter-spacing: 0.5px;
             font-size: 0.85em;

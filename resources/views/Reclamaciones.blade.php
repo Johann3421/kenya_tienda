@@ -157,8 +157,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            font-family: 'Arial', sans-serif;
-            color: black;
+            font-family: 'Inter', sans-serif;
         }
 
         .reclamaciones-container h2 {
@@ -237,8 +236,8 @@
             margin: 0;
             font-size: 1.1rem;
             display: table;
-            font-family: 'Arial', sans-serif;
-            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
         }
 
         .form-hint {

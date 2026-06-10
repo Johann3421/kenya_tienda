@@ -321,8 +321,8 @@
 
     .descripcion h6 {
         font-size: 1rem;
-        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
         text-align: center;
         margin: 0;
         color: var(--text-color);
@@ -330,7 +330,7 @@
     }
 
     .p-nombre {
-        font-family: "Raleway", sans-serif;
+        font-family: "Poppins", sans-serif;
         color: var(--text-color);
         transition: color 0.3s ease;
     }
@@ -574,7 +574,7 @@
 
 /* Contenedor principal */
 #vue-filtros {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     max-width: 300px;
     position: relative; /* Necesario para el z-index */
 }

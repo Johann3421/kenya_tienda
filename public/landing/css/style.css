@@ -9,7 +9,7 @@
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Inter", sans-serif;
   color: #444;
 }
 
@@ -23,7 +23,8 @@ a:hover {
 }
 
 h1, h2, h3, h4, h5, h6, .font-primary {
-  font-family: "Raleway", sans-serif;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
 }
 
 /*--------------------------------------------------------------
@@ -619,8 +620,8 @@ h1, h2, h3, h4, h5, h6, .font-primary {
 }
 
 #hero .btn-get-started {
-  font-family: "Raleway", sans-serif;
-  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
   font-size: 14px;
   letter-spacing: 1px;
   display: inline-block;
@@ -1168,7 +1169,7 @@ section {
 .counts .count-box p {
   padding: 0;
   margin: 0;
-  font-family: "Raleway", sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 14px;
 }
 
@@ -1692,7 +1693,7 @@ section {
 .kenya-final-footer {
     background-color: #212121;
     color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
     padding: 40px 0 20px;
     border-top: 2px solid #ee7c31;
     width: 100%;

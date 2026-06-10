@@ -26,7 +26,7 @@
         .E6 { background-color: #0077ff; }
 
         pre {
-            font-family: 'Raleway', sans-serif;
+            font-family: 'Poppins', sans-serif;
             padding: 5px 10px;
             margin-bottom: 0;
         }

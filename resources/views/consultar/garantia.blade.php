@@ -62,7 +62,7 @@
         }
 
         pre {
-            font-family: 'Raleway', sans-serif;
+            font-family: 'Poppins', sans-serif;
             padding: 5px 10px;
             margin-bottom: 0;
         }
@@ -209,7 +209,7 @@
         .warranty-section {
             padding: 2rem 0;
             background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         .warranty-container {
