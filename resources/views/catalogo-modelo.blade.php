@@ -216,6 +216,7 @@
             const filtersUrlBase = @json(url('catalogo/filters'));
             const productsUrl = @json(url('catalogo/preview-products'));
             const suggestUrl = @json(url('catalogo/preview-suggest'));
+            let searchTimer = null;
 
             function fetchFilters(modeloId){
                 const url = modeloId ? `${filtersUrlBase}/${modeloId}` : filtersUrlBase;
@@ -224,14 +225,19 @@
                 }).catch(err => console.error(err));
             }
 
-            function fetchProducts(){
+            function fetchProducts(page){
                 const params = new URLSearchParams(window.location.search);
                 const modelo = modeloSelect.value;
                 if (modelo) params.set('modelo', modelo); else params.delete('modelo');
+                if (page) params.set('page', page);
                 fetch(productsUrl + '?' + params.toString(), { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     productsContainer.innerHTML = html;
+                    window.scrollTo({ top: productsContainer.offsetTop - 20, behavior: 'smooth' });
                 }).catch(err => console.error(err));
             }
+
+            // Listen for filter changes from aside-detallemod
+            window.addEventListener('filterchange', function(){ fetchProducts(); });
 
             const searchInput = document.getElementById('preview-search');
             const suggestionsBox = document.getElementById('preview-suggestions');
@@ -264,12 +270,23 @@
                     .catch(err => { console.error(err); hideSuggestions(); });
             }
 
+            function applySearchQuery(q){
+                const params = new URLSearchParams(window.location.search);
+                if (q) params.set('busqueda', q); else params.delete('busqueda');
+                params.delete('page');
+                history.replaceState({}, '', window.location.pathname + '?' + params.toString());
+                hideSuggestions();
+                fetchProducts();
+            }
+
             if (searchInput) {
                 searchInput.addEventListener('input', (e) => {
                     const q = (e.target.value || '').trim();
                     clearTimeout(suggestTimer);
-                    if (q.length === 0) { hideSuggestions(); fetchProducts(); return; }
+                    clearTimeout(searchTimer);
+                    if (q.length === 0) { hideSuggestions(); applySearchQuery(''); return; }
                     suggestTimer = setTimeout(() => fetchSuggest(q), 250);
+                    searchTimer = setTimeout(() => applySearchQuery(q), 500);
                 });
 
                 searchInput.addEventListener('keydown', (e) => {
@@ -283,11 +300,7 @@
                             window.location.href = items[activeIndex].dataset.url;
                         } else {
                             const q = (e.target.value || '').trim();
-                            const params = new URLSearchParams(window.location.search);
-                            if (q) params.set('busqueda', q); else params.delete('busqueda');
-                            if (modeloSelect && modeloSelect.value) params.set('modelo', modeloSelect.value); else params.delete('modelo');
-                            history.pushState({}, '', window.location.pathname + '?' + params.toString());
-                            fetchProducts(); hideSuggestions();
+                            applySearchQuery(q);
                         }
                     }
                 });
@@ -311,6 +324,22 @@
                     }
                 });
             }
+
+            // AJAX pagination via event delegation
+            document.addEventListener('click', function(e) {
+                const link = e.target.closest('.page-link');
+                if (!link) return;
+                if (!productsContainer.contains(link)) return;
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                if (!href) return;
+                const urlObj = new URL(href, window.location.origin);
+                const page = urlObj.searchParams.get('page') || '1';
+                const params = new URLSearchParams(window.location.search);
+                params.set('page', page);
+                history.replaceState({}, '', window.location.pathname + '?' + params.toString());
+                fetchProducts(page);
+            });
         })();
     </script>
     <script src="{{ asset('js/detallemod.js') }}"></script>

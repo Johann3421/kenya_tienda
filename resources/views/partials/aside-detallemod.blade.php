@@ -287,10 +287,11 @@
             params.delete(campo);
         }
 
-        // Quitar el parámetro 'page' para volver a la página 1 al filtrar
         params.delete('page');
 
-        window.location.href = window.location.pathname + '?' + params.toString();
+        const newUrl = window.location.pathname + '?' + params.toString();
+        history.replaceState({}, '', newUrl);
+        window.dispatchEvent(new CustomEvent('filterchange'));
     }
 </script>
 
