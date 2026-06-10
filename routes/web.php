@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\BannerMedioController;
 use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ReclamacionController;
-use App\Http\Controllers\Sistema\AsideController;
 use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\SerialDrawController;
 use App\Http\Controllers\SearchController;
@@ -368,44 +367,12 @@ Route::group(['middleware' => ['can:admin_paginas']], function () {
     Route::get('/paginas/admin', [\App\Http\Controllers\Sistema\ControlRutasController::class, 'index'])->name('paginas.admin');
     Route::post('/paginas/admin/cambiar-estado', [\App\Http\Controllers\Sistema\ControlRutasController::class, 'cambiarEstado'])->name('paginas.admin.cambiar_estado');
 });
-Route::post('/sistema/aside/duplicar', [App\Http\Controllers\Sistema\AsideController::class, 'duplicar'])->name('sistema.aside.duplicar');
-
 // routes/web.php o routes/api.php
 
 
 Route::post('/location', 'LocationController@ubigeo');
 
 Route::prefix('sistema')->middleware(['auth', 'verified'])->group(function() {
-    // Grupo de rutas para filtros
-    Route::middleware('can:filtros')->group(function() {
-        // Rutas principales del recurso (CRUD estándar)
-        Route::resource('aside', \App\Http\Controllers\Sistema\AsideController::class)
-             ->names([
-                 'index' => 'sistema.aside.index',
-                 'create' => 'sistema.aside.create',
-                 'store' => 'sistema.aside.store',
-                 'show' => 'sistema.aside.show',
-                 'edit' => 'sistema.aside.edit',
-                 'update' => 'sistema.aside.update',
-                 'destroy' => 'sistema.aside.destroy'
-             ]);
-
-        // Rutas adicionales para operaciones con opciones/subfiltros
-        Route::prefix('aside/{aside}')->group(function() {
-            // Añadir nueva opción
-            Route::post('agregar-opcion', [\App\Http\Controllers\Sistema\AsideController::class, 'agregarOpcion'])
-                 ->name('sistema.aside.agregar-opcion');
-
-            // Eliminar opción específica
-            Route::delete('eliminar-opcion', [\App\Http\Controllers\Sistema\AsideController::class, 'eliminarOpcion'])
-                 ->name('sistema.aside.eliminar-opcion');
-
-            // Cambiar estado activo/inactivo
-            Route::post('toggle-status', [\App\Http\Controllers\Sistema\AsideController::class, 'toggleStatus'])
-                 ->name('sistema.aside.toggle-status');
-        });
-    });
-
     // ... otras rutas del sistema ...
 });
 

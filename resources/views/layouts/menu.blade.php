@@ -85,18 +85,6 @@
                     <span class="pcoded-mtext">Modelos</span></a>
                 </li>
                 @endcan
-                @can('filtros')
-<li class="nav-item {{ request()->routeIs('sistema.aside.*') ? 'active' : '' }}">
-    <a href="{{ route('sistema.aside.index') }}" class="nav-link">
-        <span class="pcoded-micon"><i class="fas fa-sliders-h"></i></span>
-        <span class="pcoded-mtext">Filtros Avanzados</span>
-        @if(request()->routeIs('sistema.aside.*'))
-            <span class="pcoded-badge label label-danger">ACTIVO</span>
-        @endif
-    </a>
-</li>
-@endcan
-
                 @if( auth()->user()->can('perfiles') || auth()->user()->can('usuarios') || auth()->user()->can('pagina_web') || auth()->user()->can('configuracion'))
                     <li class="nav-item pcoded-menu-caption">
                         <label>Administrador</label>
