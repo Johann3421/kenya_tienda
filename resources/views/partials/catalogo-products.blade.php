@@ -21,8 +21,8 @@
                             $modelImg = asset('producto.jpg');
                             if ($producto->modelo && !empty($producto->modelo->img_mod)) {
                                 $modelImg = asset('storage/' . $producto->modelo->img_mod);
-                            } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_cat)) {
-                                $modelImg = asset('storage/' . $producto->getCategoria->img_cat);
+                            } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_url)) {
+                                $modelImg = $producto->getCategoria->img_url;
                             }
 
                             if (!empty($producto->imagen_1)) {

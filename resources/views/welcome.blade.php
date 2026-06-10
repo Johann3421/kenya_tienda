@@ -1145,8 +1145,8 @@
                                 @if(!in_array($cat->id, [4, 5]))
                                 <li data-filter=".filter-{{ $cat->id }}">
                                     <div class="card" style="width: 8rem;">
-                                        @if ($cat->img_cat)
-                                            <img class="card-img-top" src="{{ asset('storage/' . $cat->img_cat) }}"
+                                        @if ($cat->img_url)
+                                            <img class="card-img-top" src="{{ $cat->img_url }}"
                                                 alt="Card image cap">
                                         @else
                                             <img class="card-img-top" src="{{ asset('producto.jpg') }}"

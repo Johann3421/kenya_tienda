@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Categoria;
+use App\Models\Categoria;
 
 class CategoriaController extends Controller
 {
@@ -65,9 +65,13 @@ class CategoriaController extends Controller
                 $extension_1 = $file_1->extension();
                 $file_name_1 = 'IMG1_'.Str::random(10).'.'.$extension_1;
 
-                Storage::putFileAs('public/'.$route, $file_1, $file_name_1);
-                $categoria->img_cat = $route.'/'.$file_name_1;
+                $savedPath = Storage::disk('public')->putFileAs($route, $file_1, $file_name_1);
+                
+                if (!$savedPath || !Storage::disk('public')->exists($savedPath)) {
+                    throw new \Exception('Error al guardar la imagen en el almacenamiento');
+                }
 
+                $categoria->img_cat = $savedPath;
                 $categoria->save();
             }
 
@@ -76,7 +80,7 @@ class CategoriaController extends Controller
             return [
                 'type'     =>  'success',
                 'title'    =>  'CORRECTO: ',
-                'message'  =>  'La Categoría se guardo correctamente.',
+                'message'  =>  'La Categoría se guardó correctamente.',
             ];
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -84,7 +88,7 @@ class CategoriaController extends Controller
             return [
                 'type'     =>  'danger',
                 'title'    =>  'ERROR: ',
-                'message'  =>  'Ocurrio un error al guardar la Categoria, intente nuevamente o contacte al Administrador del Sistema.'
+                'message'  =>  $th->getMessage() . ' Ocurrió un error al guardar la Categoria, intente nuevamente o contacte al Administrador del Sistema.'
             ];
         }
     }
@@ -108,24 +112,33 @@ class CategoriaController extends Controller
             $route = 'CATEGORIAS/'.$categoria->id;
 
             if ($request->hasFile('imagen')) {
-                Storage::delete('public/'.$categoria->img_cat);
+                // Delete old image if exists
+                if ($categoria->img_cat && Storage::disk('public')->exists($categoria->img_cat)) {
+                    Storage::disk('public')->delete($categoria->img_cat);
+                }
 
                 $file = $request->file('imagen');
                 $extension = $file->extension();
                 $file_name = 'IMG_'.Str::random(10).'.'.$extension;
 
-                Storage::putFileAs('public/'.$route, $file, $file_name);
-                $categoria->img_cat = $route.'/'.$file_name;
+                // Save new image and verify it was saved
+                $savedPath = Storage::disk('public')->putFileAs($route, $file, $file_name);
+                
+                if (!$savedPath || !Storage::disk('public')->exists($savedPath)) {
+                    throw new \Exception('Error al guardar la imagen en el almacenamiento');
+                }
+
+                $categoria->img_cat = $savedPath;
             }
 
-            $categoria->update();
+            $categoria->save();
 
             DB::commit();
 
             return [
                 'type'     =>  'success',
                 'title'    =>  'CORRECTO: ',
-                'message'  =>  'La Categoría se han actualizado correctamente.',
+                'message'  =>  'La Categoría se ha actualizado correctamente.',
             ];
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -133,7 +146,7 @@ class CategoriaController extends Controller
             return [
                 'type'     =>  'danger',
                 'title'    =>  'ERROR: ',
-                'message'  =>  'Ocurrio un error al actualizar la Categoria, intente nuevamente o contacte al Administrador del Sistema.'
+                'message'  =>  $th->getMessage() . ' Ocurrió un error al actualizar la Categoria, intente nuevamente o contacte al Administrador del Sistema.'
             ];
         }
     }
