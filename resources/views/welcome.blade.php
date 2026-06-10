@@ -1136,7 +1136,7 @@
                         <ul id="portfolio-flters">
                             <li data-filter="*" class="filter-active">
                                 <div class="card" style="width: 8rem;">
-                                    <img class="card-img-top" src="{{ asset('pord.jpg') }}" alt="Card image cap">
+                                    <img class="card-img-top" src="{{ asset('pord.png') }}" alt="Card image cap">
                                     <div class="card-body">
                                         <p class="card-text" style="color:black">Todos</p>
                                     </div>

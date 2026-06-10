@@ -162,9 +162,7 @@
     $almacenamientos = DB::table('especificaciones')->where('campo', 'Almacenamiento')->distinct()->pluck('descripcion')->sort();
     $sistemas_operativos = DB::table('especificaciones')->where('campo', 'Sistema Operativo')->distinct()->pluck('descripcion')->sort();
     $unidades_opticas = DB::table('especificaciones')->where('campo', 'Unidad Óptica')->distinct()->pluck('descripcion')->sort();
-    $conectividades_lan = DB::table('especificaciones')->where('campo', 'Conectividad LAN')->distinct()->pluck('descripcion')->sort();
     $conectividades_wlan = DB::table('especificaciones')->where('campo', 'Conectividad WLAN')->distinct()->pluck('descripcion')->sort();
-    $conectividades_usb = DB::table('especificaciones')->where('campo', 'Conectividad USB')->distinct()->pluck('descripcion')->sort();
     $conectividades_vga = DB::table('especificaciones')->where('campo', 'Conectividad VGA')->distinct()->pluck('descripcion')->sort();
     $conectividades_hdmi = DB::table('especificaciones')->where('campo', 'Conectividad HDMI')->distinct()->pluck('descripcion')->sort();
     $ofimaticas = DB::table('especificaciones')->where('campo', 'Ofimática')->distinct()->pluck('descripcion')->sort();
@@ -224,9 +222,7 @@
                         'almacenamientos' => $almacenamientos,
                         'sistemas_operativos' => $sistemas_operativos,
                         'unidades_opticas' => $unidades_opticas,
-                        'conectividades_lan' => $conectividades_lan,
                         'conectividades_wlan' => $conectividades_wlan,
-                        'conectividades_usb' => $conectividades_usb,
                         'conectividades_vga' => $conectividades_vga,
                         'conectividades_hdmi' => $conectividades_hdmi,
                         'ofimaticas' => $ofimaticas,

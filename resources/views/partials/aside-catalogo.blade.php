@@ -84,19 +84,6 @@
         </div>
         @endif
 
-        <!-- Filtro Conectividad LAN -->
-        @if($conectividades_lan->count() > 0)
-        <div class="filtro-group">
-            <label for="conectividad_lan">Conectividad LAN</label>
-            <select name="conectividad_lan" id="conectividad_lan" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
-                <option value="">Todas</option>
-                @foreach($conectividades_lan as $lan)
-                    <option value="{{ $lan }}" {{ request('conectividad_lan') == $lan ? 'selected' : '' }}>{{ $lan }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
         <!-- Filtro Conectividad WLAN -->
         @if($conectividades_wlan->count() > 0)
         <div class="filtro-group">
@@ -105,19 +92,6 @@
                 <option value="">Todas</option>
                 @foreach($conectividades_wlan as $wlan)
                     <option value="{{ $wlan }}" {{ request('conectividad_wlan') == $wlan ? 'selected' : '' }}>{{ $wlan }}</option>
-                @endforeach
-            </select>
-        </div>
-        @endif
-
-        <!-- Filtro Conectividad USB -->
-        @if($conectividades_usb->count() > 0)
-        <div class="filtro-group">
-            <label for="conectividad_usb">Conectividad USB</label>
-            <select name="conectividad_usb" id="conectividad_usb" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
-                <option value="">Todas</option>
-                @foreach($conectividades_usb as $usb)
-                    <option value="{{ $usb }}" {{ request('conectividad_usb') == $usb ? 'selected' : '' }}>{{ $usb }}</option>
                 @endforeach
             </select>
         </div>
@@ -177,7 +151,7 @@
 
         <!-- Botón Limpiar Filtros -->
         <div class="filtro-group">
-            <a href="{{ route('catalogo') }}?{{ http_build_query(collect(request()->query())->except(['procesador', 'memoria_ram', 'almacenamiento', 'sistema_operativo', 'unidad_optica', 'conectividad_lan', 'conectividad_wlan', 'conectividad_usb', 'conectividad_vga', 'conectividad_hdmi', 'ofimatica', 'perifericos', 'tarjeta_video'])->toArray()) }}" class="btn btn-secondary btn-sm">Limpiar Filtros</a>
+            <a href="{{ route('catalogo') }}?{{ http_build_query(collect(request()->query())->except(['procesador', 'memoria_ram', 'almacenamiento', 'sistema_operativo', 'unidad_optica', 'conectividad_wlan', 'conectividad_vga', 'conectividad_hdmi', 'ofimatica', 'perifericos', 'tarjeta_video'])->toArray()) }}" class="btn btn-secondary btn-sm">Limpiar Filtros</a>
         </div>
     </form>
 </div>

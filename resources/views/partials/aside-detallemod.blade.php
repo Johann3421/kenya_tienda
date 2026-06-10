@@ -78,14 +78,10 @@
             'tarjetavideo'     => 'Tarjeta de Video',
             'sistema_operativo'=> 'Sistema Operativo',
             'unidad_optica'    => 'Unidad Óptica',
-            'conectividad'     => 'Conectividad LAN',
             'conectividad_wlan'=> 'Conectividad WLAN',
-            'conectividad_usb' => 'Conectividad USB',
             'video_vga'        => 'Salida VGA',
             'video_hdmi'       => 'Salida HDMI',
             'suite_ofimatica'  => 'Ofimática',
-            'teclado'          => 'Teclado',
-            'mouse'            => 'Mouse',
         ];
 
         /**
