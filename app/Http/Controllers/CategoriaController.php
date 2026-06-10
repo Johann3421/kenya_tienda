@@ -55,7 +55,7 @@ class CategoriaController extends Controller
 
             $categoria = new Categoria();
             $categoria->nombre = Str::upper($request->nombre);
-            $categoria->activo = $request->estado;
+            $categoria->activo = Str::upper($request->estado);
             $categoria->save();
 
             $route = 'CATEGORIAS/'.$categoria->id;
@@ -107,7 +107,7 @@ class CategoriaController extends Controller
 
             $categoria = Categoria::findOrFail($request->id);
             $categoria->nombre = Str::upper($request->nombre);
-            $categoria->activo = $request->estado;
+            $categoria->activo = Str::upper($request->estado);
 
             $route = 'CATEGORIAS/'.$categoria->id;
 

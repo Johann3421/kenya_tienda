@@ -175,7 +175,7 @@ new Vue({
                     this.search_categoria =  seleccion.categoria_descripcion,
                     this.modelo.categoria_id_actualizar = seleccion.categoria_id,
                     this.modelo.descripcion =  seleccion.descripcion,
-                    this.modelo.estado    =  seleccion.activo,
+                    this.modelo.estado    =  seleccion.activo ? seleccion.activo.toUpperCase() : null,
                     this.modelo.imagen = seleccion.img_mod
                     this.modelo.imagen_url = '/storage/MODELOS/' + (seleccion.img_mod || '')
 

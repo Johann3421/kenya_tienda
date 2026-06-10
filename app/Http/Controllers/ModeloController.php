@@ -73,7 +73,7 @@ class ModeloController extends Controller
             $modelo = new Modelo();
             $modelo->categoria_id = $request->categoria_id;
             $modelo->descripcion = Str::upper($request->descripcion);
-            $modelo->activo = $request->estado;
+            $modelo->activo = Str::upper($request->estado);
             $modelo->save();
 
             $route = 'MODELOS/'.$modelo->id; // relative path inside the public disk

@@ -149,7 +149,7 @@ new Vue({
                 case "edit":
                     this.resetDatos();
                     this.categoria = seleccion.nombre;
-                    this.estado = seleccion.activo;
+                    this.estado = seleccion.activo ? seleccion.activo.toUpperCase() : null;
                     this.producto.imagen = seleccion.img_cat;
 
                     break;

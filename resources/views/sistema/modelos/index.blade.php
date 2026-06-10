@@ -235,8 +235,8 @@
                                                     <label for="estado" class="label-sm">ESTADO</label>
                                                     <select id="estado" v-model="modelo.estado" class="form-control fc-new">
                                                         <option disabled value="">Seleccione una opción</option>
-                                                        <option>Si</option>
-                                                        <option>No</option>
+                                                        <option value="SI">SI</option>
+                                                        <option value="NO">NO</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -356,8 +356,8 @@
                                                     <label for="estado" class="label-sm">ESTADO</label>
                                                     <select id="estado" v-model="modelo.estado" class="form-control fc-new">
                                                         <option disabled value="">Seleccione una opción</option>
-                                                        <option>Si</option>
-                                                        <option>No</option>
+                                                        <option value="SI">SI</option>
+                                                        <option value="NO">NO</option>
                                                     </select>
                                                 </div>
                                             </div>
