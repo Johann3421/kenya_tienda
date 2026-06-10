@@ -17,9 +17,9 @@ chown -R www-data:www-data storage bootstrap/cache || true
 # (el controlador PHP y el script Python lo leen de /tmp/.groq_key
 #  para no depender del config:cache de Laravel)
 if [ -n "${GROQ_API_KEY:-}" ]; then
-    printf '%s' "$GROQ_API_KEY" > /tmp/.groq_key
-    chmod 600 /tmp/.groq_key
-    chown www-data:www-data /tmp/.groq_key
+    printf '%s' "$GROQ_API_KEY" > /tmp/.groq_key 2>/dev/null || true
+    chmod 600 /tmp/.groq_key 2>/dev/null || true
+    chown www-data:www-data /tmp/.groq_key 2>/dev/null || true
 fi
 
 php artisan storage:link || true

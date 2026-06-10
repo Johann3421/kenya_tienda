@@ -78,8 +78,8 @@ class EnriquecerProcesadoresController extends Controller
         }
 
         // SIEMPRE sobrescribir el archivo con el valor que tengamos
-        file_put_contents('/tmp/.groq_key', $groqKey);
-        chmod('/tmp/.groq_key', 0600);
+        @file_put_contents('/tmp/.groq_key', $groqKey);
+        @chmod('/tmp/.groq_key', 0600);
 
         $groqKeyEsc = escapeshellarg($groqKey);
         
