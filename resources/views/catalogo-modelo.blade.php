@@ -218,10 +218,22 @@
             const suggestUrl = @json(url('catalogo/preview-suggest'));
             let searchTimer = null;
 
+            function executeScripts(container){
+                container.querySelectorAll('script').forEach(function(oldScript){
+                    var newScript = document.createElement('script');
+                    Array.from(oldScript.attributes).forEach(function(attr){
+                        newScript.setAttribute(attr.name, attr.value);
+                    });
+                    newScript.textContent = oldScript.textContent;
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+            }
+
             function fetchFilters(modeloId){
                 const url = modeloId ? `${filtersUrlBase}/${modeloId}` : filtersUrlBase;
                 fetch(url, { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     filtersContainer.innerHTML = html;
+                    executeScripts(filtersContainer);
                 }).catch(err => console.error(err));
             }
 
