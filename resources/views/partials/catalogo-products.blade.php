@@ -85,49 +85,55 @@
         @endforelse
     </div>
 
-    @if ($productos->hasPages())
-        <div class="catalog-pagination mt-4">
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $productos->url(1) }}" aria-label="Primera">&laquo;&laquo;</a>
-                    </li>
-                    <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $productos->previousPageUrl() }}" aria-label="Anterior">&lsaquo;</a>
-                    </li>
-
-                    @if ($productos->currentPage() > 3)
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $productos->url(1) }}">1</a>
+    @php $total = $productos->total(); @endphp
+    @if ($total > 0)
+        <div class="catalog-pagination mt-4" style="display:flex; align-items:center; justify-content:center; position:relative; flex-wrap:wrap; gap:12px;">
+            @if ($productos->hasPages())
+                <nav aria-label="Page navigation">
+                    <ul class="pagination mb-0">
+                        <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $productos->url(1) }}" aria-label="Primera">&laquo;&laquo;</a>
                         </li>
-                        @if ($productos->currentPage() > 4)
-                            <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                        <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $productos->previousPageUrl() }}" aria-label="Anterior">&lsaquo;</a>
+                        </li>
+
+                        @if ($productos->currentPage() > 3)
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $productos->url(1) }}">1</a>
+                            </li>
+                            @if ($productos->currentPage() > 4)
+                                <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                            @endif
                         @endif
-                    @endif
 
-                    @foreach (range(max(1, $productos->currentPage() - 2), min($productos->lastPage(), $productos->currentPage() + 2)) as $page)
-                        <li class="page-item {{ $productos->currentPage() == $page ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $productos->url($page) }}">{{ $page }}</a>
-                        </li>
-                    @endforeach
+                        @foreach (range(max(1, $productos->currentPage() - 2), min($productos->lastPage(), $productos->currentPage() + 2)) as $page)
+                            <li class="page-item {{ $productos->currentPage() == $page ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $productos->url($page) }}">{{ $page }}</a>
+                            </li>
+                        @endforeach
 
-                    @if ($productos->currentPage() < $productos->lastPage() - 2)
-                        @if ($productos->currentPage() < $productos->lastPage() - 3)
-                            <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                        @if ($productos->currentPage() < $productos->lastPage() - 2)
+                            @if ($productos->currentPage() < $productos->lastPage() - 3)
+                                <li class="page-item disabled"><span class="page-link">&hellip;</span></li>
+                            @endif
+                            <li class="page-item">
+                                <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">{{ $productos->lastPage() }}</a>
+                            </li>
                         @endif
-                        <li class="page-item">
-                            <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}">{{ $productos->lastPage() }}</a>
-                        </li>
-                    @endif
 
-                    <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $productos->nextPageUrl() }}" aria-label="Siguiente">&rsaquo;</a>
-                    </li>
-                    <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}" aria-label="Última">&raquo;&raquo;</a>
-                    </li>
-                </ul>
-            </nav>
+                        <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $productos->nextPageUrl() }}" aria-label="Siguiente">&rsaquo;</a>
+                        </li>
+                        <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $productos->url($productos->lastPage()) }}" aria-label="Última">&raquo;&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            @endif
+            <span class="catalog-total" style="font-size:13px; color:#999; font-weight:600; white-space:nowrap; {{ $productos->hasPages() ? '' : 'margin:0 auto;' }}">
+                {{ $total }} producto{{ $total != 1 ? 's' : '' }}
+            </span>
         </div>
     @endif
 </div>
