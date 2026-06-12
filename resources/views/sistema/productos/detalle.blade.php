@@ -413,6 +413,7 @@
                     <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                 </a>
             </div>
+            </div>{{-- close #design-v2 --}}
             <div style="max-width:100%;">
         <div style="background:#fff; border:1px solid #eee; border-radius:12px; overflow:hidden;">
             <div style="background:#ee7c31; padding:16px 22px; display:flex; align-items:center; gap:8px;">
@@ -507,7 +508,7 @@
             @endif
         </div>
     </div>
-            </div>{{-- close #design-v2 --}}
+</div>
 
             {{-- ===== DISEÑO ANTERIOR ===== --}}
             <div id="design-v1" style="display:none;">
@@ -569,67 +570,6 @@
                         <th><a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-block btn-success"><i class="bx bxl-whatsapp" style="font-size:24px;vertical-align:bottom;"></i> Contactar</a></th>
                     </tr></thead></table>
                 </div>
-                <div class="table-responsive"><table class="table">
-                    <thead><tr style="background-color:#EF9614;"><th><i class="fa-solid fa-box"></i> Especificaciones Técnicas</th><th></th><th></th></tr></thead>
-                    <tbody>
-                        @if($isMonitor)
-                            @forelse($especificaciones as $espec)
-                            <tr><td style="min-width:200px;font-weight:600">{{ $espec->campo }}</td><td></td><td>{{ $espec->descripcion }}</td></tr>
-                            @empty
-                            <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                            @endforelse
-                            <tr><td style="min-width:200px;font-weight:600">Número de Parte</td><td></td><td>{{ $producto->nro_parte ?? 'No especificado' }}</td></tr>
-                        @elseif($isToner)
-                            @php $oldTonerRows = [
-                                ['label'=>'Numero de Parte','value'=>$getProductValue(['nro_parte','Número de parte'])??$getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/'])],
-                                ['label'=>'Modelo','value'=>$getSpecValue(['/^modelo$/','/modelo/'])??$getProductValue(['Modelo'])??optional($producto->modelo)->descripcion],
-                                ['label'=>'Tipo de suministro','value'=>$getSpecValue(['/tipo de suministro|suministro|formato/'])??$getProductValue(['Tipo de suministro'])],
-                                ['label'=>'Color','value'=>$getSpecValue(['/^color$/','/color/'])??$getProductValue(['Color'])],
-                                ['label'=>'Descripción','value'=>$getSpecValue(['/descrip/'])??$getProductValue(['Descripción'])],
-                                ['label'=>'Rendimiento','value'=>$getSpecValue(['/rendimiento|p[aá]ginas|paginas/'])??$getProductValue(['Rendimiento'])],
-                                ['label'=>'Garantia','value'=>$getSpecValue(['/garant[ií]a|g\.\s*f/'])??$getProductValue(['garantia_de_fabrica','Garantia'])],
-                                ['label'=>'Sistema RAEE','value'=>$getSpecValue(['/raee|manejo/'])??$getProductValue(['Sistema RAEE'])],
-                                ['label'=>'Certificaciones','value'=>$getSpecValue(['/certific|iso/'])??$getProductValue(['Certificaciones'])],
-                                ['label'=>'Empaque','value'=>$getSpecValue(['/empaque|caja\s*x/'])??$getProductValue(['Empaque'])],
-                                ['label'=>'Unidad','value'=>$getSpecValue(['/^unidad$/','/unidad\s*caja|caja\s*x/'])],
-                                ['label'=>'Dimensiones','value'=>$getSpecValue(['/dimensi/'])??$getProductValue(['Dimensiones'])]
-                            ]; @endphp
-                            @forelse($oldTonerRows as $fr)
-                            <tr><td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td><td></td><td>{{ $fr['value'] ?? 'No especificado' }}</td></tr>
-                            @empty
-                            <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                            @endforelse
-                        @else
-                            @php $oldPcRows = [
-                                ['label'=>'Numero de Parte','value'=>$getProductValue(['nro_parte','Número de parte'])],
-                                ['label'=>'Modelo','value'=>optional($producto->modelo)->nombre??optional($producto->modelo)->descripcion??$getProductValue(['Modelo'])],
-                                ['label'=>'Formato','value'=>$getSpecValue(['/formato|factor|tipo de suministro|suministro/'])??$getProductValue(['Tipo de suministro'])],
-                                ['label'=>'Procesador','value'=>$getSpecValue(['/procesador|cpu|intel|amd/'])??$getProductValue(['procesador'])],
-                                ['label'=>'Memoria Ram','value'=>$getSpecValue(['/memoria|ram/'])??$getProductValue(['ram'])],
-                                ['label'=>'Almacenamiento','value'=>$getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/'])??$getProductValue(['almacenamiento'])],
-                                ['label'=>'Sistema Operativo','value'=>$getSpecValue(['/sistema operativo|\bos\b|windows|linux/'])??$getProductValue(['sistema_operativo'])],
-                                ['label'=>'Suite Ofimática','value'=>$getSpecValue(['/ofim[aá]tica|office|suite/'])??$getProductValue(['suite_ofimatica'])],
-                                ['label'=>'Gráficos','value'=>$getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/'])??$getProductValue(['tarjetavideo'])],
-                                ['label'=>'Sonido','value'=>$getSpecValue(['/sonido|audio/'])],
-                                ['label'=>'Chipset','value'=>$getSpecValue(['/chipset/'])],
-                                ['label'=>'Lan','value'=>$getSpecValue(['/\blan\b|ethernet/'])??$getProductValue(['conectividad'])],
-                                ['label'=>'Wlan','value'=>$getSpecValue(['/\bwlan\b|wifi|wireless/'])??$getProductValue(['conectividad_wlan'])],
-                                ['label'=>'Puertos Mínimos','value'=>$getSpecValue(['/puertos|minimo|m[ií]nimo/'])??$getProductValue(['conectividad_usb'])],
-                                ['label'=>'Slot de Expansión','value'=>$getSpecValue(['/slot|expansi|pci|m\.2/'])],
-                                ['label'=>'Fuente de Poder','value'=>$getSpecValue(['/fuente|psu|power supply/'])],
-                                ['label'=>'Garantia','value'=>$getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/'])??$getProductValue(['garantia_de_fabrica','Garantia'])],
-                                ['label'=>'Empaque','value'=>$getSpecValue(['/empaque|packag/'])??$getProductValue(['Empaque'])],
-                                ['label'=>'Certificaciones','value'=>$getSpecValue(['/certific|iso/'])??$getProductValue(['Certificaciones'])],
-                                ['label'=>'Accesorios y Otros','value'=>$getSpecValue(['/accesorio|otros|observaciones|incluye/'])]
-                            ]; @endphp
-                            @forelse($oldPcRows as $fr)
-                            <tr><td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td><td></td><td>{{ $fr['value'] ?? 'No especificado' }}</td></tr>
-                            @empty
-                            <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                            @endforelse
-                        @endif
-                    </tbody>
-                </table></div>
             </div>{{-- close #design-v1 --}}
 
             <script>
@@ -638,14 +578,16 @@
                     var v1  = document.getElementById('design-v1');
                     var v2  = document.getElementById('design-v2');
                     if (!btn || !v1 || !v2) return;
+                    var showingNew = true;
                     btn.addEventListener('click', function(){
-                        if (v1.style.display === 'none') {
+                        if (showingNew) {
                             v1.style.display = ''; v2.style.display = 'none';
                             btn.innerHTML = '<i class="fa-solid fa-rotate" style="margin-right:4px;"></i> Ver diseño nuevo';
                         } else {
                             v1.style.display = 'none'; v2.style.display = '';
                             btn.innerHTML = '<i class="fa-solid fa-rotate" style="margin-right:4px;"></i> Ver diseño anterior';
                         }
+                        showingNew = !showingNew;
                     });
                     btn.addEventListener('mouseenter', function(){ btn.style.borderColor = '#ee7c31'; btn.style.color = '#ee7c31'; });
                     btn.addEventListener('mouseleave', function(){ btn.style.borderColor = '#ccc'; btn.style.color = '#666'; });
