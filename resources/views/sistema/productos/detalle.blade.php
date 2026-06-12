@@ -25,12 +25,13 @@
     }
 
     .spec-card {
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
         cursor: default;
     }
     .spec-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+        border-color: #ddd;
     }
 
     .p-precio-old {
@@ -298,18 +299,37 @@
                 }
             @endphp
 
-            <h2 class="" style="font-weight: 700; font-size: 36px; font-family: 'Inter', sans-serif">
-                {{ $producto->display_name }}
-            </h2>
+            <div style="margin-bottom:24px;">
+                <h2 style="font-weight:800; font-size:32px; color:#1a1a1a; margin-bottom:6px; line-height:1.2;">
+                    {{ $producto->display_name }}
+                </h2>
+                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:13px; color:#777;">
+                    @if($producto->modelo)
+                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f3f3f3; padding:3px 10px; border-radius:20px;">
+                            <i class="fa-solid fa-cube" style="font-size:10px;"></i> {{ $producto->modelo->descripcion ?? $producto->modelo->nombre }}
+                        </span>
+                    @endif
+                    @if($producto->getCategoria)
+                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f3f3f3; padding:3px 10px; border-radius:20px;">
+                            <i class="fa-solid fa-tag" style="font-size:10px;"></i> {{ $producto->getCategoria->nombre }}
+                        </span>
+                    @endif
+                    @if($producto->nro_parte)
+                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f3f3f3; padding:3px 10px; border-radius:20px;">
+                            <i class="fa-solid fa-hashtag" style="font-size:10px;"></i> {{ $producto->nro_parte }}
+                        </span>
+                    @endif
+                </div>
+            </div>
 
-            <div class="carousel-descripcion mb-3" style="padding:0;">
-                <div class="row g-3">
+            <div class="carousel-descripcion mb-4" style="padding:0;">
+                <div class="row g-4">
                     @if($isMonitor)
                         @forelse($especificacionesResumen as $espec)
                         <div class="col-6 col-md-4">
-                            <div class="spec-card" style="background:#fafafa; border-radius:10px; padding:14px 16px; height:100%;">
-                                <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px;">{{ $espec->campo }}</div>
-                                <div style="font-size:14px; font-weight:700; color:#222; line-height:1.3;">{{ $espec->descripcion }}</div>
+                            <div class="spec-card" style="background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; height:100%;">
+                                <div style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">{{ $espec->campo }}</div>
+                                <div style="font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.3;">{{ $espec->descripcion }}</div>
                             </div>
                         </div>
                         @empty
@@ -318,9 +338,9 @@
                     @elseif($isToner)
                         @foreach($topOrdered as $espec)
                         <div class="col-6 col-md-3">
-                            <div class="spec-card" style="background:#fafafa; border-radius:10px; padding:14px 16px; height:100%;">
-                                <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px;">{{ $espec->campo }}</div>
-                                <div style="font-size:14px; font-weight:700; color:#222; line-height:1.3;">{{ $espec->descripcion }}</div>
+                            <div class="spec-card" style="background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; height:100%;">
+                                <div style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">{{ $espec->campo }}</div>
+                                <div style="font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.3;">{{ $espec->descripcion }}</div>
                             </div>
                         </div>
                         @endforeach
@@ -330,14 +350,25 @@
                             @php
                                 $colClass = $specCount <= 4 ? 'col-6 col-md-3' : 'col-6 col-md-4 col-lg-3';
                                 $value = $espec->descripcion;
-                                if ($isDesktopOrWorkstation && strtolower($espec->campo) === 'procesador' && !empty($producto->descripcion_2)) {
+                                $icon = '';
+                                $campoLower = strtolower($espec->campo);
+                                if (str_contains($campoLower, 'procesador')) $icon = '🖥️';
+                                elseif (str_contains($campoLower, 'memoria') || str_contains($campoLower, 'ram')) $icon = '🧠';
+                                elseif (str_contains($campoLower, 'almacenamiento')) $icon = '💾';
+                                elseif (str_contains($campoLower, 'gráfico') || str_contains($campoLower, 'video') || str_contains($campoLower, 'grafico')) $icon = '🎮';
+                                elseif (str_contains($campoLower, 'chipset')) $icon = '⚡';
+                                elseif (str_contains($campoLower, 'fuente')) $icon = '🔌';
+                                elseif (str_contains($campoLower, 'formato')) $icon = '📦';
+                                if ($isDesktopOrWorkstation && $campoLower === 'procesador' && !empty($producto->descripcion_2)) {
                                     $value = $espec->descripcion . ' · ' . $producto->descripcion_2;
                                 }
                             @endphp
                             <div class="{{ $colClass }}">
-                                <div class="spec-card" style="background:#fafafa; border-radius:10px; padding:14px 16px; height:100%;">
-                                    <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px;">{{ $espec->campo }}</div>
-                                    <div style="font-size:14px; font-weight:700; color:#222; line-height:1.3;">
+                                <div class="spec-card" style="background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; height:100%;">
+                                    <div style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
+                                        @if($icon)<span style="margin-right:4px;">{{ $icon }}</span>@endif{{ $espec->campo }}
+                                    </div>
+                                    <div style="font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.3;">
                                         {{ $value }}
                                     </div>
                                 </div>
@@ -345,9 +376,9 @@
                         @endforeach
                     @endif
                 </div>
-                <div class="col-12 mt-2" style="font-size: 11px; color:#999;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
+                <div class="mt-3" style="font-size:11px; color:#bbb; padding-left:2px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
             </div>
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:10px; padding:12px 16px; background:#fafafa; border-radius:10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin:20px 0 24px; padding:16px 20px; background:#fafafa; border:1px solid #eee; border-radius:12px;">
                 <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
                     @foreach($producto->getGarantia->skip(0)->take(1) as $gar)
                     <div style="display:flex; align-items:center; gap:6px;">
