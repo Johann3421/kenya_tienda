@@ -24,6 +24,15 @@
         border-radius: 5px;
     }
 
+    .spec-card {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        cursor: default;
+    }
+    .spec-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
     .p-precio-old {
         font-size: 20px;
         color: red;
@@ -293,95 +302,77 @@
                 {{ $producto->display_name }}
             </h2>
 
-            <div class="carousel-descripcion mb-3 row" style="padding: 15px;">
-                <div class="col-md-8">
-                    <div class="table-responsive">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                                @if($isMonitor)
-                                    @forelse($especificacionesResumen as $espec)
-                                    <tr>
-                                        <td style="min-width:160px;font-weight:600">{{ $espec->campo }}</td>
-                                        <td>: {{ $espec->descripcion }}</td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="2" class="text-center text-muted">Aún no tiene especificaciones</td>
-                                    </tr>
-                                    @endforelse
-                                @else
-                                    @forelse($topOrdered as $espec)
-                                    <tr>
-                                        <td style="min-width:160px;font-weight:700;vertical-align:top">{{ $espec->campo }}</td>
-                                        <td>
-                                            @if($isDesktopOrWorkstation)
-                                            <table style="width:100%;border-collapse:collapse;">
-                                                <tr>
-                                                    <td style="padding:0;vertical-align:top;width:50%;">: {{ $espec->descripcion }}</td>
-                                                    <td style="padding:0 0 0 14px;vertical-align:top;width:50%;">
-                                                        <span style="font-size:0.85em;color:#999;font-style:italic;">
-                                                            @if(strtolower($espec->campo) === 'procesador')
-                                                                Descripción 2: {{ $producto->descripcion_2 ?: 'Vacío' }}
-                                                            @else
-                                                                Descripción 2: Vacío
-                                                            @endif
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                            @else
-                                            : {{ $espec->descripcion }}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr>
-                                        <td colspan="2" class="text-center text-muted">Aún no tiene especificaciones</td>
-                                    </tr>
-                                    @endforelse
-                                @endif
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-md-12 mt-2" style="font-size: 11px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
-
-            </div>
-            <div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col-12">
-                                <div class="grid-icons__item grid-icon" data-v-563d1590="" data-v-e15b3258="">
-                                    @foreach($producto->getGarantia->skip(0)->take(1) as $gar)
-                                    <div draggable="true" class="app-icon grid-icon__icon is-dotty" data-v-563d1590="">TIEMPO DE GARANTIA: {{$gar->garantia}} MESES
-                                        @endforeach
-                                        <img alt="Tarjeta de garantía icon" srcset="https://img.icons8.com/fluency/2x/guarantee.png 3x">
-                                        <br>
-                                        FICHA TECNICA:
-                                        @if($producto->ficha_tecnica)
-                                            @php
-                                                $fichaUrl = str_starts_with($producto->ficha_tecnica, 'http')
-                                                    ? $producto->ficha_tecnica
-                                                    : asset('/storage/' . $producto->ficha_tecnica);
-                                            @endphp
-                                            <a href="{{ $fichaUrl }}" target="_blank">
-                                                PDF <iconify-icon icon="bx:download"></iconify-icon>
-                                            </a>
-                                        @else
-                                            <span class="text-muted">No disponible</span>
-                                        @endif
-                                        <img alt="Tarjeta de garantía icon" srcset="https://img.icons8.com/ios-filled/2x/wordbook.png 3x" style="text-align:center;filter:invert(0%) sepia(0%) saturate(7469%) hue-rotate(214deg) brightness(91%) contrast(107%);">
+            <div class="carousel-descripcion mb-3" style="padding:0;">
+                <div class="row g-3">
+                    @if($isMonitor)
+                        @forelse($especificacionesResumen as $espec)
+                        <div class="col-6 col-md-4">
+                            <div class="spec-card" style="background:#fafafa; border-radius:10px; padding:14px 16px; height:100%;">
+                                <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px;">{{ $espec->campo }}</div>
+                                <div style="font-size:14px; font-weight:700; color:#222; line-height:1.3;">{{ $espec->descripcion }}</div>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="col-12"><p class="text-center text-muted py-3">Aún no tiene especificaciones</p></div>
+                        @endforelse
+                    @elseif($isToner)
+                        @foreach($topOrdered as $espec)
+                        <div class="col-6 col-md-3">
+                            <div class="spec-card" style="background:#fafafa; border-radius:10px; padding:14px 16px; height:100%;">
+                                <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px;">{{ $espec->campo }}</div>
+                                <div style="font-size:14px; font-weight:700; color:#222; line-height:1.3;">{{ $espec->descripcion }}</div>
+                            </div>
+                        </div>
+                        @endforeach
+                    @else
+                        @php $specCount = count($topOrdered); @endphp
+                        @foreach($topOrdered as $espec)
+                            @php
+                                $colClass = $specCount <= 4 ? 'col-6 col-md-3' : 'col-6 col-md-4 col-lg-3';
+                                $value = $espec->descripcion;
+                                if ($isDesktopOrWorkstation && strtolower($espec->campo) === 'procesador' && !empty($producto->descripcion_2)) {
+                                    $value = $espec->descripcion . ' · ' . $producto->descripcion_2;
+                                }
+                            @endphp
+                            <div class="{{ $colClass }}">
+                                <div class="spec-card" style="background:#fafafa; border-radius:10px; padding:14px 16px; height:100%;">
+                                    <div style="font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:5px;">{{ $espec->campo }}</div>
+                                    <div style="font-size:14px; font-weight:700; color:#222; line-height:1.3;">
+                                        {{ $value }}
                                     </div>
                                 </div>
-                            </th>
-                            <th>
-                            <a target="blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-block btn-success"><i class="bx bxl-whatsapp" style="font-size: 24px; vertical-align: bottom;"></i> Contactar</a>
-
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
+                <div class="col-12 mt-2" style="font-size: 11px; color:#999;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:10px; padding:12px 16px; background:#fafafa; border-radius:10px;">
+                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+                    @foreach($producto->getGarantia->skip(0)->take(1) as $gar)
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <img alt="Garantía" src="https://img.icons8.com/fluency/2x/guarantee.png" style="width:28px; height:28px;">
+                        <span style="font-size:14px; font-weight:600; color:#222;">Garantía {{ $gar->garantia }} meses</span>
+                    </div>
+                    @endforeach
+                    <span style="color:#ddd;">|</span>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <img alt="Ficha técnica" src="https://img.icons8.com/ios-filled/2x/wordbook.png" style="width:22px; height:22px; filter:invert(0%) sepia(0%) saturate(7469%) hue-rotate(214deg) brightness(91%) contrast(107%);">
+                        @if($producto->ficha_tecnica)
+                            @php
+                                $fichaUrl = str_starts_with($producto->ficha_tecnica, 'http')
+                                    ? $producto->ficha_tecnica
+                                    : asset('/storage/' . $producto->ficha_tecnica);
+                            @endphp
+                            <a href="{{ $fichaUrl }}" target="_blank" style="font-size:14px; font-weight:600;">Ficha técnica <iconify-icon icon="bx:download"></iconify-icon></a>
+                        @else
+                            <span style="font-size:14px; color:#999;">Ficha técnica no disponible</span>
+                        @endif
+                    </div>
+                </div>
+                <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600; white-space:nowrap;">
+                    <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
+                </a>
             </div>
         </div>
     </div>
