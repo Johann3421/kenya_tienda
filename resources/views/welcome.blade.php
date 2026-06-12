@@ -1192,11 +1192,6 @@
                                     </div>
                                 </div>
                                 <div class="prod-details">
-                                    <div class="prod-title-container">
-                                        <p class="prod-title" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
-                                            @if($mod->prefix)<span class="prod-prefix">{{ $mod->prefix }} </span>@endif{{ Str::limit($mod->descripcion ?? '', 90) }}
-                                        </p>
-                                    </div>
                                     <div class="prod-action-btn">
                                         <a href="{{ route('detallemod', $mod->id) }}"><i class='bx bx-shopping-bag'></i>
                                             Ver Catálogo</a>
