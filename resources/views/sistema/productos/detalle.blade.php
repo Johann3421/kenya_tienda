@@ -413,9 +413,7 @@
                     <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                 </a>
             </div>
-        </div>
-    </div>
-    <div style="max-width:100%;">
+            <div style="max-width:100%;">
         <div style="background:#fff; border:1px solid #eee; border-radius:12px; overflow:hidden;">
             <div style="background:#ee7c31; padding:16px 22px; display:flex; align-items:center; gap:8px;">
                 <i class="fa-solid fa-clipboard-list" style="color:#1a1a1a; font-size:16px;"></i>
@@ -509,7 +507,6 @@
             @endif
         </div>
     </div>
-</div>
             </div>{{-- close #design-v2 --}}
 
             {{-- ===== DISEÑO ANTERIOR ===== --}}
@@ -654,6 +651,9 @@
                     btn.addEventListener('mouseleave', function(){ btn.style.borderColor = '#ccc'; btn.style.color = '#666'; });
                 })();
             </script>
+        </div>
+    </div>
+</div>
 <br>
 @endsection
 
