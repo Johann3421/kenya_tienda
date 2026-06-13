@@ -518,95 +518,99 @@
     </div>{{-- close col-lg-8 --}}
 </div>{{-- close row --}}
 
-{{-- ===== ESPECIFICACIONES TÉCNICAS (diseño viejo, ancho completo) ===== --}}
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr style="background-color: #EF9614;">
-                <th><i class="fa-solid fa-box"></i> Especificaciones Técnicas</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if($isMonitor)
-                @forelse($especificaciones as $espec)
-                <tr>
-                    <td style="min-width:200px;font-weight:600">{{ $espec->campo }}</td>
-                    <td></td>
-                    <td>{{ $espec->descripcion }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                @endforelse
-                <tr>
-                    <td style="min-width:200px;font-weight:600">Número de Parte</td>
-                    <td></td>
-                    <td>{{ $producto->nro_parte ?? 'No especificado' }}</td>
-                </tr>
-            @elseif($isToner)
-                @php
-                    $oldTonerRows = [
-                        ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte']) ?? $getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/'])],
-                        ['label' => 'Modelo', 'value' => $getSpecValue(['/^modelo$/', '/modelo/']) ?? $getProductValue(['Modelo']) ?? optional($producto->modelo)->descripcion],
-                        ['label' => 'Tipo de suministro', 'value' => $getSpecValue(['/tipo de suministro|suministro|formato/']) ?? $getProductValue(['Tipo de suministro'])],
-                        ['label' => 'Color', 'value' => $getSpecValue(['/^color$/', '/color/']) ?? $getProductValue(['Color'])],
-                        ['label' => 'Descripción', 'value' => $getSpecValue(['/descrip/']) ?? $getProductValue(['Descripción'])],
-                        ['label' => 'Rendimiento', 'value' => $getSpecValue(['/rendimiento|p[aá]ginas|paginas/']) ?? $getProductValue(['Rendimiento'])],
-                        ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a|g\.\s*f/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
-                        ['label' => 'Sistema RAEE', 'value' => $getSpecValue(['/raee|manejo/']) ?? $getProductValue(['Sistema RAEE'])],
-                        ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
-                        ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|caja\s*x/']) ?? $getProductValue(['Empaque'])],
-                        ['label' => 'Unidad', 'value' => $getSpecValue(['/^unidad$/', '/unidad\s*caja|caja\s*x/'])],
-                        ['label' => 'Dimensiones', 'value' => $getSpecValue(['/dimensi/']) ?? $getProductValue(['Dimensiones'])]
-                    ];
-                @endphp
-                @forelse($oldTonerRows as $fr)
-                <tr>
-                    <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
-                    <td></td>
-                    <td>{{ $fr['value'] ?? 'No especificado' }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                @endforelse
-            @else
-                @php
-                    $oldPcRows = [
-                        ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
-                        ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
-                        ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
-                        ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
-                        ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
-                        ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
-                        ['label' => 'Sistema Operativo', 'value' => $getSpecValue(['/sistema operativo|\bos\b|windows|linux/']) ?? $getProductValue(['sistema_operativo'])],
-                        ['label' => 'Suite Ofimática', 'value' => $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica'])],
-                        ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
-                        ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/'])],
-                        ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/'])],
-                        ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
-                        ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
-                        ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
-                        ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2/'])],
-                        ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/'])],
-                        ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
-                        ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque'])],
-                        ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
-                        ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/'])],
-                    ];
-                @endphp
-                @forelse($oldPcRows as $fr)
-                <tr>
-                    <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
-                    <td></td>
-                    <td>{{ $fr['value'] ?? 'No especificado' }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                @endforelse
-            @endif
-        </tbody>
-    </table>
+{{-- ===== ESPECIFICACIONES TÉCNICAS (ancho completo) ===== --}}
+<div style="background:#fff; border:1px solid #eee; border-radius:14px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.04); margin-bottom:20px;">
+    <div style="background:linear-gradient(135deg, #ee7c31 0%, #f39548 100%); padding:18px 24px; display:flex; align-items:center; gap:10px;">
+        <i class="fa-solid fa-clipboard-list" style="color:#fff; font-size:18px;"></i>
+        <span style="font-weight:700; font-size:17px; color:#fff; letter-spacing:0.3px;">Especificaciones Técnicas</span>
+    </div>
+
+    <div style="padding:8px 0;">
+        @if($isMonitor)
+            @forelse($especificaciones as $espec)
+            <div style="display:flex; align-items:center; padding:14px 24px; border-bottom:1px solid #f5f5f5; transition:background 0.15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='transparent'">
+                <div style="flex:0 0 220px; font-weight:600; color:#555; font-size:14px; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-circle" style="font-size:5px; color:#ee7c31;"></i>
+                    {{ $espec->campo }}
+                </div>
+                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $espec->descripcion }}</div>
+            </div>
+            @empty
+            <div style="padding:32px; text-align:center; color:#999; font-size:14px;">Aún no tiene especificaciones</div>
+            @endforelse
+            <div style="display:flex; align-items:center; padding:14px 24px; background:#fafafa; transition:background 0.15s;" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='#fafafa'">
+                <div style="flex:0 0 220px; font-weight:600; color:#555; font-size:14px; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-circle" style="font-size:5px; color:#ee7c31;"></i>
+                    Número de Parte
+                </div>
+                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $producto->nro_parte ?? 'No especificado' }}</div>
+            </div>
+        @elseif($isToner)
+            @php
+                $oldTonerRows = [
+                    ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte']) ?? $getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/'])],
+                    ['label' => 'Modelo', 'value' => $getSpecValue(['/^modelo$/', '/modelo/']) ?? $getProductValue(['Modelo']) ?? optional($producto->modelo)->descripcion],
+                    ['label' => 'Tipo de suministro', 'value' => $getSpecValue(['/tipo de suministro|suministro|formato/']) ?? $getProductValue(['Tipo de suministro'])],
+                    ['label' => 'Color', 'value' => $getSpecValue(['/^color$/', '/color/']) ?? $getProductValue(['Color'])],
+                    ['label' => 'Descripción', 'value' => $getSpecValue(['/descrip/']) ?? $getProductValue(['Descripción'])],
+                    ['label' => 'Rendimiento', 'value' => $getSpecValue(['/rendimiento|p[aá]ginas|paginas/']) ?? $getProductValue(['Rendimiento'])],
+                    ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a|g\.\s*f/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
+                    ['label' => 'Sistema RAEE', 'value' => $getSpecValue(['/raee|manejo/']) ?? $getProductValue(['Sistema RAEE'])],
+                    ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
+                    ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|caja\s*x/']) ?? $getProductValue(['Empaque'])],
+                    ['label' => 'Unidad', 'value' => $getSpecValue(['/^unidad$/', '/unidad\s*caja|caja\s*x/'])],
+                    ['label' => 'Dimensiones', 'value' => $getSpecValue(['/dimensi/']) ?? $getProductValue(['Dimensiones'])]
+                ];
+            @endphp
+            @forelse($oldTonerRows as $fr)
+            <div style="display:flex; align-items:center; padding:14px 24px; border-bottom:1px solid #f5f5f5; transition:background 0.15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='transparent'">
+                <div style="flex:0 0 220px; font-weight:600; color:#555; font-size:14px; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-circle" style="font-size:5px; color:#ee7c31;"></i>
+                    {{ $fr['label'] }}
+                </div>
+                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $fr['value'] ?? 'No especificado' }}</div>
+            </div>
+            @empty
+            <div style="padding:32px; text-align:center; color:#999; font-size:14px;">Aún no tiene especificaciones</div>
+            @endforelse
+        @else
+            @php
+                $oldPcRows = [
+                    ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
+                    ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
+                    ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
+                    ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
+                    ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
+                    ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
+                    ['label' => 'Sistema Operativo', 'value' => $getSpecValue(['/sistema operativo|\bos\b|windows|linux/']) ?? $getProductValue(['sistema_operativo'])],
+                    ['label' => 'Suite Ofimática', 'value' => $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica'])],
+                    ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
+                    ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/'])],
+                    ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/'])],
+                    ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
+                    ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
+                    ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
+                    ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2/'])],
+                    ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/'])],
+                    ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
+                    ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque'])],
+                    ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
+                    ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/'])],
+                ];
+            @endphp
+            @forelse($oldPcRows as $fr)
+            <div style="display:flex; align-items:center; padding:14px 24px; border-bottom:1px solid #f5f5f5; transition:background 0.15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='transparent'">
+                <div style="flex:0 0 220px; font-weight:600; color:#555; font-size:14px; display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-circle" style="font-size:5px; color:#ee7c31;"></i>
+                    {{ $fr['label'] }}
+                </div>
+                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $fr['value'] ?? 'No especificado' }}</div>
+            </div>
+            @empty
+            <div style="padding:32px; text-align:center; color:#999; font-size:14px;">Aún no tiene especificaciones</div>
+            @endforelse
+        @endif
+    </div>
 </div>
 </div>{{-- close container --}}
 
