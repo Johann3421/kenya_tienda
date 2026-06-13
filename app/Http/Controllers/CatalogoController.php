@@ -303,9 +303,10 @@ class CatalogoController extends Controller
                 foreach($tarjetavideos as $key => $tarjetavideo) {
                     $tv = trim($tarjetavideo);
                     $tvLen = strlen($tv);
-                    // Match: raw value starts with normalized value
-                    // AND is either exactly the same or has a word boundary (space) after
-                    $matchExpr = "(tarjetavideo LIKE ? AND (CHAR_LENGTH(tarjetavideo) = ? OR SUBSTRING(tarjetavideo, ?, 1) = ' '))";
+                    // Normalizar columna: quitar espacios alrededor de guiones y consolidar espacios
+                    // "- 8GB" → "-8GB", "-  8GB" → "-8GB", "NVIDIA  RTX" → "NVIDIA RTX"
+                    $normCol = "REPLACE(REPLACE(REPLACE(REPLACE(TRIM(tarjetavideo), '-  ', '-'), '- ', '-'), '  ', ' '), '- ', '-')";
+                    $matchExpr = "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))";
                     $matchParams = [$tv . '%', $tvLen, $tvLen + 1];
                     if ($key === 0) {
                         $q->whereRaw($matchExpr, $matchParams);
@@ -521,8 +522,9 @@ class CatalogoController extends Controller
         if ($request->tarjetavideo){
             $tv = trim($request->tarjetavideo);
             $tvLen = strlen($tv);
+            $normCol = "REPLACE(REPLACE(REPLACE(REPLACE(TRIM(tarjetavideo), '-  ', '-'), '- ', '-'), '  ', ' '), '- ', '-')";
             $productos->whereRaw(
-                "(tarjetavideo LIKE ? AND (CHAR_LENGTH(tarjetavideo) = ? OR SUBSTRING(tarjetavideo, ?, 1) = ' '))",
+                "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))",
                 [$tv . '%', $tvLen, $tvLen + 1]
             );
         }

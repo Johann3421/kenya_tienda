@@ -102,6 +102,9 @@
             // Consolidar espacios múltiples (incluye tabs) a un solo espacio
             $v = preg_replace('/\s+/', ' ', $v);
             $v = trim($v);
+            // Normalizar guiones sueltos: "- 8GB" → "-8GB" (quitar espacios alrededor de guion)
+            $v = preg_replace('/\s*-\s*/', '-', $v);
+            $v = trim($v);
 
             // Caso 1: si tiene VRAM (ej. "8GB", "12 GB") conservar solo hasta ahí
             if (preg_match('/^(.*?\d+\s*GB)/i', $v, $m)) {
