@@ -70,8 +70,29 @@ class CatalogoController extends Controller
             if ($request->filled($col)) {
                 $values = array_map('trim', explode(',', $request->$col));
                 $values = array_filter($values, fn($v) => $v !== '');
+
                 if (!empty($values)) {
-                    $query->whereIn($col, $values);
+                    if ($col === 'tarjetavideo') {
+                        // Para tarjeta de video: normalizar columna y buscar con LIKE
+                        // porque el aside muestra valores normalizados (sin sufijos OC/Gaming/Edition)
+                        // pero la BD tiene valores crudos con esos sufijos
+                        $query->where(function($q) use ($values) {
+                            $normCol = "REPLACE(REPLACE(REPLACE(REPLACE(TRIM(tarjetavideo), '-  ', '-'), '- ', '-'), '  ', ' '), '- ', '-')";
+                            foreach ($values as $i => $val) {
+                                $tv = trim($val);
+                                $tvLen = strlen($tv);
+                                $matchExpr = "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))";
+                                $matchParams = [$tv . '%', $tvLen, $tvLen + 1];
+                                if ($i === 0) {
+                                    $q->whereRaw($matchExpr, $matchParams);
+                                } else {
+                                    $q->orWhereRaw($matchExpr, $matchParams);
+                                }
+                            }
+                        });
+                    } else {
+                        $query->whereIn($col, $values);
+                    }
                 }
             }
         }
