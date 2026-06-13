@@ -591,6 +591,7 @@
         </tbody>
     </table>
 </div>
+</div>{{-- close container --}}
 
 <br>
 @endsection
