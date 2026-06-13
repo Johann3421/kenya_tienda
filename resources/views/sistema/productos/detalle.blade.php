@@ -417,63 +417,80 @@
 
         {{-- ===== DISEÑO ANTERIOR ===== --}}
         <div id="design-v1" style="display:none;">
-            <div class="carousel-descripcion mb-3 row" style="padding: 15px;">
-                <div class="col-md-8">
-                    <div class="table-responsive">
-                        <table class="table table-borderless mb-0">
-                            <tbody>
-                                @if($isMonitor)
-                                    @forelse($especificacionesResumen as $espec)
-                                    <tr><td style="min-width:160px;font-weight:600">{{ $espec->campo }}</td><td>: {{ $espec->descripcion }}</td></tr>
-                                    @empty
-                                    <tr><td colspan="2" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                                    @endforelse
-                                @elseif($isToner)
-                                    @foreach($topOrdered as $espec)
-                                    <tr><td style="min-width:160px;font-weight:700">{{ $espec->campo }}</td><td>: {{ $espec->descripcion }}</td></tr>
-                                    @endforeach
-                                @else
-                                    @forelse($topOrdered as $espec)
-                                    <tr>
-                                        <td style="min-width:160px;font-weight:700;vertical-align:top">{{ $espec->campo }}</td>
-                                        <td>
-                                            @if($isDesktopOrWorkstation)
-                                            <table style="width:100%;border-collapse:collapse;"><tr>
-                                                <td style="padding:0;vertical-align:top;width:50%;">: {{ $espec->descripcion }}</td>
-                                                <td style="padding:0 0 0 14px;vertical-align:top;width:50%;"><span style="font-size:0.85em;color:#999;font-style:italic;">
-                                                    @if(strtolower($espec->campo) === 'procesador')Descripción 2: {{ $producto->descripcion_2 ?: 'Vacío' }}@else Descripción 2: Vacío @endif
-                                                </span></td>
-                                            </tr></table>
-                                            @else
-                                            : {{ $espec->descripcion }}
-                                            @endif
-                                        </td>
-                                    </tr>
-                                    @empty
-                                    <tr><td colspan="2" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
-                                    @endforelse
-                                @endif
-                            </tbody>
-                        </table>
+            <div style="background:#fff; border:1px solid #eee; border-radius:12px; padding:24px 28px; margin-bottom:20px;">
+                <div class="table-responsive">
+                    <table class="table table-borderless mb-0" style="width:100%;">
+                        <tbody>
+                            @if($isMonitor)
+                                @forelse($especificacionesResumen as $espec)
+                                <tr>
+                                    <td style="min-width:180px; font-weight:600; color:#444; padding:10px 16px 10px 0; vertical-align:top; width:35%;">{{ $espec->campo }}</td>
+                                    <td style="padding:10px 0; color:#1a1a1a; vertical-align:top;">: {{ $espec->descripcion }}</td>
+                                </tr>
+                                @empty
+                                <tr><td colspan="2" class="text-center text-muted py-3">Aún no tiene especificaciones</td></tr>
+                                @endforelse
+                            @elseif($isToner)
+                                @foreach($topOrdered as $espec)
+                                <tr>
+                                    <td style="min-width:180px; font-weight:700; color:#444; padding:10px 16px 10px 0; vertical-align:top; width:35%;">{{ $espec->campo }}</td>
+                                    <td style="padding:10px 0; color:#1a1a1a; vertical-align:top;">: {{ $espec->descripcion }}</td>
+                                </tr>
+                                @endforeach
+                            @else
+                                @forelse($topOrdered as $espec)
+                                <tr>
+                                    <td style="min-width:180px; font-weight:700; color:#444; padding:10px 16px 10px 0; vertical-align:top; width:35%;">{{ $espec->campo }}</td>
+                                    <td style="padding:10px 0; color:#1a1a1a; vertical-align:top;">
+                                        @if($isDesktopOrWorkstation)
+                                        <div style="display:flex; gap:16px; align-items:flex-start;">
+                                            <div style="flex:1;">: {{ $espec->descripcion }}</div>
+                                            <div style="flex:1; font-size:0.85em; color:#999; font-style:italic;">
+                                                @if(strtolower($espec->campo) === 'procesador')Descripción 2: {{ $producto->descripcion_2 ?: 'Vacío' }}@else Descripción 2: Vacío @endif
+                                            </div>
+                                        </div>
+                                        @else
+                                        : {{ $espec->descripcion }}
+                                        @endif
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr><td colspan="2" class="text-center text-muted py-3">Aún no tiene especificaciones</td></tr>
+                                @endforelse
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3" style="font-size:11px; color:#bbb; padding-left:2px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
+            </div>
+
+            <div style="background:#fafafa; border:1px solid #eee; border-radius:12px; padding:18px 24px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+                <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+                    @foreach($producto->getGarantia->skip(0)->take(1) as $gar)
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img alt="Garantía" src="https://img.icons8.com/fluency/2x/guarantee.png" style="width:28px; height:28px;">
+                        <span style="font-size:14px; font-weight:600; color:#222;">TIEMPO DE GARANTIA: {{ $gar->garantia }} MESES</span>
+                    </div>
+                    @endforeach
+                    <span style="color:#ddd;">|</span>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img alt="Ficha técnica" src="https://img.icons8.com/ios-filled/2x/wordbook.png" style="width:22px; height:22px; filter:invert(0%) sepia(0%) saturate(7469%) hue-rotate(214deg) brightness(91%) contrast(107%);">
+                        <span style="font-size:14px; font-weight:600; color:#222;">FICHA TECNICA:</span>
+                        @if($producto->ficha_tecnica)
+                            @php
+                                $fichaUrl = str_starts_with($producto->ficha_tecnica, 'http')
+                                    ? $producto->ficha_tecnica
+                                    : asset('/storage/' . $producto->ficha_tecnica);
+                            @endphp
+                            <a href="{{ $fichaUrl }}" target="_blank" style="font-size:14px; font-weight:600; color:#1a1a1a;">PDF <iconify-icon icon="bx:download"></iconify-icon></a>
+                        @else
+                            <span style="font-size:14px; color:#999;">No disponible</span>
+                        @endif
                     </div>
                 </div>
-                <div class="col-md-12 mt-2" style="font-size: 11px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
-            </div>
-            <div>
-                <table class="table"><thead><tr>
-                    <th scope="col-12"><div class="grid-icons__item grid-icon">
-                        @foreach($producto->getGarantia->skip(0)->take(1) as $gar)
-                        <div>TIEMPO DE GARANTIA: {{$gar->garantia}} MESES @endforeach
-                        <img alt="Garantía" srcset="https://img.icons8.com/fluency/2x/guarantee.png 3x"><br>FICHA TECNICA:
-                        @if($producto->ficha_tecnica)
-                            @php $fichaUrl = str_starts_with($producto->ficha_tecnica, 'http') ? $producto->ficha_tecnica : asset('/storage/'.$producto->ficha_tecnica); @endphp
-                            <a href="{{ $fichaUrl }}" target="_blank">PDF <iconify-icon icon="bx:download"></iconify-icon></a>
-                        @else <span class="text-muted">No disponible</span> @endif
-                        <img alt="Ficha" srcset="https://img.icons8.com/ios-filled/2x/wordbook.png 3x" style="filter:invert(0%) sepia(0%) saturate(7469%) hue-rotate(214deg) brightness(91%) contrast(107%);">
-                        </div></div>
-                    </th>
-                    <th><a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-block btn-success"><i class="bx bxl-whatsapp" style="font-size:24px;vertical-align:bottom;"></i> Contactar</a></th>
-                </tr></thead></table>
+                <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600; white-space:nowrap; font-size:14px;">
+                    <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
+                </a>
             </div>
         </div>{{-- close #design-v1 --}}
 
