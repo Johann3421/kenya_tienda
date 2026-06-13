@@ -78,7 +78,7 @@ class CatalogoController extends Controller
                         // sin sufijos OC/Gaming/Edition, y sin espacios alrededor de guiones)
                         // pero la BD tiene valores crudos con todo eso
                         $query->where(function($q) use ($values) {
-                            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '))";
+                            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' dedicado', ''), 'integrado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '), '  ', ' '), '  ', ' '))";
                             foreach ($values as $i => $val) {
                                 $tv = strtolower(trim($val));
                                 $tv = str_replace(' gb', 'gb', $tv);
@@ -323,7 +323,7 @@ class CatalogoController extends Controller
             $tarjetavideos = $request->tarjetavideos;
 
             $productos->where(function($q) use ($tarjetavideos) {
-                $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '))";
+                $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' dedicado', ''), 'integrado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '), '  ', ' '), '  ', ' '))";
                 foreach($tarjetavideos as $key => $tarjetavideo) {
                     $tv = strtolower(trim($tarjetavideo));
                     $tv = str_replace(' gb', 'gb', $tv);
@@ -545,7 +545,7 @@ class CatalogoController extends Controller
             $tv = strtolower(trim($request->tarjetavideo));
             $tv = str_replace(' gb', 'gb', $tv);
             $tvLen = strlen($tv);
-            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '))";
+            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' dedicado', ''), 'integrado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '), '  ', ' '), '  ', ' '))";
             $productos->whereRaw(
                 "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))",
                 [$tv . '%', $tvLen, $tvLen + 1]
