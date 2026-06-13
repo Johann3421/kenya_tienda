@@ -299,13 +299,21 @@ class CatalogoController extends Controller
         if (!empty($request->tarjetavideos)) {
             $tarjetavideos = $request->tarjetavideos;
 
-            foreach($tarjetavideos as $key =>$tarjetavideo){
-                if($key === 0) {
-                    $productos->where('tarjetavideo', $tarjetavideos[0]);
-                }else {
-                    $productos->orwhere('tarjetavideo', $tarjetavideo);
+            $productos->where(function($q) use ($tarjetavideos) {
+                foreach($tarjetavideos as $key => $tarjetavideo) {
+                    $tv = trim($tarjetavideo);
+                    $tvLen = strlen($tv);
+                    // Match: raw value starts with normalized value
+                    // AND is either exactly the same or has a word boundary (space) after
+                    $matchExpr = "(tarjetavideo LIKE ? AND (CHAR_LENGTH(tarjetavideo) = ? OR SUBSTRING(tarjetavideo, ?, 1) = ' '))";
+                    $matchParams = [$tv . '%', $tvLen, $tvLen + 1];
+                    if ($key === 0) {
+                        $q->whereRaw($matchExpr, $matchParams);
+                    } else {
+                        $q->orWhereRaw($matchExpr, $matchParams);
+                    }
                 }
-            }
+            });
         }
 
         if (!empty($request->ram)) {
@@ -511,7 +519,12 @@ class CatalogoController extends Controller
             $productos->where('almacenamiento', $request->almacenamiento);
         }
         if ($request->tarjetavideo){
-            $productos->where('tarjetavideo', $request->tarjetavideo);
+            $tv = trim($request->tarjetavideo);
+            $tvLen = strlen($tv);
+            $productos->whereRaw(
+                "(tarjetavideo LIKE ? AND (CHAR_LENGTH(tarjetavideo) = ? OR SUBSTRING(tarjetavideo, ?, 1) = ' '))",
+                [$tv . '%', $tvLen, $tvLen + 1]
+            );
         }
 
         $productos = $productos->paginate(6);

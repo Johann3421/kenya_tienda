@@ -99,6 +99,9 @@
             // Quitar la palabra "dedicado" y similares
             $v = preg_replace('/\bdedicad[oa]s?\b/i', '', $v);
             $v = trim($v);
+            // Consolidar espacios múltiples (incluye tabs) a un solo espacio
+            $v = preg_replace('/\s+/', ' ', $v);
+            $v = trim($v);
 
             // Caso 1: si tiene VRAM (ej. "8GB", "12 GB") conservar solo hasta ahí
             if (preg_match('/^(.*?\d+\s*GB)/i', $v, $m)) {
