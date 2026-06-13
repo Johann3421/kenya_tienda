@@ -415,100 +415,6 @@
             </div>
         </div>{{-- close #design-v2 --}}
 
-        <div style="max-width:100%;">
-            <div style="background:#fff; border:1px solid #eee; border-radius:12px; overflow:hidden;">
-                <div style="background:#ee7c31; padding:16px 22px; display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-clipboard-list" style="color:#1a1a1a; font-size:16px;"></i>
-                    <span style="font-weight:700; font-size:16px; color:#fff;">Especificaciones Técnicas</span>
-                </div>
-
-                @if($isMonitor)
-                    @php $monitorRows = $especificaciones->filter(fn($e) => trim($e->descripcion ?? '') !== ''); @endphp
-                    @if($monitorRows->isNotEmpty())
-                        @foreach($monitorRows as $index => $espec)
-                            <div style="display:flex; padding:13px 22px; {{ $index % 2 === 0 ? 'background:#fff;' : 'background:#fafafa;' }} border-bottom:1px solid #f3f3f3;">
-                                <div style="flex:0 0 200px; font-weight:600; color:#444; font-size:14px;">{{ $espec->campo }}</div>
-                                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $espec->descripcion }}</div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div style="padding:20px; text-align:center; color:#999;">Aún no tiene especificaciones</div>
-                    @endif
-                    <div style="display:flex; padding:13px 22px; background:#fff; border-bottom:1px solid #f3f3f3;">
-                        <div style="flex:0 0 200px; font-weight:600; color:#444; font-size:14px;">Número de Parte</div>
-                        <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $producto->nro_parte ?? 'No especificado' }}</div>
-                    </div>
-                @elseif($isToner)
-                    @php
-                        $finalRows = [
-                            ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte']) ?? $getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/'])],
-                            ['label' => 'Modelo', 'value' => $getSpecValue(['/^modelo$/', '/modelo/']) ?? $getProductValue(['Modelo']) ?? optional($producto->modelo)->descripcion],
-                            ['label' => 'Tipo de suministro', 'value' => $getSpecValue(['/tipo de suministro|suministro|formato/']) ?? $getProductValue(['Tipo de suministro'])],
-                            ['label' => 'Color', 'value' => $getSpecValue(['/^color$/', '/color/']) ?? $getProductValue(['Color'])],
-                            ['label' => 'Descripción', 'value' => $getSpecValue(['/descrip/']) ?? $getProductValue(['Descripción'])],
-                            ['label' => 'Rendimiento', 'value' => $getSpecValue(['/rendimiento|p[aá]ginas|paginas/']) ?? $getProductValue(['Rendimiento'])],
-                            ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a|g\.\s*f/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
-                            ['label' => 'Sistema RAEE', 'value' => $getSpecValue(['/raee|manejo/']) ?? $getProductValue(['Sistema RAEE'])],
-                            ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
-                            ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|caja\s*x/']) ?? $getProductValue(['Empaque'])],
-                            ['label' => 'Unidad', 'value' => $getSpecValue(['/^unidad$/', '/unidad\s*caja|caja\s*x/'])],
-                            ['label' => 'Dimensiones', 'value' => $getSpecValue(['/dimensi/']) ?? $getProductValue(['Dimensiones'])],
-                        ];
-                    @endphp
-                    @php $tonerRows = array_filter($finalRows, fn($r) => ($r['value'] ?? null) !== null); @endphp
-                    @if(!empty($tonerRows))
-                        @php $ti = 0; @endphp
-                        @foreach($tonerRows as $fr)
-                            <div style="display:flex; padding:13px 22px; {{ $ti % 2 === 0 ? 'background:#fff;' : 'background:#fafafa;' }} border-bottom:1px solid #f3f3f3;">
-                                <div style="flex:0 0 200px; font-weight:600; color:#444; font-size:14px;">{{ $fr['label'] }}</div>
-                                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $fr['value'] ?? '—' }}</div>
-                            </div>
-                            @php $ti++; @endphp
-                        @endforeach
-                    @else
-                        <div style="padding:20px; text-align:center; color:#999;">Aún no tiene especificaciones</div>
-                    @endif
-                @else
-                    @php
-                        $finalRows = [
-                            ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
-                            ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
-                            ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
-                            ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
-                            ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
-                            ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
-                            ['label' => 'Sistema Operativo', 'value' => $getSpecValue(['/sistema operativo|\bos\b|windows|linux/']) ?? $getProductValue(['sistema_operativo'])],
-                            ['label' => 'Suite Ofimática', 'value' => $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica'])],
-                            ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
-                            ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/'])],
-                            ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/'])],
-                            ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
-                            ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
-                            ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
-                            ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2/'])],
-                            ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/'])],
-                            ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
-                            ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque'])],
-                            ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
-                            ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/'])],
-                        ];
-                    @endphp
-                    @php $pcRows = array_filter($finalRows, fn($r) => ($r['value'] ?? null) !== null); @endphp
-                    @if(!empty($pcRows))
-                        @php $pi = 0; @endphp
-                        @foreach($pcRows as $fr)
-                            <div style="display:flex; padding:13px 22px; {{ $pi % 2 === 0 ? 'background:#fff;' : 'background:#fafafa;' }} border-bottom:1px solid #f3f3f3;">
-                                <div style="flex:0 0 200px; font-weight:600; color:#444; font-size:14px;">{{ $fr['label'] }}</div>
-                                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $fr['value'] ?? '—' }}</div>
-                            </div>
-                            @php $pi++; @endphp
-                        @endforeach
-                    @else
-                        <div style="padding:20px; text-align:center; color:#999;">Aún no tiene especificaciones</div>
-                    @endif
-                @endif
-            </div>
-        </div>
         {{-- ===== DISEÑO ANTERIOR ===== --}}
         <div id="design-v1" style="display:none;">
             <div class="carousel-descripcion mb-3 row" style="padding: 15px;">
@@ -592,9 +498,99 @@
                 btn.addEventListener('mouseleave', function(){ btn.style.borderColor = '#ccc'; btn.style.color = '#666'; });
             })();
         </script>
-
     </div>{{-- close col-lg-8 --}}
 </div>{{-- close row --}}
+
+{{-- ===== ESPECIFICACIONES TÉCNICAS (diseño viejo, ancho completo) ===== --}}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr style="background-color: #EF9614;">
+                <th><i class="fa-solid fa-box"></i> Especificaciones Técnicas</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if($isMonitor)
+                @forelse($especificaciones as $espec)
+                <tr>
+                    <td style="min-width:200px;font-weight:600">{{ $espec->campo }}</td>
+                    <td></td>
+                    <td>{{ $espec->descripcion }}</td>
+                </tr>
+                @empty
+                <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
+                @endforelse
+                <tr>
+                    <td style="min-width:200px;font-weight:600">Número de Parte</td>
+                    <td></td>
+                    <td>{{ $producto->nro_parte ?? 'No especificado' }}</td>
+                </tr>
+            @elseif($isToner)
+                @php
+                    $oldTonerRows = [
+                        ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte']) ?? $getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/'])],
+                        ['label' => 'Modelo', 'value' => $getSpecValue(['/^modelo$/', '/modelo/']) ?? $getProductValue(['Modelo']) ?? optional($producto->modelo)->descripcion],
+                        ['label' => 'Tipo de suministro', 'value' => $getSpecValue(['/tipo de suministro|suministro|formato/']) ?? $getProductValue(['Tipo de suministro'])],
+                        ['label' => 'Color', 'value' => $getSpecValue(['/^color$/', '/color/']) ?? $getProductValue(['Color'])],
+                        ['label' => 'Descripción', 'value' => $getSpecValue(['/descrip/']) ?? $getProductValue(['Descripción'])],
+                        ['label' => 'Rendimiento', 'value' => $getSpecValue(['/rendimiento|p[aá]ginas|paginas/']) ?? $getProductValue(['Rendimiento'])],
+                        ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a|g\.\s*f/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
+                        ['label' => 'Sistema RAEE', 'value' => $getSpecValue(['/raee|manejo/']) ?? $getProductValue(['Sistema RAEE'])],
+                        ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
+                        ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|caja\s*x/']) ?? $getProductValue(['Empaque'])],
+                        ['label' => 'Unidad', 'value' => $getSpecValue(['/^unidad$/', '/unidad\s*caja|caja\s*x/'])],
+                        ['label' => 'Dimensiones', 'value' => $getSpecValue(['/dimensi/']) ?? $getProductValue(['Dimensiones'])]
+                    ];
+                @endphp
+                @forelse($oldTonerRows as $fr)
+                <tr>
+                    <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
+                    <td></td>
+                    <td>{{ $fr['value'] ?? 'No especificado' }}</td>
+                </tr>
+                @empty
+                <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
+                @endforelse
+            @else
+                @php
+                    $oldPcRows = [
+                        ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
+                        ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
+                        ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
+                        ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
+                        ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
+                        ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
+                        ['label' => 'Sistema Operativo', 'value' => $getSpecValue(['/sistema operativo|\bos\b|windows|linux/']) ?? $getProductValue(['sistema_operativo'])],
+                        ['label' => 'Suite Ofimática', 'value' => $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica'])],
+                        ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
+                        ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/'])],
+                        ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/'])],
+                        ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
+                        ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
+                        ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
+                        ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2/'])],
+                        ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/'])],
+                        ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
+                        ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque'])],
+                        ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
+                        ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/'])],
+                    ];
+                @endphp
+                @forelse($oldPcRows as $fr)
+                <tr>
+                    <td style="min-width:200px;font-weight:600">{{ $fr['label'] }}</td>
+                    <td></td>
+                    <td>{{ $fr['value'] ?? 'No especificado' }}</td>
+                </tr>
+                @empty
+                <tr><td colspan="3" class="text-center text-muted">Aún no tiene especificaciones</td></tr>
+                @endforelse
+            @endif
+        </tbody>
+    </table>
+</div>
 
 <br>
 @endsection
