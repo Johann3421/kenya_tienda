@@ -74,23 +74,25 @@ class CatalogoController extends Controller
                 if (!empty($values)) {
                     if ($col === 'tarjetavideo') {
                         // Para tarjeta de video: buscar por la capacidad (ej. "12GB") en cualquier posición
-                        // del valor crudo, con coincidencia insensible a mayúsculas y a espacios.
-                        // Usa regex con word boundary para evitar falsos positivos (ej. "12GB" no debe
-                        // matchear "120GB" o "112GB").
+                        // del valor crudo, con coincidencia insensible a mayúsculas y flexible en espacios
+                        // (acepta "12GB", "12 GB", "12  GB"). Usa regex con word boundary para evitar
+                        // falsos positivos (ej. "12GB" no debe matchear "120GB" o "112GB").
                         $query->where(function($q) use ($values) {
                             foreach ($values as $i => $val) {
                                 $tv = strtolower(trim($val));
                                 $tv = ltrim($tv, '-');
                                 $tv = trim($tv);
-                                // Escapar caracteres especiales de regex
-                                $tvRegex = preg_quote($tv, '/');
-                                // Buscar el valor con word boundary: no debe estar precedido ni seguido por un dígito
-                                $matchExpr = "LOWER(tarjetavideo) ~ ?";
-                                $matchParams = ['(?:^|[^0-9])' . $tvRegex . '(?:[^0-9]|$)'];
-                                if ($i === 0) {
-                                    $q->whereRaw($matchExpr, $matchParams);
-                                } else {
-                                    $q->orWhereRaw($matchExpr, $matchParams);
+                                // Extraer el número del valor (ej. "12" de "12gb")
+                                if (preg_match('/(\d+)/', $tv, $m)) {
+                                    $num = $m[1];
+                                    // Buscar el número seguido de "gb" con espacio opcional y word boundary
+                                    $matchExpr = "LOWER(tarjetavideo) ~ ?";
+                                    $matchParams = ['(?:^|[^0-9])' . $num . '\s*gb(?:[^0-9]|$)'];
+                                    if ($i === 0) {
+                                        $q->whereRaw($matchExpr, $matchParams);
+                                    } else {
+                                        $q->orWhereRaw($matchExpr, $matchParams);
+                                    }
                                 }
                             }
                         });
@@ -329,8 +331,10 @@ class CatalogoController extends Controller
                     $tv = strtolower(trim($tarjetavideo));
                     $tv = ltrim($tv, '-');
                     $tv = trim($tv);
-                    $tvRegex = preg_quote($tv, '/');
-                    $q->orWhereRaw("LOWER(tarjetavideo) ~ ?", ['(?:^|[^0-9])' . $tvRegex . '(?:[^0-9]|$)']);
+                    if (preg_match('/(\d+)/', $tv, $m)) {
+                        $num = $m[1];
+                        $q->orWhereRaw("LOWER(tarjetavideo) ~ ?", ['(?:^|[^0-9])' . $num . '\s*gb(?:[^0-9]|$)']);
+                    }
                 }
             });
         }
@@ -541,8 +545,10 @@ class CatalogoController extends Controller
             $tv = strtolower(trim($request->tarjetavideo));
             $tv = ltrim($tv, '-');
             $tv = trim($tv);
-            $tvRegex = preg_quote($tv, '/');
-            $productos->whereRaw("LOWER(tarjetavideo) ~ ?", ['(?:^|[^0-9])' . $tvRegex . '(?:[^0-9]|$)']);
+            if (preg_match('/(\d+)/', $tv, $m)) {
+                $num = $m[1];
+                $productos->whereRaw("LOWER(tarjetavideo) ~ ?", ['(?:^|[^0-9])' . $num . '\s*gb(?:[^0-9]|$)']);
+            }
         }
 
         $productos = $productos->paginate(6);
