@@ -73,18 +73,20 @@ class CatalogoController extends Controller
 
                 if (!empty($values)) {
                     if ($col === 'tarjetavideo') {
-                        // Para tarjeta de video: normalizar columna y buscar con LIKE
-                        // porque el aside muestra valores normalizados (sin prefijos Dedicado/Integrado,
-                        // sin sufijos OC/Gaming/Edition, y sin espacios alrededor de guiones)
-                        // pero la BD tiene valores crudos con todo eso
+                        // Para tarjeta de video: buscar por la capacidad (ej. "12GB") en cualquier posición
+                        // del valor crudo, con coincidencia insensible a mayúsculas y a espacios.
+                        // Usa regex con word boundary para evitar falsos positivos (ej. "12GB" no debe
+                        // matchear "120GB" o "112GB").
                         $query->where(function($q) use ($values) {
-                            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' dedicado', ''), 'integrado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '), '  ', ' '), '  ', ' '))";
                             foreach ($values as $i => $val) {
                                 $tv = strtolower(trim($val));
-                                $tv = str_replace(' gb', 'gb', $tv);
-                                $tvLen = strlen($tv);
-                                $matchExpr = "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))";
-                                $matchParams = [$tv . '%', $tvLen, $tvLen + 1];
+                                $tv = ltrim($tv, '-');
+                                $tv = trim($tv);
+                                // Escapar caracteres especiales de regex
+                                $tvRegex = preg_quote($tv, '/');
+                                // Buscar el valor con word boundary: no debe estar precedido ni seguido por un dígito
+                                $matchExpr = "LOWER(tarjetavideo) ~ ?";
+                                $matchParams = ['(?:^|[^0-9])' . $tvRegex . '(?:[^0-9]|$)'];
                                 if ($i === 0) {
                                     $q->whereRaw($matchExpr, $matchParams);
                                 } else {
@@ -323,18 +325,12 @@ class CatalogoController extends Controller
             $tarjetavideos = $request->tarjetavideos;
 
             $productos->where(function($q) use ($tarjetavideos) {
-                $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' dedicado', ''), 'integrado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '), '  ', ' '), '  ', ' '))";
                 foreach($tarjetavideos as $key => $tarjetavideo) {
                     $tv = strtolower(trim($tarjetavideo));
-                    $tv = str_replace(' gb', 'gb', $tv);
-                    $tvLen = strlen($tv);
-                    $matchExpr = "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))";
-                    $matchParams = [$tv . '%', $tvLen, $tvLen + 1];
-                    if ($key === 0) {
-                        $q->whereRaw($matchExpr, $matchParams);
-                    } else {
-                        $q->orWhereRaw($matchExpr, $matchParams);
-                    }
+                    $tv = ltrim($tv, '-');
+                    $tv = trim($tv);
+                    $tvRegex = preg_quote($tv, '/');
+                    $q->orWhereRaw("LOWER(tarjetavideo) ~ ?", ['(?:^|[^0-9])' . $tvRegex . '(?:[^0-9]|$)']);
                 }
             });
         }
@@ -543,13 +539,10 @@ class CatalogoController extends Controller
         }
         if ($request->tarjetavideo){
             $tv = strtolower(trim($request->tarjetavideo));
-            $tv = str_replace(' gb', 'gb', $tv);
-            $tvLen = strlen($tv);
-            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' dedicado', ''), 'integrado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '), '  ', ' '), '  ', ' '))";
-            $productos->whereRaw(
-                "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))",
-                [$tv . '%', $tvLen, $tvLen + 1]
-            );
+            $tv = ltrim($tv, '-');
+            $tv = trim($tv);
+            $tvRegex = preg_quote($tv, '/');
+            $productos->whereRaw("LOWER(tarjetavideo) ~ ?", ['(?:^|[^0-9])' . $tvRegex . '(?:[^0-9]|$)']);
         }
 
         $productos = $productos->paginate(6);
