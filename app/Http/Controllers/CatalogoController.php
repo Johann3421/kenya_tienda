@@ -338,9 +338,6 @@ class CatalogoController extends Controller
                 }
             });
         }
-                }
-            });
-        }
 
         if (!empty($request->ram)) {
             $rams = $request->ram;
