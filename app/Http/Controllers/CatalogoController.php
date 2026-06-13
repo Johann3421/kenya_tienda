@@ -74,12 +74,14 @@ class CatalogoController extends Controller
                 if (!empty($values)) {
                     if ($col === 'tarjetavideo') {
                         // Para tarjeta de video: normalizar columna y buscar con LIKE
-                        // porque el aside muestra valores normalizados (sin sufijos OC/Gaming/Edition)
-                        // pero la BD tiene valores crudos con esos sufijos
+                        // porque el aside muestra valores normalizados (sin prefijos Dedicado/Integrado,
+                        // sin sufijos OC/Gaming/Edition, y sin espacios alrededor de guiones)
+                        // pero la BD tiene valores crudos con todo eso
                         $query->where(function($q) use ($values) {
-                            $normCol = "REPLACE(REPLACE(REPLACE(REPLACE(TRIM(tarjetavideo), '-  ', '-'), '- ', '-'), '  ', ' '), '- ', '-')";
+                            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '))";
                             foreach ($values as $i => $val) {
-                                $tv = trim($val);
+                                $tv = strtolower(trim($val));
+                                $tv = str_replace(' gb', 'gb', $tv);
                                 $tvLen = strlen($tv);
                                 $matchExpr = "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))";
                                 $matchParams = [$tv . '%', $tvLen, $tvLen + 1];
@@ -321,12 +323,11 @@ class CatalogoController extends Controller
             $tarjetavideos = $request->tarjetavideos;
 
             $productos->where(function($q) use ($tarjetavideos) {
+                $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '))";
                 foreach($tarjetavideos as $key => $tarjetavideo) {
-                    $tv = trim($tarjetavideo);
+                    $tv = strtolower(trim($tarjetavideo));
+                    $tv = str_replace(' gb', 'gb', $tv);
                     $tvLen = strlen($tv);
-                    // Normalizar columna: quitar espacios alrededor de guiones y consolidar espacios
-                    // "- 8GB" → "-8GB", "-  8GB" → "-8GB", "NVIDIA  RTX" → "NVIDIA RTX"
-                    $normCol = "REPLACE(REPLACE(REPLACE(REPLACE(TRIM(tarjetavideo), '-  ', '-'), '- ', '-'), '  ', ' '), '- ', '-')";
                     $matchExpr = "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))";
                     $matchParams = [$tv . '%', $tvLen, $tvLen + 1];
                     if ($key === 0) {
@@ -334,6 +335,9 @@ class CatalogoController extends Controller
                     } else {
                         $q->orWhereRaw($matchExpr, $matchParams);
                     }
+                }
+            });
+        }
                 }
             });
         }
@@ -541,9 +545,10 @@ class CatalogoController extends Controller
             $productos->where('almacenamiento', $request->almacenamiento);
         }
         if ($request->tarjetavideo){
-            $tv = trim($request->tarjetavideo);
+            $tv = strtolower(trim($request->tarjetavideo));
+            $tv = str_replace(' gb', 'gb', $tv);
             $tvLen = strlen($tv);
-            $normCol = "REPLACE(REPLACE(REPLACE(REPLACE(TRIM(tarjetavideo), '-  ', '-'), '- ', '-'), '  ', ' '), '- ', '-')";
+            $normCol = "TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(LOWER(tarjetavideo), '  ', ' '), '  ', ' '), '-  ', '-'), '- ', '-'), ' dedicado', ''), ' integrado', ''), ' gb', 'gb'), '  ', ' '), '  ', ' '))";
             $productos->whereRaw(
                 "($normCol LIKE ? AND (CHAR_LENGTH($normCol) = ? OR SUBSTRING($normCol, ?, 1) = ' '))",
                 [$tv . '%', $tvLen, $tvLen + 1]
