@@ -42,8 +42,12 @@ class LoginController extends Controller
 
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
-        
-        // Redirección directa sin intended (para pruebas)
+
+        // ponytail: rol cliente_web → portal cotización; el resto → admin
+        if (Auth::user()->hasRole('cliente_web')) {
+            return redirect('/cotizar');
+        }
+
         return redirect('/home');
     }
 

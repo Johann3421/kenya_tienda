@@ -385,7 +385,38 @@
                     @endif
                 </div>
                 <div class="mt-3" style="font-size:11px; color:#bbb; padding-left:2px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
-            </div>
+            
+            {{-- ── PRECIO (solo clientes verificados) ── --}}
+            @auth
+                @hasrole('cliente_web')
+                <div style="background:linear-gradient(135deg,#fff8f4,#fff3ec); border:1.5px solid #f5d4bb; border-radius:12px; padding:18px 22px; margin:0 0 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+                    <div>
+                        <div style="font-size:11px; color:#b0502a; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; margin-bottom:4px;">
+                            <i class="fa-solid fa-tag" style="margin-right:4px;"></i>Precio referencial (cliente verificado)
+                        </div>
+                        @if($producto->precio_anterior)
+                            <div style="font-size:14px; color:#ccc; text-decoration:line-through; margin-bottom:2px;">
+                                S/ {{ number_format($producto->precio_anterior, 2) }}
+                                <span style="background:#e74c3c; color:#fff; font-size:10px; font-weight:700; border-radius:4px; padding:1px 6px; margin-left:4px;">OFERTA</span>
+                            </div>
+                        @endif
+                        @if($producto->precio_unitario)
+                            <div style="font-size:30px; font-weight:800; color:#ee7c31; letter-spacing:-1px; line-height:1;">
+                                S/ {{ number_format($producto->precio_unitario, 2) }}
+                            </div>
+                        @else
+                            <div style="font-size:16px; color:#bbb; font-style:italic;">Precio a consultar</div>
+                        @endif
+                    </div>
+                    <a target="_blank"
+                       href="https://wa.me/+51958021778?text=Hola, soy cliente verificado y quiero cotizar: {{ urlencode($producto->display_name) }}"
+                       class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600;">
+                        <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Solicitar cotización
+                    </a>
+                </div>
+                @endhasrole
+            @endauth
+
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin:20px 0 24px; padding:16px 20px; background:#fafafa; border:1px solid #eee; border-radius:12px;">
                 <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
                     @foreach($producto->getGarantia->skip(0)->take(1) as $gar)
@@ -409,9 +440,11 @@
                         @endif
                     </div>
                 </div>
+                @guest
                 <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600; white-space:nowrap;">
                     <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                 </a>
+                @endguest
             </div>
         </div>{{-- close #design-v2 --}}
 

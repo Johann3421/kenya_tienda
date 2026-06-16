@@ -159,6 +159,14 @@ Route::view('/Novedades', 'Novedades')->name('novedades');
 Route::view('/Contactenos', 'Contactenos')->name('contactenos');
 Route::view('/Reclamaciones', 'Reclamaciones')->name('reclamaciones');
 
+// --------------------- PORTAL COTIZACIÓN (clientes verificados) --------
+Route::middleware(['auth', 'role:cliente_web'])->prefix('cotizar')->name('cotizar.')->group(function () {
+    Route::get('/', [App\Http\Controllers\CotizarController::class, 'index'])->name('index');
+    Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('detalle');
+    Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+});
+// -----------------------------------------------------------------------
+
 // Sorteo temporalmente oculto en producción — redirige al inicio
 Route::get('/sorteo', fn() => redirect('/'))->name('serial.draw');
 Route::post('/sorteo', fn() => redirect('/'))->name('serial.draw.store');
