@@ -23,10 +23,10 @@ class ClienteWebController extends Controller
 
     public function buscar(Request $request)
     {
-        // Asegurar que el rol existe (idempotente)
-        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'cliente_web', 'guard_name' => 'web']);
-
         try {
+            // Asegurar que el rol existe (idempotente)
+            \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'cliente_web', 'guard_name' => 'web']);
+
             $clientes = User::role('cliente_web')
                 ->with(['roles' => function ($query) {
                     $query->select('id', 'name');
@@ -56,11 +56,16 @@ class ClienteWebController extends Controller
                 'clientes' => $clientes
             ];
         } catch (\Throwable $e) {
-            \Log::error('ClienteWebController@buscar error: ' . $e->getMessage());
+            \Log::error('ClienteWebController@buscar error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
             return response()->json([
                 'type' => 'danger',
                 'title' => 'ERROR: ',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'debug' => [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]
             ], 500);
         }
     }
