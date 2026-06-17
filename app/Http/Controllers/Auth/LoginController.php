@@ -45,7 +45,7 @@ class LoginController extends Controller
 
         // ponytail: rol cliente_web → portal cotización; el resto → admin
         if (Auth::user()->hasRole('cliente_web')) {
-            return redirect('/cotizar');
+            return redirect()->intended('/cotizar');
         }
 
         return redirect('/home');
