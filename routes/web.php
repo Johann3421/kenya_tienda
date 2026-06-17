@@ -160,10 +160,13 @@ Route::view('/Contactenos', 'Contactenos')->name('contactenos');
 Route::view('/Reclamaciones', 'Reclamaciones')->name('reclamaciones');
 
 // --------------------- PORTAL COTIZACIÓN (clientes verificados) --------
+Route::get('/acceso-clientes', [App\Http\Controllers\LoginClienteController::class, 'showLoginForm'])->name('login-cliente.show');
+Route::post('/acceso-clientes', [App\Http\Controllers\LoginClienteController::class, 'login'])->name('login-cliente.post');
+
 Route::middleware(['auth', 'role:cliente_web'])->prefix('cotizar')->name('cotizar.')->group(function () {
     Route::get('/', [App\Http\Controllers\CotizarController::class, 'index'])->name('index');
     Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('detalle');
-    Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::post('/logout', [App\Http\Controllers\LoginClienteController::class, 'logout'])->name('logout');
 });
 // -----------------------------------------------------------------------
 

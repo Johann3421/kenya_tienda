@@ -43,9 +43,14 @@ class LoginController extends Controller
     if (Auth::attempt($credentials)) {
         $request->session()->regenerate();
 
-        // ponytail: rol cliente_web → portal cotización; el resto → admin
+        // Si es un cliente_web intentando entrar al panel de admin, lo rechazamos
         if (Auth::user()->hasRole('cliente_web')) {
-            return redirect()->intended('/cotizar');
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return back()->withErrors([
+                'username' => 'Este acceso es para el sistema administrativo. Ingresa por el Portal de Clientes.',
+            ]);
         }
 
         return redirect('/home');
