@@ -350,6 +350,15 @@ Route::group(['middleware' => ['can:productos']], function () {
     Route::post('/precios/sync', 'Admin\PrecioSyncController@sync')->name('precios.sync');
 });
 
+// --------------------- CLIENTES WEB (portal cotizaciones) -----------
+Route::group(['middleware' => ['can:usuarios']], function () {
+    Route::get('/clientes-web', 'ClienteWebController@index')->name('clientes-web.index');
+    Route::post('/clientes-web/buscar', 'ClienteWebController@buscar');
+    Route::post('/clientes-web/store', 'ClienteWebController@store');
+    Route::post('/clientes-web/update', 'ClienteWebController@update');
+    Route::post('/clientes-web/delete', 'ClienteWebController@delete');
+});
+
 // --------------------- USUARIOS --------------------------------
 Route::group(['middleware' => ['can:usuarios']], function () {
     Route::get('/usuarios', 'UserController@index')->name('usuarios');

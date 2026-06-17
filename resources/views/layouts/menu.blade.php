@@ -107,6 +107,7 @@
 
                 @can('usuarios')
                 <li class="nav-item"><a href="{{route('usuarios')}}" class="nav-link "><span class="pcoded-micon"><i class="fas fa-user-shield"></i></span><span class="pcoded-mtext">Usuarios</span></a></li>
+                <li class="nav-item"><a href="{{route('clientes-web.index')}}" class="nav-link "><span class="pcoded-micon"><i class="fas fa-user-tag"></i></span><span class="pcoded-mtext">Clientes Web</span></a></li>
                 @endcan
 
                 @can('pagina_web')
