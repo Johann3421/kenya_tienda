@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use App\User;
 use Illuminate\Support\Facades\DB;
@@ -22,34 +23,43 @@ class ClienteWebController extends Controller
 
     public function buscar(Request $request)
     {
-        $clientes = User::role('cliente_web')
-            ->with(['roles' => function ($query) {
-                $query->select('id', 'name');
-            }]);
+        try {
+            $clientes = User::role('cliente_web')
+                ->with(['roles' => function ($query) {
+                    $query->select('id', 'name');
+                }]);
 
-        if ($request->search) {
-            $clientes->where(function ($q) use ($request) {
-                $q->where('nombres', 'LIKE', "%{$request->search}%")
-                  ->orWhere('ape_paterno', 'LIKE', "%{$request->search}%")
-                  ->orWhere('username', 'LIKE', "%{$request->search}%")
-                  ->orWhere('email', 'LIKE', "%{$request->search}%");
-            });
+            if ($request->search) {
+                $clientes->where(function ($q) use ($request) {
+                    $q->where('nombres', 'LIKE', "%{$request->search}%")
+                      ->orWhere('ape_paterno', 'LIKE', "%{$request->search}%")
+                      ->orWhere('username', 'LIKE', "%{$request->search}%")
+                      ->orWhere('email', 'LIKE', "%{$request->search}%");
+                });
+            }
+
+            $clientes = $clientes->paginate(10);
+
+            return [
+                'pagination' => [
+                    'total'        => $clientes->total(),
+                    'current_page' => $clientes->currentPage(),
+                    'per_page'     => $clientes->perPage(),
+                    'last_page'    => $clientes->lastPage(),
+                    'from'         => $clientes->firstItem(),
+                    'to'           => $clientes->to,
+                    'index'        => ($clientes->currentPage() - 1) * $clientes->perPage(),
+                ],
+                'clientes' => $clientes
+            ];
+        } catch (\Throwable $e) {
+            \Log::error('ClienteWebController@buscar error: ' . $e->getMessage());
+            return response()->json([
+                'type' => 'danger',
+                'title' => 'ERROR: ',
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        $clientes = $clientes->paginate(10);
-
-        return [
-            'pagination' => [
-                'total'        => $clientes->total(),
-                'current_page' => $clientes->currentPage(),
-                'per_page'     => $clientes->perPage(),
-                'last_page'    => $clientes->lastPage(),
-                'from'         => $clientes->firstItem(),
-                'to'           => $clientes->to,
-                'index'        => ($clientes->currentPage() - 1) * $clientes->perPage(),
-            ],
-            'clientes' => $clientes
-        ];
     }
 
     public function store(Request $request)
