@@ -344,6 +344,12 @@ Route::group(['middleware' => ['can:perfiles']], function () {
     Route::post('/roles/delete', 'RolController@delete');
 });
 
+// --------------------- PRECIOS (Google Sheets) ---------------------
+Route::group(['middleware' => ['can:productos']], function () {
+    Route::get('/precios/sync', 'Admin\PrecioSyncController@index')->name('precios.sync.index');
+    Route::post('/precios/sync', 'Admin\PrecioSyncController@sync')->name('precios.sync');
+});
+
 // --------------------- USUARIOS --------------------------------
 Route::group(['middleware' => ['can:usuarios']], function () {
     Route::get('/usuarios', 'UserController@index')->name('usuarios');

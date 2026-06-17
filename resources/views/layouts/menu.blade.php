@@ -38,6 +38,10 @@
                     <span class="pcoded-micon"><i class="fas fa-archive"></i></span>
                     <span class="pcoded-mtext">Productos</span></a>
                 </li>
+                <li class="nav-item"><a href="{{route('precios.sync.index')}}" class="nav-link ">
+                    <span class="pcoded-micon"><i class="fas fa-file-excel"></i></span>
+                    <span class="pcoded-mtext">Sync Precios</span></a>
+                </li>
                 @endcan
 
                 @can('producto_drivers')
