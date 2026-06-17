@@ -330,7 +330,7 @@
                                                 </div>
 
                                             </td>
-                                            <td class="text-center" style="text-transform: uppercase;"><span v-if="user.roles">@{{user.roles[0].name}}</span></td>
+                                            <td class="text-center" style="text-transform: uppercase;"><span v-if="user.roles && user.roles.length > 0">@{{user.roles[0].name}}</span></td>
                                             <td class="text-center">@{{Fecha(user.updated_at)}}</td>
                                             <td class="text-center">
                                                 <i class="fas fa-check-circle font-green" style="font-size: 15px;" v-if="user.activo == 'SI'"></i>
