@@ -23,6 +23,9 @@ class ClienteWebController extends Controller
 
     public function buscar(Request $request)
     {
+        // Asegurar que el rol existe (idempotente)
+        \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'cliente_web', 'guard_name' => 'web']);
+
         try {
             $clientes = User::role('cliente_web')
                 ->with(['roles' => function ($query) {
