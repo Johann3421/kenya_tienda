@@ -385,6 +385,7 @@
                     @endif
                 </div>
                 <div class="mt-3" style="font-size:11px; color:#bbb; padding-left:2px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
+            </div>
             
             {{-- ── PRECIO (solo clientes verificados) ── --}}
             @auth
