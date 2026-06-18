@@ -158,10 +158,94 @@
                 $altText = "Imagen de " . $producto->display_name;
             @endphp
 
-            <div class="product-image-container">
-                <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}"
-                     onerror="this.src='{{ asset('producto.jpg') }}'">
-            </div>
+            @php
+                $isGenwork = stripos($producto->display_name ?? $producto->nombre, 'genwork') !== false 
+                          || stripos(optional($producto->modelo)->descripcion, 'genwork') !== false;
+            @endphp
+
+            @if($isGenwork)
+                <div class="product-image-container 3d-viewer" id="viewer-3d" style="cursor: ew-resize; user-select: none; position: relative;">
+                    <img id="img-3d" src="{{ asset('Diseño_3d_case/XTQ-209_1.jpg') }}" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
+                    <div style="text-align:center; font-size:13px; color:#555; margin-top:12px; font-weight:600; background:#f8f9fa; padding:8px; border-radius:6px; border:1px solid #eee;">
+                        <i class="fas fa-cube" style="color:#ee7c31; margin-right:4px;"></i> Arrastra hacia los lados para girar en 3D
+                    </div>
+                </div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const viewer = document.getElementById('viewer-3d');
+                        if (!viewer) return;
+                        
+                        const img = document.getElementById('img-3d');
+                        const totalFrames = 36;
+                        let currentFrame = 1;
+                        let isDragging = false;
+                        let startX = 0;
+
+                        // Function to update image
+                        const updateFrame = (deltaX) => {
+                            if (Math.abs(deltaX) > 12) { // Sensitivity threshold
+                                if (deltaX > 0) {
+                                    // Drag right -> rotate left (decrease frame)
+                                    currentFrame = currentFrame > 1 ? currentFrame - 1 : totalFrames;
+                                } else {
+                                    // Drag left -> rotate right (increase frame)
+                                    currentFrame = currentFrame < totalFrames ? currentFrame + 1 : 1;
+                                }
+                                img.src = `{{ asset('Diseño_3d_case/XTQ-209_') }}${currentFrame}.jpg`;
+                                return true;
+                            }
+                            return false;
+                        };
+
+                        // Mouse Events
+                        viewer.addEventListener('mousedown', (e) => {
+                            isDragging = true;
+                            startX = e.clientX;
+                            viewer.style.cursor = 'grabbing';
+                            e.preventDefault(); // Prevent text selection
+                        });
+
+                        document.addEventListener('mouseup', () => {
+                            isDragging = false;
+                            viewer.style.cursor = 'ew-resize';
+                        });
+
+                        document.addEventListener('mousemove', (e) => {
+                            if (!isDragging) return;
+                            if (updateFrame(e.clientX - startX)) {
+                                startX = e.clientX;
+                            }
+                        });
+
+                        // Touch Events
+                        viewer.addEventListener('touchstart', (e) => {
+                            isDragging = true;
+                            startX = e.touches[0].clientX;
+                        });
+                        document.addEventListener('touchend', () => {
+                            isDragging = false;
+                        });
+                        viewer.addEventListener('touchmove', (e) => {
+                            if (!isDragging) return;
+                            e.preventDefault(); // Prevent page scroll while rotating
+                            if (updateFrame(e.touches[0].clientX - startX)) {
+                                startX = e.touches[0].clientX;
+                            }
+                        }, { passive: false });
+                        
+                        // Preload all 36 images for smooth rotation
+                        for(let i=1; i<=totalFrames; i++) {
+                            const preloadImg = new Image();
+                            preloadImg.src = `{{ asset('Diseño_3d_case/XTQ-209_') }}${i}.jpg`;
+                        }
+                    });
+                </script>
+            @else
+                <div class="product-image-container">
+                    <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}"
+                         onerror="this.src='{{ asset('producto.jpg') }}'">
+                </div>
+            @endif
         </div>
 
         <div class="col-lg-8" id="producto_detalle">
