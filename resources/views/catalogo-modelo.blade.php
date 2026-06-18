@@ -96,19 +96,7 @@
             position: absolute; bottom: 10px; right: 10px;
             display: flex; gap: 0.5rem; z-index: 2;
         }
-        .quick-view {
-            width: 38px; height: 38px; border-radius: 50%;
-            background-color: var(--primary-color); border: none;
-            color: white; display: flex; align-items: center;
-            justify-content: center; cursor: pointer;
-            transition: var(--transition); box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-            font-size: 1.1rem;
-        }
-        .quick-view:hover {
-            background-color: var(--secondary-color); transform: scale(1.12);
-            box-shadow: 0 4px 12px rgba(238,124,49,0.4);
-        }
-        .quick-view:active { transform: scale(0.95); }
+
         .product-info {
             padding: 1.25rem 1.5rem 1.5rem; flex-grow: 1; display: flex; flex-direction: column;
         }
@@ -379,15 +367,6 @@
                 params.set('page', page);
                 history.replaceState({}, '', window.location.pathname + '?' + params.toString());
                 fetchProducts(page);
-            });
-
-            // Lupa (quick-view) → ir al detalle del producto (funciona también con AJAX)
-            document.addEventListener('click', function(e) {
-                const lupa = e.target.closest('.quick-view');
-                if (!lupa) return;
-                e.preventDefault();
-                const id = lupa.getAttribute('data-id');
-                if (id) window.location.href = '/producto/' + id + '/detalle';
             });
         })();
     </script>
