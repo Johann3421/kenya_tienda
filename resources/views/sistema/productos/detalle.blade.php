@@ -164,50 +164,89 @@
                 $modelo360Id = $producto->modelo_id ?? null;
                 $url360Prefix = '';
                 
-                // 1. Check if it's a dynamic 360 model uploaded via admin
-                if ($modelo360Id && \Illuminate\Support\Facades\Storage::exists('public/modelos_360/' . $modelo360Id)) {
-                    $files = \Illuminate\Support\Facades\Storage::files('public/modelos_360/' . $modelo360Id);
-                    $totalFrames = count($files);
-                    if ($totalFrames > 0) {
-                        $has360 = true;
-                        $url360Prefix = asset('storage/modelos_360/' . $modelo360Id . '/');
+                // Allow disabling 3D via URL parameter ?3d=0
+                if (request('3d') !== '0') {
+                    // 1. Check if it's a dynamic 360 model uploaded via admin
+                    if ($modelo360Id && \Illuminate\Support\Facades\Storage::exists('public/modelos_360/' . $modelo360Id)) {
+                        $files = \Illuminate\Support\Facades\Storage::files('public/modelos_360/' . $modelo360Id);
+                        $totalFrames = count($files);
+                        if ($totalFrames > 0) {
+                            $has360 = true;
+                            $url360Prefix = asset('storage/modelos_360/' . $modelo360Id . '/');
+                        }
                     }
-                }
-                
-                // 2. Fallback to static "genwork" directory we pushed earlier if no dynamic model exists
-                if (!$has360) {
-                    $isGenwork = stripos($producto->display_name ?? $producto->nombre, 'genwork') !== false 
-                              || stripos(optional($producto->modelo)->descripcion, 'genwork') !== false;
                     
-                    if ($isGenwork) {
-                        $has360 = true;
-                        $totalFrames = 36;
-                        $url360Prefix = asset('Diseño_3d_case/XTQ-209_'); // Base without the number
+                    // 2. Fallback to static "genwork" directory we pushed earlier if no dynamic model exists
+                    if (!$has360) {
+                        $isGenwork = stripos($producto->display_name ?? $producto->nombre, 'genwork') !== false 
+                                  || stripos(optional($producto->modelo)->descripcion, 'genwork') !== false;
+                        
+                        if ($isGenwork) {
+                            $has360 = true;
+                            $totalFrames = 36;
+                            $url360Prefix = asset('Diseño_3d_case/XTQ-209_'); // Base without the number
+                        }
                     }
                 }
             @endphp
 
             @if($has360)
-                <div class="product-image-container 3d-viewer" id="viewer-3d" style="cursor: ew-resize; user-select: none; position: relative;">
-                    @php
-                        // First image load depends on if it's dynamic or static
-                        $firstImage = stripos($url360Prefix, 'Diseño_3d_case') !== false ? $url360Prefix . '1.jpg' : $url360Prefix . '/1.jpg';
-                    @endphp
-                    <img id="img-3d" src="{{ $firstImage }}" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
-                    
-                    <div id="v360-menu-btns" style="margin-top:15px; display:flex; justify-content:center; align-items:center; color:#555;">
-                        <div class="v360-navigate-btns" style="display:flex; gap:25px; background:#f8f9fa; padding:12px 25px; border-radius:30px; border:1px solid #ddd; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
-                            <div class="v360-menu-btns" id="btn-play" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-play"></i></div>
-                            <div class="v360-menu-btns" id="btn-drag" style="cursor:pointer; font-size:18px; color:#ee7c31;" title="Arrastrar"><i class="fa fa-hand-paper"></i></div>
-                            <div class="v360-menu-btns" id="btn-prev" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-chevron-left"></i></div>
-                            <div class="v360-menu-btns" id="btn-next" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-chevron-right"></i></div>
-                            <div class="v360-menu-btns" id="btn-reset" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-sync"></i></div>
+                <div id="container-3d-view">
+                    <div class="product-image-container 3d-viewer" id="viewer-3d" style="cursor: ew-resize; user-select: none; position: relative;">
+                        @php
+                            // First image load depends on if it's dynamic or static
+                            $firstImage = stripos($url360Prefix, 'Diseño_3d_case') !== false ? $url360Prefix . '1.jpg' : $url360Prefix . '/1.jpg';
+                        @endphp
+                        <img id="img-3d" src="{{ $firstImage }}" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
+                        
+                        <div id="v360-menu-btns" style="margin-top:15px; display:flex; justify-content:center; align-items:center; color:#555;">
+                            <div class="v360-navigate-btns" style="display:flex; gap:25px; background:#f8f9fa; padding:12px 25px; border-radius:30px; border:1px solid #ddd; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+                                <div class="v360-menu-btns" id="btn-play" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-play"></i></div>
+                                <div class="v360-menu-btns" id="btn-drag" style="cursor:pointer; font-size:18px; color:#ee7c31;" title="Arrastrar"><i class="fa fa-hand-paper"></i></div>
+                                <div class="v360-menu-btns" id="btn-prev" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-chevron-left"></i></div>
+                                <div class="v360-menu-btns" id="btn-next" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-chevron-right"></i></div>
+                                <div class="v360-menu-btns" id="btn-reset" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-sync"></i></div>
+                            </div>
                         </div>
                     </div>
+                    <div class="text-center mt-3">
+                        <button type="button" id="btn-toggle-view" class="btn btn-outline-secondary btn-sm" style="border-radius:20px;">
+                            <i class="fas fa-image"></i> Ver Imagen Normal (2D)
+                        </button>
+                    </div>
                 </div>
+
+                <!-- 2D Container (Hidden by default) -->
+                <div id="container-2d-view" style="display:none;">
+                    <div class="product-image-container">
+                        <img src="{{ $imagen }}" class="img-fluid w-100" alt="{{ $altText }}"
+                             onerror="this.src='{{ asset('producto.jpg') }}'">
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="button" id="btn-toggle-view-back" class="btn btn-outline-primary btn-sm" style="border-radius:20px;">
+                            <i class="fas fa-cube"></i> Volver a Vista 3D
+                        </button>
+                    </div>
+                </div>
+
                 <script>
                     document.addEventListener("DOMContentLoaded", function() {
                         const viewer = document.getElementById('viewer-3d');
+                        const container3d = document.getElementById('container-3d-view');
+                        const container2d = document.getElementById('container-2d-view');
+                        const btnToggle = document.getElementById('btn-toggle-view');
+                        const btnToggleBack = document.getElementById('btn-toggle-view-back');
+
+                        btnToggle.addEventListener('click', () => {
+                            container3d.style.display = 'none';
+                            container2d.style.display = 'block';
+                        });
+
+                        btnToggleBack.addEventListener('click', () => {
+                            container2d.style.display = 'none';
+                            container3d.style.display = 'block';
+                        });
+
                         if (!viewer) return;
                         
                         const img = document.getElementById('img-3d');
