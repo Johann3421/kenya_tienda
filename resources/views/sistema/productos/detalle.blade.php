@@ -159,13 +159,24 @@
             @endphp
 
             @php
-                $isGenwork = stripos($producto->display_name ?? $producto->nombre, 'genwork') !== false 
-                          || stripos(optional($producto->modelo)->descripcion, 'genwork') !== false;
+                $has360 = false;
+                $totalFrames = 0;
+                $modelo360Id = $producto->modelo_id ?? null;
+                $url360Prefix = '';
+                
+                if ($modelo360Id && \Illuminate\Support\Facades\Storage::exists('public/modelos_360/' . $modelo360Id)) {
+                    $files = \Illuminate\Support\Facades\Storage::files('public/modelos_360/' . $modelo360Id);
+                    $totalFrames = count($files);
+                    if ($totalFrames > 0) {
+                        $has360 = true;
+                        $url360Prefix = asset('storage/modelos_360/' . $modelo360Id . '/');
+                    }
+                }
             @endphp
 
-            @if($isGenwork)
+            @if($has360)
                 <div class="product-image-container 3d-viewer" id="viewer-3d" style="cursor: ew-resize; user-select: none; position: relative;">
-                    <img id="img-3d" src="{{ asset('Diseño_3d_case/XTQ-209_1.jpg') }}" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
+                    <img id="img-3d" src="{{ $url360Prefix }}/1.jpg" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
                     
                     <div id="v360-menu-btns" style="margin-top:15px; display:flex; justify-content:center; align-items:center; color:#555;">
                         <div class="v360-navigate-btns" style="display:flex; gap:25px; background:#f8f9fa; padding:12px 25px; border-radius:30px; border:1px solid #ddd; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
@@ -183,15 +194,17 @@
                         if (!viewer) return;
                         
                         const img = document.getElementById('img-3d');
-                        const totalFrames = 36;
+                        const totalFrames = {{ $totalFrames }};
                         let currentFrame = 1;
                         let isDragging = false;
                         let startX = 0;
                         let playInterval = null;
 
+                        const baseUrl = `{{ $url360Prefix }}/`;
+
                         const setFrame = (frame) => {
                             currentFrame = frame;
-                            img.src = `{{ asset('Diseño_3d_case/XTQ-209_') }}${currentFrame}.jpg`;
+                            img.src = `${baseUrl}${currentFrame}.jpg`;
                         };
 
                         const nextFrame = () => {
@@ -284,10 +297,10 @@
                             if (updateFrameDrag(e.touches[0].clientX - startX)) startX = e.touches[0].clientX;
                         }, { passive: false });
                         
-                        // Preload all 36 images
+                        // Preload all images
                         for(let i=1; i<=totalFrames; i++) {
                             const preloadImg = new Image();
-                            preloadImg.src = `{{ asset('Diseño_3d_case/XTQ-209_') }}${i}.jpg`;
+                            preloadImg.src = `${baseUrl}${i}.jpg`;
                         }
                     });
                 </script>

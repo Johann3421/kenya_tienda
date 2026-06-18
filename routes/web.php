@@ -350,6 +350,13 @@ Route::group(['middleware' => ['can:productos']], function () {
     Route::post('/precios/sync', 'Admin\PrecioSyncController@sync')->name('precios.sync');
 });
 
+// --------------------- MODELOS 360 ---------------------
+Route::group(['middleware' => ['can:modelos']], function () {
+    Route::get('/modelos-360', 'Admin\Modelo360Controller@index')->name('modelos360.index');
+    Route::post('/modelos-360/upload', 'Admin\Modelo360Controller@upload')->name('modelos360.upload');
+    Route::post('/modelos-360/delete/{id}', 'Admin\Modelo360Controller@delete')->name('modelos360.delete');
+});
+
 // --------------------- CLIENTES WEB (portal cotizaciones) -----------
 Route::group(['middleware' => ['can:usuarios']], function () {
     Route::get('/clientes-web', 'ClienteWebController@index')->name('clientes-web.index');

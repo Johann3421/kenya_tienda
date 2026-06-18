@@ -88,6 +88,10 @@
                     <span class="pcoded-micon"><i class="fas fa-solid fa-folder-open"></i></span>
                     <span class="pcoded-mtext">Modelos</span></a>
                 </li>
+                <li class="nav-item"><a href="{{route('modelos360.index')}}" class="nav-link ">
+                    <span class="pcoded-micon"><i class="fas fa-cube"></i></span>
+                    <span class="pcoded-mtext">Vistas 360</span></a>
+                </li>
                 @endcan
                 @if( auth()->user()->can('perfiles') || auth()->user()->can('usuarios') || auth()->user()->can('pagina_web') || auth()->user()->can('configuracion'))
                     <li class="nav-item pcoded-menu-caption">
