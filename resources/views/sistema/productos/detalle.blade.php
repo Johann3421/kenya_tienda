@@ -164,6 +164,7 @@
                 $modelo360Id = $producto->modelo_id ?? null;
                 $url360Prefix = '';
                 
+                // 1. Check if it's a dynamic 360 model uploaded via admin
                 if ($modelo360Id && \Illuminate\Support\Facades\Storage::exists('public/modelos_360/' . $modelo360Id)) {
                     $files = \Illuminate\Support\Facades\Storage::files('public/modelos_360/' . $modelo360Id);
                     $totalFrames = count($files);
@@ -172,11 +173,27 @@
                         $url360Prefix = asset('storage/modelos_360/' . $modelo360Id . '/');
                     }
                 }
+                
+                // 2. Fallback to static "genwork" directory we pushed earlier if no dynamic model exists
+                if (!$has360) {
+                    $isGenwork = stripos($producto->display_name ?? $producto->nombre, 'genwork') !== false 
+                              || stripos(optional($producto->modelo)->descripcion, 'genwork') !== false;
+                    
+                    if ($isGenwork) {
+                        $has360 = true;
+                        $totalFrames = 36;
+                        $url360Prefix = asset('Diseño_3d_case/XTQ-209_'); // Base without the number
+                    }
+                }
             @endphp
 
             @if($has360)
                 <div class="product-image-container 3d-viewer" id="viewer-3d" style="cursor: ew-resize; user-select: none; position: relative;">
-                    <img id="img-3d" src="{{ $url360Prefix }}/1.jpg" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
+                    @php
+                        // First image load depends on if it's dynamic or static
+                        $firstImage = stripos($url360Prefix, 'Diseño_3d_case') !== false ? $url360Prefix . '1.jpg' : $url360Prefix . '/1.jpg';
+                    @endphp
+                    <img id="img-3d" src="{{ $firstImage }}" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
                     
                     <div id="v360-menu-btns" style="margin-top:15px; display:flex; justify-content:center; align-items:center; color:#555;">
                         <div class="v360-navigate-btns" style="display:flex; gap:25px; background:#f8f9fa; padding:12px 25px; border-radius:30px; border:1px solid #ddd; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
@@ -200,7 +217,9 @@
                         let startX = 0;
                         let playInterval = null;
 
-                        const baseUrl = `{{ $url360Prefix }}/`;
+                        // Check if it's dynamic storage or static genwork
+                        const isStaticGenwork = {{ stripos($url360Prefix, 'Diseño_3d_case') !== false ? 'true' : 'false' }};
+                        const baseUrl = isStaticGenwork ? `{{ $url360Prefix }}` : `{{ $url360Prefix }}/`;
 
                         const setFrame = (frame) => {
                             currentFrame = frame;
