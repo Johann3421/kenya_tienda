@@ -50,7 +50,7 @@ class ClienteWebController extends Controller
                     'per_page'     => $clientes->perPage(),
                     'last_page'    => $clientes->lastPage(),
                     'from'         => $clientes->firstItem(),
-                    'to'           => $clientes->to,
+                    'to'           => $clientes->lastItem(),
                     'index'        => ($clientes->currentPage() - 1) * $clientes->perPage(),
                 ],
                 'clientes' => $clientes
