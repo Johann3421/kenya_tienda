@@ -51,15 +51,21 @@
                     </div>
 
                     <div class="product-info">
-                        <span class="product-category">
-                            {{ $producto->modelo->nombre ?? ($producto->modelo->descripcion ?? 'Sin categoría') }}
-                        </span>
+                        @php
+                            $rawName = $producto->display_name ?? $producto->nombre ?? 'Nombre no disponible';
+                            // Eliminar número de parte entre paréntesis del nombre (ya se muestra abajo)
+                            $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $rawName);
+                        @endphp
 
-                        <h3 class="product-title">{{ $producto->display_name ?? $producto->nombre ?? 'Nombre no disponible' }}</h3>
+                        <h3 class="product-title">{{ trim($cleanName) }}</h3>
 
                         <div class="product-details">
-                            <p><strong>Parte:</strong> {{ $producto->nro_parte ?? 'N/A' }}</p>
-                            <p><strong>Stock:</strong>
+                            <p class="detail-row">
+                                <span class="detail-label">N° de parte:</span>
+                                <span class="detail-value">{{ $producto->nro_parte ?? 'N/A' }}</span>
+                            </p>
+                            <p class="detail-row">
+                                <span class="detail-label">Stock:</span>
                                 @php
                                     $stock = $producto->stock ?? '≥ 20';
                                 @endphp
