@@ -97,15 +97,18 @@
             display: flex; gap: 0.5rem; z-index: 2;
         }
         .quick-view {
-            width: 36px; height: 36px; border-radius: 50%;
-            background-color: rgba(255,255,255,0.9); border: none;
-            color: var(--dark-color); display: flex; align-items: center;
+            width: 38px; height: 38px; border-radius: 50%;
+            background-color: var(--primary-color); border: none;
+            color: white; display: flex; align-items: center;
             justify-content: center; cursor: pointer;
-            transition: var(--transition); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: var(--transition); box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            font-size: 1.1rem;
         }
         .quick-view:hover {
-            background-color: white; color: var(--primary-color); transform: scale(1.1);
+            background-color: var(--secondary-color); transform: scale(1.12);
+            box-shadow: 0 4px 12px rgba(238,124,49,0.4);
         }
+        .quick-view:active { transform: scale(0.95); }
         .product-info {
             padding: 1.25rem 1.5rem 1.5rem; flex-grow: 1; display: flex; flex-direction: column;
         }
@@ -127,8 +130,11 @@
             text-transform: uppercase; letter-spacing: 0.3px;
         }
         .detail-value {
-            color: #1a1a1a; font-weight: 600; font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
+            color: #1a1a1a; font-weight: 700; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.82rem; letter-spacing: 0.4px;
+            font-variant-numeric: tabular-nums; font-feature-settings: 'tnum';
+            background: #f8f9fb; padding: 2px 8px; border-radius: 4px;
+            border: 1px solid #ececec;
         }
         .in-stock {
             color: var(--success-color); font-weight: 700; font-size: 0.85rem;
@@ -373,6 +379,15 @@
                 params.set('page', page);
                 history.replaceState({}, '', window.location.pathname + '?' + params.toString());
                 fetchProducts(page);
+            });
+
+            // Lupa (quick-view) → ir al detalle del producto (funciona también con AJAX)
+            document.addEventListener('click', function(e) {
+                const lupa = e.target.closest('.quick-view');
+                if (!lupa) return;
+                e.preventDefault();
+                const id = lupa.getAttribute('data-id');
+                if (id) window.location.href = '/producto/' + id + '/detalle';
             });
         })();
     </script>

@@ -44,7 +44,8 @@
                              onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
 
                         <div class="product-actions">
-                            <button class="quick-view" data-id="{{ $producto->id }}">
+                            <button class="quick-view" data-id="{{ $producto->id }}" title="Ver detalles" aria-label="Ver detalles de {{ $producto->display_name ?? $producto->nombre ?? 'producto' }}"
+                                    onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
                                 <i class="bx bx-search"></i>
                             </button>
                         </div>
