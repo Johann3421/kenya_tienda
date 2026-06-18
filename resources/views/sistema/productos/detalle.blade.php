@@ -166,8 +166,15 @@
             @if($isGenwork)
                 <div class="product-image-container 3d-viewer" id="viewer-3d" style="cursor: ew-resize; user-select: none; position: relative;">
                     <img id="img-3d" src="{{ asset('Diseño_3d_case/XTQ-209_1.jpg') }}" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
-                    <div style="text-align:center; font-size:13px; color:#555; margin-top:12px; font-weight:600; background:#f8f9fa; padding:8px; border-radius:6px; border:1px solid #eee;">
-                        <i class="fas fa-cube" style="color:#ee7c31; margin-right:4px;"></i> Arrastra hacia los lados para girar en 3D
+                    
+                    <div id="v360-menu-btns" style="margin-top:15px; display:flex; justify-content:center; align-items:center; color:#555;">
+                        <div class="v360-navigate-btns" style="display:flex; gap:25px; background:#f8f9fa; padding:12px 25px; border-radius:30px; border:1px solid #ddd; box-shadow:0 4px 6px rgba(0,0,0,0.05);">
+                            <div class="v360-menu-btns" id="btn-play" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-play"></i></div>
+                            <div class="v360-menu-btns" id="btn-drag" style="cursor:pointer; font-size:18px; color:#ee7c31;" title="Arrastrar"><i class="fa fa-hand-paper"></i></div>
+                            <div class="v360-menu-btns" id="btn-prev" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-chevron-left"></i></div>
+                            <div class="v360-menu-btns" id="btn-next" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-chevron-right"></i></div>
+                            <div class="v360-menu-btns" id="btn-reset" style="cursor:pointer; font-size:18px; transition:color 0.2s;" onmouseover="this.style.color='#ee7c31'" onmouseout="this.style.color=''"><i class="fa fa-sync"></i></div>
+                        </div>
                     </div>
                 </div>
                 <script>
@@ -180,29 +187,76 @@
                         let currentFrame = 1;
                         let isDragging = false;
                         let startX = 0;
+                        let playInterval = null;
 
-                        // Function to update image
-                        const updateFrame = (deltaX) => {
-                            if (Math.abs(deltaX) > 12) { // Sensitivity threshold
-                                if (deltaX > 0) {
-                                    // Drag right -> rotate left (decrease frame)
-                                    currentFrame = currentFrame > 1 ? currentFrame - 1 : totalFrames;
-                                } else {
-                                    // Drag left -> rotate right (increase frame)
-                                    currentFrame = currentFrame < totalFrames ? currentFrame + 1 : 1;
-                                }
-                                img.src = `{{ asset('Diseño_3d_case/XTQ-209_') }}${currentFrame}.jpg`;
+                        const setFrame = (frame) => {
+                            currentFrame = frame;
+                            img.src = `{{ asset('Diseño_3d_case/XTQ-209_') }}${currentFrame}.jpg`;
+                        };
+
+                        const nextFrame = () => {
+                            setFrame(currentFrame < totalFrames ? currentFrame + 1 : 1);
+                        };
+
+                        const prevFrame = () => {
+                            setFrame(currentFrame > 1 ? currentFrame - 1 : totalFrames);
+                        };
+
+                        // Buttons
+                        const btnPlay = document.getElementById('btn-play');
+                        const btnPrev = document.getElementById('btn-prev');
+                        const btnNext = document.getElementById('btn-next');
+                        const btnReset = document.getElementById('btn-reset');
+
+                        const togglePlay = () => {
+                            if (playInterval) {
+                                clearInterval(playInterval);
+                                playInterval = null;
+                                btnPlay.innerHTML = '<i class="fa fa-play"></i>';
+                            } else {
+                                playInterval = setInterval(nextFrame, 60); // Speed: 60ms per frame
+                                btnPlay.innerHTML = '<i class="fa fa-pause"></i>';
+                            }
+                        };
+
+                        btnPlay.addEventListener('click', togglePlay);
+                        
+                        btnNext.addEventListener('click', () => { 
+                            if(playInterval) togglePlay(); 
+                            nextFrame(); 
+                        });
+                        
+                        btnPrev.addEventListener('click', () => { 
+                            if(playInterval) togglePlay(); 
+                            prevFrame(); 
+                        });
+                        
+                        btnReset.addEventListener('click', () => { 
+                            if(playInterval) togglePlay(); 
+                            setFrame(1); 
+                        });
+
+                        // Mouse/Touch drag functionality
+                        const updateFrameDrag = (deltaX) => {
+                            if (Math.abs(deltaX) > 12) {
+                                if (deltaX > 0) prevFrame(); // Drag right -> rotate left
+                                else nextFrame(); // Drag left -> rotate right
                                 return true;
                             }
                             return false;
                         };
 
-                        // Mouse Events
+                        const stopPlayIfActive = () => {
+                            if (playInterval) togglePlay();
+                        };
+
                         viewer.addEventListener('mousedown', (e) => {
+                            if (e.target.closest('#v360-menu-btns')) return; // Ignore if clicking buttons
+                            stopPlayIfActive();
                             isDragging = true;
                             startX = e.clientX;
                             viewer.style.cursor = 'grabbing';
-                            e.preventDefault(); // Prevent text selection
+                            e.preventDefault();
                         });
 
                         document.addEventListener('mouseup', () => {
@@ -212,28 +266,25 @@
 
                         document.addEventListener('mousemove', (e) => {
                             if (!isDragging) return;
-                            if (updateFrame(e.clientX - startX)) {
-                                startX = e.clientX;
-                            }
+                            if (updateFrameDrag(e.clientX - startX)) startX = e.clientX;
                         });
 
-                        // Touch Events
                         viewer.addEventListener('touchstart', (e) => {
+                            if (e.target.closest('#v360-menu-btns')) return;
+                            stopPlayIfActive();
                             isDragging = true;
                             startX = e.touches[0].clientX;
                         });
-                        document.addEventListener('touchend', () => {
-                            isDragging = false;
-                        });
+                        
+                        document.addEventListener('touchend', () => { isDragging = false; });
+                        
                         viewer.addEventListener('touchmove', (e) => {
                             if (!isDragging) return;
-                            e.preventDefault(); // Prevent page scroll while rotating
-                            if (updateFrame(e.touches[0].clientX - startX)) {
-                                startX = e.touches[0].clientX;
-                            }
+                            e.preventDefault();
+                            if (updateFrameDrag(e.touches[0].clientX - startX)) startX = e.touches[0].clientX;
                         }, { passive: false });
                         
-                        // Preload all 36 images for smooth rotation
+                        // Preload all 36 images
                         for(let i=1; i<=totalFrames; i++) {
                             const preloadImg = new Image();
                             preloadImg.src = `{{ asset('Diseño_3d_case/XTQ-209_') }}${i}.jpg`;
