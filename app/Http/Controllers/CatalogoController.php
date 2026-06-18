@@ -114,10 +114,23 @@ class CatalogoController extends Controller
         foreach ($monitorSpecs as $param => $campo) {
             if ($request->filled($param)) {
                 $values = array_map('trim', explode(',', $request->$param));
-                $query->whereHas('especificaciones', function($q) use ($campo, $values) {
-                    $q->where('campo', $campo)
-                      ->whereIn('descripcion', $values);
-                });
+                // Garantía: usar LIKE porque el filtro envia valores normalizados
+                // (ej. "36 MESES ON-SITE") y la BD tiene el texto completo
+                if ($param === 'espec_garantia') {
+                    $query->whereHas('especificaciones', function($q) use ($campo, $values) {
+                        $q->where('campo', $campo)
+                          ->where(function($sub) use ($values) {
+                            foreach ($values as $v) {
+                                $sub->orWhere('descripcion', 'LIKE', $v . '%');
+                            }
+                        });
+                    });
+                } else {
+                    $query->whereHas('especificaciones', function($q) use ($campo, $values) {
+                        $q->where('campo', $campo)
+                          ->whereIn('descripcion', $values);
+                    });
+                }
             }
         }
     }

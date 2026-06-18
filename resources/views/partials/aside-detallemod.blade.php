@@ -70,6 +70,26 @@
         if ($numeroParte->isNotEmpty()) {
             $specs['numero_parte_toner'] = ['label' => 'Número de parte', 'options' => $numeroParte];
         }
+
+        // Garantía de Fábrica (toner): normalizar para agrupar por meses + tipo
+        if (isset($specs['garantia_toner'])) {
+            $normalizarGarantia = function(string $v): ?string {
+                $v = strtoupper(trim($v));
+                if (!preg_match('/(\d+)\s*MESES/i', $v, $m)) return null;
+                $meses = $m[1] . ' MESES';
+                if (str_contains($v, 'ON-SITE') || str_contains($v, 'ON SITE')) $tipo = 'ON-SITE';
+                elseif (str_contains($v, 'CARRY-IN') || str_contains($v, 'CARRY IN')) $tipo = 'CARRY-IN';
+                else $tipo = 'ESTÁNDAR';
+                return "$meses $tipo";
+            };
+            $garantiasNorm = $specs['garantia_toner']['options']
+                ->map(fn($v) => $normalizarGarantia((string) $v))
+                ->filter()
+                ->unique()
+                ->sort()
+                ->values();
+            $specs['garantia_toner']['options'] = $garantiasNorm;
+        }
     } else {
         $specFields = [
             'procesador'       => 'Procesador',
@@ -189,6 +209,26 @@
             if ($values->isNotEmpty()) {
                 $specs[$paramKey] = ['label' => $campo, 'options' => $values];
             }
+        }
+
+        // Garantía de Fábrica (monitores): normalizar para agrupar por meses + tipo
+        if (isset($specs['espec_garantia'])) {
+            $normalizarGarantia = function(string $v): ?string {
+                $v = strtoupper(trim($v));
+                if (!preg_match('/(\d+)\s*MESES/i', $v, $m)) return null;
+                $meses = $m[1] . ' MESES';
+                if (str_contains($v, 'ON-SITE') || str_contains($v, 'ON SITE')) $tipo = 'ON-SITE';
+                elseif (str_contains($v, 'CARRY-IN') || str_contains($v, 'CARRY IN')) $tipo = 'CARRY-IN';
+                else $tipo = 'ESTÁNDAR';
+                return "$meses $tipo";
+            };
+            $garantiasNorm = $specs['espec_garantia']['options']
+                ->map(fn($v) => $normalizarGarantia((string) $v))
+                ->filter()
+                ->unique()
+                ->sort()
+                ->values();
+            $specs['espec_garantia']['options'] = $garantiasNorm;
         }
     }
 @endphp
