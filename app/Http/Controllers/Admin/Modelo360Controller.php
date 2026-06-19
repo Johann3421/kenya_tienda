@@ -66,6 +66,14 @@ class Modelo360Controller extends Controller
             $this->guardarComoJpg($img, $path, $filename);
         }
 
+        // Verificar que se guardaron todos los archivos esperados.
+        // Si el límite de max_file_uploads recortó los archivos del request,
+        // avisamos al usuario en vez de dejarlo con un set incompleto.
+        $saved = count(Storage::files($path));
+        if ($saved < $total) {
+            return back()->with('warning', "Se subieron $saved de $total imágenes. El servidor recortó el resto (límite de " . $maxUploads . "). Vuelve a subir las que faltan.");
+        }
+
         return back()->with('success', 'Las ' . $total . ' imágenes 360 se subieron correctamente al modelo seleccionado.');
     }
 
@@ -110,7 +118,19 @@ class Modelo360Controller extends Controller
     {
         $path = 'public/modelos_360/' . $id;
         if (Storage::exists($path)) {
+            // Eliminar todos los archivos primero (por si deleteDirectory deja alguno)
+            foreach (Storage::files($path) as $file) {
+                Storage::delete($file);
+            }
+            foreach (Storage::directories($path) as $dir) {
+                Storage::deleteDirectory($dir);
+            }
+            // Ahora eliminar el directorio raíz
             Storage::deleteDirectory($path);
+        }
+        // Verificar que realmente se borró
+        if (Storage::exists($path)) {
+            return back()->with('warning', 'No se pudo eliminar completamente la vista 360. Intenta de nuevo.');
         }
         return back()->with('success', 'Vista 360 eliminada correctamente del modelo.');
     }
