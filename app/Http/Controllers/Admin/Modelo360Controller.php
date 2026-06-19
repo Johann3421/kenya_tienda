@@ -55,15 +55,52 @@ class Modelo360Controller extends Controller
         $total = count($imagenes);
 
         // Numerar 1..N preservando el orden en que el navegador las envía.
-        // Usar índice secuencial (no el nombre del archivo) evita que dos
-        // archivos con el mismo nombre se sobreescriban entre sí.
+        // Todas se guardan como .jpg para que la vista 360 funcione sin importar
+        // la extensión original del archivo subido (png, webp, jpg, etc.).
+        // Sin esto, la vista intenta cargar N.jpg pero el archivo es N.png → 404.
         foreach ($imagenes as $i => $img) {
-            $extension = $img->getClientOriginalExtension();
-            $filename = ($i + 1) . '.' . $extension;
-            $img->storeAs($path, $filename);
+            $filename = ($i + 1) . '.jpg';
+            $this->guardarComoJpg($img, $path, $filename);
         }
 
         return back()->with('success', 'Las ' . $total . ' imágenes 360 se subieron correctamente al modelo seleccionado.');
+    }
+
+    /**
+     * Convierte la imagen subida a JPEG y la guarda en storage.
+     * Usa GD (incluido en PHP). Si falla la conversión, cae al storeAs original.
+     */
+    private function guardarComoJpg($img, string $path, string $filename): void
+    {
+        $sourcePath = $img->getRealPath();
+        $mime = $img->getMimeType();
+        $imgResource = match ($mime) {
+            'image/jpeg' => @imagecreatefromjpeg($sourcePath),
+            'image/png'  => @imagecreatefrompng($sourcePath),
+            'image/webp' => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($sourcePath) : null,
+            default      => null,
+        };
+
+        if (!$imgResource) {
+            // Fallback: guardar con extensión original
+            $img->storeAs($path, $filename);
+            return;
+        }
+
+        // JPEG no soporta transparencia → rellenar con blanco
+        if (in_array($mime, ['image/png', 'image/webp'], true)) {
+            $width  = imagesx($imgResource);
+            $height = imagesy($imgResource);
+            $canvas = imagecreatetruecolor($width, $height);
+            imagefill($canvas, 0, 0, imagecolorallocate($canvas, 255, 255, 255));
+            imagecopy($canvas, $imgResource, 0, 0, 0, 0, $width, $height);
+            imagedestroy($imgResource);
+            $imgResource = $canvas;
+        }
+
+        $fullPath = Storage::path($path . '/' . $filename);
+        imagejpeg($imgResource, $fullPath, 90);
+        imagedestroy($imgResource);
     }
 
     public function delete($id)
