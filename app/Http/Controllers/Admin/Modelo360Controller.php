@@ -52,28 +52,18 @@ class Modelo360Controller extends Controller
         Storage::makeDirectory($path);
 
         $imagenes = $request->file('imagenes');
-        
-        // Es importante el orden. Si las suben seleccionando todo, el OS normalmente las manda ordenadas por nombre.
-        // Las renombramos a 1.jpg, 2.jpg... basándonos en el orden que llegan (que idealmente debería ser el correcto si seleccionan todas juntas)
-        // Alternativamente, el cliente puede subir las imágenes ya con nombres tipo 1.jpg, 2.jpg. 
-        // Para asegurar, simplemente las numeraremos 1 al N.
-        
-        // Primero, intentamos ordenar los archivos por su nombre original para asegurar secuencia
-        $filesArray = [];
-        foreach($imagenes as $img) {
-            $filesArray[$img->getClientOriginalName()] = $img;
-        }
-        ksort($filesArray, SORT_NATURAL);
+        $total = count($imagenes);
 
-        $i = 1;
-        foreach ($filesArray as $originalName => $img) {
+        // Numerar 1..N preservando el orden en que el navegador las envía.
+        // Usar índice secuencial (no el nombre del archivo) evita que dos
+        // archivos con el mismo nombre se sobreescriban entre sí.
+        foreach ($imagenes as $i => $img) {
             $extension = $img->getClientOriginalExtension();
-            $filename = $i . '.' . $extension;
+            $filename = ($i + 1) . '.' . $extension;
             $img->storeAs($path, $filename);
-            $i++;
         }
 
-        return back()->with('success', 'Las ' . count($imagenes) . ' imágenes 360 se subieron correctamente al modelo seleccionado.');
+        return back()->with('success', 'Las ' . $total . ' imágenes 360 se subieron correctamente al modelo seleccionado.');
     }
 
     public function delete($id)
