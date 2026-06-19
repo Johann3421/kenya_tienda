@@ -44,7 +44,8 @@
                             <li>Selecciona un modelo de la lista.</li>
                             <li>Sube las imágenes de la vista 360. <strong>Se recomienda subir 36 imágenes (una para cada 10° de rotación).</strong></li>
                             <li>Asegúrate de seleccionarlas todas a la vez (mantén presionado Ctrl o Shift al seleccionarlas).</li>
-                            <li>El sistema las ordenará automáticamente por su nombre original.</li>
+                            <li>El sistema las ordenará automáticamente en el orden que las subes.</li>
+                            <li><strong>Nota:</strong> el servidor permite subir hasta <span id="max-uploads">100</span> imágenes a la vez. Si tienes más, divídelas en lotes.</li>
                         </ol>
                     </div>
 

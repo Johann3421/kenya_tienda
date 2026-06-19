@@ -36,10 +36,13 @@ class Modelo360Controller extends Controller
 
     public function upload(Request $request)
     {
+        $maxUploads = (int) ini_get('max_file_uploads');
         $request->validate([
             'modelo_id' => 'required|exists:modelos,id',
-            'imagenes' => 'required|array|min:1',
+            'imagenes' => 'required|array|min:1|max:' . $maxUploads,
             'imagenes.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048'
+        ], [
+            'imagenes.max' => 'El servidor permite subir máximo ' . $maxUploads . ' imágenes a la vez. Divide tu subida en lotes.',
         ]);
 
         $modeloId = $request->modelo_id;
