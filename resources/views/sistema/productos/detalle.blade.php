@@ -285,7 +285,7 @@
                                 playInterval = null;
                                 btnPlay.innerHTML = '<i class="fa fa-play"></i>';
                             } else {
-                                playInterval = setInterval(nextFrame, 60); // Speed: 60ms per frame
+                                playInterval = setInterval(nextFrame, 120); // Speed: 120ms per frame
                                 btnPlay.innerHTML = '<i class="fa fa-pause"></i>';
                             }
                         };
@@ -309,7 +309,7 @@
 
                         // Mouse/Touch drag functionality
                         const updateFrameDrag = (deltaX) => {
-                            if (Math.abs(deltaX) > 12) {
+                            if (Math.abs(deltaX) > 24) {
                                 if (deltaX > 0) prevFrame(); // Drag right -> rotate left
                                 else nextFrame(); // Drag left -> rotate right
                                 return true;
