@@ -1026,6 +1026,74 @@
             .lenovo-hero__arrow i { font-size: 18px; }
             .lenovo-hero__dots-wrap { width: calc(100% - 20px); padding-left: 16px; bottom: 10px; }
         }
+
+        /* =====================================================
+           PORTFOLIO FILTERS RESPONSIVE
+           ===================================================== */
+        #portfolio-flters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            padding: 0;
+            margin-bottom: 30px;
+            list-style: none;
+        }
+        #portfolio-flters li {
+            margin: 0;
+            cursor: pointer;
+        }
+        #portfolio-flters .card {
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            height: 100%;
+        }
+        #portfolio-flters .filter-active .card {
+            border-color: #ee7c31 !important;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(238, 124, 49, 0.2);
+        }
+        #portfolio-flters .card-body {
+            padding: 8px 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #portfolio-flters .card-text {
+            font-size: 13px;
+            font-weight: 700;
+            margin: 0;
+            text-align: center;
+            line-height: 1.1;
+        }
+        @media (max-width: 768px) {
+            #portfolio-flters {
+                gap: 8px;
+            }
+            #portfolio-flters li .card {
+                width: 6.5rem !important; /* Override inline 8rem */
+            }
+            #portfolio-flters .card-text {
+                font-size: 11px;
+            }
+            #portfolio-flters .card-body {
+                padding: 6px 4px;
+            }
+        }
+        @media (max-width: 480px) {
+            #portfolio-flters {
+                gap: 6px;
+            }
+            #portfolio-flters li .card {
+                width: 5.5rem !important;
+            }
+            #portfolio-flters .card-text {
+                font-size: 10px;
+            }
+        }
     </style>
 @endsection
 @section('content')
