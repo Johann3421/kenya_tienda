@@ -12,7 +12,7 @@
         --text-muted: #888;
     }
 
-    body { background: var(--surface); }
+    body { background: var(--surface); zoom: 0.9; }
 
     /* ── Header portal ── */
     .portal-hero {
