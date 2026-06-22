@@ -841,6 +841,19 @@
             z-index: 0;
         }
 
+        @media (max-width: 768px) {
+            @keyframes panMobileHero {
+                0% { object-position: 0% 50%; }
+                100% { object-position: 100% 50%; }
+            }
+            .lenovo-hero__bg {
+                object-position: 0% 50%;
+            }
+            .lenovo-hero__slide[aria-hidden="false"] .lenovo-hero__bg {
+                animation: panMobileHero 5s ease-in-out forwards;
+            }
+        }
+
         /* Capa 2 — Máscara de enlace invisible */
         .lenovo-hero__mask-link {
             position: absolute;
