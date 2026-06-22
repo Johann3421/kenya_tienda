@@ -144,7 +144,7 @@
         .view-details:hover { background-color: var(--secondary-color); transform: translateY(-1px); }
         .view-details::after { content: '→'; font-size: 1.1rem; }
         .catalog-pagination { margin-top: 3rem; }
-        .pagination { display: flex; gap: 0.5rem; }
+        .pagination { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
         .page-item.disabled .page-link { opacity: 0.5; pointer-events: none; }
         .page-item.active .page-link {
             background-color: var(--primary-color);
@@ -165,7 +165,8 @@
             .product-title { font-size: 1.1rem; }
         }
         @media (max-width: 992px) {
-            .col-lg-3 { display: none; }
+            #filterSidebar { display: none; margin-bottom: 20px; }
+            #filterSidebar.show-filters { display: block; }
             .col-lg-9 { flex: 0 0 100%; max-width: 100%; }
         }
         @media (max-width: 576px) {
@@ -191,7 +192,12 @@
     <section class="catalog-section">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-12 d-lg-none mb-3">
+                    <button id="toggleFiltersBtn" class="btn w-100" style="background-color: var(--primary-color); color: white; border: none; padding: 12px; font-weight: bold; border-radius: var(--border-radius); cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
+                        <i class="bx bx-filter-alt"></i> Mostrar / Ocultar Filtros
+                    </button>
+                </div>
+                <div class="col-lg-3" id="filterSidebar">
                     <div style="margin-bottom:12px;">
                         <label for="preview-modelo" style="font-weight:700">Seleccionar modelo</label>
                         <select id="preview-modelo" class="form-control">
@@ -233,6 +239,14 @@
             const productsUrl = @json(url('catalogo/preview-products'));
             const suggestUrl = @json(url('catalogo/preview-suggest'));
             let searchTimer = null;
+
+            const toggleBtn = document.getElementById('toggleFiltersBtn');
+            const filterSidebar = document.getElementById('filterSidebar');
+            if(toggleBtn && filterSidebar){
+                toggleBtn.addEventListener('click', function(){
+                    filterSidebar.classList.toggle('show-filters');
+                });
+            }
 
             function executeScripts(container){
                 container.querySelectorAll('script').forEach(function(oldScript){
