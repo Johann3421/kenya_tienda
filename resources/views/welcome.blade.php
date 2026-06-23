@@ -72,23 +72,22 @@
         }
 
         /* ---- FILTROS DE CATEGORIA ---- */
-        /* Anula style.css (max-width:1600px, grid repeat(4)) y el bloque duplicado del slider */
+        /* Grid alineado con la grilla de productos: 4 columnas iguales */
         section#productos ul#portfolio-flters {
-            display: flex !important;
-            flex-wrap: wrap !important;
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 20px !important;
             justify-content: center !important;
             align-items: stretch !important;
-            gap: 14px !important;
             list-style: none !important;
             padding: 0 !important;
-            margin: 0 auto 28px auto !important;
+            margin: 0 auto 32px auto !important;
             width: 100% !important;
-            max-width: 100% !important; /* Anula el max-width:900px del bloque anterior */
+            max-width: 100% !important;
         }
 
         section#productos ul#portfolio-flters li {
-            flex: 0 0 auto !important;
-            width: auto !important;
+            width: 100% !important;
             cursor: pointer;
             margin: 0 !important;
             transition: transform 0.25s ease !important;
@@ -98,12 +97,12 @@
             transform: translateY(-3px) !important;
         }
 
-        /* Card de categoria — override completo sobre style.css (aspect-ratio 3/4, etc.) */
+        /* Card de categoria: ocupa todo el ancho de su celda y conserva proporcion */
         section#productos ul#portfolio-flters li .card {
-            width: 7.5rem !important;
-            min-width: 7.5rem !important;
-            max-width: 7.5rem !important;
-            aspect-ratio: unset !important;
+            width: 100% !important;
+            min-width: 100% !important;
+            max-width: 100% !important;
+            aspect-ratio: 3 / 4 !important;
             border-radius: 12px !important;
             overflow: hidden !important;
             border: 2px solid transparent !important;
@@ -111,7 +110,7 @@
             transition: all 0.25s ease !important;
             display: flex !important;
             flex-direction: column !important;
-            height: auto !important;
+            height: 100% !important;
         }
 
         section#productos ul#portfolio-flters li.filter-active .card,
@@ -123,22 +122,22 @@
 
         section#productos ul#portfolio-flters li .card-img-top {
             width: 100% !important;
-            height: 75px !important; /* Ligeramente más bajo para compensar el ancho menor */
+            height: 75% !important;
             object-fit: cover !important;
             padding: 0 !important;
         }
 
         section#productos ul#portfolio-flters li .card-body {
-            padding: 8px 6px !important;
-            background: #ee7c31 !important;
+            padding: 0 !important;
+            background: transparent !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            height: auto !important;
+            height: 25% !important;
         }
 
         section#productos ul#portfolio-flters li .card-text {
-            font-size: 11.5px !important;
+            font-size: clamp(0.8rem, 1vw, 1rem) !important;
             font-weight: 700 !important;
             color: #fff !important;
             text-align: center !important;
@@ -146,33 +145,67 @@
             letter-spacing: 0.04em !important;
             margin: 0 !important;
             line-height: 1.2 !important;
-            padding: 0 !important;
-            background: transparent !important;
-            border-radius: 0 !important;
-            width: auto !important;
-            min-height: auto !important;
+            padding: 10px 5px !important;
+            background: #ee7c31 !important;
+            border-radius: 0 0 10px 10px !important;
+            width: 100% !important;
+            min-height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
-        /* ---- GRILLA DE MODELOS/PRODUCTOS ---- */
-        /* Anula: Bootstrap .row (display:flex), col-lg-3 (flex:0 0 25%), justify-content:space-between */
+        @media (max-width: 1200px) {
+            section#productos ul#portfolio-flters {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 18px !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            section#productos ul#portfolio-flters {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 14px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            section#productos ul#portfolio-flters {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            section#productos ul#portfolio-flters li .card-text {
+                font-size: 0.75rem !important;
+                padding: 8px 2px !important;
+            }
+        }
+
+        /* ---- CARRUSEL DE MODELOS/PRODUCTOS ---- */
         section#productos .prod-filter-container {
-            display: grid !important;
-            grid-template-columns: repeat(4, 1fr) !important;
+            display: flex !important;
+            flex-wrap: nowrap !important;
             gap: 20px !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            scroll-behavior: smooth !important;
+            justify-content: flex-start !important;
+            align-items: stretch !important;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 10px 0 !important;
             width: 100% !important;
-            /* Anular todo lo que Bootstrap .row inyecta */
-            justify-content: unset !important;
-            flex-wrap: unset !important;
-            flex-direction: unset !important;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        section#productos .prod-filter-container::-webkit-scrollbar {
+            display: none;
         }
 
-        /* Anula Bootstrap col-lg-3 / col-md-4 completamente */
+        /* Anula Bootstrap col-lg-3 / col-md-4: tarjeta de ancho fijo */
         section#productos .prod-filter-item {
-            flex: unset !important;
-            width: 100% !important;
-            max-width: 100% !important;
+            flex: 0 0 auto !important;
+            width: 25% !important;
+            min-width: 260px !important;
+            max-width: 320px !important;
             padding: 0 !important;
             margin: 0 !important;
             transition: opacity 0.35s ease, transform 0.35s ease;
@@ -303,26 +336,26 @@
         .botones:hover>a:nth-child(2) { flex:1 1 20%; margin-left:.5rem; }
         .botones:hover>a:first-child { border-top-right-radius:.5rem; border-bottom-right-radius:.5rem; }
 
-        /* ---- RESPONSIVE GRILLA ---- */
+        /* ---- RESPONSIVE CARRUSEL ---- */
         @media (max-width: 1200px) {
-            section#productos .prod-filter-container {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 18px !important;
+            section#productos .prod-filter-item {
+                width: 33.333% !important;
+                min-width: 240px !important;
             }
         }
 
         @media (max-width: 768px) {
-            section#productos .prod-filter-container {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 14px !important;
+            section#productos .prod-filter-item {
+                width: 50% !important;
+                min-width: 220px !important;
             }
             .prod-image-wrapper { padding-top: 62% !important; }
         }
 
         @media (max-width: 480px) {
-            section#productos .prod-filter-container {
-                grid-template-columns: 1fr !important;
-                gap: 12px !important;
+            section#productos .prod-filter-item {
+                width: 80% !important;
+                min-width: 200px !important;
             }
             .prod-image-wrapper { padding-top: 68% !important; }
         }
