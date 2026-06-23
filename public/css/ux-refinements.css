@@ -443,3 +443,30 @@ img {
     color: var(--kenya-dark) !important;
     font-weight: 500;
 }
+
+/* ─── 23. HEADER SYMMETRY FIX ──────────────────────────────────────────────── */
+.kenya-header-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+.kenya-logo-wrapper {
+    float: none !important;
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+}
+.kenya-main-nav {
+    float: none !important;
+    flex: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important; /* Alinear links a la derecha */
+}
+/* Hacer que los items del menú no se rompan */
+.kenya-nav-list {
+    display: flex !important;
+    align-items: center !important;
+}

@@ -1006,7 +1006,7 @@
             --hero-btn-text: #000000;
             --hero-btn-border: #171717;
             --hero-height: 500px;
-            --hero-top-offset: 96px;
+            --hero-top-offset: 56px; /* Ajustado al alto exacto del header (7px padding + 42px logo + 7px padding) */
             --hero-max-width: 1600px;
         }
 
@@ -1248,7 +1248,7 @@
         @media (max-width: 991px) {
             :root {
                 --hero-height: 380px;
-                --hero-top-offset: 82px;
+                --hero-top-offset: 56px;
             }
             .lenovo-hero__content { width: calc(100% - 24px); padding-left: 24px; }
             .lenovo-hero__headline { font-size: 26px; }
@@ -1258,7 +1258,7 @@
         @media (max-width: 576px) {
             :root {
                 --hero-height: 320px;
-                --hero-top-offset: 74px;
+                --hero-top-offset: 56px;
             }
             .lenovo-hero__content { width: calc(100% - 20px); padding-left: 16px; }
             .lenovo-hero__headline { font-size: 20px; }
