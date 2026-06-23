@@ -53,14 +53,106 @@ p, li, td, th, label, input, select, textarea, button, a {
 small, .small { font-size: var(--fs-xs) !important; }
 
 /* ─── 3. HEADER ────────────────────────────────────────────────────────────── */
+
+/* Compensar header fijo */
+body {
+    padding-top: 62px !important;
+}
+
 .kenya-main-header {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    right: 0;
     padding: 7px 0 !important;
     box-shadow: 0 1px 10px rgba(0,0,0,0.07) !important;
     border-bottom: 1px solid var(--kenya-border);
+    background: #fff;
+    z-index: 997;
+}
+
+.kenya-header-container {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 16px;
+    width: 100% !important;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.kenya-logo-wrapper {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    float: none !important;
 }
 
 .kenya-logo-img {
     max-height: 42px !important;
+    width: auto !important;
+}
+
+/* Buscador del header */
+.kenya-header-search {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-width: 0;
+}
+
+.kenya-search-inner {
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+}
+
+#productSearch {
+    width: 100%;
+    font-size: var(--fs-sm) !important;
+    padding: 9px 16px !important;
+    border: 1.5px solid var(--kenya-border) !important;
+    border-radius: 30px !important;
+    box-shadow: var(--kenya-shadow-sm) !important;
+    transition: var(--kenya-transition) !important;
+}
+#productSearch:focus {
+    border-color: var(--kenya-orange) !important;
+    box-shadow: 0 0 0 3px rgba(238,124,49,0.15) !important;
+    outline: none;
+}
+
+#searchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    display: none;
+    margin-top: 8px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    max-height: 360px;
+    overflow: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* Menú principal */
+.kenya-main-nav {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    float: none !important;
+}
+
+.kenya-nav-list {
+    display: flex !important;
+    align-items: center !important;
 }
 
 .kenya-nav-link {
@@ -69,6 +161,7 @@ small, .small { font-size: var(--fs-xs) !important; }
     letter-spacing: 0.01em;
     border-radius: 5px !important;
     font-weight: 600 !important;
+    white-space: nowrap;
 }
 
 .kenya-nav-icon {
@@ -76,18 +169,134 @@ small, .small { font-size: var(--fs-xs) !important; }
     margin-right: 5px !important;
 }
 
-/* Buscador del header */
-#productSearch {
-    font-size: var(--fs-sm) !important;
-    padding: 8px 14px !important;
-    border: 1.5px solid var(--kenya-border) !important;
-    box-shadow: var(--kenya-shadow-sm) !important;
-    transition: var(--kenya-transition) !important;
+/* Botón hamburguesa y menú móvil */
+.kenya-mobile-menu-toggle {
+    display: none !important;
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: #2c3e50;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    transition: color 0.2s ease;
 }
-#productSearch:focus {
-    border-color: var(--kenya-orange) !important;
-    box-shadow: 0 0 0 3px rgba(238,124,49,0.15) !important;
-    outline: none;
+
+.kenya-mobile-menu-toggle:hover {
+    color: var(--kenya-orange);
+}
+
+.kenya-mobile-menu {
+    display: none !important;
+    position: absolute;
+    top: 100%;
+    right: 15px;
+    background: #fff;
+    border: 1px solid var(--kenya-border);
+    border-radius: 8px;
+    box-shadow: var(--kenya-shadow-lg);
+    z-index: 998;
+    min-width: 200px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.kenya-mobile-menu.active {
+    display: block !important;
+}
+
+.kenya-mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kenya-mobile-menu li {
+    border-bottom: 1px solid var(--kenya-border);
+}
+
+.kenya-mobile-menu li:last-child {
+    border-bottom: none;
+}
+
+.kenya-mobile-menu a {
+    display: block;
+    padding: 11px 16px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.kenya-mobile-menu a:hover {
+    background: #f9fafb;
+    color: var(--kenya-orange);
+}
+
+/* Responsive header */
+@media (max-width: 991px) {
+    body {
+        padding-top: 58px !important;
+    }
+
+    .kenya-main-nav {
+        display: none !important;
+    }
+
+    .kenya-mobile-menu-toggle {
+        display: block !important;
+    }
+
+    .kenya-header-search {
+        order: 0;
+        flex: 1 1 auto !important;
+        justify-content: flex-end !important;
+    }
+
+    .kenya-search-inner {
+        max-width: 360px;
+    }
+
+    .kenya-logo-wrapper {
+        order: -1;
+    }
+
+    .kenya-mobile-menu-toggle {
+        order: 1;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding-top: 108px !important;
+    }
+
+    .kenya-header-container {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 8px 12px;
+    }
+
+    .kenya-logo-img {
+        max-height: 36px !important;
+    }
+
+    .kenya-header-search {
+        order: 2;
+        flex: 1 1 100% !important;
+        justify-content: center !important;
+    }
+
+    .kenya-search-inner {
+        max-width: 100%;
+    }
+
+    .kenya-mobile-menu {
+        right: 10px;
+        left: 10px;
+        min-width: auto;
+    }
 }
 
 /* ─── 4. TOPBAR ────────────────────────────────────────────────────────────── */
@@ -444,29 +653,4 @@ img {
     font-weight: 500;
 }
 
-/* ─── 23. HEADER SYMMETRY FIX ──────────────────────────────────────────────── */
-.kenya-header-container {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    width: 100% !important;
-}
-.kenya-logo-wrapper {
-    float: none !important;
-    flex: 1 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-}
-.kenya-main-nav {
-    float: none !important;
-    flex: 1 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important; /* Alinear links a la derecha */
-}
-/* Hacer que los items del menú no se rompan */
-.kenya-nav-list {
-    display: flex !important;
-    align-items: center !important;
-}
+

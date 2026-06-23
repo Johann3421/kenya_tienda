@@ -76,12 +76,12 @@
         section#productos ul#portfolio-flters {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
-            gap: 20px !important;
+            gap: 16px !important;
             justify-content: center !important;
             align-items: stretch !important;
             list-style: none !important;
             padding: 0 !important;
-            margin: 0 auto 32px auto !important;
+            margin: 0 auto 28px auto !important;
             width: 100% !important;
             max-width: 100% !important;
         }
@@ -102,7 +102,7 @@
             width: 100% !important;
             min-width: 100% !important;
             max-width: 100% !important;
-            aspect-ratio: 3 / 4 !important;
+            aspect-ratio: 4 / 3 !important;
             border-radius: 12px !important;
             overflow: hidden !important;
             border: 2px solid transparent !important;
@@ -122,7 +122,7 @@
 
         section#productos ul#portfolio-flters li .card-img-top {
             width: 100% !important;
-            height: 75% !important;
+            height: 65% !important;
             object-fit: cover !important;
             padding: 0 !important;
         }
@@ -133,11 +133,11 @@
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
-            height: 25% !important;
+            height: 35% !important;
         }
 
         section#productos ul#portfolio-flters li .card-text {
-            font-size: clamp(0.8rem, 1vw, 1rem) !important;
+            font-size: clamp(0.7rem, 0.85vw, 0.85rem) !important;
             font-weight: 700 !important;
             color: #fff !important;
             text-align: center !important;
@@ -145,7 +145,7 @@
             letter-spacing: 0.04em !important;
             margin: 0 !important;
             line-height: 1.2 !important;
-            padding: 10px 5px !important;
+            padding: 8px 4px !important;
             background: #ee7c31 !important;
             border-radius: 0 0 10px 10px !important;
             width: 100% !important;
@@ -158,14 +158,14 @@
         @media (max-width: 1200px) {
             section#productos ul#portfolio-flters {
                 grid-template-columns: repeat(3, 1fr) !important;
-                gap: 18px !important;
+                gap: 14px !important;
             }
         }
 
         @media (max-width: 768px) {
             section#productos ul#portfolio-flters {
                 grid-template-columns: repeat(2, 1fr) !important;
-                gap: 14px !important;
+                gap: 12px !important;
             }
         }
 
@@ -175,8 +175,8 @@
                 gap: 10px !important;
             }
             section#productos ul#portfolio-flters li .card-text {
-                font-size: 0.75rem !important;
-                padding: 8px 2px !important;
+                font-size: 0.7rem !important;
+                padding: 6px 2px !important;
             }
         }
 

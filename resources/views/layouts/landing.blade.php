@@ -145,11 +145,10 @@ header, footer {
                 </h1>
             </div>
             <!-- Buscador global en header -->
-            <div style="flex:1; display:flex; justify-content:center; align-items:center;">
-                <div style="width:100%; max-width:720px;">
-                    <input id="productSearch" type="search" placeholder="Buscar productos por nombre o característica..."
-                        style="width:100%; padding:10px 14px; border-radius:30px; border:1px solid #ddd; box-shadow: 0 2px 6px rgba(0,0,0,0.06);">
-                    <div id="searchResults" style="position:absolute; z-index:9999; display:none; margin-top:8px; width:calc(100% - 40px); background:#fff; border:1px solid #e6e6e6; border-radius:8px; max-height:360px; overflow:auto; box-shadow:0 8px 24px rgba(0,0,0,0.08);"></div>
+            <div class="kenya-header-search">
+                <div class="kenya-search-inner">
+                    <input id="productSearch" type="search" placeholder="Buscar productos por nombre o característica...">
+                    <div id="searchResults"></div>
                 </div>
             </div>
 
