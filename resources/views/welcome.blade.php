@@ -123,8 +123,10 @@
         section#productos ul#portfolio-flters li .card-img-top {
             width: 100% !important;
             height: 65% !important;
-            object-fit: cover !important;
-            padding: 0 !important;
+            object-fit: contain !important;
+            object-position: center !important;
+            padding: 10px !important;
+            background: #fff;
         }
 
         section#productos ul#portfolio-flters li .card-body {
@@ -195,6 +197,7 @@
             width: 100% !important;
             cursor: grab;
             user-select: none;
+            scroll-snap-type: x mandatory;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -213,6 +216,7 @@
             max-width: 320px !important;
             padding: 0 !important;
             margin: 0 !important;
+            scroll-snap-align: start;
             transition: opacity 0.35s ease, transform 0.35s ease;
             opacity: 1;
             transform: scale(1);
@@ -1118,7 +1122,7 @@
             --hero-btn-text: #000000;
             --hero-btn-border: #171717;
             --hero-height: 500px;
-            --hero-top-offset: 56px; /* Ajustado al alto exacto del header (7px padding + 42px logo + 7px padding) */
+            --hero-top-offset: 0px; /* El body ya tiene padding-top para compensar el header fijo */
             --hero-max-width: 1600px;
         }
 
@@ -1360,7 +1364,7 @@
         @media (max-width: 991px) {
             :root {
                 --hero-height: 380px;
-                --hero-top-offset: 56px;
+                --hero-top-offset: 0px;
             }
             .lenovo-hero__content { width: calc(100% - 24px); padding-left: 24px; }
             .lenovo-hero__headline { font-size: 26px; }
@@ -1370,7 +1374,7 @@
         @media (max-width: 576px) {
             :root {
                 --hero-height: 320px;
-                --hero-top-offset: 56px;
+                --hero-top-offset: 0px;
             }
             .lenovo-hero__content { width: calc(100% - 20px); padding-left: 16px; }
             .lenovo-hero__headline { font-size: 20px; }
@@ -1684,11 +1688,7 @@
             const prevBtn = document.querySelector('.prod-carousel-prev');
             const nextBtn = document.querySelector('.prod-carousel-next');
             if (carousel && prevBtn && nextBtn) {
-                const scrollStep = () => {
-                    const item = carousel.querySelector('.prod-filter-item');
-                    const gap = parseInt(getComputedStyle(carousel).gap) || 20;
-                    return item ? item.offsetWidth + gap : carousel.clientWidth * 0.75;
-                };
+                const scrollStep = () => carousel.clientWidth * 0.85;
 
                 prevBtn.addEventListener('click', () => {
                     carousel.scrollBy({ left: -scrollStep(), behavior: 'smooth' });
@@ -1698,9 +1698,10 @@
                 });
 
                 // Arrastre con mouse
-                let isDown = false, startX, scrollLeft;
+                let isDown = false, isDragging = false, startX, scrollLeft;
                 carousel.addEventListener('mousedown', (e) => {
                     isDown = true;
+                    isDragging = false;
                     carousel.classList.add('dragging');
                     startX = e.pageX - carousel.offsetLeft;
                     scrollLeft = carousel.scrollLeft;
@@ -1711,6 +1712,7 @@
                 });
                 carousel.addEventListener('mouseup', () => {
                     isDown = false;
+                    setTimeout(() => { isDragging = false; }, 50);
                     carousel.classList.remove('dragging');
                 });
                 carousel.addEventListener('mousemove', (e) => {
@@ -1718,8 +1720,17 @@
                     e.preventDefault();
                     const x = e.pageX - carousel.offsetLeft;
                     const walk = (x - startX) * 1.5;
+                    if (Math.abs(x - startX) > 5) isDragging = true;
                     carousel.scrollLeft = scrollLeft - walk;
                 });
+
+                // Evitar que el arrastre dispare clicks en los enlaces
+                carousel.addEventListener('click', (e) => {
+                    if (isDragging) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                }, true);
             }
         });
     </script>
