@@ -58,6 +58,12 @@
         .brand-prowork  .prod-title, .brand-prowork  .prod-overlay-text { font-family: 'ProworkFont', sans-serif; }
         .brand-raito    .prod-title, .brand-raito    .prod-overlay-text { font-family: 'RaitoFont', sans-serif; }
 
+        /* =============================================================
+           LAYOUT SECTION — UNICO BLOQUE DE ESTILOS DE DISTRIBUCION
+           Anula: Bootstrap .row/.col-lg-3, style.css, cualquier herencia
+           ============================================================= */
+
+        /* ---- Contenedor site-width ---- */
         .site-width {
             margin: 0 auto;
             padding: 0;
@@ -65,40 +71,263 @@
             width: 100%;
         }
 
-        /* Ensure product cards fit inside the constrained width */
-        .site-width .prod-filter-container {
-            gap: 20px;
+        /* ---- FILTROS DE CATEGORIA ---- */
+        /* Anula style.css (max-width:1600px, grid repeat(4)) y el bloque duplicado del slider */
+        section#productos ul#portfolio-flters {
+            display: flex !important;
+            flex-wrap: wrap !important;
             justify-content: center !important;
+            align-items: stretch !important;
+            gap: 14px !important;
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 auto 28px auto !important;
+            width: 100% !important;
+            max-width: 100% !important; /* Anula el max-width:900px del bloque anterior */
         }
 
-        /* Grid de categorías centrado y simétrico (4 items) */
-        #portfolio-flters {
+        section#productos ul#portfolio-flters li {
+            flex: 0 0 auto !important;
+            width: auto !important;
+            cursor: pointer;
+            margin: 0 !important;
+            transition: transform 0.25s ease !important;
+        }
+
+        section#productos ul#portfolio-flters li:hover {
+            transform: translateY(-3px) !important;
+        }
+
+        /* Card de categoria — override completo sobre style.css (aspect-ratio 3/4, etc.) */
+        section#productos ul#portfolio-flters li .card {
+            width: 9rem !important;
+            min-width: 9rem !important;
+            max-width: 9rem !important;
+            aspect-ratio: unset !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            border: 2px solid transparent !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.09) !important;
+            transition: all 0.25s ease !important;
+            display: flex !important;
+            flex-direction: column !important;
+            height: auto !important;
+        }
+
+        section#productos ul#portfolio-flters li.filter-active .card,
+        section#productos ul#portfolio-flters li .card:hover {
+            border-color: #ee7c31 !important;
+            box-shadow: 0 6px 18px rgba(238,124,49,0.22) !important;
+            transform: translateY(-3px) !important;
+        }
+
+        section#productos ul#portfolio-flters li .card-img-top {
+            width: 100% !important;
+            height: 90px !important;
+            object-fit: cover !important;
+            padding: 0 !important;
+        }
+
+        section#productos ul#portfolio-flters li .card-body {
+            padding: 8px 6px !important;
+            background: #ee7c31 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: auto !important;
+        }
+
+        section#productos ul#portfolio-flters li .card-text {
+            font-size: 11.5px !important;
+            font-weight: 700 !important;
+            color: #fff !important;
+            text-align: center !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.04em !important;
+            margin: 0 !important;
+            line-height: 1.2 !important;
+            padding: 0 !important;
+            background: transparent !important;
+            border-radius: 0 !important;
+            width: auto !important;
+            min-height: auto !important;
+        }
+
+        /* ---- GRILLA DE MODELOS/PRODUCTOS ---- */
+        /* Anula: Bootstrap .row (display:flex), col-lg-3 (flex:0 0 25%), justify-content:space-between */
+        section#productos .prod-filter-container {
             display: grid !important;
             grid-template-columns: repeat(4, 1fr) !important;
-            justify-content: center !important;
-            justify-items: center !important;
-            align-items: center !important;
             gap: 20px !important;
+            margin: 0 !important;
+            padding: 0 !important;
             width: 100% !important;
-            max-width: 900px !important;
-            margin: 0 auto 30px auto !important;
-            padding: 0 20px !important;
-            list-style: none !important;
+            /* Anular todo lo que Bootstrap .row inyecta */
+            justify-content: unset !important;
+            flex-wrap: unset !important;
+            flex-direction: unset !important;
         }
 
-        @media (max-width: 991px) {
-            #portfolio-flters {
-                grid-template-columns: repeat(2, 1fr) !important;
-                max-width: 500px !important;
+        /* Anula Bootstrap col-lg-3 / col-md-4 completamente */
+        section#productos .prod-filter-item {
+            flex: unset !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Card de producto */
+        .prod-card-container {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.09);
+            transition: all 0.3s ease;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prod-card-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 24px rgba(238, 124, 49, 0.18);
+        }
+
+        /* Imagen de producto — proporcion 68% */
+        .prod-image-wrapper {
+            position: relative !important;
+            width: 100% !important;
+            overflow: hidden !important;
+            padding-top: 68% !important;
+            height: 0 !important;
+        }
+
+        .prod-main-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 45%;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .prod-card-container:hover .prod-main-image {
+            transform: scale(1.05);
+        }
+
+        .prod-image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 14px;
+            background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.15));
+            color: white;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .prod-overlay-text {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .prod-prefix {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 0.65em;
+            opacity: 0.78;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1px;
+        }
+
+        .prod-details {
+            padding: 12px 14px;
+            background: #f8f9fa;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prod-action-btn { margin-top: auto; }
+
+        .prod-action-btn a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 14px;
+            background: #ee7c31;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.82rem;
+            transition: all 0.3s ease;
+        }
+
+        .prod-action-btn a:hover {
+            background: #d96b20;
+            transform: translateY(-2px);
+        }
+
+        .prod-action-btn i { margin-right: 7px; }
+
+        /* --- UTILS --- */
+        .contorno { border: 1px solid #cecece; border-radius: 2px; background-color: #fff; }
+        .descripcion { padding: 7px 9px; }
+        .p-nombre { font-family: "Inter", sans-serif; color: #444; font-weight: 600; }
+        .p-nombre:hover { color: #000; text-decoration: underline; }
+        .p-precio { font-size: 20px; color: #1965a7; }
+        .p-precio-old { font-size: 12px; color: red; text-decoration: line-through; }
+        .team { background-color: #f2fff0; }
+        .oferta { position: absolute; right: -8px; top: 8px; background-color: red; color:#fff; padding: 0 10px; z-index:1; border:1px solid #bd0000; border-radius:15px; }
+        .novedad { position: absolute; right: -8px; top: 8px; background-color: #099409; color:#fff; padding: 0 10px; z-index:1; border:1px solid green; border-radius:15px; }
+
+        /* --- BOTONES PRODUCTOS --- */
+        .botones { display:flex; flex-wrap:nowrap; flex-direction:row; justify-content:space-between; }
+        .botones a:first-child { background-color:#2869a1; color:#ffffff; text-align:center; padding:.3rem; flex:1 1 100%; border:none; transition:border-radius 0.6s linear; }
+        .botones a:first-child:hover { background-color:#124e83; }
+        .botones a:nth-child(2) { display:flex; justify-content:center; align-items:center; background-color:#57cf57; color:#ffffff; border-top-left-radius:.5rem; border-bottom-left-radius:.5rem; flex:1 1 0%; width:0; transition:flex .5s; }
+        .botones a:nth-child(2):hover { background-color:#1bd81b; }
+        .botones:hover>a:nth-child(2) { flex:1 1 20%; margin-left:.5rem; }
+        .botones:hover>a:first-child { border-top-right-radius:.5rem; border-bottom-right-radius:.5rem; }
+
+        /* ---- RESPONSIVE GRILLA ---- */
+        @media (max-width: 1200px) {
+            section#productos .prod-filter-container {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 18px !important;
             }
+        }
+
+        @media (max-width: 768px) {
+            section#productos .prod-filter-container {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 14px !important;
+            }
+            .prod-image-wrapper { padding-top: 62% !important; }
         }
 
         @media (max-width: 480px) {
-            #portfolio-flters {
-                grid-template-columns: repeat(2, 1fr) !important;
-                max-width: 320px !important;
+            section#productos .prod-filter-container {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
             }
+            .prod-image-wrapper { padding-top: 68% !important; }
         }
+
+        /* FIN DE LA SECCION DE LAYOUT */
 
         .contorno {
             border: 1px solid #cecece;
@@ -1041,72 +1270,10 @@
         }
 
         /* =====================================================
-           PORTFOLIO FILTERS RESPONSIVE
+           PORTFOLIO FILTERS — estilos definidos arriba en el
+           bloque principal "LAYOUT SECTION".
+           No redefinir aqui para evitar conflictos en cascada.
            ===================================================== */
-        #portfolio-flters {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            padding: 0;
-            margin-bottom: 30px;
-            list-style: none;
-        }
-        #portfolio-flters li {
-            margin: 0;
-            cursor: pointer;
-        }
-        #portfolio-flters .card {
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-            height: 100%;
-        }
-        #portfolio-flters .filter-active .card {
-            border-color: #ee7c31 !important;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(238, 124, 49, 0.2);
-        }
-        #portfolio-flters .card-body {
-            padding: 8px 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #portfolio-flters .card-text {
-            font-size: 13px;
-            font-weight: 700;
-            margin: 0;
-            text-align: center;
-            line-height: 1.1;
-        }
-        @media (max-width: 768px) {
-            #portfolio-flters {
-                gap: 8px;
-            }
-            #portfolio-flters li .card {
-                width: 6.5rem !important; /* Override inline 8rem */
-            }
-            #portfolio-flters .card-text {
-                font-size: 11px;
-            }
-            #portfolio-flters .card-body {
-                padding: 6px 4px;
-            }
-        }
-        @media (max-width: 480px) {
-            #portfolio-flters {
-                gap: 6px;
-            }
-            #portfolio-flters li .card {
-                width: 5.5rem !important;
-            }
-            #portfolio-flters .card-text {
-                font-size: 10px;
-            }
-        }
     </style>
 @endsection
 @section('content')
