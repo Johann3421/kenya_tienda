@@ -193,11 +193,16 @@
             margin: 0 !important;
             padding: 10px 0 !important;
             width: 100% !important;
+            cursor: grab;
+            user-select: none;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
         section#productos .prod-filter-container::-webkit-scrollbar {
             display: none;
+        }
+        section#productos .prod-filter-container.dragging {
+            cursor: grabbing;
         }
 
         /* Anula Bootstrap col-lg-3 / col-md-4: tarjeta de ancho fijo */
@@ -358,6 +363,80 @@
                 min-width: 200px !important;
             }
             .prod-image-wrapper { padding-top: 68% !important; }
+        }
+
+        /* ---- CONTROLES Y ESTILOS DEL CARRUSEL ---- */
+        .prod-carousel-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .prod-carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.95);
+            color: #ee7c31;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .prod-carousel-btn:hover {
+            background: #ee7c31;
+            color: #fff;
+        }
+
+        .prod-carousel-prev { left: 10px; }
+        .prod-carousel-next { right: 10px; }
+
+        @media (max-width: 768px) {
+            .prod-carousel-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+            }
+            .prod-carousel-prev { left: 6px; }
+            .prod-carousel-next { right: 6px; }
+        }
+
+        /* Mejora de boton Ver Catalogo y textos con Inter */
+        section#productos .prod-action-btn a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: #ee7c31;
+            color: #fff;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            box-shadow: 0 4px 12px rgba(238,124,49,0.25);
+            transition: all 0.25s ease;
+        }
+
+        section#productos .prod-action-btn a:hover {
+            background: #d96b20;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(238,124,49,0.35);
+        }
+
+        section#productos .prod-overlay-text,
+        section#productos .prod-prefix {
+            font-family: 'Inter', sans-serif;
         }
 
         /* FIN DE LA SECCION DE LAYOUT */
@@ -1442,45 +1521,53 @@
                         </ul>
                     </div>
                 </div>
-                <div class="row prod-filter-container" style="justify-content: center">
-                    @foreach ($modelo as $mod)
-                        @php
-                            $modNombre = strtoupper($mod->descripcion ?? $mod->nombre ?? '');
-                            $brandClass = '';
-                            if (str_contains($modNombre, 'EZENT'))        $brandClass = 'brand-ezent';
-                            elseif (str_contains($modNombre, 'GENWORK'))  $brandClass = 'brand-genwork';
-                            elseif (str_contains($modNombre, 'OFISZU'))   $brandClass = 'brand-ofiszu';
-                            elseif (str_contains($modNombre, 'HENKO'))    $brandClass = 'brand-henko';
-                            elseif (str_contains($modNombre, 'PROWORK'))  $brandClass = 'brand-prowork';
-                            elseif (str_contains($modNombre, 'RAITO'))    $brandClass = 'brand-raito';
-                        @endphp
-                        <div class="col-lg-3 col-md-4 prod-filter-item filter-{{ $mod->categoria_id }} {{ $brandClass }}">
-                            <div class="prod-card-container">
-                                <div class="prod-image-wrapper" style="margin: 0 auto;">
-                                    @if ($mod->img_mod)
-                                        <img src="{{ asset('storage/' . $mod->img_mod) }}"
-                                            class="img-fluid prod-main-image" alt="">
-                                    @else
-                                        <img src="{{ asset('producto.jpg') }}" class="img-fluid prod-main-image"
-                                            alt="">
-                                    @endif
-                                    <div class="prod-image-overlay">
-                                        @if ($mod->categoria_id)
-                                            <h6 class="prod-overlay-text" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
-                                                @if($mod->prefix)<span class="prod-prefix">{{ $mod->prefix }} </span>@endif{{ Str::limit($mod->descripcion ?? '', 160) }}
-                                            </h6>
+                <div class="prod-carousel-wrapper">
+                    <button type="button" class="prod-carousel-btn prod-carousel-prev" aria-label="Anterior">
+                        <i class="bx bx-chevron-left"></i>
+                    </button>
+                    <div class="row prod-filter-container" style="justify-content: center">
+                        @foreach ($modelo as $mod)
+                            @php
+                                $modNombre = strtoupper($mod->descripcion ?? $mod->nombre ?? '');
+                                $brandClass = '';
+                                if (str_contains($modNombre, 'EZENT'))        $brandClass = 'brand-ezent';
+                                elseif (str_contains($modNombre, 'GENWORK'))  $brandClass = 'brand-genwork';
+                                elseif (str_contains($modNombre, 'OFISZU'))   $brandClass = 'brand-ofiszu';
+                                elseif (str_contains($modNombre, 'HENKO'))    $brandClass = 'brand-henko';
+                                elseif (str_contains($modNombre, 'PROWORK'))  $brandClass = 'brand-prowork';
+                                elseif (str_contains($modNombre, 'RAITO'))    $brandClass = 'brand-raito';
+                            @endphp
+                            <div class="col-lg-3 col-md-4 prod-filter-item filter-{{ $mod->categoria_id }} {{ $brandClass }}">
+                                <div class="prod-card-container">
+                                    <div class="prod-image-wrapper" style="margin: 0 auto;">
+                                        @if ($mod->img_mod)
+                                            <img src="{{ asset('storage/' . $mod->img_mod) }}"
+                                                class="img-fluid prod-main-image" alt="">
+                                        @else
+                                            <img src="{{ asset('producto.jpg') }}" class="img-fluid prod-main-image"
+                                                alt="">
                                         @endif
+                                        <div class="prod-image-overlay">
+                                            @if ($mod->categoria_id)
+                                                <h6 class="prod-overlay-text" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
+                                                    @if($mod->prefix)<span class="prod-prefix">{{ $mod->prefix }} </span>@endif{{ Str::limit($mod->descripcion ?? '', 160) }}
+                                                </h6>
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="prod-details">
-                                    <div class="prod-action-btn">
-                                        <a href="{{ route('detallemod', $mod->id) }}"><i class='bx bx-shopping-bag'></i>
-                                            Ver Catálogo</a>
+                                    <div class="prod-details">
+                                        <div class="prod-action-btn">
+                                            <a href="{{ route('detallemod', $mod->id) }}"><i class='bx bx-shopping-bag'></i>
+                                                Ver Catálogo</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
+                    <button type="button" class="prod-carousel-btn prod-carousel-next" aria-label="Siguiente">
+                        <i class="bx bx-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </section>
@@ -1547,6 +1634,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const filterButtons = document.querySelectorAll('#portfolio-flters li');
             const portfolioItems = document.querySelectorAll('.prod-filter-item');
+            const carousel = document.querySelector('.prod-filter-container');
 
             // Función de filtrado corregida
             function filterPortfolio() {
@@ -1571,6 +1659,9 @@
                         item.style.transform = 'scale(0.9)';
                     }
                 });
+
+                // Volver al inicio del carrusel al filtrar
+                if (carousel) carousel.scrollLeft = 0;
             }
 
             // Añadir eventos
@@ -1587,6 +1678,48 @@
             const defaultFilter = document.querySelector('#portfolio-flters li.filter-active');
             if (defaultFilter && defaultFilter.querySelector('.card')) {
                 defaultFilter.querySelector('.card').style.border = '2px solid #ee7c31';
+            }
+
+            // Controles del carrusel de productos
+            const prevBtn = document.querySelector('.prod-carousel-prev');
+            const nextBtn = document.querySelector('.prod-carousel-next');
+            if (carousel && prevBtn && nextBtn) {
+                const scrollStep = () => {
+                    const item = carousel.querySelector('.prod-filter-item');
+                    const gap = parseInt(getComputedStyle(carousel).gap) || 20;
+                    return item ? item.offsetWidth + gap : carousel.clientWidth * 0.75;
+                };
+
+                prevBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: -scrollStep(), behavior: 'smooth' });
+                });
+                nextBtn.addEventListener('click', () => {
+                    carousel.scrollBy({ left: scrollStep(), behavior: 'smooth' });
+                });
+
+                // Arrastre con mouse
+                let isDown = false, startX, scrollLeft;
+                carousel.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    carousel.classList.add('dragging');
+                    startX = e.pageX - carousel.offsetLeft;
+                    scrollLeft = carousel.scrollLeft;
+                });
+                carousel.addEventListener('mouseleave', () => {
+                    isDown = false;
+                    carousel.classList.remove('dragging');
+                });
+                carousel.addEventListener('mouseup', () => {
+                    isDown = false;
+                    carousel.classList.remove('dragging');
+                });
+                carousel.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - carousel.offsetLeft;
+                    const walk = (x - startX) * 1.5;
+                    carousel.scrollLeft = scrollLeft - walk;
+                });
             }
         });
     </script>
