@@ -207,8 +207,12 @@
             }
         }
 
+        .breadcrumbs {
+            padding: 10px 0;
+        }
+
         .warranty-section {
-            padding: 2rem 0;
+            padding: 1rem 0 2rem 0;
             background-color: #f8f9fa;
             font-family: 'Inter', sans-serif;
         }

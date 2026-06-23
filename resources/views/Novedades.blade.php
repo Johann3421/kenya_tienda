@@ -318,7 +318,7 @@
 
         /* Estilos generales */
         .catalog-section {
-            padding: 2rem 0;
+            padding: 1rem 0 2rem 0;
             font-family: 'Inter', sans-serif;
             background-color: #f9f9f9;
             min-height: 100vh;
@@ -702,7 +702,7 @@
             width: 100%;
             position: relative;
             overflow: hidden;
-            margin-top: 3rem;
+            margin-top: 0;
         }
 
         .promo-banner-container {
