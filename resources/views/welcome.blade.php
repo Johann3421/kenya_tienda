@@ -100,9 +100,9 @@
 
         /* Card de categoria — override completo sobre style.css (aspect-ratio 3/4, etc.) */
         section#productos ul#portfolio-flters li .card {
-            width: 9rem !important;
-            min-width: 9rem !important;
-            max-width: 9rem !important;
+            width: 7.5rem !important;
+            min-width: 7.5rem !important;
+            max-width: 7.5rem !important;
             aspect-ratio: unset !important;
             border-radius: 12px !important;
             overflow: hidden !important;
@@ -123,7 +123,7 @@
 
         section#productos ul#portfolio-flters li .card-img-top {
             width: 100% !important;
-            height: 90px !important;
+            height: 75px !important; /* Ligeramente más bajo para compensar el ancho menor */
             object-fit: cover !important;
             padding: 0 !important;
         }
@@ -1383,7 +1383,7 @@
                         </div>
                         <ul id="portfolio-flters">
                             <li data-filter="*" class="filter-active">
-                                <div class="card" style="width: 8rem;">
+                                <div class="card">
                                     <img class="card-img-top" src="{{ asset('producto-placeholder.png') }}" alt="Card image cap">
                                     <div class="card-body">
                                         <p class="card-text" style="color:black">Todos</p>
@@ -1392,7 +1392,7 @@
                             </li>
                             @foreach ($categorias as $cat)
                                 <li data-filter=".filter-{{ $cat->id }}">
-                                    <div class="card" style="width: 8rem;">
+                                    <div class="card">
                                         @if ($cat->img_url)
                                             <img class="card-img-top" src="{{ $cat->img_url }}"
                                                 alt="Card image cap">
