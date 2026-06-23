@@ -18,11 +18,11 @@
             --transition: all 0.3s ease;
         }
         .catalog-section {
-            padding: 2rem 0;
+            padding: 1rem 0 2rem 0;
             font-family: 'Inter', sans-serif;
             background-color: #f9f9f9;
             min-height: 100vh;
-            margin-top: 4rem;
+            margin-top: 0;
         }
         .container {
             max-width: 1600px;
