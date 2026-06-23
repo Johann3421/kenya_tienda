@@ -1,0 +1,445 @@
+/**
+ * Kenya Tienda — Refinamiento UX Global
+ * Mejoras: tipografía, escala ~10% menor, márgenes, espaciado, colores y micro-animaciones
+ * Se carga como el último CSS para tener máxima prioridad por cascada.
+ */
+
+/* ─── 1. VARIABLES ─────────────────────────────────────────────────────────── */
+:root {
+    --kenya-orange: #ee7c31;
+    --kenya-orange-dark: #d06520;
+    --kenya-dark: #1e2a38;
+    --kenya-gray: #6b7280;
+    --kenya-gray-light: #f3f4f6;
+    --kenya-border: #e5e7eb;
+    --kenya-shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --kenya-shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+    --kenya-shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --kenya-radius: 8px;
+    --kenya-radius-sm: 5px;
+    --kenya-transition: all 0.22s ease;
+
+    /* Escala de fuentes ~10% más pequeña */
+    --fs-xs:   0.72rem;  /* era 0.8rem */
+    --fs-sm:   0.8rem;   /* era 0.875rem */
+    --fs-base: 0.875rem; /* era 0.95rem */
+    --fs-md:   0.95rem;  /* era 1.05rem */
+    --fs-lg:   1.05rem;  /* era 1.15rem */
+    --fs-xl:   1.2rem;   /* era 1.35rem */
+    --fs-2xl:  1.5rem;   /* era 1.7rem */
+    --fs-3xl:  1.9rem;   /* era 2.1rem */
+}
+
+/* ─── 2. BASE BODY & TIPOGRAFÍA ────────────────────────────────────────────── */
+body {
+    font-size: var(--fs-base) !important;
+    line-height: 1.58 !important;
+    color: #374151 !important;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+}
+
+h1 { font-size: var(--fs-3xl) !important; font-weight: 800; letter-spacing: -0.03em; }
+h2 { font-size: var(--fs-2xl) !important; font-weight: 700; letter-spacing: -0.02em; }
+h3 { font-size: var(--fs-xl)  !important; font-weight: 700; }
+h4 { font-size: var(--fs-lg)  !important; font-weight: 600; }
+h5 { font-size: var(--fs-md)  !important; font-weight: 600; }
+h6 { font-size: var(--fs-base)!important; font-weight: 600; }
+
+p, li, td, th, label, input, select, textarea, button, a {
+    font-size: var(--fs-base);
+}
+
+small, .small { font-size: var(--fs-xs) !important; }
+
+/* ─── 3. HEADER ────────────────────────────────────────────────────────────── */
+.kenya-main-header {
+    padding: 7px 0 !important;
+    box-shadow: 0 1px 10px rgba(0,0,0,0.07) !important;
+    border-bottom: 1px solid var(--kenya-border);
+}
+
+.kenya-logo-img {
+    max-height: 42px !important;
+}
+
+.kenya-nav-link {
+    font-size: 0.8rem !important;
+    padding: 7px 11px !important;
+    letter-spacing: 0.01em;
+    border-radius: 5px !important;
+    font-weight: 600 !important;
+}
+
+.kenya-nav-icon {
+    font-size: 14px !important;
+    margin-right: 5px !important;
+}
+
+/* Buscador del header */
+#productSearch {
+    font-size: var(--fs-sm) !important;
+    padding: 8px 14px !important;
+    border: 1.5px solid var(--kenya-border) !important;
+    box-shadow: var(--kenya-shadow-sm) !important;
+    transition: var(--kenya-transition) !important;
+}
+#productSearch:focus {
+    border-color: var(--kenya-orange) !important;
+    box-shadow: 0 0 0 3px rgba(238,124,49,0.15) !important;
+    outline: none;
+}
+
+/* ─── 4. TOPBAR ────────────────────────────────────────────────────────────── */
+#topbar {
+    font-size: 0.75rem !important;
+    padding: 6px 0 !important;
+}
+
+/* ─── 5. TARJETAS DE PRODUCTO ──────────────────────────────────────────────── */
+.product-card,
+.card[class*="producto"],
+.card-producto,
+.product-item,
+.card-item {
+    border: 1px solid var(--kenya-border) !important;
+    border-radius: var(--kenya-radius) !important;
+    box-shadow: var(--kenya-shadow-sm) !important;
+    transition: var(--kenya-transition) !important;
+    overflow: hidden;
+}
+
+.product-card:hover,
+.card[class*="producto"]:hover,
+.card-producto:hover,
+.product-item:hover,
+.card-item:hover {
+    box-shadow: var(--kenya-shadow-md) !important;
+    transform: translateY(-2px) !important;
+    border-color: #d1d5db !important;
+}
+
+/* Nombre del producto en tarjetas */
+.product-name,
+.product-title,
+.card-title {
+    font-size: var(--fs-sm) !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    color: var(--kenya-dark) !important;
+}
+
+/* Número de parte / código */
+.product-code,
+.nro-parte,
+.badge-code {
+    font-size: var(--fs-xs) !important;
+    letter-spacing: 0.03em;
+}
+
+/* ─── 6. CATÁLOGO / GRILLA ──────────────────────────────────────────────────── */
+/* Reducir padding general de secciones */
+.section,
+section {
+    padding-top: 45px !important;
+    padding-bottom: 45px !important;
+}
+
+/* Encabezados de sección */
+.section-title h2 {
+    font-size: var(--fs-2xl) !important;
+}
+.section-title p {
+    font-size: var(--fs-sm) !important;
+}
+
+/* Contenedores */
+.container {
+    max-width: 1440px !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+}
+
+/* ─── 7. BOTONES ────────────────────────────────────────────────────────────── */
+.btn {
+    font-size: var(--fs-sm) !important;
+    padding: 0.38rem 0.9rem !important;
+    border-radius: var(--kenya-radius-sm) !important;
+    font-weight: 500 !important;
+    transition: var(--kenya-transition) !important;
+    letter-spacing: 0.01em;
+}
+
+.btn-sm {
+    font-size: var(--fs-xs) !important;
+    padding: 0.25rem 0.65rem !important;
+}
+
+.btn-lg {
+    font-size: var(--fs-md) !important;
+    padding: 0.55rem 1.3rem !important;
+}
+
+/* Botón WhatsApp & CTA */
+.btn-whatsapp,
+a[href*="wa.me"],
+a[href*="whatsapp"] {
+    font-size: var(--fs-sm) !important;
+    padding: 9px 20px !important;
+    border-radius: 22px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.01em;
+    transition: var(--kenya-transition) !important;
+}
+
+/* ─── 8. VISTA DE DETALLE DE PRODUCTO ──────────────────────────────────────── */
+#producto_detalle h1,
+#producto_detalle h2 {
+    font-size: var(--fs-2xl) !important;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+}
+
+#producto_detalle .product-specs-table td,
+#producto_detalle .product-specs-table th,
+.especificaciones-table td,
+.especificaciones-table th {
+    font-size: var(--fs-sm) !important;
+    padding: 0.45rem 0.75rem !important;
+}
+
+#producto_detalle .product-price,
+.precio-producto {
+    font-size: var(--fs-2xl) !important;
+    font-weight: 800;
+    color: var(--kenya-orange);
+}
+
+#producto_detalle .nro-parte,
+#producto_detalle .product-code {
+    font-size: var(--fs-xs) !important;
+    color: var(--kenya-gray);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+    font-size: var(--fs-xs) !important;
+    padding: 0.4rem 0.75rem !important;
+    background: var(--kenya-gray-light);
+    border-radius: var(--kenya-radius-sm);
+}
+.breadcrumb-item a {
+    color: var(--kenya-gray) !important;
+    font-weight: 500;
+}
+.breadcrumb-item.active {
+    color: var(--kenya-dark) !important;
+    font-weight: 600;
+}
+
+/* ─── 9. NAVEGACIÓN DE TABS / SPECS ─────────────────────────────────────────── */
+.nav-tabs .nav-link {
+    font-size: var(--fs-sm) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    color: var(--kenya-gray) !important;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0 !important;
+    transition: var(--kenya-transition);
+}
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-link:hover {
+    color: var(--kenya-orange) !important;
+    border-bottom-color: var(--kenya-orange) !important;
+    background: transparent !important;
+}
+.nav-tabs {
+    border-bottom: 1px solid var(--kenya-border) !important;
+}
+
+/* ─── 10. TABLAS ────────────────────────────────────────────────────────────── */
+.table {
+    font-size: var(--fs-sm) !important;
+}
+.table thead th {
+    font-size: var(--fs-xs) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--kenya-gray) !important;
+    border-bottom: 2px solid var(--kenya-border) !important;
+    background: var(--kenya-gray-light);
+    padding: 0.55rem 0.75rem !important;
+}
+.table td {
+    padding: 0.5rem 0.75rem !important;
+    vertical-align: middle !important;
+    border-color: var(--kenya-border) !important;
+}
+.table tbody tr:hover {
+    background: rgba(238,124,49,0.03) !important;
+}
+
+/* ─── 11. FORMS ─────────────────────────────────────────────────────────────── */
+.form-control {
+    font-size: var(--fs-sm) !important;
+    padding: 0.38rem 0.75rem !important;
+    border-color: var(--kenya-border) !important;
+    border-radius: var(--kenya-radius-sm) !important;
+    transition: var(--kenya-transition) !important;
+    line-height: 1.5;
+}
+.form-control:focus {
+    border-color: var(--kenya-orange) !important;
+    box-shadow: 0 0 0 3px rgba(238,124,49,0.14) !important;
+}
+label {
+    font-size: var(--fs-sm) !important;
+    font-weight: 500 !important;
+    color: #374151;
+    margin-bottom: 0.3rem !important;
+}
+
+/* ─── 12. BADGES ────────────────────────────────────────────────────────────── */
+.badge {
+    font-size: var(--fs-xs) !important;
+    padding: 0.28em 0.65em !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.03em;
+}
+
+/* ─── 13. FOOTER ────────────────────────────────────────────────────────────── */
+footer,
+#footer {
+    font-size: var(--fs-sm) !important;
+}
+footer h4,
+#footer h4 {
+    font-size: var(--fs-md) !important;
+    letter-spacing: 0.01em;
+}
+
+/* ─── 14. ALERTAS ────────────────────────────────────────────────────────────── */
+.alert {
+    font-size: var(--fs-sm) !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: var(--kenya-radius) !important;
+    border-left-width: 4px !important;
+}
+
+/* ─── 15. MODALES ────────────────────────────────────────────────────────────── */
+.modal-title {
+    font-size: var(--fs-lg) !important;
+    font-weight: 700;
+}
+.modal-body {
+    font-size: var(--fs-sm) !important;
+}
+
+/* ─── 16. MICRO-ANIMACIONES ──────────────────────────────────────────────────── */
+a, button, .btn, .nav-link, .card, .product-card {
+    transition: var(--kenya-transition) !important;
+}
+
+/* Suavizar aparición de imágenes */
+img {
+    transition: opacity 0.3s ease;
+}
+
+/* Botones con efecto presión */
+.btn:active {
+    transform: scale(0.97) !important;
+}
+
+/* ─── 17. SCROLLBAR PERSONALIZADO ───────────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--kenya-gray-light);
+}
+::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--kenya-orange);
+}
+
+/* ─── 18. SELECCIÓN DE TEXTO ────────────────────────────────────────────────── */
+::selection {
+    background: rgba(238,124,49,0.18);
+    color: var(--kenya-dark);
+}
+
+/* ─── 19. PÁGINA DE CATÁLOGO / GRID ─────────────────────────────────────────── */
+.catalog-grid .card,
+.catalogo-grid .card,
+.products-grid .card {
+    margin-bottom: 1rem !important;
+}
+
+/* Texto en tarjetas del catálogo */
+.catalog-grid .card-body,
+.catalogo-grid .card-body {
+    padding: 0.85rem !important;
+}
+
+/* ─── 20. SECCIÓN DE DETALLE — IMAGEN ──────────────────────────────────────── */
+.product-image-container img {
+    border-radius: var(--kenya-radius) !important;
+    box-shadow: var(--kenya-shadow-sm) !important;
+}
+
+/* ─── 21. PAGINACIÓN ─────────────────────────────────────────────────────────── */
+.pagination .page-link {
+    font-size: var(--fs-xs) !important;
+    padding: 0.35rem 0.65rem !important;
+    color: var(--kenya-gray);
+    border-color: var(--kenya-border);
+}
+.pagination .page-item.active .page-link {
+    background: var(--kenya-orange) !important;
+    border-color: var(--kenya-orange) !important;
+    color: #fff !important;
+}
+.pagination .page-link:hover {
+    color: var(--kenya-orange) !important;
+    background: rgba(238,124,49,0.07) !important;
+}
+
+/* ─── 22. ESPECIFICACIONES TÉCNICAS ──────────────────────────────────────────── */
+.spec-row,
+.especificacion-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--kenya-border);
+}
+.spec-row:last-child,
+.especificacion-row:last-child {
+    border-bottom: none;
+}
+.spec-label,
+.especificacion-label {
+    font-size: var(--fs-xs) !important;
+    font-weight: 600 !important;
+    color: var(--kenya-gray) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    min-width: 140px;
+    flex-shrink: 0;
+}
+.spec-value,
+.especificacion-value {
+    font-size: var(--fs-sm) !important;
+    color: var(--kenya-dark) !important;
+    font-weight: 500;
+}

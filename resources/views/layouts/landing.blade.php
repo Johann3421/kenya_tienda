@@ -29,6 +29,8 @@
 
     <!-- Template Main CSS File -->
     <link href="{{ asset('landing/css/style.css') }}" rel="stylesheet">
+    <!-- UX Refinements — tipografía, escala y márgenes optimizados -->
+    <link href="{{ asset('css/ux-refinements.css') }}?v={{ filemtime(public_path('css/ux-refinements.css')) }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
