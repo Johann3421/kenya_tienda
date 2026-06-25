@@ -1,0 +1,21 @@
+=== COMANDOS PARA EJECUTAR EN CONTENEDOR DOKPLOY ===
+
+cd /var/www/html
+
+# 1. Verificar que el código tiene firstOrCreate
+grep -n "firstOrCreate" app/Http/Controllers/ClienteWebController.php
+
+# 2. Limpiar cachés Laravel
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear
+
+# 3. Crear rol cliente_web manualmente
+php artisan tinker --execute="Spatie\Permission\Models\Role::firstOrCreate(['name' => 'cliente_web', 'guard_name' => 'web']); echo 'Rol creado/verificado';"
+
+# 4. Verificar que el rol existe
+php artisan tinker --execute="echo Spatie\Permission\Models\Role::where('name', 'cliente_web')->where('guard_name', 'web')->exists() ? 'EXISTE' : 'NO EXISTE';"
+
+# 5. Probar la query directamente
+php artisan tinker --execute="echo App\User::role('cliente_web')->count();"

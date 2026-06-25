@@ -648,20 +648,20 @@
                     </div>
                 </div>
                 @guest
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap;">
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:38px; padding:6px 14px;">
                         <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                     </a>
-                    <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="display:flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; border:1px solid #ee7c31; color:#ee7c31; background:transparent; padding:6px 12px; border-radius:4px; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='#ee7c31'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ee7c31';">
+                    <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; border:1px solid #ee7c31; color:#ee7c31; background:transparent; padding:6px 14px; min-height:38px; border-radius:4px; text-decoration:none; transition:all 0.2s; box-sizing:border-box;" onmouseover="this.style.background='#ee7c31'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ee7c31';">
                         <i class="fa-solid fa-tag"></i> Ver precio
                     </a>
                 </div>
                 @else
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap;">
+                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:38px; padding:6px 14px;">
                         <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                     </a>
-                    <a href="{{ route('cotizar.detalle', $producto->id, false) }}" style="display:flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; border:1px solid #ee7c31; color:#ee7c31; background:transparent; padding:6px 12px; border-radius:4px; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='#ee7c31'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ee7c31';">
+                    <a href="{{ route('cotizar.detalle', $producto->id, false) }}" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; border:1px solid #ee7c31; color:#ee7c31; background:transparent; padding:6px 14px; min-height:38px; border-radius:4px; text-decoration:none; transition:all 0.2s; box-sizing:border-box;" onmouseover="this.style.background='#ee7c31'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ee7c31';">
                         <i class="fa-solid fa-tag"></i> Ver precio
                     </a>
                 </div>
