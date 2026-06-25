@@ -50,7 +50,7 @@
                     @php
                         $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
                     @endphp
-                    @if ($logo_sistema->archivo)
+                    @if ($logo_sistema && $logo_sistema->archivo)
                         <img src="{{asset('storage/'.$logo_sistema->archivo_ruta.'/'.$logo_sistema->archivo)}}" alt="" class="logo" style="height: 50px;">
                     @else
                         <img src="{{asset('theme/images/kenya.png')}}" alt="kenya" class="logo" style="width: 76%;">
@@ -220,8 +220,8 @@
         <script src="{{asset('theme/js/pages/ac-lightbox.js')}}"></script>
         <script src="{{asset('theme/js/plugins/bootstrap-notify.min.js')}}"></script>
         <script src="{{asset('theme/js/pages/ac-notification.js')}}"></script>
-        <script src="{{asset('js/vue.min.js')}}"></script>
-        <script src="{{asset('js/axios.min.js')}}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@0.21.4/dist/axios.min.js"></script>
         {{-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script> --}}
 
         @yield('js')

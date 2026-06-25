@@ -31,7 +31,7 @@
                                 @php
                                     $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
                                 @endphp
-                                @if ($logo_sistema->archivo)
+                                @if ($logo_sistema && $logo_sistema->archivo)
                                     <img src="{{asset('storage/'.$logo_sistema->archivo_ruta.'/'.$logo_sistema->archivo)}}" alt="" class="img-fluid mb-4" style="width: 140px;">
                                 @else
                                     <img src="{{asset('theme/images/kenya.png')}}" alt="Vasco" class="img-fluid mb-4" style="width: 76%;">

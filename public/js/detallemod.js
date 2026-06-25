@@ -6,11 +6,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextBtn = document.querySelector('.novedades-carousel-next');
     const dotsContainer = document.querySelector('.novedades-carousel-dots');
 
+    if (!track || !prevBtn || !nextBtn || !dotsContainer || items.length === 0) {
+        return;
+    }
+
     let currentIndex = 0;
-    let visibleItems = 4; // Valor por defecto para desktop
+    let visibleItems = 4;
     let totalSlides = items.length;
 
-    // Calcular items visibles según el ancho de pantalla
     function updateVisibleItems() {
         if (window.innerWidth <= 576) {
             visibleItems = 1;
@@ -23,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
         createDots();
     }
 
-    // Crear indicadores
     function createDots() {
         dotsContainer.innerHTML = '';
         const dotCount = Math.ceil(totalSlides / visibleItems);
@@ -37,15 +39,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Actualizar posición del track
     function updateTrackPosition() {
+        if (!items[0]) return;
         const itemWidth = items[0].offsetWidth;
         const gap = 20;
         const newPosition = -(currentIndex * (itemWidth + gap));
 
         track.style.transform = `translateX(${newPosition}px)`;
 
-        // Actualizar dots activos
         document.querySelectorAll('.novedades-carousel-dot').forEach((dot, i) => {
             const dotPosition = i * visibleItems;
             dot.classList.toggle('active', currentIndex >= dotPosition && currentIndex <
@@ -53,12 +54,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Navegación
     function nextSlide() {
         if (currentIndex < totalSlides - visibleItems) {
             currentIndex++;
         } else {
-            currentIndex = 0; // Volver al inicio
+            currentIndex = 0;
         }
         updateTrackPosition();
     }
@@ -67,22 +67,19 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentIndex > 0) {
             currentIndex--;
         } else {
-            currentIndex = totalSlides - visibleItems; // Ir al final
+            currentIndex = totalSlides - visibleItems;
         }
         updateTrackPosition();
     }
 
-    // Ir a slide específico
     function goToSlide(index) {
         currentIndex = Math.min(Math.max(index, 0), totalSlides - visibleItems);
         updateTrackPosition();
     }
 
-    // Event listeners
     nextBtn.addEventListener('click', nextSlide);
     prevBtn.addEventListener('click', prevSlide);
 
-    // Auto-desplazamiento
     let slideInterval;
 
     function startAutoSlide() {
@@ -95,16 +92,13 @@ document.addEventListener('DOMContentLoaded', function () {
         clearInterval(slideInterval);
     }
 
-    // Inicializar
     function initCarousel() {
         updateVisibleItems();
         startAutoSlide();
 
-        // Pausar al interactuar
         track.addEventListener('mouseenter', stopAutoSlide);
         track.addEventListener('mouseleave', startAutoSlide);
 
-        // Touch events para móviles
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -130,12 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Redimensionamiento
     window.addEventListener('resize', () => {
         updateVisibleItems();
     });
 
-    // Iniciar carrusel
     initCarousel();
 });
-

@@ -17,13 +17,7 @@
 
 @section('css')
     <style>
-        /* Registro de fuente personalizada Kenya */
-        @font-face {
-            font-family: 'Kenyav1';
-            src: url('/Kenyav1-Regular.otf') format('opentype');
-        }
-
-        /* Tipografías de líneas de producto Kenya */
+        /* Tipografías de líneas de producto Kenya (Kenyav1 usa Inter como fallback del layout) */
         @font-face {
             font-family: 'EzentFont';
             src: url('/TIPOGRAFIA%20KENYA/EZENT/Ezent-Regular.ttf') format('truetype'),
@@ -1626,15 +1620,6 @@
 @section('js')
     <!-- SCRIPT DE LAS CATEGORIAS -->
     <script>
-        new Vue({
-            el: '#portfolio',
-            data: {
-
-            },
-            methods: {
-
-            },
-        });
         document.addEventListener('DOMContentLoaded', function() {
             const filterButtons = document.querySelectorAll('#portfolio-flters li');
             const portfolioItems = document.querySelectorAll('.prod-filter-item');
@@ -1742,13 +1727,17 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const track = document.querySelector('.promo-banner-track');
-            const items = document.querySelectorAll('.promo-banner-slide'); // Cambiado a promo-banner-slide
-            const prevBtn = document.querySelector('.promo-banner-prev'); // Cambiado a promo-banner-prev
-            const nextBtn = document.querySelector('.promo-banner-next'); // Cambiado a promo-banner-next
-            const dotsContainer = document.querySelector('.promo-banner-dots'); // Cambiado a promo-banner-dots
+            const items = document.querySelectorAll('.promo-banner-slide');
+            const prevBtn = document.querySelector('.promo-banner-prev');
+            const nextBtn = document.querySelector('.promo-banner-next');
+            const dotsContainer = document.querySelector('.promo-banner-dots');
+
+            if (!track || !prevBtn || !nextBtn || !dotsContainer || items.length === 0) {
+                return;
+            }
 
             let currentIndex = 0;
-            let visibleItems = 1; // Mostrar solo 1 banner a la vez
+            let visibleItems = 1;
             let totalSlides = items.length;
 
             // Calcular items visibles según el ancho de pantalla
@@ -1775,6 +1764,7 @@
 
             // Actualizar posición del track
             function updateTrackPosition() {
+                if (!items[0]) return;
                 const itemWidth = items[0].offsetWidth;
                 const gap = 0; // Sin gap entre banners
                 const newPosition = -(currentIndex * (itemWidth + gap));
@@ -1995,4 +1985,3 @@
         })();
     </script>
 @endsection
-<script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>

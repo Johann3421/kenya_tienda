@@ -56,7 +56,6 @@
     </style>
 
 <style>
-    // Agrega esto al CSS global o en el layout principal
 html, body {
     height: 100%;
     min-height: 100%;
@@ -135,7 +134,7 @@ header, footer {
                         @php
                             $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
                         @endphp
-                        @if ($logo_sistema->archivo)
+                        @if ($logo_sistema && $logo_sistema->archivo)
                             <img src="{{ asset('storage/' . $logo_sistema->archivo_ruta . '/' . $logo_sistema->archivo) }}"
                                 alt="KENYA Logo" class="kenya-logo-img">
                         @else
@@ -289,28 +288,9 @@ header, footer {
 
     <!-- Template Main JS File -->
     <script src="{{ asset('landing/js/main.js') }}"></script>
-    <script src="{{ asset('js/vue.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.4/dist/axios.min.js"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.1/iconify-icon.min.js"></script>
-
-    {{-- CSS --}}
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/js/all.min.js"
-        integrity="sha512-naukR7I+Nk6gp7p5TMA4ycgfxaZBJ7MO5iC3Fp6ySQyKFHOGfpkSZkYVWV5R7u7cfAicxanwYQ5D1e17EfJcMA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <script>
-        new Vue({
-            el: '#whatsapp',
-            data: {
-                mensaje: null,
-            },
-            method: {
-                Whatsapp() {
-
-                }
-            }
-        });
-    </script>
     <script>
         (function(){
             const input = document.getElementById('productSearch');
