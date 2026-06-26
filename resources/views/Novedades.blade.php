@@ -321,7 +321,7 @@
             padding: 1rem 0 2rem 0;
             font-family: 'Inter', sans-serif;
             background-color: #f9f9f9;
-            min-height: 100vh;
+
         }
 
         .container {
