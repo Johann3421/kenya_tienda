@@ -551,6 +551,7 @@
         }
 
         .product-card {
+            position: relative;
             background: white;
             border-radius: var(--border-radius);
             overflow: hidden;

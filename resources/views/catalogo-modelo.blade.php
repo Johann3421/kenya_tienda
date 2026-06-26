@@ -65,6 +65,7 @@
         }
         .product-grid { margin-top: 0.5rem; }
         .product-card {
+            position: relative;
             background: white; border-radius: var(--border-radius);
             overflow: hidden; box-shadow: var(--box-shadow);
             transition: var(--transition); height: 100%;

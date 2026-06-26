@@ -1,26 +1,5 @@
 <!-- resources/views/components/novedades.blade.php -->
 <style>
-    .novedades-title-section h2 {
-    font-size: clamp(1.8rem, 4vw, 2.5rem);
-    font-weight: 700;
-    text-transform: uppercase;
-    color: white !important;
-    text-align: center;
-    margin: 0 auto 40px;
-    padding: 8px 15px;
-    position: relative;
-    display: inline-block;
-    background: linear-gradient(135deg, #ee7c31 0%, #e67125 100%);
-    border-radius: 55px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    letter-spacing: 1.5px;
-    box-shadow: 0 6px 15px rgba(238, 124, 49, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform-style: preserve-3d;
-    perspective: 500px;
-}
-
         .novedades-container {
             max-width: 1600px;
             margin: 0 auto;
@@ -33,9 +12,22 @@
         }
 
         .novedades-title-section h2 {
-            font-size: 2.5rem;
-            color: #212121;
-            margin-bottom: 15px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white !important;
+            text-align: center;
+            margin: 0 auto 15px;
+            padding: 8px 25px;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #ee7c31 0%, #e67125 100%);
+            border-radius: 55px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 15px rgba(238, 124, 49, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .novedades-title-section p {
@@ -47,6 +39,7 @@
         .novedades-carousel-wrapper {
             position: relative;
             overflow: hidden;
+            padding-bottom: 10px;
         }
 
         /* Pista del carrusel */
@@ -60,11 +53,12 @@
         .novedades-carousel-item {
             flex: 0 0 calc(25% - 15px);
             min-width: calc(25% - 15px);
-            padding: 0 5px;
+            box-sizing: border-box;
         }
 
         /* Tarjeta de producto */
         .novedades-product-card {
+            position: relative;
             background: white;
             border-radius: 10px;
             overflow: hidden;
@@ -80,6 +74,9 @@
 
         /* Badge "Nuevo" */
         .novedades-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             background: #ee7c31;
             color: white;
             padding: 3px 10px;
