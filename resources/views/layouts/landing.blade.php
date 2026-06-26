@@ -116,6 +116,33 @@ header, footer {
     #print-pdf-container.printing {
         display: block;
     }
+
+    /* Footer inferior: enlaces alineados y consistentes */
+    .kenya-footer-bottom-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+    .kenya-right-section {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 18px;
+    }
+    .kenya-complaint-book,
+    .kenya-login-link {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
+    }
+    .kenya-complaint-book:hover,
+    .kenya-login-link:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
     </style>
 
     @yield('css')
@@ -249,17 +276,9 @@ header, footer {
                             <i class="fas fa-book-open"></i> Libro de reclamaciones
                         </a>
 
-                        <div class="kenya-social-section">
-                            <span class="kenya-social-text">Síguenos en:</span>
-                            <div class="kenya-social-icons">
-                                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#"><i class="fab fa-instagram"></i></a>
-                                <a href="#"><i class="fab fa-twitter"></i></a>
-                                <a href="{{ url('/login') }}" title="Iniciar sesión" style="margin-left:8px;">
-            <i class="fas fa-user"></i>
-        </a>
-                            </div>
-                        </div>
+                        <a href="{{ url('/login') }}" title="Iniciar sesión" class="kenya-login-link">
+                            <i class="fas fa-user"></i> Iniciar sesión
+                        </a>
                     </div>
                 </div>
             </div>
