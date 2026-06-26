@@ -863,7 +863,11 @@
         /* Estilo de la sección de novedades */
         /* Estilos generales del carrusel */
         .novedades-section {
+            position: relative;
+            clear: both;
+            padding: 40px 0;
             background-color: #f8f9fa;
+            z-index: 1;
         }
 
         .novedades-container {
@@ -878,9 +882,22 @@
         }
 
         .novedades-title-section h2 {
-            font-size: 2.5rem;
-            color: #212121;
-            margin-bottom: 15px;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white !important;
+            text-align: center;
+            margin: 0 auto 15px;
+            padding: 8px 25px;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #ee7c31 0%, #e67125 100%);
+            border-radius: 55px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 15px rgba(238, 124, 49, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .novedades-title-section p {
@@ -892,6 +909,7 @@
         .novedades-carousel-wrapper {
             position: relative;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
         /* Pista del carrusel */
@@ -905,17 +923,20 @@
         .novedades-carousel-item {
             flex: 0 0 calc(25% - 15px);
             min-width: calc(25% - 15px);
-            padding: 0 5px;
+            box-sizing: border-box;
         }
 
         /* Tarjeta de producto */
         .novedades-product-card {
+            position: relative;
             background: white;
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .novedades-product-card:hover {
@@ -925,6 +946,9 @@
 
         /* Badge "Nuevo" */
         .novedades-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             background: #ee7c31;
             color: white;
             padding: 3px 10px;
@@ -971,6 +995,10 @@
         /* Detalles del producto */
         .novedades-product-details {
             padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .novedades-product-title {

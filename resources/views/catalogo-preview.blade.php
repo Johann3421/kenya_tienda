@@ -63,7 +63,7 @@
             border-color: var(--primary-color); outline: none;
             box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
         }
-        .product-grid { margin-top: 0.5rem; }
+        .product-grid { margin-top: 0.5rem; margin-bottom: 2rem; }
         .product-card {
             position: relative;
             background: white; border-radius: var(--border-radius);

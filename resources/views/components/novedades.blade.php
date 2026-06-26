@@ -1,5 +1,13 @@
 <!-- resources/views/components/novedades.blade.php -->
 <style>
+        .novedades-section {
+            position: relative;
+            clear: both;
+            padding: 40px 0;
+            background-color: #f8f9fa;
+            z-index: 1;
+        }
+
         .novedades-container {
             max-width: 1600px;
             margin: 0 auto;
@@ -40,6 +48,7 @@
             position: relative;
             overflow: hidden;
             padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         /* Pista del carrusel */
@@ -65,6 +74,8 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
             height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .novedades-product-card:hover {
@@ -123,6 +134,10 @@
         /* Detalles del producto */
         .novedades-product-details {
             padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .novedades-product-title {
