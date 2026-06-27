@@ -313,100 +313,73 @@
             margin: 0 !important;
         }
 
-        /* GRID DE CATEGORÍAS - ESTILO CIRCULAR */
-        #main-welcome-container .categorias-section-inner {
-            background-color: #ffffff !important;
-            padding: 2rem 0 !important;
-        }
-
+        /* GRID DE CATEGORÍAS */
         #main-welcome-container .categoria-grid {
-            display: flex !important;
-            align-items: flex-start !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;
-            gap: 40px !important;
-            padding: 10px 5px !important;
-            width: 100% !important;
-            list-style: none !important;
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 16px !important;
             margin-bottom: 40px !important;
+            list-style: none !important;
+            padding: 0 !important;
         }
 
         #main-welcome-container .categoria-btn {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            text-decoration: none !important;
-            color: #111 !important;
-            width: 160px !important;
-            flex-shrink: 0 !important;
-            text-align: center !important;
-            gap: 15px !important;
-            transition: transform 0.3s ease !important;
+            width: 100% !important;
             cursor: pointer !important;
             border: none !important;
-            background: none !important;
             padding: 0 !important;
+            background: none !important;
+            transition: transform 0.25s ease !important;
         }
 
         #main-welcome-container .categoria-btn:hover {
-            transform: translateY(-5px) !important;
+            transform: translateY(-3px) !important;
         }
 
         #main-welcome-container .categoria-card {
-            width: 140px !important;
-            height: 140px !important;
-            border-radius: 50% !important;
-            background-color: #f4f4f4 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            transition: all 0.3s ease !important;
+            width: 100% !important;
+            aspect-ratio: 4 / 3 !important;
+            border-radius: 12px !important;
             overflow: hidden !important;
-            border: 1px solid transparent !important;
-            aspect-ratio: unset !important;
-            flex-direction: unset !important;
+            border: 2px solid transparent !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.09) !important;
+            transition: all 0.25s ease !important;
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+        }
+
+        #main-welcome-container .categoria-btn.active .categoria-card,
+        #main-welcome-container .categoria-btn .categoria-card:hover {
+            border-color: #f26522 !important;
+            box-shadow: 0 6px 18px rgba(242,101,34,0.22) !important;
         }
 
         #main-welcome-container .categoria-card img {
-            max-width: 70% !important;
-            max-height: 70% !important;
-            display: block !important;
+            width: 100% !important;
+            height: 65% !important;
             object-fit: contain !important;
-            width: auto !important;
-            height: auto !important;
-            padding: 0 !important;
-            background: transparent !important;
-        }
-
-        #main-welcome-container .categoria-btn:hover .categoria-card {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
-            background-color: #e8e8e8 !important;
-        }
-
-        #main-welcome-container .categoria-btn.active .categoria-card {
-            border-color: #f26522 !important;
-            background-color: #fffaf7 !important;
-            box-shadow: 0 8px 20px rgba(242, 101, 34, 0.2) !important;
+            object-position: center !important;
+            padding: 10px !important;
+            background: #fff !important;
         }
 
         #main-welcome-container .categoria-label {
-            font-size: 1rem !important;
-            line-height: 1.3 !important;
-            font-weight: 500 !important;
-            transition: color 0.3s !important;
-            display: block !important;
-            background: none !important;
-            color: #111 !important;
-            text-transform: uppercase !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            height: 35% !important;
             padding: 0 !important;
-            height: auto !important;
-            width: auto !important;
+            background: #f26522 !important;
+            color: #fff !important;
+            font-size: 0.85rem !important;
+            font-weight: 700 !important;
             text-align: center !important;
-        }
-
-        #main-welcome-container .categoria-btn.active .categoria-label {
-            color: #f26522 !important;
-            font-weight: bold !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.04em !important;
+            line-height: 1.2 !important;
+            margin: 0 !important;
+            width: 100% !important;
         }
 
         /* CARRUSEL DE PRODUCTOS */
@@ -570,56 +543,51 @@
             margin: 0 !important;
         }
 
-        /* BANNER DE PROMOCIÓN - ESTILO FULLWIDTH */
+        /* BANNER DE PROMOCIÓN */
         #main-welcome-container .promo-banner {
             position: relative !important;
             width: 100% !important;
             padding: 0 !important;
+            background: white !important;
             margin: 0 !important;
-            overflow: hidden !important;
-            background: #000 !important;
         }
 
         #main-welcome-container .promo-container {
             position: relative !important;
-            width: 100% !important;
+            height: 300px !important;
             overflow: hidden !important;
         }
 
         #main-welcome-container .promo-track {
             display: flex !important;
-            transition: transform 0.6s ease !important;
+            transition: transform 0.5s ease !important;
+            height: 100% !important;
             width: 100% !important;
         }
 
         #main-welcome-container .promo-slide {
             min-width: 100% !important;
-            width: 100% !important;
             position: relative !important;
-            flex-shrink: 0 !important;
-        }
-
-        #main-welcome-container .promo-slide a {
-            display: block !important;
-            text-decoration: none !important;
-            width: 100% !important;
         }
 
         #main-welcome-container .promo-slide img {
             width: 100% !important;
-            height: auto !important;
-            max-height: 420px !important;
+            height: 100% !important;
             object-fit: cover !important;
             display: block !important;
+        }
+
+        #main-welcome-container .promo-slide a {
+            text-decoration: none !important;
         }
 
         #main-welcome-container .promo-btn {
             position: absolute !important;
             top: 50% !important;
             transform: translateY(-50%) !important;
-            width: 46px !important;
-            height: 46px !important;
-            background: rgba(255, 255, 255, 0.85) !important;
+            width: 40px !important;
+            height: 40px !important;
+            background: rgba(255, 255, 255, 0.8) !important;
             border: none !important;
             border-radius: 50% !important;
             cursor: pointer !important;
@@ -630,14 +598,11 @@
             transition: all 0.3s ease !important;
             padding: 0 !important;
             color: #f26522 !important;
-            font-size: 1.1rem !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important;
+            font-size: 24px !important;
         }
 
         #main-welcome-container .promo-btn:hover {
             background: white !important;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
-            transform: translateY(-50%) scale(1.07) !important;
         }
 
         #main-welcome-container .promo-prev {
@@ -650,7 +615,7 @@
 
         #main-welcome-container .promo-dots {
             position: absolute !important;
-            bottom: 18px !important;
+            bottom: 20px !important;
             left: 0 !important;
             right: 0 !important;
             display: flex !important;
@@ -660,8 +625,8 @@
         }
 
         #main-welcome-container .promo-dot {
-            width: 10px !important;
-            height: 10px !important;
+            width: 12px !important;
+            height: 12px !important;
             border-radius: 50% !important;
             background: rgba(255, 255, 255, 0.5) !important;
             cursor: pointer !important;
@@ -672,11 +637,11 @@
 
         #main-welcome-container .promo-dot.active {
             background: white !important;
-            transform: scale(1.3) !important;
+            transform: scale(1.2) !important;
         }
 
         /* ═══════════════════════════════════════════════════════════════
-           SECCIÓN DE NOVEDADES - CARRUSEL HORIZONTAL
+           SECCIÓN DE NOVEDADES
            ═══════════════════════════════════════════════════════════════ */
         #main-welcome-container .novedades-section {
             width: 100% !important;
@@ -687,7 +652,7 @@
 
         #main-welcome-container .novedades-title {
             text-align: center !important;
-            margin-bottom: 10px !important;
+            margin-bottom: 40px !important;
         }
 
         #main-welcome-container .novedades-title h2 {
@@ -706,185 +671,82 @@
             margin: 0 !important;
         }
 
-        #main-welcome-container .novedades-subtitle {
-            text-align: center !important;
-            font-size: 1rem !important;
-            color: #666 !important;
-            margin: 10px 0 30px !important;
-        }
-
-        /* Wrapper con flechas */
-        #main-welcome-container .novedades-slider-wrapper {
-            position: relative !important;
-            padding: 0 50px !important;
-        }
-
-        /* Track scrollable */
         #main-welcome-container .novedades-grid {
-            display: flex !important;
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
             gap: 20px !important;
-            overflow-x: auto !important;
-            scroll-behavior: smooth !important;
-            padding: 10px 5px 20px !important;
-            -ms-overflow-style: none !important;
-            scrollbar-width: none !important;
         }
 
-        #main-welcome-container .novedades-grid::-webkit-scrollbar {
-            display: none !important;
-        }
-
-        /* Tarjeta de novedad - estilo rec-card */
         #main-welcome-container .novedad-card {
-            background: #ffffff !important;
-            border-radius: 15px !important;
-            padding: 20px !important;
-            min-width: 280px !important;
-            flex: 0 0 280px !important;
+            position: relative !important;
+            background: white !important;
+            border-radius: 10px !important;
+            overflow: hidden !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+            transition: all 0.3s ease !important;
+            height: 100% !important;
             display: flex !important;
             flex-direction: column !important;
-            text-align: left !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
-            transition: box-shadow 0.3s ease, transform 0.3s ease !important;
-            position: relative !important;
-            overflow: visible !important;
-            height: auto !important;
         }
 
         #main-welcome-container .novedad-card:hover {
-            box-shadow: 0 8px 25px rgba(0,0,0,0.13) !important;
-            transform: translateY(-4px) !important;
+            transform: translateY(-5px) !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
         }
 
         #main-welcome-container .novedad-badge {
-            display: inline-block !important;
-            background-color: #f26522 !important;
-            color: #ffffff !important;
-            font-size: 0.75rem !important;
+            position: absolute !important;
+            top: 10px !important;
+            right: 10px !important;
+            background: #f26522 !important;
+            color: white !important;
+            padding: 3px 10px !important;
+            border-radius: 20px !important;
+            font-size: 0.8rem !important;
             font-weight: bold !important;
-            text-transform: uppercase !important;
-            padding: 5px 12px !important;
-            border-radius: 15px !important;
-            letter-spacing: 0.5px !important;
-            margin-bottom: 12px !important;
-            position: static !important;
+            z-index: 2 !important;
         }
 
         #main-welcome-container .novedad-imagen {
+            position: relative !important;
             width: 100% !important;
-            height: 200px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+            aspect-ratio: 4/3 !important;
             overflow: hidden !important;
-            margin-bottom: 15px !important;
-            aspect-ratio: unset !important;
-            position: static !important;
         }
 
         #main-welcome-container .novedad-imagen img {
             width: 100% !important;
-            height: 200px !important;
-            object-fit: contain !important;
-            transition: transform 0.3s ease !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            transition: transform 0.5s ease !important;
         }
 
         #main-welcome-container .novedad-card:hover .novedad-imagen img {
-            transform: scale(1.04) !important;
+            transform: scale(1.05) !important;
         }
 
         #main-welcome-container .novedad-info {
-            padding: 0 !important;
+            padding: 15px !important;
             flex-grow: 1 !important;
             display: flex !important;
-            flex-direction: column !important;
-            gap: 8px !important;
-            justify-content: flex-start !important;
-            align-items: flex-start !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         #main-welcome-container .novedad-titulo {
             margin: 0 !important;
             font-size: 1rem !important;
-            font-weight: 700 !important;
-            color: #111 !important;
-            text-align: left !important;
+            text-align: center !important;
         }
 
         #main-welcome-container .novedad-titulo a {
-            color: #111 !important;
+            color: #333 !important;
             text-decoration: none !important;
             transition: color 0.3s ease !important;
         }
 
         #main-welcome-container .novedad-titulo a:hover {
             color: #f26522 !important;
-        }
-
-        #main-welcome-container .novedad-btn-detalle {
-            display: block !important;
-            background-color: #f26522 !important;
-            color: #fff !important;
-            text-align: center !important;
-            padding: 10px !important;
-            border-radius: 30px !important;
-            text-decoration: none !important;
-            font-weight: bold !important;
-            font-size: 0.9rem !important;
-            transition: background 0.3s !important;
-            width: 100% !important;
-            margin-top: 12px !important;
-            border: none !important;
-            cursor: pointer !important;
-        }
-
-        #main-welcome-container .novedad-btn-detalle:hover {
-            background-color: #444 !important;
-        }
-
-        /* Botones del carrusel de novedades */
-        #main-welcome-container .novedades-btn {
-            position: absolute !important;
-            top: 50% !important;
-            transform: translateY(-50%) !important;
-            background-color: #fff !important;
-            border: 1px solid #eaeaea !important;
-            border-radius: 50% !important;
-            width: 45px !important;
-            height: 45px !important;
-            cursor: pointer !important;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1) !important;
-            z-index: 10 !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            color: #f26522 !important;
-            font-size: 1.1rem !important;
-            transition: all 0.3s !important;
-            padding: 0 !important;
-        }
-
-        #main-welcome-container .novedades-btn:hover {
-            background-color: #f26522 !important;
-            color: #fff !important;
-        }
-
-        #main-welcome-container .novedades-prev {
-            left: 0 !important;
-        }
-
-        #main-welcome-container .novedades-next {
-            right: 0 !important;
-        }
-
-        @media (max-width: 768px) {
-            #main-welcome-container .novedades-slider-wrapper {
-                padding: 0 35px !important;
-            }
-            #main-welcome-container .novedad-card {
-                min-width: 230px !important;
-                flex: 0 0 230px !important;
-            }
         }
 
         /* ════════════════════════════════════════════════════════════════
@@ -977,7 +839,9 @@
             #main-welcome-container .hero-slide p {
                 font-size: 1.2rem !important;
             }
-            /* categoria-grid: flex wrap, sin override de columnas */
+            #main-welcome-container .categoria-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+            }
             #main-welcome-container .producto-card {
                 flex: 0 0 calc(33.333% - 13px) !important;
             }
@@ -996,11 +860,15 @@
             #main-welcome-container .hero-slide p {
                 font-size: 1rem !important;
             }
-            /* categoria-grid: flex wrap, sin override */
+            #main-welcome-container .categoria-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
             #main-welcome-container .producto-card {
                 flex: 0 0 calc(50% - 10px) !important;
             }
-            /* novedades: carrusel, sin cambio de grid */
+            #main-welcome-container .novedades-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1025,7 +893,9 @@
                 width: 40px !important;
                 height: 40px !important;
             }
-            /* categoria-grid: flex wrap, sin override */
+            #main-welcome-container .categoria-grid {
+                grid-template-columns: 1fr !important;
+            }
             #main-welcome-container .producto-card {
                 flex: 0 0 100% !important;
             }
@@ -1033,7 +903,12 @@
                 width: 35px !important;
                 height: 35px !important;
             }
-            /* novedades carrusel sin override */
+            #main-welcome-container .novedades-grid {
+                grid-template-columns: 1fr !important;
+            }
+            #main-welcome-container .promo-container {
+                height: 200px !important;
+            }
         }
 
         /* CLASES DE MARCA PARA TIPOGRAFÍAS */
@@ -1166,8 +1041,8 @@
                     <button class="categoria-btn active" data-category="*">
                         <div class="categoria-card">
                             <img src="{{ asset('producto-placeholder.png') }}" alt="Todos">
+                            <p class="categoria-label">Todos</p>
                         </div>
-                        <p class="categoria-label">Todos</p>
                     </button>
                     @foreach ($categorias as $cat)
                         <button class="categoria-btn" data-category=".filter-{{ $cat->id }}">
@@ -1177,8 +1052,8 @@
                                 @else
                                     <img src="{{ asset('producto.jpg') }}" alt="{{ $cat->nombre }}">
                                 @endif
+                                <p class="categoria-label">{{ $cat->nombre }}</p>
                             </div>
-                            <p class="categoria-label">{{ $cat->nombre }}</p>
                         </button>
                     @endforeach
                 </div>
@@ -1278,47 +1153,32 @@
         <!-- ═══════════════════════════════════════════════════════════
              SECCIÓN DE NOVEDADES
              ═══════════════════════════════════════════════════════════ -->
-        <!-- ═══════════════════════════════════════════════════════════
-             SECCIÓN DE NOVEDADES - CARRUSEL
-             ═══════════════════════════════════════════════════════════ -->
         <section class="novedades-section">
             <div class="section-container">
                 <div class="novedades-title">
                     <h2>Novedades</h2>
                 </div>
-                <p class="novedades-subtitle">Nuevos productos en nuestra lista, ¡qué esperas!</p>
                 
-                <div class="novedades-slider-wrapper">
-                    <button class="novedades-btn novedades-prev" aria-label="Anterior">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-
-                    <div class="novedades-grid" id="novedades-track">
-                        @if(isset($novedades) && $novedades->count() > 0)
-                            @foreach($novedades as $novedad)
-                                <div class="novedad-card">
-                                    <span class="novedad-badge">Nuevo</span>
-                                    <div class="novedad-imagen">
-                                        @if($novedad->imagen)
-                                            <img src="{{ asset('storage/' . $novedad->imagen) }}" alt="{{ $novedad->titulo ?? 'Producto nuevo' }}">
-                                        @else
-                                            <img src="{{ asset('producto.jpg') }}" alt="{{ $novedad->titulo ?? 'Producto nuevo' }}">
-                                        @endif
-                                    </div>
-                                    <div class="novedad-info">
-                                        <h5 class="novedad-titulo">
-                                            <a href="#">{{ $novedad->titulo ?? 'Producto nuevo' }}</a>
-                                        </h5>
-                                        <a href="#" class="novedad-btn-detalle">Ver detalles</a>
-                                    </div>
+                <div class="novedades-grid">
+                    @if(isset($novedades) && $novedades->count() > 0)
+                        @foreach($novedades as $novedad)
+                            <div class="novedad-card">
+                                <span class="novedad-badge">Nuevo</span>
+                                <div class="novedad-imagen">
+                                    @if($novedad->imagen)
+                                        <img src="{{ asset('storage/' . $novedad->imagen) }}" alt="{{ $novedad->titulo ?? 'Producto nuevo' }}">
+                                    @else
+                                        <img src="{{ asset('producto.jpg') }}" alt="{{ $novedad->titulo ?? 'Producto nuevo' }}">
+                                    @endif
                                 </div>
-                            @endforeach
-                        @endif
-                    </div>
-
-                    <button class="novedades-btn novedades-next" aria-label="Siguiente">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
+                                <div class="novedad-info">
+                                    <h5 class="novedad-titulo">
+                                        <a href="#">{{ $novedad->titulo ?? 'Producto nuevo' }}</a>
+                                    </h5>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </section>
@@ -1468,19 +1328,13 @@
                     updatePromoPosition();
                 });
 
-            // ==================================================
-            // 5. CARRUSEL DE NOVEDADES
-            // ==================================================
-            const novedadesTrack = container.querySelector('#novedades-track');
-            const novedadesPrev = container.querySelector('.novedades-prev');
-            const novedadesNext = container.querySelector('.novedades-next');
-
-            novedadesPrev?.addEventListener('click', () => {
-                novedadesTrack?.scrollBy({ left: -300, behavior: 'smooth' });
-            });
-            novedadesNext?.addEventListener('click', () => {
-                novedadesTrack?.scrollBy({ left: 300, behavior: 'smooth' });
-            });
+                promoDots.forEach((dot, idx) => {
+                    dot.addEventListener('click', () => {
+                        currentPromo = idx;
+                        updatePromoPosition();
+                    });
+                });
+            }
         });
     </script>
 @endsection

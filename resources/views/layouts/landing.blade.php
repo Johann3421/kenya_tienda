@@ -28,7 +28,7 @@
 
 
     <!-- Template Main CSS File -->
-    <link href="{{ asset('landing/css/style.css') }}" rel="stylesheet">
+    <link href="{{ asset('landing/css/style.css') }}?v={{ filemtime(public_path('landing/css/style.css')) }}" rel="stylesheet">
     <!-- UX Refinements — tipografía, escala y márgenes optimizados -->
     <link href="{{ asset('css/ux-refinements.css') }}?v={{ filemtime(public_path('css/ux-refinements.css')) }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
@@ -152,41 +152,37 @@ header, footer {
 @hasSection('hide_header_footer')
         {{-- No mostrar header/footer --}}
     @else
-    <!-- ======= Header ======= -->
-    <header class="kenya-main-header">
-        <div class="kenya-header-container">
-            <div class="kenya-logo-wrapper">
-                <h1 class="kenya-logo-title">
-                    <a href="{{ url('/') }}" class="kenya-logo-link">
-                        @php
-                            $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
-                        @endphp
-                        @if ($logo_sistema && $logo_sistema->archivo)
-                            <img src="{{ asset('storage/' . $logo_sistema->archivo_ruta . '/' . $logo_sistema->archivo) }}"
-                                alt="KENYA Logo" class="kenya-logo-img">
-                        @else
-                            <img src="{{ asset('theme/images/kenya.png') }}" alt="KENYA" class="kenya-logo-img">
-                        @endif
-                    </a>
-                </h1>
+    <!-- ======= Header (redesign v2) ======= -->
+    <header class="site-header">
+        <div class="container header-content">
+            <div class="header-left">
+                <a href="{{ url('/') }}" class="header-logo">
+                    @php
+                        $logo_sistema = App\Models\Configuracion::where('nombre', 'logo_sistema')->first();
+                    @endphp
+                    @if ($logo_sistema && $logo_sistema->archivo)
+                        <img src="{{ asset('storage/' . $logo_sistema->archivo_ruta . '/' . $logo_sistema->archivo) }}"
+                            alt="KENYA Logo" class="header-logo-img">
+                    @else
+                        <img src="{{ asset('theme/images/kenya.png') }}" alt="KENYA" class="header-logo-img">
+                    @endif
+                </a>
             </div>
-            <!-- Buscador global en header -->
-            <div class="kenya-header-search">
-                <div class="kenya-search-inner">
-                    <input id="productSearch" type="search" placeholder="Buscar productos por nombre o característica...">
+            <div class="header-search">
+                <div class="header-search-wrapper">
+                    <input id="productSearch" type="search" placeholder="Buscar productos...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
                     <div id="searchResults"></div>
                 </div>
             </div>
 
             @yield('menu')
 
-            <!-- Botón hamburguesa para mobile -->
             <button class="kenya-mobile-menu-toggle" id="kenyaMobileMenuToggle" title="Menú">
                 <i class="bx bx-menu"></i>
             </button>
         </div>
 
-        <!-- Menú móvil dropdown -->
         <nav class="kenya-mobile-menu" id="kenyaMobileMenu">
             <ul>
                 <li><a href="{{ url('/') }}"><i class="bx bx-home"></i> Inicio</a></li>
@@ -406,7 +402,7 @@ header, footer {
 
                 // Close menu when clicking outside
                 document.addEventListener('click', function(e) {
-                    if (!e.target.closest('.kenya-main-header')) {
+                    if (!e.target.closest('.site-header')) {
                         mobileMenu.classList.remove('active');
                     }
                 });

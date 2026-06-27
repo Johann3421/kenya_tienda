@@ -100,411 +100,266 @@ h1, h2, h3, h4, h5, h6, .font-primary {
   color: #428bca;
 }
 
-/* ====================== */
-/* HEADER KENYA ESPECÍFICO */
-/* ====================== */
-
-.kenya-main-header {
-    transition: all 0.3s ease;
-    padding: 10px 0;
-    background: #fff;
-    z-index: 997;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
-    position: fixed;
-    width: 100%;
+/* ==========================================
+   HEADER — redesign v2 (ref: index.html)
+   ========================================== */
+.site-header {
+    background-color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    position: sticky;
     top: 0;
-  }
+    z-index: 1000;
+    height: 80px;
+    width: 100%;
+}
 
-  .kenya-header-container {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 15px;
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
+    height: 100%;
+}
 
-  .kenya-logo-wrapper {
-    float: left;
-  }
-
-  .kenya-logo-title {
-    margin: 0;
-    line-height: 1;
-  }
-
-  .kenya-logo-link {
-    display: block;
-    transition: all 0.3s ease;
-  }
-
-  .kenya-logo-img {
-    max-height: 50px;
-    width: auto;
-    transition: all 0.3s ease;
-  }
-
-  .kenya-logo-link:hover .kenya-logo-img {
-    transform: scale(1.05);
-  }
-
-  /* MENÚ PRINCIPAL */
-  .kenya-main-nav {
-    margin: 0;
-    padding: 0;
-  }
-
-  .kenya-nav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-  }
-
-  .kenya-nav-list > li {
-    position: relative;
-    margin-left: 10px;
-  }
-
-  .kenya-nav-link {
+.header-left {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.header-logo-img {
+    height: 45px;
+    width: auto;
+    display: block;
+}
+
+/* Search */
+.header-search {
+    flex-grow: 1;
+    max-width: 550px;
+    margin: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.header-search input {
+    width: 100%;
+    padding: 12px 40px 12px 25px;
+    border: 1px solid #eaeaea;
+    background-color: #f9f9f9;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.header-search input:focus {
+    border-color: #f26522;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.1);
+}
+
+.header-search i {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.header-search input:focus + i,
+.header-search i:hover {
+    color: #f26522;
+}
+
+#searchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    display: none;
+    margin-top: 8px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 8px;
+    max-height: 360px;
+    overflow: auto;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+
+
+/* Hamburger */
+.kenya-mobile-menu-toggle {
+    display: none !important;
+    background: none;
+    border: none;
+    font-size: 26px;
     color: #2c3e50;
-    padding: 10px 15px;
+    cursor: pointer;
+    padding: 5px;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.kenya-mobile-menu-toggle:hover {
+    color: #f26522;
+}
+
+.kenya-mobile-menu {
+    display: none !important;
+    position: absolute;
+    top: 100%;
+    right: 15px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    z-index: 998;
+    min-width: 200px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.kenya-mobile-menu.active {
+    display: block !important;
+}
+
+.kenya-mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kenya-mobile-menu li {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.kenya-mobile-menu li:last-child {
+    border-bottom: none;
+}
+
+.kenya-mobile-menu a {
+    display: block;
+    padding: 11px 16px;
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.kenya-mobile-menu a:hover {
+    background: #f9fafb;
+    color: #f26522;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .kenya-nav-list { gap: 20px; }
+    .kenya-nav-list li a { font-size: 0.8rem; }
+    .header-search { margin: 0 20px; }
+}
+
+@media (max-width: 992px) {
+    .header-content {
+        flex-wrap: wrap;
+        height: auto;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        gap: 12px;
+    }
+    .header-left { flex: none; width: 100%; justify-content: center; }
+    .header-search { flex: none; width: 100%; justify-content: center; order: 2; max-width: 100%; margin: 0; }
+    .header-search-wrapper { max-width: 100%; }
+    .kenya-main-nav { display: none !important; }
+    .kenya-mobile-menu-toggle { display: block !important; }
+}
+
+@media (max-width: 576px) {
+    .header-content { gap: 8px; padding-top: 10px; padding-bottom: 10px; }
+    .header-logo-img { height: 36px; }
+    .header-search input { font-size: 0.85rem; padding: 10px 36px 10px 16px; }
+    .kenya-mobile-menu { right: 10px; left: 10px; min-width: auto; }
+}
+
+/* Remove padding-top from body since header is sticky not fixed */
+body {
+    padding-top: 0 !important;
+}
+
+/* Nav (backward-compat with kenya classes) */
+.site-header .kenya-main-nav {
+    display: flex !important;
+    justify-content: flex-end;
+    flex-shrink: 0;
+}
+.site-header .kenya-nav-list {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin: 0 0 0 auto;
+    padding: 0;
+}
+.site-header .kenya-nav-list li a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+.site-header .kenya-nav-list li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #f26522;
+    transition: width 0.3s ease;
+}
+.site-header .kenya-nav-list li a:hover,
+.site-header .kenya-nav-list li.kenya-active a {
+    color: #f26522;
+}
+.site-header .kenya-nav-list li a:hover::after,
+.site-header .kenya-nav-list li.kenya-active a::after {
+    width: 100%;
+}
+.site-header .kenya-nav-icon {
+    margin-right: 5px;
     font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border-radius: 4px;
-  }
+}
 
-  .kenya-nav-icon {
-    margin-right: 8px;
-    font-size: 16px;
-  }
-
-  .kenya-nav-link:hover,
-  .kenya-active .kenya-nav-link {
-    color: #fff;
-    background-color: #ee7c31;
-  }
-
-  .kenya-nav-link:hover .kenya-nav-icon,
-  .kenya-active .kenya-nav-link .kenya-nav-icon {
-    color: #fff;
-  }
-
-  /* Utilidades */
-  .kenya-float-right {
-    float: right;
-  }
-
-  /* MENÚ MÓVIL HAMBURGUESA - OCULTO POR DEFECTO EN DESKTOP */
-  .kenya-mobile-menu-toggle {
-    display: none !important;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #2c3e50;
-    cursor: pointer;
-    padding: 5px 10px;
-    transition: all 0.3s ease;
-  }
-
-  .kenya-mobile-menu-toggle:hover {
-    color: #ee7c31;
-  }
-
-  /* Menú móvil - OCULTO POR DEFECTO */
-  .kenya-mobile-menu {
-    display: none !important;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 999;
-    min-width: 200px;
-    margin-top: 5px;
-  }
-
-  .kenya-mobile-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .kenya-mobile-menu li {
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .kenya-mobile-menu li:last-child {
-    border-bottom: none;
-  }
-
-  .kenya-mobile-menu a {
-    display: block;
-    padding: 12px 16px;
-    color: #2c3e50;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .kenya-mobile-menu a:hover {
-    background: #f5f5f5;
-    color: #ee7c31;
-    padding-left: 20px;
-  }
-
-  @media (max-width: 992px) {
-    .kenya-header-container {
-      flex-wrap: wrap;
-      padding: 10px 15px;
-    }
-
-    .kenya-logo-img {
-      max-height: 45px;
-    }
-
-    .kenya-nav-list > li {
-      margin-left: 5px;
-    }
-
-    .kenya-nav-link {
-      padding: 8px 10px;
-      font-size: 13px;
-    }
-
-    .kenya-nav-icon {
-      margin-right: 4px;
-      font-size: 14px;
-    }
-  }
-
-  /* RESPONSIVE NAVBAR - MOBILE */
-  @media (max-width: 768px) {
-    .kenya-main-header {
-      padding: 8px 0;
-    }
-
-    .kenya-header-container {
-      padding: 8px 10px;
-    }
-
-    .kenya-logo-img {
-      max-height: 40px;
-    }
-
-    .kenya-nav-list > li {
-      margin-left: 3px;
-    }
-
-    .kenya-nav-link {
-      padding: 6px 8px;
-      font-size: 11px;
-    }
-
-    .kenya-nav-icon {
-      margin-right: 3px;
-      font-size: 12px;
-    }
-
-    /* Buscador en header - reducir tamaño */
-    #productSearch {
-      font-size: 13px !important;
-      padding: 8px 12px !important;
-    }
-  }
-
-  /* RESPONSIVE NAVBAR - MOBILE PEQUEÑO */
-  @media (max-width: 576px) {
-    .kenya-main-header {
-      padding: 5px 0;
-      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
-    }
-
-    .kenya-header-container {
-      padding: 5px 8px;
-      gap: 5px;
-    }
-
-    .kenya-logo-img {
-      max-height: 35px;
-    }
-
-    .kenya-logo-wrapper {
-      flex-shrink: 0;
-    }
-
-    /* Menú principal se oculta en mobile pequeño */
-    .kenya-main-nav {
-      display: none;
-    }
-
-    .kenya-nav-list > li {
-      margin-left: 0;
-    }
-
-    .kenya-nav-link {
-      padding: 5px 6px;
-      font-size: 10px;
-    }
-
-    .kenya-nav-icon {
-      margin-right: 2px;
-      font-size: 11px;
-    }
-
-    /* Buscador responsive para mobile */
-    #productSearch {
-      font-size: 12px !important;
-      padding: 6px 10px !important;
-    }
-
-    #searchResults {
-      max-height: 300px !important;
-    }
-  }
-
-  /* MENÚ MÓVIL HAMBURGUESA - OCULTO POR DEFECTO EN DESKTOP */
-  .kenya-mobile-menu-toggle {
-    display: none !important;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #2c3e50;
-    cursor: pointer;
-    padding: 5px 10px;
-    transition: all 0.3s ease;
-  }
-
-  .kenya-mobile-menu-toggle:hover {
-    color: #ee7c31;
-  }
-
-  /* Menú móvil - OCULTO POR DEFECTO */
-  .kenya-mobile-menu {
-    display: none !important;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 999;
-    min-width: 200px;
-    margin-top: 5px;
-  }
-
-  .kenya-mobile-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .kenya-mobile-menu li {
-    border-bottom: 1px solid #f0f0f0;
-  }
-
-  .kenya-mobile-menu li:last-child {
-    border-bottom: none;
-  }
-
-  .kenya-mobile-menu a {
-    display: block;
-    padding: 12px 16px;
-    color: #2c3e50;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .kenya-mobile-menu a:hover {
-    background: #f5f5f5;
-    color: #ee7c31;
-    padding-left: 20px;
-  }
-
-  /* MOSTRAR MENÚ HAMBURGUESA SOLO EN MOBILE */
-  @media (max-width: 576px) {
-    .kenya-mobile-menu-toggle {
-      display: block !important;
-    }
-
-    .kenya-mobile-menu {
-      display: none !important;
-    }
-
-    .kenya-mobile-menu.active {
-      display: block !important;
-    }
-  }
-
-  .kenya-d-none {
+.kenya-d-none {
     display: none;
-  }
+}
 
-  @media (min-width: 992px) {
+@media (min-width: 992px) {
     .kenya-d-lg-block {
-      display: block !important;
+        display: block !important;
     }
-  }
-
-  /* Efecto scroll */
-  .kenya-header-scrolled {
-    height: 70px;
-    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.12);
-  }
-
-  /* Responsive */
-  @media (max-width: 991px) {
-    .kenya-main-nav {
-      position: fixed;
-      top: 80px;
-      left: -100%;
-      width: 80%;
-      height: calc(100vh - 80px);
-      background: #fff;
-      transition: all 0.3s ease;
-      z-index: 996;
-      overflow-y: auto;
-    }
-
-    .kenya-nav-list {
-      flex-direction: column;
-      padding: 20px;
-    }
-
-    .kenya-nav-list > li {
-      margin-left: 0;
-      margin-bottom: 5px;
-    }
-
-    .kenya-nav-active .kenya-main-nav {
-      left: 0;
-    }
-  }
-
-  /* Botón móvil (deberás implementar la lógica JS) */
-  .kenya-mobile-nav-toggle {
-    display: none;
-    font-size: 24px;
-    color: #2c3e50;
-    cursor: pointer;
-    z-index: 995;
-  }
-
-  @media (max-width: 991px) {
-    .kenya-mobile-nav-toggle {
-      display: block;
-    }
-  }
+}
 /*--------------------------------------------------------------
 
 # Hero Section
