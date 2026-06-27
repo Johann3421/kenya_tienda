@@ -56,399 +56,94 @@
     </style>
 
 <style>
-/* ═══════════════════════════════════════════════════════
-   BASE LAYOUT
-   ═══════════════════════════════════════════════════════ */
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
 html, body {
     height: 100%;
     min-height: 100%;
-    margin: 0;
-    padding: 0;
 }
 
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f8f8f8;
-    color: #333;
 }
 
 #main {
     flex: 1 0 auto;
 }
 
-/* Neutralizar el max-width de Bootstrap para el header/footer */
-.site-header .container,
-.kenya-final-footer .container {
+    /* Si tu footer tiene una clase específica, por ejemplo .footer */
+.footer {
+    flex-shrink: 0;
+}
+
+/* Aumentar el ancho máximo de los contenedores para mejor uso del espacio en pantallas anchas */
+.container {
+    max-width: 1600px !important;
+}
+
+/* Hacer header y footer full-width para aprovechar el espacio */
+header, footer {
+    width: 100%;
     max-width: none !important;
-    padding: 0 !important;
-    width: 100% !important;
 }
 
-/* ═══════════════════════════════════════════════════════
-   HEADER — ESTILO INDEX.HTML
-   ═══════════════════════════════════════════════════════ */
-.site-header {
-    background-color: #ffffff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
-    height: 80px;
-    border: none;
-    padding: 0;
-    margin: 0;
+/* Centrar el contenido del header */
+.kenya-header-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
 
-.site-header .header-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    height: 80px !important;
-    max-width: 1400px !important;
-    margin: 0 auto !important;
-    padding: 0 24px !important;
-    gap: 24px !important;
-    /* Anular Bootstrap flex/display */
-    flex-wrap: nowrap !important;
+/* Centrar el contenido del footer */
+.kenya-footer-fullwidth {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 15px;
 }
+    /* Versión oculta solo para imprimir PDF */
+    #print-pdf-container {
+        width: 210mm;
+        min-height: 297mm;
+        background: white;
+        padding: 20mm;
+        box-sizing: border-box;
+        color: black;
+        font-family: 'Arial', sans-serif;
+        display: none;
+    }
 
-/* ── Logo ── */
-.site-header .header-left {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
+    /* Mostramos solo en modo PDF */
+    #print-pdf-container.printing {
+        display: block;
+    }
 
-.site-header .header-logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-}
-
-.site-header .header-logo-img,
-.site-header .header-logo img {
-    height: 45px;
-    width: auto;
-    display: block;
-    object-fit: contain;
-}
-
-/* ── Buscador ── */
-.site-header .header-search {
-    flex: 1 1 0;
-    max-width: 540px;
-    display: flex;
-    align-items: center;
-}
-
-.site-header .header-search-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.site-header .header-search-wrapper input,
-.site-header #productSearch {
-    width: 100%;
-    padding: 11px 42px 11px 22px;
-    border: 1.5px solid #eaeaea;
-    background-color: #f9f9f9;
-    border-radius: 30px;
-    font-size: 0.95rem;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.25s, box-shadow 0.25s, background-color 0.25s;
-    color: #333;
-    /* Anular Bootstrap form-control */
-    box-shadow: none;
-    appearance: none;
-    -webkit-appearance: none;
-}
-
-.site-header .header-search-wrapper input:focus,
-.site-header #productSearch:focus {
-    border-color: #f26522;
-    background-color: #fff;
-    box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.12);
-}
-
-.site-header .header-search-wrapper > i.fa-magnifying-glass,
-.site-header .header-search-wrapper > i {
-    position: absolute;
-    right: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #aaa;
-    font-size: 0.95rem;
-    pointer-events: none;
-    transition: color 0.25s;
-}
-
-.site-header .header-search-wrapper input:focus ~ i {
-    color: #f26522;
-}
-
-/* Resultados de búsqueda */
-#searchResults {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    width: 100%;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
-    z-index: 9999;
-    overflow: hidden;
-    display: none;
-}
-
-/* ── Navegación desktop ── */
-.site-header .kenya-main-nav {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    float: none !important;
-}
-
-.site-header .kenya-nav-list {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 26px;
-    margin: 0;
-    padding: 0;
-}
-
-.site-header .kenya-nav-list > li {
-    position: relative;
-    margin: 0;
-    padding: 0;
-}
-
-.site-header .kenya-nav-list > li > a,
-.site-header .kenya-nav-link {
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    position: relative;
-    padding: 6px 0;
-    display: inline-block;
-    transition: color 0.25s ease;
-    white-space: nowrap;
-    line-height: 1;
-    /* Anular estilos del template */
-    background: none !important;
-    border: none !important;
-}
-
-/* Subrayado naranja animado */
-.site-header .kenya-nav-list > li > a::after,
-.site-header .kenya-nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    height: 2px;
-    background-color: #f26522;
-    transition: width 0.28s ease;
-}
-
-.site-header .kenya-nav-list > li > a:hover,
-.site-header .kenya-nav-link:hover,
-.site-header .kenya-active > a,
-.site-header .kenya-active .kenya-nav-link {
-    color: #f26522 !important;
-}
-
-.site-header .kenya-nav-list > li > a:hover::after,
-.site-header .kenya-nav-link:hover::after,
-.site-header .kenya-active > a::after,
-.site-header .kenya-active .kenya-nav-link::after {
-    width: 100%;
-}
-
-/* Ocultar ícono de home dentro del texto del nav */
-.site-header .kenya-nav-icon {
-    display: none;
-}
-
-/* ── Botón hamburguesa ── */
-.site-header .kenya-mobile-menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.7rem;
-    cursor: pointer;
-    color: #333;
-    padding: 4px 6px;
-    line-height: 1;
-    flex-shrink: 0;
-    transition: color 0.25s;
-}
-
-.site-header .kenya-mobile-menu-toggle:hover {
-    color: #f26522;
-}
-
-/* ── Menú móvil desplegable ── */
-.kenya-mobile-menu {
-    display: none;
-    background: #fff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.09);
-    border-top: 1px solid #f0f0f0;
-    position: sticky;
-    top: 80px;
-    z-index: 999;
-    width: 100%;
-}
-
-.kenya-mobile-menu.active {
-    display: block;
-}
-
-.kenya-mobile-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 8px 0;
-}
-
-.kenya-mobile-menu ul li a {
-    display: block;
-    padding: 13px 24px;
-    color: #333;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-    border-bottom: 1px solid #f4f4f4;
-    transition: color 0.25s, background 0.25s;
-}
-
-.kenya-mobile-menu ul li:last-child a {
-    border-bottom: none;
-}
-
-.kenya-mobile-menu ul li a:hover {
-    color: #f26522;
-    background-color: #fff8f5;
-}
-
-/* ── Responsive header ── */
-@media (max-width: 1100px) {
-    .site-header .kenya-nav-list {
+    /* Footer inferior: enlaces alineados y consistentes */
+    .kenya-footer-bottom-content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+    .kenya-right-section {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
         gap: 18px;
     }
-    .site-header .kenya-nav-link,
-    .site-header .kenya-nav-list > li > a {
-        font-size: 0.78rem;
+    .kenya-complaint-book,
+    .kenya-login-link {
+        color: rgba(255,255,255,0.85);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
     }
-}
-
-@media (max-width: 900px) {
-    .site-header {
-        height: auto;
-        position: sticky;
-        top: 0;
+    .kenya-complaint-book:hover,
+    .kenya-login-link:hover {
+        color: #fff;
+        text-decoration: underline;
     }
-    .site-header .header-content {
-        flex-wrap: wrap !important;
-        height: auto !important;
-        padding: 12px 20px !important;
-        gap: 10px !important;
-        row-gap: 10px !important;
-    }
-    .site-header .kenya-main-nav {
-        display: none !important;
-    }
-    .site-header .kenya-mobile-menu-toggle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .site-header .header-search {
-        order: 3;
-        max-width: 100%;
-        width: 100%;
-        flex: 1 1 100%;
-    }
-    .kenya-mobile-menu {
-        top: 0;
-    }
-}
-
-@media (max-width: 576px) {
-    .site-header .header-content {
-        padding: 10px 15px !important;
-    }
-}
-
-/* ═══════════════════════════════════════════════════════
-   PDF PRINT
-   ═══════════════════════════════════════════════════════ */
-#print-pdf-container {
-    width: 210mm;
-    min-height: 297mm;
-    background: white;
-    padding: 20mm;
-    box-sizing: border-box;
-    color: black;
-    font-family: 'Arial', sans-serif;
-    display: none;
-}
-
-#print-pdf-container.printing {
-    display: block;
-}
-
-/* ═══════════════════════════════════════════════════════
-   FOOTER
-   ═══════════════════════════════════════════════════════ */
-.kenya-footer-bottom-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-}
-
-.kenya-right-section {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 18px;
-}
-
-.kenya-complaint-book,
-.kenya-login-link {
-    color: rgba(255,255,255,0.85);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.2s ease;
-}
-
-.kenya-complaint-book:hover,
-.kenya-login-link:hover {
-    color: #fff;
-    text-decoration: underline;
-}
-
-.kenya-footer-fullwidth {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-</style>
+    </style>
 
     @yield('css')
 </head>
