@@ -24,11 +24,13 @@ Route::get('/', function () {
         ->whereHas('getProducto', function ($q) {
             $q->where('pagina_web', 'SI')->noSuspendido();
         })
+        ->withMax('getProducto', 'created_at')
+        ->orderByDesc('get_producto_max_created_at')
         ->get();
     // $productos = App\Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->get();
     $productos = App\Producto::with('getModelo')->orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->get();
     $ofertas = App\Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->where('precio_anterior', '!=', null)->get();
-    $novedades = App\Producto::with('modelo')->orderBy('created_at', 'DESC')->where('pagina_web', 'SI')->where('precio_anterior', null)->paginate(16);
+    $novedades = App\Producto::with('modelo')->orderBy('created_at', 'DESC')->where('pagina_web', 'SI')->paginate(16);
     $banners = App\Models\Banner::where('activo', 'SI')->get();
     return view('welcome', compact('categorias', 'productos', 'ofertas', 'novedades', 'banners', 'modelo'));
     //return $productos;

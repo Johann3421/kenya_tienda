@@ -16,18 +16,17 @@
 @section('css')
     <style>
         /* ═══════════════════════════════════════════════════════════════
-           RESET GLOBAL AISLADO - CANCELA HERENCIAS DE BOOTSTRAP Y OTROS
+           CONTENEDOR PRINCIPAL
            ═══════════════════════════════════════════════════════════════ */
-        
         #main-welcome-container {
-            all: revert !important;
             margin: 0 !important;
             padding: 0 !important;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
         }
 
-        #main-welcome-container * {
-            all: revert !important;
+        #main-welcome-container *,
+        #main-welcome-container *::before,
+        #main-welcome-container *::after {
             box-sizing: border-box !important;
         }
 
@@ -1291,20 +1290,25 @@
                     <div class="novedades-grid" id="novedades-track">
                         @if(isset($novedades) && $novedades->count() > 0)
                             @foreach($novedades as $novedad)
+                                @php
+                                    $novedadImg = $novedad->imagen ?: $novedad->imagen_1;
+                                    $novedadNombre = $novedad->nombre ?: $novedad->descripcion;
+                                    $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
+                                @endphp
                                 <div class="novedad-card">
                                     <span class="novedad-badge">Nuevo</span>
                                     <div class="novedad-imagen">
-                                        @if($novedad->imagen)
-                                            <img src="{{ asset('storage/' . $novedad->imagen) }}" alt="{{ $novedad->titulo ?? 'Producto nuevo' }}">
+                                        @if($novedadImg)
+                                            <img src="{{ asset('storage/' . $novedadImg) }}" alt="{{ $novedadNombre ?? 'Producto nuevo' }}">
                                         @else
-                                            <img src="{{ asset('producto.jpg') }}" alt="{{ $novedad->titulo ?? 'Producto nuevo' }}">
+                                            <img src="{{ asset('producto.jpg') }}" alt="{{ $novedadNombre ?? 'Producto nuevo' }}">
                                         @endif
                                     </div>
                                     <div class="novedad-info">
                                         <h5 class="novedad-titulo">
-                                            <a href="#">{{ $novedad->titulo ?? 'Producto nuevo' }}</a>
+                                            <a href="{{ $novedadUrl }}">{{ $novedadNombre ?? 'Producto nuevo' }}</a>
                                         </h5>
-                                        <a href="#" class="novedad-btn-detalle">Ver detalles</a>
+                                        <a href="{{ $novedadUrl }}" class="novedad-btn-detalle">Ver detalles</a>
                                     </div>
                                 </div>
                             @endforeach
