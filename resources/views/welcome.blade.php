@@ -1293,23 +1293,51 @@
                             @foreach($novedades as $novedad)
                                 @php
                                     $novedadImg = $novedad->imagen ?: $novedad->imagen_1;
+                                    $imgUrl = asset('producto.jpg');
+                                    
+                                    if ($novedadImg) {
+                                        if (str_starts_with($novedadImg, 'http://') || str_starts_with($novedadImg, 'https://')) {
+                                            $imgUrl = $novedadImg;
+                                        } else {
+                                            $imgUrl = asset('storage/' . $novedadImg);
+                                        }
+                                    } elseif ($novedad->modelo && !empty($novedad->modelo->img_mod)) {
+                                        $imgUrl = asset('storage/' . $novedad->modelo->img_mod);
+                                    } elseif ($novedad->getCategoria && !empty($novedad->getCategoria->img_url)) {
+                                        $imgUrl = $novedad->getCategoria->img_url;
+                                    }
+
                                     $novedadNombre = $novedad->nombre ?: $novedad->descripcion;
+                                    $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $novedadNombre ?? '');
+                                    $cleanName = trim($cleanName);
+                                    
                                     $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
+                                    $novedadPartNumber = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
+                                    $novedadStock = $novedad->stock ?? '≥ 20';
                                 @endphp
                                 <div class="novedad-card">
                                     <span class="novedad-badge">Nuevo</span>
                                     <div class="novedad-imagen">
-                                        @if($novedadImg)
-                                            <img src="{{ asset('storage/' . $novedadImg) }}" alt="{{ $novedadNombre ?? 'Producto nuevo' }}">
-                                        @else
-                                            <img src="{{ asset('producto.jpg') }}" alt="{{ $novedadNombre ?? 'Producto nuevo' }}">
-                                        @endif
+                                        <img src="{{ $imgUrl }}" alt="{{ $cleanName }}" onerror="this.onerror=null; this.src='{{ asset('producto.jpg') }}';">
                                     </div>
                                     <div class="novedad-info">
                                         <h5 class="novedad-titulo">
-                                            <a href="{{ $novedadUrl }}">{{ $novedadNombre ?? 'Producto nuevo' }}</a>
+                                            <a href="{{ $novedadUrl }}"><strong>{{ $cleanName }}</strong></a>
                                         </h5>
-                                        <a href="{{ $novedadUrl }}" class="novedad-btn-detalle">Ver detalles</a>
+                                        <ul class="novedad-features" style="list-style-type: none; padding-left: 0; margin: 10px 0; width: 100%;">
+                                            <li style="font-size: 0.85rem; color: #555; margin-bottom: 6px; line-height: 1.4;">
+                                                <strong>N° PARTE:</strong> {{ $novedadPartNumber }}
+                                            </li>
+                                            <li style="font-size: 0.85rem; color: #555; margin-bottom: 6px; line-height: 1.4;">
+                                                <strong>STOCK:</strong>
+                                                @if($novedadStock !== 0 && $novedadStock !== '0')
+                                                    <span style="color: #2e7d32; font-weight: 600;">{{ $novedadStock }} unidades</span>
+                                                @else
+                                                    <span style="color: #c62828; font-weight: 600;">No disponible</span>
+                                                @endif
+                                            </li>
+                                        </ul>
+                                        <a href="{{ $novedadUrl }}" class="novedad-btn-detalle" style="margin-top: auto !important;">Ver detalles</a>
                                     </div>
                                 </div>
                             @endforeach
