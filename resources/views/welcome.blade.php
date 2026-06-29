@@ -367,12 +367,13 @@
         }
 
         #main-welcome-container .categoria-card img {
-            max-width: 70% !important;
-            max-height: 70% !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
             display: block !important;
             object-fit: contain !important;
-            width: auto !important;
-            height: auto !important;
+            mix-blend-mode: multiply !important;
             padding: 0 !important;
             background: transparent !important;
         }
