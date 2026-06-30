@@ -134,35 +134,45 @@
 
         .warranty-stage-info {
             display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
             font-size: 12px;
         }
 
         .warranty-stage-info span {
             color: #aaa;
-            padding: 2px 5px;
-            border-radius: 3px;
+            background-color: #f4f4f4;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .warranty-stage-info span.active {
             font-weight: bold;
+            color: #fff !important;
         }
 
         .warranty-stage-info span.active:nth-child(1) {
-            color: #4CAF50;
+            background-color: #9E9E9E;
         }
 
         .warranty-stage-info span.active:nth-child(2) {
-            color: #FF9800;
+            background-color: #F44336;
         }
 
         .warranty-stage-info span.active:nth-child(3) {
-            color: #F44336;
+            background-color: #FFC107;
         }
 
         .warranty-stage-info span.active:nth-child(4) {
-            color: #9E9E9E;
+            background-color: #4CAF50;
         }
 
         .expiration-message {
@@ -211,6 +221,132 @@
             padding: 10px 0;
         }
 
+        /* ═══════════════════════════════════════════════════════
+           HERO DE SOPORTE — estilo maqueta profesional
+           ═══════════════════════════════════════════════════════ */
+        .soporte-hero {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.55)),
+                url('/landing/img/slide/slide-1.jpg') center / cover no-repeat;
+            padding: 80px 20px;
+            text-align: left;
+            margin-top: 56px; /* offset del header fixed */
+        }
+
+        .soporte-hero .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .soporte-hero h1 {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            color: #1a1a1a;
+            font-weight: 400;
+            margin: 0 0 6px;
+            line-height: 1.2;
+        }
+
+        .soporte-hero p {
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
+            color: #222;
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 576px) {
+            .soporte-hero {
+                padding: 55px 16px;
+                text-align: left;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           PESTAÑAS ESTILO PÍLDORA CON ÍCONO
+           ═══════════════════════════════════════════════════════ */
+        .soporte-tabs.nav-tabs {
+            border-bottom: none !important;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin: -38px 0 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .soporte-tabs .nav-item {
+            margin-bottom: 0;
+        }
+
+        .soporte-tabs .nav-link {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #ffffff;
+            color: #555;
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+            padding: 16px 22px;
+            min-width: 130px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .soporte-tabs .nav-link i {
+            font-size: 1.6rem;
+            margin-right: 0;
+            color: #f26522;
+            transition: color 0.25s ease;
+        }
+
+        .soporte-tabs .nav-link span {
+            line-height: 1.2;
+        }
+
+        .soporte-tabs .nav-link:hover:not(.disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.13);
+            background-color: #fff;
+            color: #f26522;
+        }
+
+        .soporte-tabs .nav-link.active {
+            background: #f26522 !important;
+            color: #fff !important;
+            border-color: transparent;
+        }
+
+        .soporte-tabs .nav-link.active i {
+            color: #fff;
+        }
+
+        .soporte-tabs .nav-link.disabled {
+            opacity: 0.5;
+            box-shadow: none;
+        }
+
+        @media (max-width: 576px) {
+            .soporte-tabs.nav-tabs {
+                gap: 10px;
+                margin-top: -25px;
+            }
+            .soporte-tabs .nav-link {
+                min-width: 100px;
+                padding: 12px 14px;
+                font-size: 0.72rem;
+            }
+            .soporte-tabs .nav-link i {
+                font-size: 1.3rem;
+            }
+        }
+
         .warranty-section {
             padding: 1rem 0 2rem 0;
             background-color: #f8f9fa;
@@ -255,10 +391,10 @@
 
         .nav-link.active {
             color: #fff;
-            background-color: #E67E22;
+            background-color: #f26522;
             /* Naranja más oscuro */
             border-color: transparent;
-            border-bottom: 3px solid #D35400;
+            border-bottom: 3px solid #d96b20;
         }
 
         .nav-link.disabled {
@@ -267,7 +403,7 @@
         }
 
         .nav-link:not(.active):not(.disabled):hover {
-            color: #E67E22;
+            color: #f26522;
             border-color: transparent;
             background-color: rgba(230, 126, 34, 0.1);
         }
@@ -275,9 +411,9 @@
         /* Contenido de las pestañas */
         .tab-content {
             background: white;
-            border-radius: 0 8px 8px 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.06);
+            padding: 25px;
         }
 
         /* Estilos generales (manteniendo los anteriores con ajustes de color) */
@@ -293,35 +429,36 @@
         }
 
         .modern-input-group {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            border-radius: 30px;
             overflow: hidden;
+            border: 1.5px solid #eaeaea;
         }
 
         .modern-input {
             border: none;
-            padding: 12px 15px;
+            padding: 13px 22px;
             font-size: 16px;
             background-color: white;
         }
 
         .modern-input:focus {
             box-shadow: none;
-            border-color: #E67E22;
+            border-color: #f26522;
         }
 
         .search-button {
-            background-color: #E67E22;
+            background-color: #f26522;
             /* Naranja más oscuro */
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 12px 24px;
             font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .search-button:hover {
-            background-color: #D35400;
+            background-color: #d96b20;
             /* Naranja más oscuro - hover */
             transform: translateY(-1px);
         }
@@ -347,7 +484,7 @@
             border: 4px solid rgba(230, 126, 34, 0.3);
             /* Naranja más oscuro */
             border-radius: 50%;
-            border-top-color: #E67E22;
+            border-top-color: #f26522;
             /* Naranja más oscuro */
             animation: spin 1s ease-in-out infinite;
             margin-bottom: 1rem;
@@ -366,24 +503,52 @@
 
         .warranty-card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 3px 16px rgba(0, 0, 0, 0.07);
             overflow: hidden;
             margin-bottom: 2rem;
         }
 
+        .product-image-container {
+            margin: 0;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 30px 20px;
+        }
+
+        .product-image {
+            max-height: 260px;
+            max-width: 90%;
+            border-radius: 8px;
+        }
+
         .card-header {
-            background-color: #E67E22;
-            /* Naranja más oscuro */
-            color: white;
-            padding: 15px 20px;
+            background-color: #fff;
+            color: #1a1a1a;
+            padding: 20px 25px 10px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .product-eyebrow {
+            display: block;
+            font-size: 0.8rem;
             font-weight: 600;
-            font-size: 18px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
+        }
+
+        .card-header .product-title {
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: #1a1a1a;
         }
 
         .card-content {
             display: flex;
-            padding: 20px;
+            padding: 25px;
             flex-wrap: wrap;
         }
 
@@ -411,7 +576,7 @@
         .section-title iconify-icon {
             margin-right: 8px;
             font-size: 18px;
-            color: #E67E22;
+            color: #f26522;
             /* Naranja más oscuro */
         }
 
@@ -427,20 +592,36 @@
         .detail-item iconify-icon {
             width: 20px;
             text-align: center;
-            color: #E67E22;
+            color: #f26522;
             /* Naranja más oscuro */
         }
 
-        .product-image-container {
-            margin: 20px 0;
-            text-align: center;
+        .detail-item strong {
+            color: #343a40;
+            margin-right: 4px;
         }
 
-        .product-image {
-            max-height: 180px;
-            max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        /* Sección de estado/progreso de garantía, ahora separada en franja propia */
+        .warranty-progress-section {
+            padding: 20px 25px 25px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .terms-quick-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 14px;
+            color: #f26522;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .terms-quick-link:hover {
+            color: #d96b20;
+            text-decoration: underline;
         }
 
         .warranty-progress {
@@ -461,7 +642,7 @@
         }
 
         .progress.active .progress-bar {
-            background-color: #E67E22;
+            background-color: #f26522;
             /* Naranja más oscuro */
         }
 
@@ -483,7 +664,7 @@
         .expiration-message.active {
             background-color: rgba(230, 126, 34, 0.1);
             /* Naranja más oscuro */
-            color: #E67E22;
+            color: #f26522;
             /* Naranja más oscuro */
         }
 
@@ -502,7 +683,7 @@
         }
 
         .tech-link {
-            color: #E67E22;
+            color: #f26522;
             /* Naranja más oscuro */
             font-weight: 600;
             text-decoration: none;
@@ -510,13 +691,13 @@
             display: inline-flex;
             align-items: center;
             padding: 8px 12px;
-            border: 1px solid #E67E22;
+            border: 1px solid #f26522;
             /* Naranja más oscuro */
             border-radius: 5px;
         }
 
         .tech-link:hover {
-            color: #D35400;
+            color: #d96b20;
             /* Naranja más oscuro - hover */
             background-color: rgba(230, 126, 34, 0.1);
             /* Naranja más oscuro */
@@ -539,13 +720,13 @@
         }
 
         .manual-item a:hover {
-            color: #E67E22;
+            color: #f26522;
             /* Naranja más oscuro */
         }
 
         .manual-item iconify-icon {
             margin-right: 8px;
-            color: #E67E22;
+            color: #f26522;
             /* Naranja más oscuro */
         }
 
@@ -555,49 +736,59 @@
         }
 
         .drivers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             margin-top: 20px;
         }
 
         .driver-card {
             background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 4px solid #E67E22;
-            /* Naranja más oscuro */
-            transition: transform 0.2s;
+            border-radius: 12px;
+            padding: 16px 20px;
+            border-left: 4px solid #f26522;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .driver-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            background: #fff;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
         }
 
         .driver-name {
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 0;
             color: #343a40;
+            font-size: 0.95rem;
         }
 
         .driver-download {
-            color: #E67E22;
-            /* Naranja más oscuro */
+            color: #fff;
+            background-color: #f26522;
             text-decoration: none;
-            font-size: 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
-            transition: color 0.2s;
+            padding: 8px 18px;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
         .driver-download:hover {
-            color: #D35400;
-            /* Naranja más oscuro - hover */
+            background-color: #d96b20;
+            color: #fff;
+            transform: translateY(-1px);
         }
 
         .driver-download iconify-icon {
-            margin-right: 5px;
+            margin-right: 6px;
         }
 
         /* Estilos para la pestaña de videos */
@@ -614,16 +805,28 @@
 
         .video-item {
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .video-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-item iframe {
+            display: block;
+            border-radius: 14px 14px 0 0;
         }
 
         .video-title {
-            padding: 12px;
+            padding: 14px;
             font-weight: 600;
             color: #343a40;
             text-align: center;
+            font-size: 0.92rem;
         }
 
         /* Estilos para términos y condiciones */
@@ -661,7 +864,7 @@
             font-size: 24px;
             display: block;
             margin-bottom: 10px;
-            color: #E67E22;
+            color: #f26522;
             /* Naranja más oscuro */
         }
 
@@ -818,12 +1021,12 @@
         }
 
         .pdf-btn-primary {
-            background-color: #E67E22;
+            background-color: #f26522;
             color: white;
         }
 
         .pdf-btn-primary:hover {
-            background-color: #D35400;
+            background-color: #d96b20;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
@@ -846,7 +1049,7 @@
         .pdf-btn-small {
             padding: 6px 12px;
             font-size: 12px;
-            background-color: #E67E22;
+            background-color: #f26522;
             color: white;
             font-weight: 600;
             display: flex;
@@ -855,7 +1058,7 @@
         }
 
         .pdf-btn-small:hover {
-            background-color: #D35400;
+            background-color: #d96b20;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
@@ -905,7 +1108,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 15px 20px;
-            background-color: #E67E22;
+            background-color: #f26522;
             color: white;
             border-bottom: 1px solid #ddd;
         }
@@ -1061,13 +1264,13 @@
             }
 
             .pdf-fullscreen-controls .pdf-btn-small {
-                background-color: #E67E22;
+                background-color: #f26522;
                 color: white;
                 font-weight: 600;
             }
 
             .pdf-fullscreen-controls .pdf-btn-small:hover {
-                background-color: #D35400;
+                background-color: #d96b20;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             }
 
@@ -1094,46 +1297,39 @@
 @section('content')
     <main id="main">
 
-        <!-- ======= Breadcrumbs Section ======= -->
-        <section class="breadcrumbs">
+        <!-- ======= Hero de Soporte ======= -->
+        <section class="soporte-hero">
             <div class="container">
-
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2>Buscar soporte</h2>
-                    <ol>
-                        <li><a href="{{ url('/') }}"><i class="bx bx-home"></i> Inicio</a></li>
-                        <li>Consultar</li>
-                    </ol>
-                </div>
-
+                <h1>Bienvenido al centro de soporte Kenya</h1>
+                <p>Controladores, actualizaciones, guías prácticas, ayuda técnica y más</p>
             </div>
-        </section><!-- Breadcrumbs Section -->
+        </section><!-- End Hero de Soporte -->
 
         <section class="warranty-section" id="garantia">
             <div class="warranty-container">
                 <!-- Pestañas -->
                 <div class="tabs-container">
-                    <ul class="nav nav-tabs" id="warrantyTabs" role="tablist">
+                    <ul class="nav nav-tabs soporte-tabs" id="warrantyTabs" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="warranty-tab" data-toggle="tab" href="#warranty" role="tab">
-                                <i class="bx bx-shield"></i> Garantía
+                                <i class="bx bx-shield"></i> <span>Garantía</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" :class="{ disabled: !tabsEnabled }" id="drivers-tab" data-toggle="tab"
                                 href="#drivers" role="tab">
-                                <i class="bx bx-chip"></i> Controladores
+                                <i class="bx bx-chip"></i> <span>Controladores</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" :class="{ disabled: !tabsEnabled }" id="gallery-tab" data-toggle="tab"
                                 href="#gallery" role="tab">
-                                <i class="bx bx-video"></i> Galería de Video
+                                <i class="bx bx-video"></i> <span>Galería de videos</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" id="terms-tab" data-toggle="tab" href="#terms" role="tab">
-                                <i class="bx bx-file"></i> Términos y Condiciones
+                                <i class="bx bx-file"></i> <span>Términos y condiciones</span>
                             </a>
                         </li>
                     </ul>
@@ -1166,9 +1362,26 @@
                                 <div v-if="state">
                                     <div v-if="state == 'success'">
                                         <div class="warranty-card">
+                                            <!-- Imagen del producto -->
+                                            <div class="product-image-container">
+                                                <img v-for="producto in garantia.get_productos"
+                                                    :src="(producto.modelo && (producto.modelo.id == 10 ||
+                                                        (producto.modelo.descripcion &&
+                                                            producto.modelo.descripcion.toLowerCase()
+                                                            .includes('tonner')))) ?
+                                                    (producto.imagen_1 ? '/storage/' + producto.imagen_1 :
+                                                        '/producto.jpg') :
+                                                    (producto.modelo && producto.modelo.img_mod ?
+                                                        '/storage/' + producto.modelo.img_mod :
+                                                        '/producto.jpg')"
+                                                    class="product-image" :alt="'Imagen de ' + producto.nombre">
+                                            </div>
+
+                                            <!-- Estado del producto + título -->
                                             <div class="card-header">
+                                                <span class="product-eyebrow">Estado del Producto</span>
                                                 <div class="product-title" v-for="nom in garantia.get_productos">
-                                                    Producto: @{{ nom.nombre }}
+                                                    @{{ nom.nombre }}
                                                 </div>
                                             </div>
 
@@ -1179,85 +1392,16 @@
                                                         <iconify-icon icon="zondicons:align-center"></iconify-icon> DETALLES
                                                     </div>
                                                     <div class="detail-item">
-                                                        <i class="fa-solid fa-tv"></i> Serie: @{{ garantia.serie }}
+                                                        <i class="fa-solid fa-tv"></i> <strong>Serie:</strong>
+                                                        @{{ garantia.serie }}
                                                     </div>
                                                     <div class="detail-item">
-                                                        <iconify-icon icon="bx:calendar"></iconify-icon> Inicia:
-                                                        @{{ garantia.fecha_venta }}
+                                                        <iconify-icon icon="bx:calendar"></iconify-icon>
+                                                        <strong>Inicia:</strong> @{{ garantia.fecha_venta }}
                                                     </div>
                                                     <div class="detail-item">
-                                                        <iconify-icon icon="bx:time"></iconify-icon> Garantía:
-                                                        @{{ garantia.garantia }} Meses
-                                                    </div>
-
-                                                    <div class="product-image-container">
-                                                        <img v-for="producto in garantia.get_productos"
-                                                            :src="(producto.modelo && (producto.modelo.id == 10 ||
-                                                                (producto.modelo.descripcion &&
-                                                                    producto.modelo.descripcion.toLowerCase()
-                                                                    .includes('tonner')))) ?
-                                                            (producto.imagen_1 ? '/storage/' + producto.imagen_1 :
-                                                                '/producto.jpg') :
-                                                            (producto.modelo && producto.modelo.img_mod ?
-                                                                '/storage/' + producto.modelo.img_mod :
-                                                                '/producto.jpg')"
-                                                            class="product-image" :alt="'Imagen de ' + producto.nombre">
-                                                    </div>
-
-                                                    <div class="warranty-progress">
-                                                        <div class="progress">
-                                                            <div class="progress-bar"
-                                                                :style="'width:' + calcularPorcentajeGarantia() + '%'"
-                                                                :class="getWarrantyStageClass()">
-                                                                <span class="progress-text" v-if="showDaysCount()">
-                                                                    @{{ diasRestantes }} días restantes
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="warranty-stage-info">
-                                                            <span :class="{ 'active': warrantyStage === 'expired' }">
-                                                                <i class="bx bx-x-circle"></i> Vencida
-                                                            </span>
-                                                            <span :class="{ 'active': warrantyStage === 'ending' }">
-                                                                <i class="bx bx-error-circle"></i> Por vencer
-                                                            </span>
-                                                            <span :class="{ 'active': warrantyStage === 'mid' }">
-                                                                <i class="bx bx-time"></i> Intermedia
-                                                            </span>
-                                                            <span :class="{ 'active': warrantyStage === 'new' }">
-                                                                <i class="bx bx-check-circle"></i> Nueva
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="expiration-message" :class="warrantyStage">
-                                                        <iconify-icon icon="bx:calendar"></iconify-icon>
-                                                        <span v-if="warrantyStage === 'new'">
-                                                            Garantía nueva - @{{ diasRestantes }} días restantes (Vence:
-                                                            @{{ garantia.fecha_Vencimiento }})
-                                                        </span>
-                                                        <span v-else-if="warrantyStage === 'mid'">
-                                                            Garantía en etapa intermedia - @{{ diasRestantes }} días
-                                                            restantes (Vence: @{{ garantia.fecha_Vencimiento }})
-                                                        </span>
-                                                        <span v-else-if="warrantyStage === 'ending'">
-                                                            ¡Garantía por vencer! - Solo @{{ diasRestantes }} días
-                                                            restantes (Vence: @{{ garantia.fecha_Vencimiento }})
-                                                        </span>
-                                                        <span v-else-if="warrantyStage === 'expired'">
-                                                            Garantía vencida el @{{ garantia.fecha_Vencimiento }}
-                                                        </span>
-                                                    </div>
-
-                                                    <div class="expiration-message expired"
-                                                        v-if="garantia.fecha_Vencimiento < vencido">
-                                                        <iconify-icon icon="bx:calendar"></iconify-icon>
-                                                        La garantía ha vencido el: @{{ garantia.fecha_Vencimiento }}
-                                                    </div>
-                                                    <div class="expiration-message expiring"
-                                                        v-if="garantia.fecha_Vencimiento == vencido">
-                                                        <iconify-icon icon="bx:calendar"></iconify-icon>
-                                                        La Garantía vence hoy
+                                                        <iconify-icon icon="bx:time"></iconify-icon>
+                                                        <strong>Garantía:</strong> @{{ garantia.garantia }} Meses
                                                     </div>
                                                 </div>
 
@@ -1289,7 +1433,69 @@
                                                         </a>
                                                     </div>
                                                 </div>
+                                            </div>
 
+                                            <!-- Estado de la garantía -->
+                                            <div class="warranty-progress-section">
+                                                <div class="warranty-progress">
+                                                    <div class="progress">
+                                                        <div class="progress-bar"
+                                                            :style="'width:' + calcularPorcentajeGarantia() + '%'"
+                                                            :class="getWarrantyStageClass()">
+                                                            <span class="progress-text" v-if="showDaysCount()">
+                                                                @{{ diasRestantes }} días restantes
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="warranty-stage-info">
+                                                        <span :class="{ 'active': warrantyStage === 'expired' }">
+                                                            <i class="bx bx-x-circle"></i> Vencida
+                                                        </span>
+                                                        <span :class="{ 'active': warrantyStage === 'ending' }">
+                                                            <i class="bx bx-error-circle"></i> Por vencer
+                                                        </span>
+                                                        <span :class="{ 'active': warrantyStage === 'mid' }">
+                                                            <i class="bx bx-time"></i> Intermedia
+                                                        </span>
+                                                        <span :class="{ 'active': warrantyStage === 'new' }">
+                                                            <i class="bx bx-check-circle"></i> Nueva
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="expiration-message" :class="warrantyStage">
+                                                    <iconify-icon icon="bx:calendar"></iconify-icon>
+                                                    <span v-if="warrantyStage === 'new'">
+                                                        Garantía nueva - @{{ diasRestantes }} días restantes (Vence:
+                                                        @{{ garantia.fecha_Vencimiento }})
+                                                    </span>
+                                                    <span v-else-if="warrantyStage === 'mid'">
+                                                        Garantía en etapa intermedia - @{{ diasRestantes }} días
+                                                        restantes (Vence: @{{ garantia.fecha_Vencimiento }})
+                                                    </span>
+                                                    <span v-else-if="warrantyStage === 'ending'">
+                                                        ¡Garantía por vencer! - Solo @{{ diasRestantes }} días
+                                                        restantes (Vence: @{{ garantia.fecha_Vencimiento }})
+                                                    </span>
+                                                    <span v-else-if="warrantyStage === 'expired'">
+                                                        Garantía vencida el @{{ garantia.fecha_Vencimiento }}
+                                                    </span>
+                                                </div>
+
+                                                <div class="expiration-message expired"
+                                                    v-if="garantia.fecha_Vencimiento < vencido">
+                                                    <iconify-icon icon="bx:calendar"></iconify-icon>
+                                                    La garantía ha vencido el: @{{ garantia.fecha_Vencimiento }}
+                                                </div>
+                                                <div class="expiration-message expiring"
+                                                    v-if="garantia.fecha_Vencimiento == vencido">
+                                                    <iconify-icon icon="bx:calendar"></iconify-icon>
+                                                    La Garantía vence hoy
+                                                </div>
+
+                                                <a href="#terms" class="terms-quick-link" id="terms-tab-quicklink">
+                                                    <i class="bx bx-chevron-right"></i> Términos y condiciones de la garantía
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -1517,6 +1723,16 @@
             // Verificar hash en la URL para activar pestaña específica
             if (window.location.hash === '#terms') {
                 $('#terms-tab').tab('show');
+            }
+
+            // Enlace rápido "Términos y condiciones de la garantía" dentro de la tarjeta
+            const termsQuickLink = document.getElementById('terms-tab-quicklink');
+            if (termsQuickLink) {
+                termsQuickLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    $('#terms-tab').tab('show');
+                    document.getElementById('warrantyTabs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
             }
 
             // CONTROLES DE ZOOM - VISTA NORMAL
