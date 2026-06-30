@@ -336,7 +336,7 @@
             align-items: center !important;
             text-decoration: none !important;
             color: #111 !important;
-            width: 160px !important;
+            width: 200px !important;
             flex-shrink: 0 !important;
             text-align: center !important;
             gap: 15px !important;
@@ -352,8 +352,6 @@
         }
 
         #main-welcome-container .categoria-card {
-            width: 140px !important;
-            height: 140px !important;
             border-radius: 50% !important;
             background-color: #f4f4f4 !important;
             display: flex !important;
@@ -1061,7 +1059,7 @@
 @section('content')
     <!-- CONTENEDOR PRINCIPAL AISLADO -->
     <div id="main-welcome-container">
-        
+
         <!-- ══════════════════════════════════════════════════════════
              HERO SLIDER - 4 BANNERS ESTÁTICOS
              ══════════════════════════════════════════════════════════ -->
@@ -1102,7 +1100,7 @@
                     ],
                 ];
             @endphp
-            
+
             @foreach ($heroSlides as $index => $slide)
                 <div class="hero-slide @if($index == 0) active @endif" style="background: url('{{ $slide['image'] }}') center/cover;">
                     <div class="hero-slide-content">
@@ -1182,7 +1180,7 @@
                     <button class="carousel-btn carousel-prev" aria-label="Anterior">
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
-                    
+
                     <div class="carousel-track" id="carousel-track">
                         @foreach ($modelo as $mod)
                             @php
@@ -1281,7 +1279,7 @@
                     <h2>Novedades</h2>
                 </div>
                 <p class="novedades-subtitle">Nuevos productos en nuestra lista, ¡qué esperas!</p>
-                
+
                 <div class="novedades-slider-wrapper">
                     <button class="novedades-btn novedades-prev" aria-label="Anterior">
                         <i class="fa-solid fa-chevron-left"></i>
@@ -1340,7 +1338,7 @@
             const playPauseBtn = container.querySelector('#playPauseBtn');
             const heroNext = container.querySelector('.hero-next');
             const heroPrev = container.querySelector('.hero-prev');
-            
+
             let currentSlide = 0;
             let slideInterval;
             let isPlaying = true;
