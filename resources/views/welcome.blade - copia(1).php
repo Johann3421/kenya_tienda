@@ -425,36 +425,28 @@
         }
 
         #main-welcome-container .carousel-track::-webkit-scrollbar {
-            height: 8px !important;
-        }
-
-        #main-welcome-container .carousel-track::-webkit-scrollbar-track {
-            background: #f1f1f1 !important;
-            border-radius: 10px !important;
-        }
-
-        #main-welcome-container .carousel-track::-webkit-scrollbar-thumb {
-            background: #f26522 !important;
-            border-radius: 10px !important;
+            display: none !important;
         }
 
         #main-welcome-container .producto-card {
             flex: 0 0 calc(25% - 15px) !important;
-            min-width: 280px !important;
-            background: white !important;
-            border-radius: 10px !important;
+            min-width: 260px !important;
+            background: #ffffff !important;
+            border-radius: 14px !important;
             overflow: hidden !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.09) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
             transition: all 0.3s ease !important;
             display: flex !important;
             flex-direction: column !important;
+            align-items: center !important;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 25px 20px 25px !important;
+            text-align: center !important;
         }
 
         #main-welcome-container .producto-card:hover {
             transform: translateY(-5px) !important;
-            box-shadow: 0 6px 18px rgba(242,101,34,0.22) !important;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.1) !important;
         }
 
         #main-welcome-container .producto-imagen {
@@ -462,9 +454,12 @@
             width: 100% !important;
             aspect-ratio: 1 !important;
             overflow: hidden !important;
-            background: #f9f9f9 !important;
+            background: transparent !important;
             padding: 0 !important;
-            margin: 0 !important;
+            margin: 0 0 18px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         #main-welcome-container .producto-imagen img {
@@ -472,52 +467,60 @@
             height: 100% !important;
             object-fit: contain !important;
             object-position: center !important;
-            padding: 15px !important;
+            padding: 10px !important;
         }
 
-        #main-welcome-container .producto-overlay {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            padding: 15px !important;
-            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.8)) !important;
-            color: white !important;
+        #main-welcome-container .producto-info {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 4px !important;
+            margin-bottom: 20px !important;
+            width: 100% !important;
         }
 
-        #main-welcome-container .producto-overlay h6 {
-            margin: 0 !important;
-            font-size: 0.9rem !important;
+        #main-welcome-container .producto-categoria {
+            font-size: 0.78rem !important;
             font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.06em !important;
+        }
+
+        #main-welcome-container .producto-titulo {
+            margin: 0 !important;
+            font-size: 1.25rem !important;
+            font-weight: 700 !important;
+            color: #1a1a1a !important;
+            font-family: Georgia, 'Times New Roman', serif !important;
+            line-height: 1.3 !important;
         }
 
         #main-welcome-container .producto-accion {
-            padding: 15px !important;
-            flex-grow: 1 !important;
+            padding: 0 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            width: 100% !important;
         }
 
         #main-welcome-container .producto-accion a {
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            gap: 8px !important;
-            padding: 10px 18px !important;
+            padding: 12px 30px !important;
             background: #f26522 !important;
             color: #fff !important;
-            border-radius: 8px !important;
+            border-radius: 30px !important;
             text-decoration: none !important;
             font-weight: 600 !important;
-            font-size: 0.78rem !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.04em !important;
+            font-size: 0.9rem !important;
             box-shadow: 0 4px 12px rgba(242,101,34,0.25) !important;
             transition: all 0.25s ease !important;
             border: none !important;
             cursor: pointer !important;
             margin: 0 !important;
+            width: 100% !important;
         }
 
         #main-welcome-container .producto-accion a:hover {
@@ -543,7 +546,7 @@
             justify-content: center !important;
             transition: all 0.3s ease !important;
             padding: 0 !important;
-            color: #333 !important;
+            color: #f26522 !important;
         }
 
         #main-welcome-container .carousel-btn:hover {
@@ -553,127 +556,14 @@
         }
 
         #main-welcome-container .carousel-prev {
-            left: 0 !important;
+            left: -20px !important;
         }
 
         #main-welcome-container .carousel-next {
-            right: 0 !important;
+            right: -20px !important;
         }
 
-        /* ═══════════════════════════════════════════════════════════════
-           SECCIÓN DE OFERTAS
-           ═══════════════════════════════════════════════════════════════ */
-        #main-welcome-container .ofertas-section {
-            width: 100% !important;
-            padding: 40px 0 !important;
-            background: white !important;
-            margin: 0 !important;
-        }
-
-        /* BANNER DE PROMOCIÓN - ESTILO FULLWIDTH */
-        #main-welcome-container .promo-banner {
-            position: relative !important;
-            width: 100% !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            overflow: hidden !important;
-            background: #000 !important;
-        }
-
-        #main-welcome-container .promo-container {
-            position: relative !important;
-            width: 100% !important;
-            overflow: hidden !important;
-        }
-
-        #main-welcome-container .promo-track {
-            display: flex !important;
-            transition: transform 0.6s ease !important;
-            width: 100% !important;
-        }
-
-        #main-welcome-container .promo-slide {
-            min-width: 100% !important;
-            width: 100% !important;
-            position: relative !important;
-            flex-shrink: 0 !important;
-        }
-
-        #main-welcome-container .promo-slide a {
-            display: block !important;
-            text-decoration: none !important;
-            width: 100% !important;
-        }
-
-        #main-welcome-container .promo-slide img {
-            width: 100% !important;
-            height: auto !important;
-            max-height: 420px !important;
-            object-fit: cover !important;
-            display: block !important;
-        }
-
-        #main-welcome-container .promo-btn {
-            position: absolute !important;
-            top: 50% !important;
-            transform: translateY(-50%) !important;
-            width: 46px !important;
-            height: 46px !important;
-            background: rgba(255, 255, 255, 0.85) !important;
-            border: none !important;
-            border-radius: 50% !important;
-            cursor: pointer !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            z-index: 10 !important;
-            transition: all 0.3s ease !important;
-            padding: 0 !important;
-            color: #f26522 !important;
-            font-size: 1.1rem !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15) !important;
-        }
-
-        #main-welcome-container .promo-btn:hover {
-            background: white !important;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
-            transform: translateY(-50%) scale(1.07) !important;
-        }
-
-        #main-welcome-container .promo-prev {
-            left: 20px !important;
-        }
-
-        #main-welcome-container .promo-next {
-            right: 20px !important;
-        }
-
-        #main-welcome-container .promo-dots {
-            position: absolute !important;
-            bottom: 18px !important;
-            left: 0 !important;
-            right: 0 !important;
-            display: flex !important;
-            justify-content: center !important;
-            gap: 10px !important;
-            z-index: 10 !important;
-        }
-
-        #main-welcome-container .promo-dot {
-            width: 10px !important;
-            height: 10px !important;
-            border-radius: 50% !important;
-            background: rgba(255, 255, 255, 0.5) !important;
-            cursor: pointer !important;
-            transition: all 0.3s ease !important;
-            border: none !important;
-            padding: 0 !important;
-        }
-
-        #main-welcome-container .promo-dot.active {
-            background: white !important;
-            transform: scale(1.3) !important;
-        }
+        /* ofertas-section: ver bloque de estilos al final de la sección css */
 
         /* ═══════════════════════════════════════════════════════════════
            SECCIÓN DE NOVEDADES - CARRUSEL HORIZONTAL
@@ -1036,28 +926,136 @@
             /* novedades carrusel sin override */
         }
 
+        /* ═══════════════════════════════════════════════════════════════
+           OFERTAS - ESTILO INDEX.HTML
+           ═══════════════════════════════════════════════════════════════ */
+        #main-welcome-container .ofertas-section {
+            padding: 4rem 0 !important;
+            background-color: #f8f8f8 !important;
+        }
+
+        #main-welcome-container .ofertas-heading {
+            text-align: center !important;
+            margin-bottom: 40px !important;
+            padding: 0 10px !important;
+        }
+
+        #main-welcome-container .ofertas-heading h2 {
+            font-size: 2.2rem !important;
+            color: #111 !important;
+            font-weight: 700 !important;
+            margin: 0 0 5px !important;
+        }
+
+        #main-welcome-container .ofertas-heading p {
+            font-size: 1rem !important;
+            color: #666 !important;
+            margin: 0 !important;
+        }
+
+        #main-welcome-container .ofertas-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+            gap: 25px !important;
+            padding: 0 10px !important;
+        }
+
+        #main-welcome-container .oferta-card {
+            background: #fff !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+            border: 1px solid #eaeaea !important;
+            cursor: pointer !important;
+            height: 100% !important;
+        }
+
+        #main-welcome-container .oferta-card:hover {
+            transform: translateY(-5px) !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+        }
+
+        #main-welcome-container .oferta-content {
+            padding: 25px 25px 20px !important;
+            background-color: #fff !important;
+        }
+
+        #main-welcome-container .oferta-content h3 {
+            font-size: 1.4rem !important;
+            color: #111 !important;
+            margin-bottom: 10px !important;
+            font-weight: 700 !important;
+        }
+
+        #main-welcome-container .oferta-content p {
+            font-size: 0.95rem !important;
+            color: #555 !important;
+            margin: 0 !important;
+            line-height: 1.4 !important;
+        }
+
+        #main-welcome-container .oferta-image-wrapper {
+            width: 100% !important;
+            height: 220px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            overflow: hidden !important;
+            position: relative !important;
+            margin-top: auto !important;
+        }
+
+        #main-welcome-container .oferta-image-wrapper img {
+            max-width: 100% !important;
+            width: auto !important;
+            height: auto !important;
+            object-fit: contain !important;
+            display: block !important;
+            transition: transform 0.3s ease !important;
+            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.3)) !important;
+        }
+
+        #main-welcome-container .oferta-card:hover .oferta-image-wrapper img {
+            transform: scale(1.05) !important;
+        }
+
+        #main-welcome-container .bg-purple {
+            background: linear-gradient(135deg, #8e24aa, #4a148c) !important;
+        }
+
+        #main-welcome-container .bg-dark-purple {
+            background: linear-gradient(135deg, #4a148c, #311b92) !important;
+        }
+
+        #main-welcome-container .bg-red {
+            background: linear-gradient(135deg, #c62828, #b71c1c) !important;
+        }
+
         /* CLASES DE MARCA PARA TIPOGRAFÍAS */
-        #main-welcome-container .brand-ezent .producto-overlay,
+        #main-welcome-container .brand-ezent .producto-titulo,
         #main-welcome-container .brand-ezent .hero-slide {
             font-family: 'EzentFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-genwork .producto-overlay,
+        #main-welcome-container .brand-genwork .producto-titulo,
         #main-welcome-container .brand-genwork .hero-slide {
             font-family: 'GenworkFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-ofiszu .producto-overlay,
+        #main-welcome-container .brand-ofiszu .producto-titulo,
         #main-welcome-container .brand-ofiszu .hero-slide {
             font-family: 'OfiszuFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-prowork .producto-overlay,
+        #main-welcome-container .brand-prowork .producto-titulo,
         #main-welcome-container .brand-prowork .hero-slide {
             font-family: 'ProworkFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-raito .producto-overlay,
+        #main-welcome-container .brand-raito .producto-titulo,
         #main-welcome-container .brand-raito .hero-slide {
             font-family: 'RaitoFont', sans-serif !important;
         }
@@ -1209,17 +1207,20 @@
                                     @else
                                         <img src="{{ asset('producto.jpg') }}" alt="{{ $mod->descripcion ?? 'Producto' }}">
                                     @endif
-                                    <div class="producto-overlay">
-                                        @if ($mod->categoria_id)
-                                            <h6 title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
-                                                @if($mod->prefix)<span>{{ $mod->prefix }} </span>@endif{{ Str::limit($mod->descripcion ?? '', 160) }}
-                                            </h6>
-                                        @endif
-                                    </div>
+                                </div>
+                                <div class="producto-info">
+                                    @if ($mod->categoria_nombre ?? false)
+                                        <span class="producto-categoria">{{ strtoupper($mod->categoria_nombre) }}</span>
+                                    @elseif($mod->prefix)
+                                        <span class="producto-categoria">{{ strtoupper($mod->prefix) }}</span>
+                                    @endif
+                                    <h6 class="producto-titulo" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
+                                        {{ Str::limit($mod->descripcion ?? '', 40) }}
+                                    </h6>
                                 </div>
                                 <div class="producto-accion">
                                     <a href="{{ route('detallemod', $mod->id) }}">
-                                        <i class='fa-solid fa-shopping-bag'></i> Ver Catálogo
+                                        Ver Catálogo
                                     </a>
                                 </div>
                             </div>
@@ -1238,39 +1239,39 @@
              ═══════════════════════════════════════════════════════════ -->
         <section class="ofertas-section">
             <div class="section-container">
-                <div class="section-title">
-                    <h2>Ofertas</h2>
-                    <p style="text-align: center; color: #666; font-size: 1rem;">Productos con super promociones y descuentos.</p>
+                <div class="ofertas-heading">
+                    <h2>Ver Ofertas</h2>
+                    <p>Productos con super promociones y descuentos</p>
                 </div>
-            </div>
-        </section>
 
-        <!-- ═══════════════════════════════════════════════════════════
-             BANNER DE PROMOCIÓN
-             ═══════════════════════════════════════════════════════════ -->
-        <section class="promo-banner">
-            <div class="promo-container">
-                <div class="promo-track">
-                    @foreach (\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $banner)
-                        <div class="promo-slide">
-                            <a href="{{ $banner->url_destino }}" target="_blank">
-                                <img src="{{ asset($banner->imagen_path) }}" alt="{{ $banner->titulo ?? 'Banner' }}">
-                            </a>
+                <div class="ofertas-grid">
+                    <div class="oferta-card">
+                        <div class="oferta-content">
+                            <h3>OFISZU SFF</h3>
+                            <p>Ofreciendo equipos ultra compactos, elegantes y eficientes.</p>
                         </div>
-                    @endforeach
-                </div>
-
-                <button class="promo-btn promo-prev" aria-label="Anterior">
-                    <i class='fa-solid fa-chevron-left'></i>
-                </button>
-                <button class="promo-btn promo-next" aria-label="Siguiente">
-                    <i class='fa-solid fa-chevron-right'></i>
-                </button>
-
-                <div class="promo-dots">
-                    @foreach (\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $index => $banner)
-                        <button class="promo-dot {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}"></button>
-                    @endforeach
+                        <div class="oferta-image-wrapper bg-purple">
+                            <img src="{{ asset('ofiszusff.png') }}" alt="Ofiszu SFF">
+                        </div>
+                    </div>
+                    <div class="oferta-card">
+                        <div class="oferta-content">
+                            <h3>Grandes descuentos</h3>
+                            <p>Es tu oportunidad para renovar o adquirir tu equipo Kenya</p>
+                        </div>
+                        <div class="oferta-image-wrapper bg-dark-purple">
+                            <img src="{{ asset('oferta-descuentos.png') }}" alt="Descuentos Kenya">
+                        </div>
+                    </div>
+                    <div class="oferta-card">
+                        <div class="oferta-content">
+                            <h3>EZENT V1_MT</h3>
+                            <p>Equipo diseñado especialmente para usuarios de oficina y empresas</p>
+                        </div>
+                        <div class="oferta-image-wrapper bg-red">
+                            <img src="{{ asset('oferta-thinkpad.png') }}" alt="Ezent V1 MT">
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1440,36 +1441,7 @@
             });
 
             // ==================================================
-            // 4. BANNER DE PROMOCIÓN
-            // ==================================================
-            const promoTrack = container.querySelector('.promo-track');
-            const promoSlides = container.querySelectorAll('.promo-slide');
-            const promoPrev = container.querySelector('.promo-prev');
-            const promoNext = container.querySelector('.promo-next');
-            const promoDots = container.querySelectorAll('.promo-dot');
-
-            if (promoTrack && promoSlides.length > 0) {
-                let currentPromo = 0;
-
-                function updatePromoPosition() {
-                    promoTrack.style.transform = `translateX(-${currentPromo * 100}%)`;
-                    promoDots.forEach((dot, idx) => {
-                        dot.classList.toggle('active', idx === currentPromo);
-                    });
-                }
-
-                promoNext?.addEventListener('click', () => {
-                    currentPromo = (currentPromo + 1) % promoSlides.length;
-                    updatePromoPosition();
-                });
-
-                promoPrev?.addEventListener('click', () => {
-                    currentPromo = (currentPromo - 1 + promoSlides.length) % promoSlides.length;
-                    updatePromoPosition();
-                });
-
-            // ==================================================
-            // 5. CARRUSEL DE NOVEDADES
+            // 4. CARRUSEL DE NOVEDADES
             // ==================================================
             const novedadesTrack = container.querySelector('#novedades-track');
             const novedadesPrev = container.querySelector('.novedades-prev');

@@ -18,9 +18,9 @@ Route::get('/health', function () {
     return response('ok', 200);
 });
 Route::get('/', function () {
-    $categorias = App\Models\Categoria::with('getModelo')->where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
+    $categorias = App\Models\Categoria::with('getModelo')->whereIn('activo', ['SI', 'Si'])->orderBy('nombre', 'ASC')->get();
     $modelo = App\Modelo::with('getCat')
-        ->where('activo', 'SI')
+        ->whereIn('activo', ['SI', 'Si'])
         ->whereHas('getProducto', function ($q) {
             $q->where('pagina_web', 'SI')->noSuspendido();
         })

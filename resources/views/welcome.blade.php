@@ -423,36 +423,28 @@
         }
 
         #main-welcome-container .carousel-track::-webkit-scrollbar {
-            height: 8px !important;
-        }
-
-        #main-welcome-container .carousel-track::-webkit-scrollbar-track {
-            background: #f1f1f1 !important;
-            border-radius: 10px !important;
-        }
-
-        #main-welcome-container .carousel-track::-webkit-scrollbar-thumb {
-            background: #f26522 !important;
-            border-radius: 10px !important;
+            display: none !important;
         }
 
         #main-welcome-container .producto-card {
             flex: 0 0 calc(25% - 15px) !important;
-            min-width: 280px !important;
-            background: white !important;
-            border-radius: 10px !important;
+            min-width: 260px !important;
+            background: #ffffff !important;
+            border-radius: 14px !important;
             overflow: hidden !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.09) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
             transition: all 0.3s ease !important;
             display: flex !important;
             flex-direction: column !important;
+            align-items: center !important;
             margin: 0 !important;
-            padding: 0 !important;
+            padding: 25px 20px 25px !important;
+            text-align: center !important;
         }
 
         #main-welcome-container .producto-card:hover {
             transform: translateY(-5px) !important;
-            box-shadow: 0 6px 18px rgba(242,101,34,0.22) !important;
+            box-shadow: 0 10px 24px rgba(0,0,0,0.1) !important;
         }
 
         #main-welcome-container .producto-imagen {
@@ -460,9 +452,12 @@
             width: 100% !important;
             aspect-ratio: 1 !important;
             overflow: hidden !important;
-            background: #f9f9f9 !important;
+            background: transparent !important;
             padding: 0 !important;
-            margin: 0 !important;
+            margin: 0 0 18px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         #main-welcome-container .producto-imagen img {
@@ -470,52 +465,60 @@
             height: 100% !important;
             object-fit: contain !important;
             object-position: center !important;
-            padding: 15px !important;
+            padding: 10px !important;
         }
 
-        #main-welcome-container .producto-overlay {
-            position: absolute !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            padding: 15px !important;
-            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.8)) !important;
-            color: white !important;
+        #main-welcome-container .producto-info {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            gap: 4px !important;
+            margin-bottom: 20px !important;
+            width: 100% !important;
         }
 
-        #main-welcome-container .producto-overlay h6 {
-            margin: 0 !important;
-            font-size: 0.9rem !important;
+        #main-welcome-container .producto-categoria {
+            font-size: 0.78rem !important;
             font-weight: 600 !important;
+            color: #999 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.06em !important;
+        }
+
+        #main-welcome-container .producto-titulo {
+            margin: 0 !important;
+            font-size: 1.25rem !important;
+            font-weight: 700 !important;
+            color: #1a1a1a !important;
+            font-family: Georgia, 'Times New Roman', serif !important;
+            line-height: 1.3 !important;
         }
 
         #main-welcome-container .producto-accion {
-            padding: 15px !important;
-            flex-grow: 1 !important;
+            padding: 0 !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
+            width: 100% !important;
         }
 
         #main-welcome-container .producto-accion a {
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            gap: 8px !important;
-            padding: 10px 18px !important;
+            padding: 12px 30px !important;
             background: #f26522 !important;
             color: #fff !important;
-            border-radius: 8px !important;
+            border-radius: 30px !important;
             text-decoration: none !important;
             font-weight: 600 !important;
-            font-size: 0.78rem !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.04em !important;
+            font-size: 0.9rem !important;
             box-shadow: 0 4px 12px rgba(242,101,34,0.25) !important;
             transition: all 0.25s ease !important;
             border: none !important;
             cursor: pointer !important;
             margin: 0 !important;
+            width: 100% !important;
         }
 
         #main-welcome-container .producto-accion a:hover {
@@ -541,7 +544,7 @@
             justify-content: center !important;
             transition: all 0.3s ease !important;
             padding: 0 !important;
-            color: #333 !important;
+            color: #f26522 !important;
         }
 
         #main-welcome-container .carousel-btn:hover {
@@ -551,11 +554,11 @@
         }
 
         #main-welcome-container .carousel-prev {
-            left: 0 !important;
+            left: -20px !important;
         }
 
         #main-welcome-container .carousel-next {
-            right: 0 !important;
+            right: -20px !important;
         }
 
         /* ofertas-section: ver bloque de estilos al final de la sección css */
@@ -626,7 +629,7 @@
             padding: 20px !important;
             min-width: 280px !important;
             flex: 0 0 280px !important;
-            display: flex !important;
+            /*display: flex !important;*/
             flex-direction: column !important;
             text-align: left !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
@@ -994,7 +997,7 @@
 
         #main-welcome-container .oferta-image-wrapper {
             width: 100% !important;
-            height: 220px !important;
+            /*height: 220px !important;*/
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
@@ -1030,27 +1033,27 @@
         }
 
         /* CLASES DE MARCA PARA TIPOGRAFÍAS */
-        #main-welcome-container .brand-ezent .producto-overlay,
+        #main-welcome-container .brand-ezent .producto-titulo,
         #main-welcome-container .brand-ezent .hero-slide {
             font-family: 'EzentFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-genwork .producto-overlay,
+        #main-welcome-container .brand-genwork .producto-titulo,
         #main-welcome-container .brand-genwork .hero-slide {
             font-family: 'GenworkFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-ofiszu .producto-overlay,
+        #main-welcome-container .brand-ofiszu .producto-titulo,
         #main-welcome-container .brand-ofiszu .hero-slide {
             font-family: 'OfiszuFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-prowork .producto-overlay,
+        #main-welcome-container .brand-prowork .producto-titulo,
         #main-welcome-container .brand-prowork .hero-slide {
             font-family: 'ProworkFont', sans-serif !important;
         }
 
-        #main-welcome-container .brand-raito .producto-overlay,
+        #main-welcome-container .brand-raito .producto-titulo,
         #main-welcome-container .brand-raito .hero-slide {
             font-family: 'RaitoFont', sans-serif !important;
         }
@@ -1202,17 +1205,20 @@
                                     @else
                                         <img src="{{ asset('producto.jpg') }}" alt="{{ $mod->descripcion ?? 'Producto' }}">
                                     @endif
-                                    <div class="producto-overlay">
-                                        @if ($mod->categoria_id)
-                                            <h6 title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
-                                                @if($mod->prefix)<span>{{ $mod->prefix }} </span>@endif{{ Str::limit($mod->descripcion ?? '', 160) }}
-                                            </h6>
-                                        @endif
-                                    </div>
+                                </div>
+                                <div class="producto-info">
+                                    @if ($mod->categoria_nombre ?? false)
+                                        <span class="producto-categoria">{{ strtoupper($mod->categoria_nombre) }}</span>
+                                    @elseif($mod->prefix)
+                                        <span class="producto-categoria">{{ strtoupper($mod->prefix) }}</span>
+                                    @endif
+                                    <h6 class="producto-titulo" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
+                                        {{ Str::limit($mod->descripcion ?? '', 40) }}
+                                    </h6>
                                 </div>
                                 <div class="producto-accion">
                                     <a href="{{ route('detallemod', $mod->id) }}">
-                                        <i class='fa-solid fa-shopping-bag'></i> Ver Catálogo
+                                        Ver Catálogo
                                     </a>
                                 </div>
                             </div>
@@ -1252,7 +1258,7 @@
                             <p>Es tu oportunidad para renovar o adquirir tu equipo Kenya</p>
                         </div>
                         <div class="oferta-image-wrapper bg-dark-purple">
-                            <img src="{{ asset('oferta-descuentos.png') }}" alt="Descuentos Kenya">
+                            <img src="{{ asset('descuentos.png') }}" alt="Descuentos Kenya">
                         </div>
                     </div>
                     <div class="oferta-card">
@@ -1261,7 +1267,7 @@
                             <p>Equipo diseñado especialmente para usuarios de oficina y empresas</p>
                         </div>
                         <div class="oferta-image-wrapper bg-red">
-                            <img src="{{ asset('oferta-thinkpad.png') }}" alt="Ezent V1 MT">
+                            <img src="{{ asset('cuabanner.png') }}" alt="Ezent V1 MT">
                         </div>
                     </div>
                 </div>
@@ -1292,7 +1298,7 @@
                                 @php
                                     $novedadImg = $novedad->imagen ?: $novedad->imagen_1;
                                     $imgUrl = asset('producto.jpg');
-                                    
+
                                     if ($novedadImg) {
                                         if (str_starts_with($novedadImg, 'http://') || str_starts_with($novedadImg, 'https://')) {
                                             $imgUrl = $novedadImg;
@@ -1308,7 +1314,7 @@
                                     $novedadNombre = $novedad->nombre ?: $novedad->descripcion;
                                     $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $novedadNombre ?? '');
                                     $cleanName = trim($cleanName);
-                                    
+
                                     $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
                                     $novedadPartNumber = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
                                     $novedadStock = $novedad->stock ?? '≥ 20';
