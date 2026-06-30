@@ -18,9 +18,11 @@ Route::get('/health', function () {
     return response('ok', 200);
 });
 Route::get('/', function () {
-    $categorias = App\Models\Categoria::with('getModelo')->whereIn('activo', ['SI', 'Si'])->orderBy('nombre', 'ASC')->get();
+    $categorias = App\Models\Categoria::with('getModelo')->whereIn('activo', ['SI', 'Si'])->whereNotIn('id', [4, 5])->orderBy('nombre', 'ASC')->get();
     $modelo = App\Modelo::with('getCat')
         ->whereIn('activo', ['SI', 'Si'])
+        ->whereNotIn('categoria_id', [4, 5])
+        ->whereNotIn('id', [8])
         ->whereHas('getProducto', function ($q) {
             $q->where('pagina_web', 'SI')->noSuspendido();
         })

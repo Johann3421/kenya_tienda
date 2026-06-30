@@ -179,7 +179,6 @@ body {
     box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.12);
 }
 
-.site-header .header-search-wrapper > i.fa-magnifying-glass,
 .site-header .header-search-wrapper > i {
     position: absolute;
     right: 18px;
@@ -187,11 +186,18 @@ body {
     transform: translateY(-50%);
     color: #aaa;
     font-size: 0.95rem;
-    pointer-events: none;
-    transition: color 0.25s;
+    cursor: pointer;
+    transition: color 0.25s, transform 0.3s ease;
 }
 
 .site-header .header-search-wrapper input:focus ~ i {
+    color: #f26522;
+}
+
+.site-header .header-search-wrapper i.search-clear {
+    color: #999;
+}
+.site-header .header-search-wrapper i.search-clear:hover {
     color: #f26522;
 }
 
@@ -284,6 +290,11 @@ body {
     display: none;
 }
 
+/* ── Botón búsqueda móvil ── */
+.site-header .kenya-search-toggle {
+    display: none;
+}
+
 /* ── Botón hamburguesa ── */
 .site-header .kenya-mobile-menu-toggle {
     display: none;
@@ -355,7 +366,7 @@ body {
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 991px) {
     .site-header {
         height: auto;
         position: sticky;
@@ -364,9 +375,13 @@ body {
     .site-header .header-content {
         flex-wrap: wrap !important;
         height: auto !important;
-        padding: 12px 20px !important;
-        gap: 10px !important;
-        row-gap: 10px !important;
+        padding: 10px 16px !important;
+        gap: 6px !important;
+        row-gap: 8px !important;
+    }
+    .site-header .header-logo-img,
+    .site-header .header-logo img {
+        height: 36px !important;
     }
     .site-header .kenya-main-nav {
         display: none !important;
@@ -375,21 +390,61 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 2px 4px !important;
+        font-size: 1.5rem !important;
     }
     .site-header .header-search {
+        display: none;
         order: 3;
         max-width: 100%;
         width: 100%;
         flex: 1 1 100%;
     }
+    .site-header .header-search.active {
+        display: flex;
+    }
+    .site-header .header-search-wrapper input,
+    .site-header #productSearch {
+        padding: 9px 38px 9px 16px !important;
+    }
+    .site-header .kenya-search-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #333;
+        padding: 4px 6px;
+        line-height: 1;
+        flex-shrink: 0;
+        transition: color 0.25s;
+    }
+    .site-header .kenya-search-toggle:hover {
+        color: #f26522;
+    }
     .kenya-mobile-menu {
-        top: 0;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
     }
 }
 
 @media (max-width: 576px) {
     .site-header .header-content {
-        padding: 10px 15px !important;
+        padding: 8px 12px !important;
+        row-gap: 6px !important;
+    }
+    .site-header .header-logo-img,
+    .site-header .header-logo img {
+        height: 30px !important;
+    }
+    .site-header .header-search-wrapper input,
+    .site-header #productSearch {
+        font-size: 16px !important;
+        padding: 8px 36px 8px 14px !important;
     }
 }
 
@@ -476,13 +531,16 @@ body {
             <div class="header-search">
                 <div class="header-search-wrapper">
                     <input id="productSearch" type="search" placeholder="Buscar productos...">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <i id="searchIcon" class="fa-solid fa-magnifying-glass"></i>
                     <div id="searchResults"></div>
                 </div>
             </div>
 
             @yield('menu')
 
+            <button class="kenya-search-toggle" id="kenyaSearchToggle" title="Buscar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
             <button class="kenya-mobile-menu-toggle" id="kenyaMobileMenuToggle" title="Menú">
                 <i class="bx bx-menu"></i>
             </button>
@@ -650,11 +708,55 @@ body {
                 }
             }
 
-            if (input) {
+            const searchIcon = document.getElementById('searchIcon');
+
+            if (input && searchIcon) {
                 input.addEventListener('input', function(e){
                     clearTimeout(timer);
                     const q = e.target.value;
                     timer = setTimeout(() => doSearch(q), 300);
+                });
+
+                input.addEventListener('focus', function() {
+                    searchIcon.className = 'fa-solid fa-xmark';
+                    searchIcon.classList.add('search-clear');
+                });
+
+                input.addEventListener('blur', function() {
+                    searchIcon.className = 'fa-solid fa-magnifying-glass';
+                    searchIcon.classList.remove('search-clear');
+                });
+
+                searchIcon.addEventListener('click', function() {
+                    if (input === document.activeElement && input.value) {
+                        input.value = '';
+                        input.blur();
+                        renderResults([]);
+                        searchIcon.className = 'fa-solid fa-magnifying-glass';
+                        searchIcon.classList.remove('search-clear');
+                    } else {
+                        input.focus();
+                    }
+                });
+            }
+
+            // Mobile search toggle
+            const searchToggle = document.getElementById('kenyaSearchToggle');
+            const headerSearch = document.querySelector('.header-search');
+            if (searchToggle && headerSearch) {
+                searchToggle.addEventListener('click', function() {
+                    headerSearch.classList.toggle('active');
+                    if (headerSearch.classList.contains('active')) {
+                        input?.focus();
+                    } else {
+                        input?.blur();
+                    }
+                });
+                // Close search when clicking outside header
+                document.addEventListener('click', function(e) {
+                    if (headerSearch.classList.contains('active') && !e.target.closest('.site-header')) {
+                        headerSearch.classList.remove('active');
+                    }
                 });
             }
 

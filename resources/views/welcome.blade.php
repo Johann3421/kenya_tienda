@@ -71,6 +71,7 @@
             position: relative !important;
             width: 100% !important;
             height: 60vh !important;
+            min-height: 400px !important;
             overflow: hidden !important;
             background-color: #111 !important;
             margin: 0 !important;
@@ -418,6 +419,7 @@
             gap: 20px !important;
             overflow-x: auto !important;
             scroll-behavior: smooth !important;
+            scroll-snap-type: x mandatory !important;
             padding: 20px 0 !important;
             scroll-padding: 0 !important;
         }
@@ -434,17 +436,22 @@
             overflow: hidden !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
             transition: all 0.3s ease !important;
-            display: flex !important;
+            display: flex;
             flex-direction: column !important;
             align-items: center !important;
             margin: 0 !important;
             padding: 25px 20px 25px !important;
             text-align: center !important;
+            scroll-snap-align: start !important;
         }
 
         #main-welcome-container .producto-card:hover {
             transform: translateY(-5px) !important;
             box-shadow: 0 10px 24px rgba(0,0,0,0.1) !important;
+        }
+
+        #main-welcome-container .brand-henko {
+            display: none !important;
         }
 
         #main-welcome-container .producto-imagen {
@@ -613,6 +620,7 @@
             gap: 20px !important;
             overflow-x: auto !important;
             scroll-behavior: smooth !important;
+            scroll-snap-type: x mandatory !important;
             padding: 10px 5px 20px !important;
             -ms-overflow-style: none !important;
             scrollbar-width: none !important;
@@ -627,9 +635,9 @@
             background: #ffffff !important;
             border-radius: 15px !important;
             padding: 20px !important;
-            min-width: 280px !important;
-            flex: 0 0 280px !important;
-            /*display: flex !important;*/
+            min-width: 0 !important;
+            flex: 0 0 calc(25% - 15px) !important;
+            scroll-snap-align: start !important;
             flex-direction: column !important;
             text-align: left !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
@@ -765,13 +773,33 @@
             right: 0 !important;
         }
 
+        @media (max-width: 992px) {
+            #main-welcome-container .novedad-card {
+                flex: 0 0 calc(33.333% - 14px) !important;
+            }
+        }
+
         @media (max-width: 768px) {
             #main-welcome-container .novedades-slider-wrapper {
                 padding: 0 35px !important;
             }
             #main-welcome-container .novedad-card {
-                min-width: 230px !important;
-                flex: 0 0 230px !important;
+                flex: 0 0 calc(50% - 10px) !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            #main-welcome-container .novedades-slider-wrapper {
+                padding: 0 !important;
+            }
+            #main-welcome-container .novedad-card {
+                flex: 0 0 85% !important;
+            }
+            #main-welcome-container .novedades-prev {
+                left: 5px !important;
+            }
+            #main-welcome-container .novedades-next {
+                right: 5px !important;
             }
         }
 
@@ -850,10 +878,6 @@
                 gap: 15px !important;
             }
         }
-            #main-welcome-container .producto-card {
-                flex: 0 0 calc(33.333% - 13px) !important;
-            }
-        }
 
         @media (max-width: 992px) {
             #main-welcome-container .hero-slide h1 {
@@ -871,9 +895,17 @@
             }
         }
 
+        @keyframes heroPan {
+            0% { background-position: 0% center; }
+            100% { background-position: 100% center; }
+        }
+
         @media (max-width: 768px) {
             #main-welcome-container .hero-slider-section {
                 height: 50vh !important;
+            }
+            #main-welcome-container .hero-slide.active {
+                animation: heroPan 5s linear forwards;
             }
             #main-welcome-container .hero-slide h1 {
                 font-size: 2rem !important;
@@ -893,7 +925,8 @@
 
         @media (max-width: 576px) {
             #main-welcome-container .hero-slider-section {
-                height: 40vh !important;
+                height: 50vh !important;
+                min-height: 300px !important;
             }
             #main-welcome-container .hero-slide h1 {
                 font-size: 1.5rem !important;
@@ -920,6 +953,12 @@
             #main-welcome-container .carousel-btn {
                 width: 35px !important;
                 height: 35px !important;
+            }
+            #main-welcome-container .carousel-prev {
+                left: 5px !important;
+            }
+            #main-welcome-container .carousel-next {
+                right: 5px !important;
             }
             /* novedades carrusel sin override */
         }
@@ -1417,6 +1456,20 @@
                 heroNext?.addEventListener('click', () => { nextSlide(); resetInterval(); });
                 heroPrev?.addEventListener('click', () => { prevSlide(); resetInterval(); });
 
+                // Touch swipe
+                let touchStartX = 0;
+                const heroSection = container.querySelector('.hero-slider-section');
+                heroSection?.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+                heroSection?.addEventListener('touchend', (e) => {
+                    const diff = touchStartX - e.changedTouches[0].screenX;
+                    if (Math.abs(diff) > 50) {
+                        if (diff > 0) { nextSlide(); resetInterval(); }
+                        else { prevSlide(); resetInterval(); }
+                    }
+                }, { passive: true });
+
                 playPauseBtn?.addEventListener('click', () => {
                     isPlaying = !isPlaying;
                     const icon = playPauseBtn.querySelector('i');
@@ -1463,12 +1516,20 @@
             const carousel = container.querySelector('#carousel-track');
             const carouselPrev = container.querySelector('.carousel-prev');
             const carouselNext = container.querySelector('.carousel-next');
+            const scrollCard = () => {
+                const card = carousel?.querySelector('.producto-card');
+                if (!card) return 330;
+                const style = getComputedStyle(card);
+                const cardWidth = card.offsetWidth;
+                const gap = parseFloat(style.marginRight) || 20;
+                return cardWidth + gap;
+            };
 
             carouselPrev?.addEventListener('click', () => {
-                carousel?.scrollBy({ left: -330, behavior: 'smooth' });
+                carousel?.scrollBy({ left: -scrollCard(), behavior: 'smooth' });
             });
             carouselNext?.addEventListener('click', () => {
-                carousel?.scrollBy({ left: 330, behavior: 'smooth' });
+                carousel?.scrollBy({ left: scrollCard(), behavior: 'smooth' });
             });
 
             // ==================================================
@@ -1477,12 +1538,17 @@
             const novedadesTrack = container.querySelector('#novedades-track');
             const novedadesPrev = container.querySelector('.novedades-prev');
             const novedadesNext = container.querySelector('.novedades-next');
+            const scrollNovedad = () => {
+                const card = novedadesTrack?.querySelector('.novedad-card');
+                if (!card) return 300;
+                return card.offsetWidth + 20;
+            };
 
             novedadesPrev?.addEventListener('click', () => {
-                novedadesTrack?.scrollBy({ left: -300, behavior: 'smooth' });
+                novedadesTrack?.scrollBy({ left: -scrollNovedad(), behavior: 'smooth' });
             });
             novedadesNext?.addEventListener('click', () => {
-                novedadesTrack?.scrollBy({ left: 300, behavior: 'smooth' });
+                novedadesTrack?.scrollBy({ left: scrollNovedad(), behavior: 'smooth' });
             });
         });
     </script>
