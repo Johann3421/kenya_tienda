@@ -18,175 +18,200 @@
 
 @section('content')
     <style>
-        .title-section {
-            font-size: 2.5rem;
+        #quienes-somos-page {
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        #quienes-somos-page .hero-banner {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banersomos.png") }}');
+            background-size: cover;
+            background-position: right;
+            color: #000000;
+            text-align: left;
+            padding: 80px 5px;
+            margin-bottom: 0px;
+        }
+
+        #quienes-somos-page .hero-content {
+            position: relative;
+            z-index: 2; 
+            padding-left: 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        #quienes-somos-page .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: -3px;
+        }
+
+        #quienes-somos-page .hero-content p {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 20px; 
+        }
+
+        #quienes-somos-page .about-section {
+            padding: 70px 0;
+            background-color: #ffffff;
+        }
+
+        #quienes-somos-page .about-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        #quienes-somos-page .about-intro {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 70px;
+        }
+
+        #quienes-somos-page .about-text {
+            flex: 1;
+        }
+
+        #quienes-somos-page .about-text h2 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 25px;
             font-weight: 700;
         }
 
-        .subtitle {
-            font-size: 1.1rem;
-            color: #6c757d;
-        }
-
-        /* Contenedores modificados */
-        .section-box {
-            padding: 2rem;
-            background: #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: 0.3s;
+        #quienes-somos-page .about-description {
             position: relative;
-            /* Para posicionamiento interno */
+            padding-left: 25px;
+            margin-bottom: 25px;
         }
 
-        .section-box:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        }
-
-        .section-icon {
-            width: 64px;
-            height: 64px;
-            background-color: #f1f1f1;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 1rem;
-            font-size: 30px;
-            color: #333;
+        #quienes-somos-page .about-description::before {
+            content: '';
             position: absolute;
-            /* Posicionamiento absoluto */
-            top: -32px;
-            /* Mitad del icono fuera del contenedor */
-            left: 50%;
-            transform: translateX(-50%);
+            left: 0;
+            top: 5px;
+            bottom: 5px;
+            width: 4px;
+            background-color: #f26522;
         }
 
-        /* Ajuste para el contenedor principal */
-        .container.py-5 {
-            padding-top: 2rem !important;
-            position: relative;
-            margin-top: 55px;
-            max-width: 1200px;
+        #quienes-somos-page .about-description p {
+            color: #555;
+            font-size: 1.05rem;
+            line-height: 1.7;
         }
 
-        /* Ajuste para las columnas */
-        .col-md-6,
-        .col-lg-10 {
-            position: relative;
+        #quienes-somos-page .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
         }
 
-        @media (max-width: 767px) {
-            .title-section {
-                font-size: 2rem;
-            }
-
-            /* Ajuste responsive para los contenedores */
-
-            .section-icon {
-                width: 56px;
-                height: 56px;
-                top: -28px;
-                font-size: 26px;
-            }
+        #quienes-somos-page .value-card {
+            background-color: #f8f8f8; 
+            padding: 40px 30px;
+            text-align: left;
+            border-radius: 12px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .about-image-container {
-            height: 300px;
-            /* Altura fija */
-            width: 100%;
-            /* Ancho completo del contenedor padre */
+        #quienes-somos-page .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        #quienes-somos-page .value-card h3 {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 700; 
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            background-color: #f1f1f1;
-            /* Fondo gris por defecto */
-            border-radius: 0.5rem;
-            /* Coincide con el estilo de tus otros elementos */
-            overflow: hidden;
-            /* Para que la imagen no sobresalga del borde redondeado */
         }
 
-        .about-image-container img {
-            height: 100%;
-            /* Ocupa toda la altura del contenedor */
-            width: 100%;
-            /* Ocupa todo el ancho del contenedor */
-            object-fit: cover;
-            /* Ajusta la imagen manteniendo proporciones */
-            object-position: center;
-            /* Centra la imagen */
-            border: 5px solid #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        #quienes-somos-page .value-card p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin: 0;
         }
 
-        @media (max-width: 991px) {
-            .about-image-container {
-                height: 250px;
-                /* Altura menor en móviles */
-                justify-content: center;
-                margin-top: 30px;
+        #quienes-somos-page .icon-title {
+            color: #f26522; 
+            margin-right: 12px;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 992px) {
+            #quienes-somos-page .about-intro {
+                flex-direction: column;
             }
+        }
+
+        @media (max-width: 768px) {
+            #quienes-somos-page .hero-banner { padding: 50px 20px; }
+            #quienes-somos-page .hero-content h1 { font-size: 2.2rem; }
+            #quienes-somos-page .hero-content p { font-size: 1.1rem; }
+            #quienes-somos-page .about-text h2 { font-size: 1.8rem; }
         }
     </style>
 
-    <section class="container py-5">
-        <!-- Sección Quiénes Somos con imagen al lado derecho -->
-        <div class="row mb-5" style="justify-content: space-between;">
-            <div class="col-lg-7" style="max-width: 600px;">
-                <h1 class="title-section">Quiénes Somos</h1>
-                <p class="subtitle">
-                    En KENYA TECHNOLOGY diseñamos y desarrollamos computadoras de alto rendimiento para usuarios y empresas que buscan potencia, estabilidad y confianza. Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo. Nuestra pasión por la innovación nos impulsa a crear computadoras preparadas para las exigencias actuales y del futuro, fortaleciendo el crecimiento tecnológico nacional con productos confiables y de alto desempeño.
-                </p>
+    <div id="quienes-somos-page">
+        <!-- ==========================================
+             BANNER "QUIÉNES SOMOS"
+             ========================================== -->
+        <section class="hero-banner">
+            <div class="hero-content">
+                <h1>¿Quiénes Somos?</h1>
+                <p>Innovación, confianza y tecnología al alcance de todos.</p>
             </div>
-            <div class="col-lg-5" style="max-width: 600px; flex: none;">
-                <div class="about-image-container">
-                    @if (file_exists(public_path('/images/equipo-kenya.jpg')))
-                        <img src="/images/equipo-kenya.jpg" alt="Equipo KENYA" class="img-fluid rounded">
-                    @endif
+        </section>
+        
+        <!-- ==========================================
+             SECCIÓN INFORMACIÓN Y VALORES
+             ========================================== -->
+        <section class="about-section">
+            <div class="about-container">
+                <!-- Parte superior: Texto e Imagen -->
+                <div class="about-intro">
+                    <div class="about-text">
+                        <h2><i class="fa-solid fa-clock-rotate-left icon-title"></i> Nuestra Historia</h2>
+                        <div class="about-description">
+                            <p>Desde nuestros inicios, en <strong>KENYA TECHNOLOGY</strong> apostamos por crear computadoras de alto desempeño adaptadas a las necesidades de un mercado en constante evolución. Con una trayectoria basada en innovación, calidad y compromiso, hemos acompañado a miles de usuarios ofreciendo equipos ensamblados con tecnología moderna, excelente rendimiento y altos estándares de calidad. Hoy continuamos creciendo como una marca peruana enfocada en desarrollar computadoras confiables, eficientes y preparadas para el futuro.</p>
+                            <p>Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo.</p>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Secciones de Misión y Visión (sin cambios) -->
-        <div class="row text-center mb-5">
-            <div class="col-md-6 mb-4">
-                <div class="section-box h-100">
-                    <div class="section-icon mx-auto">
-                        <i class="fas fa-bullseye"></i>
+                <!-- Parte inferior: Grid de Valores, Visión y Misión -->
+                <div class="values-grid">
+                    <div class="value-card">
+                        <h3><i class="fa-solid fa-hand-holding-heart icon-title"></i> Nuestros Valores</h3>
+                        <p>Nuestros Principios Culturales nos ayudan a conectarnos con la cultura de la empresa, siendo fundamentales para que podamos seguir creciendo dentro de nuestra gran familia Kenya Computers. Nos basamos en la transparencia, el esfuerzo y el trabajo en equipo.</p>
                     </div>
-                    <h3 class="fw-bold mb-3">Misión</h3>
-                    <p class="subtitle mb-0">
-                        Desarrollar computadoras de alto rendimiento que brinden potencia, eficiencia y confiabilidad, ofreciendo a nuestros clientes la mejor experiencia tecnológica en cada equipo KENYA TECHNOLOGY.
-                    </p>
+                    <div class="value-card">
+                        <h3><i class="fa-solid fa-eye icon-title"></i> Nuestra Visión</h3>
+                        <p>"Ser la marca peruana de computadoras más reconocida y confiable a nivel nacional e internacional, destacando por nuestra innovación, calidad, rendimiento y compromiso con el medio ambiente."</p>
+                    </div>
+                    <div class="value-card">
+                        <h3><i class="fa-solid fa-bullseye icon-title"></i> Nuestra Misión</h3>
+                        <p>Desarrollar computadoras de alto rendimiento que brinden potencia, eficiencia y confiabilidad, ofreciendo a nuestros clientes la mejor experiencia tecnológica en cada equipo KENYA TECHNOLOGY.</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 mb-4">
-                <div class="section-box h-100">
-                    <div class="section-icon mx-auto">
-                        <i class="fas fa-eye"></i>
-                    </div>
-                    <h3 class="fw-bold mb-3">Visión</h3>
-                    <p class="subtitle mb-0">
-                        Ser la marca peruana de computadoras más reconocida y confiable a nivel nacional e internacional, destacando por nuestra innovación, calidad y rendimiento.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sección Nuestra Historia (sin cambios) -->
-        <div class="row mb-5">
-            <div class="col-12">
-                <div class="section-box">
-                    <div class="section-icon mx-auto">
-                        <i class="fas fa-history"></i>
-                    </div>
-                    <h3 class="fw-bold mb-3 text-center">Nuestra Historia</h3>
-                    <p class="subtitle text-center">
-                        Desde nuestros inicios, en KENYA TECHNOLOGY apostamos por crear computadoras de alto desempeño adaptadas a las necesidades de un mercado en constante evolución. Con una trayectoria basada en innovación, calidad y compromiso, hemos acompañado a miles de usuarios ofreciendo equipos ensamblados con tecnología moderna, excelente rendimiento y altos estándares de calidad. Hoy continuamos creciendo como una marca peruana enfocada en desarrollar computadoras confiables, eficientes y preparadas para el futuro.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 @endsection

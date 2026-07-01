@@ -1,5 +1,5 @@
 <div class="aside-catalogo">
-    <h4 class="aside-title">Filtros por Especificaciones Técnicas</h4>
+    <h4 class="filter-title">Filtros por Especificaciones Técnicas</h4>
     <form method="GET" action="{{ route('catalogo') }}" id="filtros-form">
         <!-- Mantener parámetros existentes -->
         <input type="hidden" name="busqueda" value="{{ request('busqueda') }}">
@@ -8,9 +8,9 @@
 
         <!-- Filtro Procesador -->
         @if($procesadores->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="procesador">Procesador</label>
-            <select name="procesador" id="procesador" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="procesador" id="procesador" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todos</option>
                 @foreach($procesadores as $proc)
                     <option value="{{ $proc }}" {{ request('procesador') == $proc ? 'selected' : '' }}>{{ $proc }}</option>
@@ -21,9 +21,9 @@
 
         <!-- Filtro Memoria RAM -->
         @if($memorias_ram->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="memoria_ram">Memoria RAM</label>
-            <select name="memoria_ram" id="memoria_ram" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="memoria_ram" id="memoria_ram" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todas</option>
                 @foreach($memorias_ram as $ram)
                     <option value="{{ $ram }}" {{ request('memoria_ram') == $ram ? 'selected' : '' }}>{{ $ram }}</option>
@@ -34,9 +34,9 @@
 
         <!-- Filtro Almacenamiento -->
         @if($almacenamientos->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="almacenamiento">Almacenamiento</label>
-            <select name="almacenamiento" id="almacenamiento" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="almacenamiento" id="almacenamiento" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todos</option>
                 @foreach($almacenamientos as $alm)
                     <option value="{{ $alm }}" {{ request('almacenamiento') == $alm ? 'selected' : '' }}>{{ $alm }}</option>
@@ -47,9 +47,9 @@
 
         <!-- Filtro Tarjeta de Video -->
         @if(isset($tarjetas_video) && $tarjetas_video->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="tarjeta_video">Tarjeta de Video</label>
-            <select name="tarjeta_video" id="tarjeta_video" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="tarjeta_video" id="tarjeta_video" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todas</option>
                 @foreach($tarjetas_video as $tv)
                     <option value="{{ $tv }}" {{ request('tarjeta_video') == $tv ? 'selected' : '' }}>{{ $tv }}</option>
@@ -60,9 +60,9 @@
 
         <!-- Filtro Sistema Operativo -->
         @if($sistemas_operativos->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="sistema_operativo">Sistema Operativo</label>
-            <select name="sistema_operativo" id="sistema_operativo" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="sistema_operativo" id="sistema_operativo" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todos</option>
                 @foreach($sistemas_operativos as $so)
                     <option value="{{ $so }}" {{ request('sistema_operativo') == $so ? 'selected' : '' }}>{{ $so }}</option>
@@ -73,9 +73,9 @@
 
         <!-- Filtro Unidad Óptica -->
         @if($unidades_opticas->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="unidad_optica">Unidad Óptica</label>
-            <select name="unidad_optica" id="unidad_optica" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="unidad_optica" id="unidad_optica" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todas</option>
                 @foreach($unidades_opticas as $uo)
                     <option value="{{ $uo }}" {{ request('unidad_optica') == $uo ? 'selected' : '' }}>{{ $uo }}</option>
@@ -86,9 +86,9 @@
 
         <!-- Filtro Conectividad WLAN -->
         @if($conectividades_wlan->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="conectividad_wlan">Conectividad WLAN</label>
-            <select name="conectividad_wlan" id="conectividad_wlan" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="conectividad_wlan" id="conectividad_wlan" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todas</option>
                 @foreach($conectividades_wlan as $wlan)
                     <option value="{{ $wlan }}" {{ request('conectividad_wlan') == $wlan ? 'selected' : '' }}>{{ $wlan }}</option>
@@ -99,9 +99,9 @@
 
         <!-- Filtro Conectividad VGA -->
         @if($conectividades_vga->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="conectividad_vga">Conectividad VGA</label>
-            <select name="conectividad_vga" id="conectividad_vga" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="conectividad_vga" id="conectividad_vga" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todas</option>
                 @foreach($conectividades_vga as $vga)
                     <option value="{{ $vga }}" {{ request('conectividad_vga') == $vga ? 'selected' : '' }}>{{ $vga }}</option>
@@ -112,9 +112,9 @@
 
         <!-- Filtro Conectividad HDMI -->
         @if($conectividades_hdmi->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="conectividad_hdmi">Conectividad HDMI</label>
-            <select name="conectividad_hdmi" id="conectividad_hdmi" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="conectividad_hdmi" id="conectividad_hdmi" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todas</option>
                 @foreach($conectividades_hdmi as $hdmi)
                     <option value="{{ $hdmi }}" {{ request('conectividad_hdmi') == $hdmi ? 'selected' : '' }}>{{ $hdmi }}</option>
@@ -125,9 +125,9 @@
 
         <!-- Filtro Ofimática -->
         @if($ofimaticas->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="ofimatica">Ofimática</label>
-            <select name="ofimatica" id="ofimatica" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="ofimatica" id="ofimatica" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todas</option>
                 @foreach($ofimaticas as $ofi)
                     <option value="{{ $ofi }}" {{ request('ofimatica') == $ofi ? 'selected' : '' }}>{{ $ofi }}</option>
@@ -138,9 +138,9 @@
 
         <!-- Filtro Periféricos -->
         @if($perifericos_list->count() > 0)
-        <div class="filtro-group">
+        <div class="filter-group">
             <label for="perifericos">Periféricos</label>
-            <select name="perifericos" id="perifericos" class="form-control filtro-select" onchange="document.getElementById('filtros-form').submit()">
+            <select name="perifericos" id="perifericos" class="custom-select" onchange="document.getElementById('filtros-form').submit()">
                 <option value="">Todos</option>
                 @foreach($perifericos_list as $per)
                     <option value="{{ $per }}" {{ request('perifericos') == $per ? 'selected' : '' }}>{{ $per }}</option>
@@ -150,7 +150,7 @@
         @endif
 
         <!-- Botón Limpiar Filtros -->
-        <div class="filtro-group">
+        <div class="filter-group">
             <a href="{{ route('catalogo') }}?{{ http_build_query(collect(request()->query())->except(['procesador', 'memoria_ram', 'almacenamiento', 'sistema_operativo', 'unidad_optica', 'conectividad_wlan', 'conectividad_vga', 'conectividad_hdmi', 'ofimatica', 'perifericos', 'tarjeta_video'])->toArray()) }}" class="btn btn-secondary btn-sm">Limpiar Filtros</a>
         </div>
     </form>

@@ -1,162 +1,541 @@
 @extends('layouts.landing')
 
-@section('title', 'Catálogo Preview')
+@section('title', 'CatÃ¡logo Preview')
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/detallemod.css') }}">
     <style>
-        :root {
-            --primary-color: #ee7c31;
-            --secondary-color: #ca7b46;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-            --success-color: #2ecc71;
-            --warning-color: #f39c12;
-            --border-radius: 8px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
-        .catalog-section {
-            padding: 1rem 0 2rem 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #f9f9f9;
-            margin-top: 0;
-        }
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        .catalog-filters {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
-        }
-        .search-box { position: relative; display: flex; }
-        .search-input {
-            width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd;
-            border-radius: var(--border-radius); font-size: 1rem;
-            transition: var(--transition);
-        }
-        .search-input:focus {
-            border-color: var(--primary-color); outline: none;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
-        }
-        .search-btn {
-            position: absolute; right: 0; top: 0; height: 100%; width: 50px;
-            background: var(--primary-color); color: white; border: none;
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
-            cursor: pointer; transition: var(--transition);
-        }
-        .search-btn:hover { background: var(--secondary-color); }
-        .filter-controls { display: flex; gap: 1rem; }
-        .category-filter, .sort-filter {
-            flex: 1; padding: 0.75rem; border: 2px solid #ddd;
-            border-radius: var(--border-radius); font-size: 1rem;
-            background-color: white; cursor: pointer; transition: var(--transition);
-        }
-        .category-filter:focus, .sort-filter:focus {
-            border-color: var(--primary-color); outline: none;
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
-        }
-        .product-grid { margin-top: 0.5rem; margin-bottom: 2rem; }
-        .product-card {
+        /* ==========================================
+           FRANJA BANNER (NUEVA)
+           ========================================== */
+        .page-banner {
             position: relative;
-            background: white; border-radius: var(--border-radius);
-            overflow: hidden; box-shadow: var(--box-shadow);
-            transition: var(--transition); height: 100%;
-            display: flex; flex-direction: column;
+            width: 100%;
+            height: 284px; 
+            background-color: #333;
+            background-image: url('{{ asset('banercatalogo.png') }}'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
+        .page-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255 255 255 / 35%); 
+            z-index: 1;
+        }
+
+        .page-banner .banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .page-banner h1 {
+            color: #000000;
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin: 0;
+            letter-spacing: 1px;
+            text-shadow: 0px 0px 0px rgba(0,0,0,0.0);
+        }
+
+        @media (max-width: 768px) {
+            .page-banner {
+                height: 100px;
+            }
+            .page-banner h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ==========================================
+           SECCIÃ“N DE CATÃLOGO
+           ========================================== */
+        .catalog-section {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            padding: 40px 0;
+            align-items: start;
+        }
+
+        .catalog-sidebar {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: static;
+            top: 100px;
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .custom-select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: #333;
+            outline: none;
+            appearance: none;
+            background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10"><path fill="%23333" d="M7 10L0 0h14z"/></svg>') no-repeat right 15px center;
+            background-size: 10px;
+            background-color: #fff;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .custom-select:focus {
+            border-color: #f26522;
+        }
+
+        .filter-title {
+            font-size: 1.1rem;
+            color: #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #f26522;
+            font-weight: 600;
+        }
+
+        /* ==========================================
+           ESTILOS DEL ACORDEÃ“N DESPLEGABLE 
+           ========================================== */
+        .accordion-wrapper {
+            margin-bottom: 8px;
+        }
+
+        .accordion-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #eaeaea;
+            padding: 12px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            color: #444;
+        }
+
+        .accordion-item span {
+            font-weight: 500;
+            transition: color 0.2s, font-weight 0.2s;
+        }
+
+        .accordion-item i {
+            color: #888;
+            font-size: 0.8rem;
+            transition: color 0.2s;
+        }
+
+        .accordion-item:hover {
+            background-color: #eef0f2;
+            border-color: #ddd;
+        }
+
+        .accordion-item.active {
+            background-color: #f8f9fa;
+            border-bottom: none;
+            border-radius: 6px 6px 0 0;
+        }
+
+        .accordion-item.active span {
+            font-weight: 700;
+            color: #000;
+        }
+
+        .accordion-item.active i {
+            color: #333;
+        }
+
+        .accordion-content {
+            display: none;
+            border: 1px solid #eaeaea;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            padding: 12px;
+            background-color: #fff;
+            margin-top: 0; 
+        }
+
+        .accordion-content.open {
+            display: block;
+        }
+
+        .accordion-search {
+            margin-bottom: 12px;
+        }
+
+        .accordion-search input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #555;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .accordion-search input:focus {
+            border-color: #f26522; 
+        }
+
+        .accordion-options {
+            max-height: 210px; 
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .accordion-options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .accordion-options::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .accordion-options::-webkit-scrollbar-thumb {
+            background: #cfd4d9;
+            border-radius: 4px;
+        }
+
+        .accordion-options::-webkit-scrollbar-thumb:hover {
+            background: #aab0b6;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 5px;
+            border-bottom: 1px solid #f4f4f4;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #444;
+            transition: background-color 0.2s;
+        }
+
+        .option-item:last-child {
+            border-bottom: none;
+        }
+
+        .option-item:hover {
+            background-color: #fcfcfc;
+        }
+
+        .option-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #f26522; 
+            margin: 0;
+        }
+
+        .btn-clear {
+            width: 100%;
+            background-color: #727b84;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-clear:hover {
+            background-color: #5c646b;
+        }
+
+        /* --- Contenido Principal (Productos) --- */
+        .catalog-main {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .catalog-main-search input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .catalog-main-search input:focus {
+            border-color: #f26522;
+            box-shadow: 0 0 8px rgba(242, 101, 34, 0.15);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(253px, 1fr));
+            gap: 12px;
+        }
+
+        .product-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #eaeaea;
+            padding: 15px 15px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-color: #ddd;
         }
-        .product-badge {
-            position: absolute; top: 10px; right: 10px;
-            padding: 0.25rem 0.75rem; border-radius: 20px;
-            font-size: 0.8rem; font-weight: 600; color: white; z-index: 2;
+
+        .product-image-wrapper {
+            position: relative;
+            text-align: center;
+            margin-bottom: 20px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .product-badge.out-of-stock { background-color: var(--accent-color); }
-        .product-badge { background-color: var(--success-color); }
-        .product-image {
-            position: relative; overflow: hidden; padding-top: 75%;
+
+        .product-image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
-        .product-image img {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover; transition: var(--transition);
+
+        .product-logos {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0 10px;
+            pointer-events: none;
         }
-        .product-card:hover .product-image img { transform: scale(1.05); }
-        .product-actions {
-            position: absolute; bottom: 10px; right: 10px;
-            display: flex; gap: 0.5rem; z-index: 2;
+
+        .product-logos img {
+            height: 25px;
+            opacity: 0.8;
         }
-        .quick-view {
-            width: 36px; height: 36px; border-radius: 50%;
-            background-color: rgba(255,255,255,0.9); border: none;
-            color: var(--dark-color); display: flex; align-items: center;
-            justify-content: center; cursor: pointer;
-            transition: var(--transition); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .quick-view:hover {
-            background-color: white; color: var(--primary-color); transform: scale(1.1);
-        }
-        .product-info {
-            padding: 1.5rem; flex-grow: 1; display: flex; flex-direction: column;
-        }
-        .product-category {
-            font-size: 0.9rem; color: var(--primary-color); font-weight: 600;
-            margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;
-        }
+
         .product-title {
-            font-size: 1.25rem; margin-bottom: 1rem; color: var(--dark-color);
-            font-weight: 700; line-height: 1.3;
+            font-size: 0.95rem;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            font-weight: 700;
         }
-        .product-details { margin-bottom: 1.5rem; }
-        .product-details p { margin-bottom: 0.5rem; font-size: 0.95rem; color: #555; }
-        .product-details strong { color: var(--dark-color); }
-        .in-stock { color: var(--success-color); font-weight: 600; }
-        .out-of-stock { color: var(--accent-color); font-weight: 600; }
-        .view-details {
-            margin-top: auto; width: 100%; padding: 0.75rem;
-            background-color: var(--primary-color); color: white; border: none;
-            border-radius: var(--border-radius); font-weight: 600;
-            cursor: pointer; transition: var(--transition);
-            text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.9rem;
+
+        .product-pn {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 0px;
         }
-        .view-details:hover { background-color: var(--secondary-color); }
-        .catalog-pagination { margin-top: 3rem; }
-        .pagination { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
-        .page-item.disabled .page-link { opacity: 0.5; pointer-events: none; }
-        .page-item.active .page-link {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color); color: white;
+
+        .product-stock {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 20px;
+            flex-grow: 1; 
         }
-        .page-link {
-            padding: 0.5rem 1rem; border: 1px solid #ddd;
-            border-radius: var(--border-radius); color: var(--dark-color);
-            transition: var(--transition);
+
+        .product-stock span {
+            color: #2ecca6; 
+            font-weight: 700;
         }
-        .page-link:hover { background-color: #f8f9fa; border-color: #ddd; }
-        .alert { padding: 1rem; border-radius: var(--border-radius); text-align: center; }
-        .alert-warning {
-            background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;
+
+        .btn-details {
+            width: 100%;
+            background-color: #f07b3f; 
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background-color 0.3s, transform 0.1s;
         }
-        @media (max-width: 768px) {
-            .filter-controls { flex-direction: column; gap: 0.75rem; }
-            .product-title { font-size: 1.1rem; }
+
+        .btn-details:hover {
+            background-color: #d96225;
         }
-        @media (max-width: 992px) {
-            #filterSidebar { display: none; margin-bottom: 20px; }
-            #filterSidebar.show-filters { display: block; }
-            .col-lg-9 { flex: 0 0 100%; max-width: 100%; }
+        
+        .btn-details:active {
+            transform: scale(0.98);
         }
-        @media (max-width: 576px) {
-            .catalog-filters .row > div { margin-bottom: 1rem; }
-            .product-card { max-width: 320px; margin-left: auto; margin-right: auto; }
+
+        /* ==========================================
+           PAGINACIÃ“N
+           ========================================== */
+        .pagination-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            margin-bottom: 0px;
+            flex-wrap: wrap;
         }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .page-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 10px;
+            background-color: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            color: #777;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .page-item:hover:not(.dots) {
+            border-color: #f26522;
+            color: #f26522;
+        }
+
+        .page-item.active {
+            background-color: #f07b3f;
+            color: #ffffff;
+            border-color: #f07b3f;
+            font-weight: 600;
+        }
+
+        .page-item.dots {
+            cursor: default;
+        }
+
+        .products-count {
+            color: #777;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* ==========================================
+           BARRA SUPERIOR DEL CATÁLOGO
+           ========================================== */
+        .catalog-top-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 4px;
+        }
+
+        .catalog-main-search {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .catalog-main-search input {
+            width: 100%;
+            padding: 10px 40px 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: #fafafa;
+        }
+
+        .catalog-main-search input:focus {
+            border-color: #f26522;
+            box-shadow: 0 0 6px rgba(242, 101, 34, 0.15);
+            background: #fff;
+        }
+
+        .catalog-main-search i {
+            position: absolute;
+            right: 12px;
+            color: #aaa;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .catalog-sort {
+            flex-shrink: 0;
+        }
+
+        .custom-sort-select {
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #444;
+            outline: none;
+            background: #fafafa;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            min-width: 210px;
+        }
+
+        .custom-sort-select:focus {
+            border-color: #f26522;
+        }
+
+        @media (max-width: 600px) {
+            .catalog-top-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .custom-sort-select {
+                min-width: 100%;
+                width: 100%;
+            }
+        }
+
+
     </style>
 @endsection
 @section('menu')
@@ -164,53 +543,68 @@
         <ul class="kenya-nav-list">
             <li><a href="{{ url('/') }}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
             <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
-            <li class="kenya-active"><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
+            <li class="kenya-active"><a href="{{ route('catalogo') }}" class="kenya-nav-link">Cat&aacute;logo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            {{-- Sorteo temporalmente oculto en producción --}}
-            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
+            {{-- Sorteo temporalmente oculto en producciÃ³n --}}
+            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">ContÃ¡ctenos</a></li>
         </ul>
     </nav>
 @endsection
 
 @section('content')
-    <section class="catalog-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 d-lg-none mb-3">
-                    <button id="toggleFiltersBtn" class="btn w-100" style="background-color: var(--primary-color); color: white; border: none; padding: 12px; font-weight: bold; border-radius: var(--border-radius); cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
-                        <i class="bx bx-filter-alt"></i> Mostrar / Ocultar Filtros
-                    </button>
+    <div class="page-banner">
+        <div class="banner-content">
+            <h1>Catálogo Electrónico de Acuerdo Marco</h1>
+        </div>
+    </div>
+
+    <main class="container catalog-section">
+        <div class="col-12 d-lg-none mb-3">
+            <button id="toggleFiltersBtn" class="btn w-100" style="background-color: #ee7c31; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
+                <i class="bx bx-filter-alt"></i> Mostrar / Ocultar Filtros
+            </button>
+        </div>
+        <aside class="catalog-sidebar" id="filterSidebar">
+            <div style="margin-bottom:12px;">
+                <label for="preview-modelo" style="font-weight:700">Seleccionar modelo</label>
+                <select id="preview-modelo" class="custom-select form-control">
+                    <option value="">-- Todos los modelos --</option>
+                    @php $selModelo = request('modelo', $id ?? null); @endphp
+                    @foreach($modelos as $m)
+                        <option value="{{ $m->id }}" {{ ($selModelo == $m->id) ? 'selected' : '' }}>{{ $m->descripcion }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div id="preview-filters">
+                @include('partials.aside-detallemod', ['id' => $selModelo])
+            </div>
+        </aside>
+
+        <div class="catalog-main">
+            <!-- Barra superior: búsqueda + orden -->
+            <div class="catalog-top-bar">
+                <div class="catalog-main-search">
+                    <input id="preview-search" type="text" placeholder="Buscar productos por nombre o parte..." aria-label="Buscar productos">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <div id="preview-suggestions" style="position:absolute;left:0;right:0;top:100%;z-index:40;background:#fff;border:1px solid #ddd;border-top:0;border-radius:0 0 6px 6px;display:none;max-height:320px;overflow:auto;"></div>
                 </div>
-                <div class="col-lg-3" id="filterSidebar">
-                    <div style="margin-bottom:12px;">
-                        <label for="preview-modelo" style="font-weight:700">Seleccionar modelo</label>
-                        <select id="preview-modelo" class="form-control">
-                            <option value="">-- Todos los modelos --</option>
-                            @foreach($modelos as $m)
-                                <option value="{{ $m->id }}" {{ (request('modelo') == $m->id) ? 'selected' : '' }}>{{ $m->descripcion }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div id="preview-filters">
-                        @include('partials.aside-detallemod', ['id' => request('modelo')])
-                    </div>
-                </div>
-                <div class="col-lg-9">
-                    {{-- Product grid (loaded via partial) --}}
-                    <div style="margin-bottom:12px;">
-                        <div style="position:relative; max-width:600px;">
-                            <input id="preview-search" type="text" placeholder="Buscar productos por nombre o parte..." class="search-input form-control" aria-label="Buscar productos">
-                            <div id="preview-suggestions" style="position:absolute;left:0;right:0;z-index:40;background:#fff;border:1px solid #ddd;border-top:0;display:none;max-height:320px;overflow:auto;"></div>
-                        </div>
-                    </div>
-                    <div id="preview-products">
-                        @include('partials.catalogo-products', ['productos' => $productos])
+                <div class="catalog-sort">
+                    <select id="preview-orden" class="custom-sort-select" aria-label="Ordenar productos">
+                        <option value="newest" {{ (request('orden','newest') == 'newest') ? 'selected' : '' }}>Ordenar por los últimos</option>
+                        <option value="oldest" {{ (request('orden') == 'oldest') ? 'selected' : '' }}>Ordenar por los más antiguos</option>
+                        <option value="nombre_asc" {{ (request('orden') == 'nombre_asc') ? 'selected' : '' }}>Nombre: A → Z</option>
+                        <option value="nombre_desc" {{ (request('orden') == 'nombre_desc') ? 'selected' : '' }}>Nombre: Z → A</option>
+                    </select>
                 </div>
             </div>
+
+
+            <div id="preview-products">
+                @include('partials.catalogo-products', ['productos' => $productos])
+            </div>
         </div>
-        </div>
-    </section>
+    </main>
 
     @include('components.novedades', ['novedades' => $novedades])
 
@@ -257,13 +651,17 @@
             function fetchProducts(page){
                 const params = new URLSearchParams(window.location.search);
                 const modelo = modeloSelect.value;
+                const ordenSelect = document.getElementById('preview-orden');
+                const orden = ordenSelect ? ordenSelect.value : 'newest';
                 if (modelo) params.set('modelo', modelo); else params.delete('modelo');
-                if (page) params.set('page', page);
+                if (orden) params.set('orden', orden); else params.delete('orden');
+                if (page) params.set('page', page); else params.delete('page');
                 fetch(productsUrl + '?' + params.toString(), { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     productsContainer.innerHTML = html;
                     window.scrollTo({ top: productsContainer.offsetTop - 20, behavior: 'smooth' });
                 }).catch(err => console.error(err));
             }
+
 
             // Listen for filter changes from aside-detallemod
             window.addEventListener('filterchange', function(){ fetchProducts(); });
@@ -283,9 +681,10 @@
                         <img src="${it.img}" width="48" height="48" style="object-fit:cover;border-radius:4px;">\
                         <div style="flex:1;">\
                             <div style="font-weight:700;color:#222;">${it.nombre}</div>\
-                            <div style="font-size:12px;color:#666;margin-top:3px;">${it.modelo} · <small>${it.nro_parte}</small></div>\
+                            <div style="font-size:12px;color:#666;margin-top:3px;">${it.modelo} &middot; <small>${it.nro_parte}</small></div>\
                         </div>\
                     </div>`).join('');
+
                 suggestionsBox.style.display = 'block';
             }
 
@@ -360,6 +759,18 @@
                 });
             }
 
+            // Sort order change
+            const ordenSelect = document.getElementById('preview-orden');
+            if (ordenSelect) {
+                ordenSelect.addEventListener('change', () => {
+                    const params = new URLSearchParams(window.location.search);
+                    params.set('orden', ordenSelect.value);
+                    params.delete('page');
+                    history.replaceState({}, '', window.location.pathname + '?' + params.toString());
+                    fetchProducts();
+                });
+            }
+
             // AJAX pagination via event delegation
             document.addEventListener('click', function(e) {
                 const link = e.target.closest('.page-link');
@@ -379,3 +790,4 @@
     </script>
     <script src="{{ asset('js/detallemod.js') }}"></script>
 @endsection
+

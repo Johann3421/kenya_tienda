@@ -1,34 +1,34 @@
 @extends('layouts.landing')
 
-@section('title', 'Catálogo')
+@section('title', 'CatÃ¡logo')
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">
             <li><a href="{{ url('/') }}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
             <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
-            <li class="kenya-active"><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
+            <li class="kenya-active"><a href="{{ route('catalogo') }}" class="kenya-nav-link">Cat&aacute;logo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            {{-- Sorteo temporalmente oculto en producción --}}
-            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
-            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
+            {{-- Sorteo temporalmente oculto en producciÃ³n --}}
+            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">ðŸŽ Sorteo</a></li> --}}
+            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">ContÃ¡ctenos</a></li>
         </ul>
     </nav>
 @endsection
 
 @section('content')
     <?php
-    // Configuración inicial
+    // ConfiguraciÃ³n inicial
     use App\Producto;
     use App\Modelo;
     use Illuminate\Support\Facades\DB;
 
-    // Obtener parámetros de filtro
+    // Obtener parÃ¡metros de filtro
     $busqueda = request('busqueda');
     $modeloId = request('modelo');
     $orden = request('orden', 'newest');
 
-    // Nuevos filtros por especificaciones técnicas
+    // Nuevos filtros por especificaciones tÃ©cnicas
     $procesador = request('procesador');
     $memoria_ram = request('memoria_ram');
     $almacenamiento = request('almacenamiento');
@@ -48,7 +48,7 @@
         ->where('pagina_web', 'SI')
         ->noSuspendido();
 
-    // Aplicar filtro de búsqueda
+    // Aplicar filtro de bÃºsqueda
     if ($busqueda) {
         $productosQuery->where('descripcion', 'LIKE', "%{$busqueda}%")->orWhere('nro_parte', 'LIKE', "%{$busqueda}%");
     }
@@ -58,7 +58,7 @@
         $productosQuery->where('modelo_id', $modeloId);
     }
 
-    // Aplicar filtros por especificaciones técnicas usando la tabla especificaciones
+    // Aplicar filtros por especificaciones tÃ©cnicas usando la tabla especificaciones
     if ($procesador) {
         $productosQuery->whereHas('especificaciones', function($q) use ($procesador) {
             $q->where('campo', 'Procesador')->where('descripcion', $procesador);
@@ -81,7 +81,7 @@
     }
     if ($unidad_optica) {
         $productosQuery->whereHas('especificaciones', function($q) use ($unidad_optica) {
-            $q->where('campo', 'Unidad Óptica')->where('descripcion', $unidad_optica);
+            $q->where('campo', 'Unidad Ã“ptica')->where('descripcion', $unidad_optica);
         });
     }
     if ($conectividad_lan) {
@@ -111,20 +111,20 @@
     }
     if ($ofimatica) {
         $productosQuery->whereHas('especificaciones', function($q) use ($ofimatica) {
-            $q->where('campo', 'Ofimática')->where('descripcion', $ofimatica);
+            $q->where('campo', 'OfimÃ¡tica')->where('descripcion', $ofimatica);
         });
     }
     if ($perifericos) {
         $productosQuery->whereHas('especificaciones', function($q) use ($perifericos) {
-            $q->where('campo', 'Periféricos')->where('descripcion', $perifericos);
+            $q->where('campo', 'PerifÃ©ricos')->where('descripcion', $perifericos);
         });
     }
     if ($tarjeta_video) {
         $productosQuery->where(function ($query) use ($tarjeta_video) {
             $query->whereHas('especificaciones', function ($q) use ($tarjeta_video) {
                 $q->where(function ($specQ) {
-                    $specQ->whereRaw("LOWER(TRIM(campo)) IN ('gráficos', 'graficos', 'tarjeta de video')")
-                          ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%gráf%'")
+                    $specQ->whereRaw("LOWER(TRIM(campo)) IN ('grÃ¡ficos', 'graficos', 'tarjeta de video')")
+                          ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%grÃ¡f%'")
                           ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%graf%'")
                           ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%tarjeta%video%'");
                 })->where('descripcion', $tarjeta_video);
@@ -132,7 +132,7 @@
         });
     }
 
-    // Aplicar ordenación
+    // Aplicar ordenaciÃ³n
     switch ($orden) {
         case 'nombre_asc':
             $productosQuery->orderBy('descripcion', 'asc');
@@ -161,12 +161,12 @@
     $memorias_ram = DB::table('especificaciones')->where('campo', 'Memoria Ram')->distinct()->pluck('descripcion')->sort();
     $almacenamientos = DB::table('especificaciones')->where('campo', 'Almacenamiento')->distinct()->pluck('descripcion')->sort();
     $sistemas_operativos = DB::table('especificaciones')->where('campo', 'Sistema Operativo')->distinct()->pluck('descripcion')->sort();
-    $unidades_opticas = DB::table('especificaciones')->where('campo', 'Unidad Óptica')->distinct()->pluck('descripcion')->sort();
+    $unidades_opticas = DB::table('especificaciones')->where('campo', 'Unidad Ã“ptica')->distinct()->pluck('descripcion')->sort();
     $conectividades_wlan = DB::table('especificaciones')->where('campo', 'Conectividad WLAN')->distinct()->pluck('descripcion')->sort();
     $conectividades_vga = DB::table('especificaciones')->where('campo', 'Conectividad VGA')->distinct()->pluck('descripcion')->sort();
     $conectividades_hdmi = DB::table('especificaciones')->where('campo', 'Conectividad HDMI')->distinct()->pluck('descripcion')->sort();
-    $ofimaticas = DB::table('especificaciones')->where('campo', 'Ofimática')->distinct()->pluck('descripcion')->sort();
-    $perifericos_list = DB::table('especificaciones')->where('campo', 'Periféricos')->distinct()->pluck('descripcion')->sort();
+    $ofimaticas = DB::table('especificaciones')->where('campo', 'OfimÃ¡tica')->distinct()->pluck('descripcion')->sort();
+    $perifericos_list = DB::table('especificaciones')->where('campo', 'PerifÃ©ricos')->distinct()->pluck('descripcion')->sort();
     $tarjetas_video_specs = DB::table('especificaciones')
         ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
         ->whereRaw("UPPER(productos.pagina_web) = 'SI'")
@@ -175,8 +175,8 @@
               ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
         })
         ->where(function ($q) {
-            $q->whereRaw("LOWER(TRIM(especificaciones.campo)) IN ('gráficos', 'graficos', 'tarjeta de video')")
-              ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%gráf%'")
+            $q->whereRaw("LOWER(TRIM(especificaciones.campo)) IN ('grÃ¡ficos', 'graficos', 'tarjeta de video')")
+              ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%grÃ¡f%'")
               ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%graf%'")
               ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%tarjeta%video%'");
         })
@@ -203,593 +203,409 @@
         ->values();
 
     // Paginar resultados (con eager loading si es necesario)
-    $productos = $productosQuery->with('modelo')->paginate(9);
+    $productos = $productosQuery->with('modelo')->paginate(8);
+
+    // Obtener Novedades para el componente de abajo
+    $novedades = Producto::with('modelo')
+        ->orderBy('created_at', 'DESC')
+        ->where('pagina_web', 'SI')
+        ->noSuspendido()
+        ->whereNull('precio_anterior')
+        ->take(16)
+        ->get();
     ?>
 
-    <section class="catalog-section">
-        <div class="container">
-            <!-- Hero Banner -->
-            <div class="catalog-hero">
-                <h1>Nuestro Catálogo de Productos</h1>
-                <p>Descubre nuestra amplia gama de productos de alta calidad</p>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-3">
-                    @include('partials.aside-catalogo', [
-                        'procesadores' => $procesadores,
-                        'memorias_ram' => $memorias_ram,
-                        'almacenamientos' => $almacenamientos,
-                        'sistemas_operativos' => $sistemas_operativos,
-                        'unidades_opticas' => $unidades_opticas,
-                        'conectividades_wlan' => $conectividades_wlan,
-                        'conectividades_vga' => $conectividades_vga,
-                        'conectividades_hdmi' => $conectividades_hdmi,
-                        'ofimaticas' => $ofimaticas,
-                        'perifericos_list' => $perifericos_list,
-                        'tarjetas_video' => $tarjetas_video
-                    ])
-                </div>
-                <div class="col-lg-9">
-                    <!-- Filtros y búsqueda -->
-                    <div class="catalog-filters">
-                <div class="row">
-                    <div class="col-md-6">
-                        <form method="GET" action="">
-                            <div class="search-box">
-                                <input type="text" name="busqueda" placeholder="Buscar productos..." class="search-input"
-                                    value="{{ request('busqueda') }}">
-                                <button type="submit" class="search-btn">
-                                    <i class="bx bx-search"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-md-6">
-                        <form method="GET" action="" id="filters-form">
-                            <input type="hidden" name="busqueda" value="{{ request('busqueda') }}">
-                            <div class="filter-controls">
-                                <!-- Filtro de modelos CORREGIDO -->
-                                <select name="modelo" class="category-filter"
-                                    onchange="document.getElementById('filters-form').submit()">
-                                    <option value="">Todos los modelos</option>
-                                    @foreach ($modelos as $modelo)
-                                        <option value="{{ $modelo->id }}"
-                                            {{ request('modelo') == $modelo->id ? 'selected' : '' }}>
-                                            {{ $modelo->descripcion }}
-                                        </option>
-                                    @endforeach
-                                </select>
-
-                                <!-- Filtro de ordenación MEJORADO -->
-                                <select name="orden" class="sort-filter"
-                                    onchange="document.getElementById('filters-form').submit()">
-                                    <option value="newest" {{ $orden == 'newest' ? 'selected' : '' }}>Más recientes
-                                    </option>
-                                    <option value="oldest" {{ $orden == 'oldest' ? 'selected' : '' }}>Más antiguos</option>
-                                    <option value="nombre_asc" {{ $orden == 'nombre_asc' ? 'selected' : '' }}>Nombre (A-Z)
-                                    </option>
-                                    <option value="nombre_desc" {{ $orden == 'nombre_desc' ? 'selected' : '' }}>Nombre
-                                        (Z-A)</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-grid">
-                <div class="row">
-                    @forelse($productos as $producto)
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
-                            <div class="product-card">
-                                @php
-                                    $stock = $producto->stock ?? '≥ 20';
-                                @endphp
-                                @if ($stock === 0 || $stock === '0')
-                                    <div class="product-badge out-of-stock">Agotado</div>
-                                @elseif(isset($producto->created_at) && \Carbon\Carbon::parse($producto->created_at)->diffInDays(now()) <= 30)
-                                    <div class="product-badge">Nuevo</div>
-                                @endif
-
-                                <div class="product-image">
-                                    @php
-                                        // Imagen del modelo como fallback si la imagen del producto falla
-                                        $modelImg = asset('producto.jpg');
-                                        if ($producto->modelo && !empty($producto->modelo->img_mod)) {
-                                            $modelImg = asset('storage/' . $producto->modelo->img_mod);
-                                        } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_url)) {
-                                            $modelImg = $producto->getCategoria->img_url;
-                                        }
-
-                                        if (!empty($producto->imagen_1)) {
-                                            // Tiene imagen propia – intenta storage/ primero (Docker), luego public/ (legacy)
-                                            $img    = asset('storage/' . $producto->imagen_1);
-                                            $imgFb  = asset($producto->imagen_1);
-                                            $imgFb2 = $modelImg;
-                                        } elseif (!empty($producto->imagen)) {
-                                            $img    = asset('storage/' . $producto->imagen);
-                                            $imgFb  = $modelImg;
-                                            $imgFb2 = asset('producto.jpg');
-                                        } else {
-                                            $img    = $modelImg;
-                                            $imgFb  = asset('producto.jpg');
-                                            $imgFb2 = asset('producto.jpg');
-                                        }
-                                    @endphp
-
-                                    <img src="{{ $img }}" alt="{{ $producto->display_name ?? 'Producto' }}" class="img-fluid"
-                                        onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
-
-                                    <div class="product-actions">
-                                        <button class="quick-view" data-id="{{ $producto->id }}">
-                                            <i class="bx bx-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="product-info">
-                                    <!-- CATEGORÍA (nombre del modelo) -->
-                                    <span class="product-category">
-                                        {{ $producto->modelo->nombre ?? ($producto->modelo->descripcion ?? 'Sin categoría') }}
-                                    </span>
-
-                                    <!-- NOMBRE DEL PRODUCTO -->
-                                    <h3 class="product-title">{{ $producto->display_name ?? 'Nombre no disponible' }}</h3>
-
-                                    <div class="product-details">
-                                        <p><strong>Parte:</strong> {{ $producto->nro_parte ?? 'N/A' }}</p>
-                                        <p><strong>Stock:</strong>
-                                            @php
-                                                $stock = $producto->stock ?? '≥ 20'; // Valor por defecto
-                                            @endphp
-                                            @if ($stock !== 0 && $stock !== '0')
-                                                <span class="in-stock">{{ $stock }} unidades</span>
-                                            @else
-                                                <span class="out-of-stock">No disponible</span>
-                                            @endif
-                                        </p>
-                                    </div>
-
-                                    <!-- Botón con nueva ruta de detalles -->
-                                    <button class="view-details"
-    onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
-    Ver detalles
-</button>
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <div class="alert alert-warning">No se encontraron productos.</div>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-
-
-            @if ($productos->hasPages())
-                <div class="catalog-pagination mt-4">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            {{-- Enlace Anterior --}}
-                            <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $productos->previousPageUrl() }}" aria-label="Anterior">
-                                    &laquo;
-                                </a>
-                            </li>
-
-                            {{-- Mostrar primera página --}}
-                            @if ($productos->currentPage() > 3)
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $productos->url(1) }}">1</a>
-                                </li>
-                                @if ($productos->currentPage() > 4)
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                @endif
-                            @endif
-
-                            {{-- Rango de páginas alrededor de la actual --}}
-                            @foreach (range(max(1, $productos->currentPage() - 2), min($productos->lastPage(), $productos->currentPage() + 2)) as $page)
-                                <li class="page-item {{ $productos->currentPage() == $page ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $productos->url($page) }}">{{ $page }}</a>
-                                </li>
-                            @endforeach
-
-                            {{-- Mostrar última página --}}
-                            @if ($productos->currentPage() < $productos->lastPage() - 2)
-                                @if ($productos->currentPage() < $productos->lastPage() - 3)
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                @endif
-                                <li class="page-item">
-                                    <a class="page-link"
-                                        href="{{ $productos->url($productos->lastPage()) }}">{{ $productos->lastPage() }}</a>
-                                </li>
-                            @endif
-
-                            {{-- Enlace Siguiente --}}
-                            <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $productos->nextPageUrl() }}" aria-label="Siguiente">
-                                    &raquo;
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </section>
     <style>
-        :root {
-            --primary-color: #ee7c31;
-            --secondary-color: #ca7b46;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-            --success-color: #2ecc71;
-            --warning-color: #f39c12;
-            --border-radius: 8px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+        .catalog-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+            border: 1px solid #eaeaea;
         }
 
-        /* Estilos generales */
-        .catalog-section {
-            padding: 2rem 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #f9f9f9;
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        /* Hero Banner */
-        .catalog-hero {
-            margin-top: 2.5rem;
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-        }
-
-        .catalog-hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .catalog-hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        /* Filtros */
-        .catalog-filters {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
-        }
-
-        .search-box {
+        .catalog-main-search {
             position: relative;
-            display: flex;
+            flex-grow: 1;
+            max-width: 500px;
         }
 
-        .search-input {
+        .catalog-main-search input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .search-input:focus {
-            border-color: var(--primary-color);
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            transition: border-color 0.3s;
         }
 
-        .search-btn {
+        .catalog-main-search input:focus {
+            border-color: #f26522;
+        }
+
+        .catalog-main-search i {
             position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 50px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
             cursor: pointer;
-            transition: var(--transition);
         }
 
-        .search-btn:hover {
-            background: var(--secondary-color);
+        .catalog-sort {
+            margin-left: 20px;
         }
 
-        .filter-controls {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .category-filter, .sort-filter {
-            flex: 1;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            background-color: white;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .category-filter:focus, .sort-filter:focus {
-            border-color: var(--primary-color);
+        .custom-sort-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #444;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background: #fafafa;
+            cursor: pointer;
+            transition: border-color 0.3s;
+            min-width: 210px;
         }
 
-        /* Product Grid */
-        .product-grid {
-            margin-top: 2rem;
-            margin-bottom: 2rem;
+        .custom-sort-select:focus {
+            border-color: #f26522;
+        }
+
+        @media (max-width: 600px) {
+            .catalog-top-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            .catalog-sort {
+                margin-left: 0;
+            }
+            .custom-sort-select {
+                min-width: 100%;
+                width: 100%;
+            }
+        }
+
+        .page-banner {
+            position: relative;
+            width: 100%;
+            height: 284px; 
+            background-color: #333;
+            background-image: url('{{ asset("banercatalogo.png") }}'); 
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .page-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.35); 
+            z-index: 1;
+        }
+
+        .page-banner .banner-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .page-banner h1 {
+            color: #000000;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: 1px;
+            text-shadow: 0px 0px 0px rgba(0,0,0,0.0);
+        }
+
+        @media (max-width: 768px) {
+            .page-banner { height: 100px; }
+            .page-banner h1 { font-size: 1.5rem; }
+        }
+
+        .catalog-section {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            padding: 40px 0;
+            align-items: start;
+        }
+
+        .catalog-sidebar {
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 20px 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: static;
+        }
+
+        .filter-group { margin-bottom: 25px; }
+        .filter-group label { display: block; font-size: 0.9rem; color: #555; margin-bottom: 8px; font-weight: 500; }
+        .custom-select {
+            width: 100%; padding: 10px 15px; border: 1px solid #ddd; border-radius: 6px;
+            font-size: 0.9rem; color: #333; outline: none; appearance: none;
+            background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10"><path fill="%23333" d="M7 10L0 0h14z"/></svg>') no-repeat right 15px center;
+            background-size: 10px; background-color: #fff; cursor: pointer; transition: border-color 0.3s;
+        }
+        .custom-select:focus { border-color: #f26522; }
+
+        .filter-title {
+            font-size: 1.1rem; color: #333; padding-bottom: 10px; margin-bottom: 15px;
+            border-bottom: 3px solid #f26522; font-weight: 600;
+        }
+
+        /* --- Contenido Principal (Productos) --- */
+        .catalog-main { display: flex; flex-direction: column; gap: 20px; }
+        
+        .search-box { position: relative; }
+        .search-input {
+            width: 100%; padding: 15px 20px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 1rem; outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .search-input:focus { border-color: #f26522; box-shadow: 0 0 8px rgba(242, 101, 34, 0.15); }
+        .search-btn {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; font-size: 1.2rem; color: #777; cursor: pointer;
+        }
+        .search-btn:hover { color: #f26522; }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(253px, 1fr));
+            gap: 12px;
         }
 
         .product-card {
-            position: relative;
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            height: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #eaeaea;
+            padding: 15px 15px;
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-color: #ddd;
         }
 
-        .product-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: white;
-            z-index: 2;
-        }
-
-        .product-badge.out-of-stock {
-            background-color: var(--accent-color);
-        }
-
-        .product-badge {
-            background-color: var(--success-color);
-        }
-
-        .product-image {
+        .product-image-wrapper {
             position: relative;
-            overflow: hidden;
-            padding-top: 75%; /* 4:3 Aspect Ratio */
-        }
-
-        .product-image img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-
-        .product-actions {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            height: 200px;
             display: flex;
-            gap: 0.5rem;
-            z-index: 2;
-        }
-
-        .quick-view {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: none;
-            color: var(--dark-color);
-            display: flex;
-            align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            align-items: center;
         }
 
-        .quick-view:hover {
-            background-color: white;
-            color: var(--primary-color);
-            transform: scale(1.1);
+        .product-image-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
         }
 
-        .product-info {
-            padding: 1.5rem;
-            flex-grow: 1;
+        .product-logos {
+            position: absolute;
+            width: 100%;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0 10px;
+            pointer-events: none;
         }
 
-        .product-category {
-            font-size: 0.9rem;
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .product-logos img {
+            height: 25px;
+            opacity: 0.8;
         }
 
         .product-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .product-details {
-            margin-bottom: 1.5rem;
-        }
-
-        .product-details p {
-            margin-bottom: 0.5rem;
             font-size: 0.95rem;
-            color: #555;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            font-weight: 700;
         }
 
-        .product-details strong {
-            color: var(--dark-color);
+        .product-pn {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 0px;
         }
 
-        .in-stock {
-            color: var(--success-color);
-            font-weight: 600;
-        }
-
-        .out-of-stock {
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-
-        .view-details {
-            margin-top: auto;
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .product-stock {
             font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 20px;
+            flex-grow: 1; 
         }
 
-        .view-details:hover {
-            background-color: var(--secondary-color);
+        .product-stock span {
+            color: #2ecca6; 
+            font-weight: 700;
         }
 
-        /* Paginación */
-        .catalog-pagination {
-            margin-top: 3rem;
+        .btn-details {
+            width: 100%;
+            background-color: #f07b3f; 
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        .btn-details:hover {
+            background-color: #d96225;
+        }
+        
+        .btn-details:active {
+            transform: scale(0.98);
+        }
+
+        /* ==========================================
+           PAGINACIÓN
+           ========================================== */
+        .pagination-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            margin-bottom: 0px;
+            flex-wrap: wrap;
         }
 
         .pagination {
             display: flex;
-            gap: 0.5rem;
+            gap: 8px;
+            align-items: center;
         }
 
-        .page-item.disabled .page-link {
-            opacity: 0.5;
-            pointer-events: none;
+        .page-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0 10px;
+            background-color: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            color: #777;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
-        .page-item.active .page-link {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
+        .page-item:hover:not(.dots) {
+            border-color: #f26522;
+            color: #f26522;
         }
 
-        .page-link {
-            padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            color: var(--dark-color);
-            transition: var(--transition);
+        .page-item.active {
+            background-color: #f07b3f;
+            color: #ffffff;
+            border-color: #f07b3f;
+            font-weight: 600;
         }
 
-        .page-link:hover {
-            background-color: #f8f9fa;
-            border-color: #ddd;
+        .page-item.dots {
+            cursor: default;
         }
 
-        /* Alertas */
-        .alert {
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-        }
-
-        .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .filter-controls {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .catalog-hero h1 {
-                font-size: 2rem;
-            }
-
-            .product-title {
-                font-size: 1.1rem;
-            }
+        .products-count {
+            color: #777;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         @media (max-width: 992px) {
-            .col-lg-3 {
-                display: none;
-            }
-            .col-lg-9 {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .catalog-filters .row > div {
-                margin-bottom: 1rem;
-            }
-
-            .product-card {
-                max-width: 320px;
-                margin-left: auto;
-                margin-right: auto;
-            }
+            .catalog-section { grid-template-columns: 1fr; }
         }
     </style>
+
+    <div class="page-banner">
+        <div class="banner-content">
+            <h1>Catálogo Electrónico de Acuerdo Marco</h1>
+        </div>
+    </div>
+
+    <main class="container catalog-section">
+        
+        <aside class="catalog-sidebar">
+            @include('partials.aside-catalogo', [
+                'procesadores' => $procesadores,
+                'memorias_ram' => $memorias_ram,
+                'almacenamientos' => $almacenamientos,
+                'sistemas_operativos' => $sistemas_operativos,
+                'unidades_opticas' => $unidades_opticas,
+                'conectividades_wlan' => $conectividades_wlan,
+                'conectividades_vga' => $conectividades_vga,
+                'conectividades_hdmi' => $conectividades_hdmi,
+                'ofimaticas' => $ofimaticas,
+                'perifericos_list' => $perifericos_list,
+                'tarjetas_video' => $tarjetas_video
+            ])
+        </aside>
+
+        <div class="catalog-main">
+            <!-- Barra Superior de CatÃ¡logo -->
+            <form method="GET" action="" id="catalog-form">
+                <div class="catalog-top-bar">
+                    <div class="catalog-main-search">
+                        <input type="text" name="busqueda" placeholder="Buscar productos por nombre o parte..." value="{{ request('busqueda') }}">
+                        <button type="submit" style="background:none;border:none;padding:0;">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="catalog-sort">
+                        <select name="orden" class="custom-sort-select" onchange="document.getElementById('catalog-form').submit()">
+                            <option value="newest" {{ $orden == 'newest' ? 'selected' : '' }}>MÃ¡s recientes</option>
+                            <option value="oldest" {{ $orden == 'oldest' ? 'selected' : '' }}>MÃ¡s antiguos</option>
+                            <option value="nombre_asc" {{ $orden == 'nombre_asc' ? 'selected' : '' }}>Nombre (A-Z)</option>
+                            <option value="nombre_desc" {{ $orden == 'nombre_desc' ? 'selected' : '' }}>Nombre (Z-A)</option>
+                        </select>
+                    </div>
+
+                    <!-- Filtro oculto de modelo para mantener el estado -->
+                    @if(request('modelo'))
+                        <input type="hidden" name="modelo" value="{{ request('modelo') }}">
+                    @endif
+                </div>
+            </form>
+
+            <!-- Listado de productos -->
+            <div class="row">
+                <div class="col-md-12">
+                              @include('partials.catalogo-products', ['productos' => $productos])
+        </div>
+    </main>
+
     <!-- Scripts para funcionalidad -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -807,7 +623,7 @@
             }
 
             function filterProducts() {
-                // Aquí iría la lógica para filtrar/ordenar los productos
+                // AquÃ­ irÃ­a la lÃ³gica para filtrar/ordenar los productos
                 console.log('Filtrando productos...');
             }
 
@@ -815,8 +631,8 @@
             const quickViewButtons = document.querySelectorAll('.quick-view');
             quickViewButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Lógica para mostrar vista rápida del producto
-                    console.log('Mostrando vista rápida');
+                    // LÃ³gica para mostrar vista rÃ¡pida del producto
+                    console.log('Mostrando vista rÃ¡pida');
                 });
             });
 
@@ -824,11 +640,16 @@
             const wishlistButtons = document.querySelectorAll('.add-wishlist');
             wishlistButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Lógica para añadir a wishlist
-                    console.log('Añadiendo a wishlist');
+                    // LÃ³gica para aÃ±adir a wishlist
+                    console.log('AÃ±adiendo a wishlist');
                 });
             });
         });
     </script>
+
+    @include('components.novedades', ['novedades' => $novedades])
+
 @endsection
+
+
 

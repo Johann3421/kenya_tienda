@@ -45,7 +45,7 @@ class CatalogoController extends Controller
             default: $productosQuery->orderBy('created_at','desc'); break;
         }
 
-        $productos = $productosQuery->with('modelo')->paginate(9);
+        $productos = $productosQuery->with('modelo')->paginate(8);
 
         $novedades = \App\Producto::with('modelo')
             ->orderBy('created_at', 'DESC')
@@ -55,7 +55,8 @@ class CatalogoController extends Controller
             ->take(16)
             ->get();
 
-        return view('catalogo-preview', compact('modelos', 'productos', 'novedades'));
+        $id = null;
+        return view('catalogo-preview', compact('modelos', 'productos', 'novedades', 'id'));
     }
 
     private function applySpecFilters($query, Request $request)
@@ -196,7 +197,7 @@ class CatalogoController extends Controller
 
         $this->applySpecFilters($productosQuery, $request);
 
-        $productos = $productosQuery->orderBy('created_at', 'desc')->paginate(9);
+        $productos = $productosQuery->orderBy('created_at', 'desc')->paginate(8);
 
         $novedades = \App\Producto::with('modelo')
             ->orderBy('created_at', 'DESC')
@@ -206,7 +207,7 @@ class CatalogoController extends Controller
             ->take(16)
             ->get();
 
-        return view('catalogo-modelo', compact('modelo', 'modelos', 'productos', 'id', 'novedades'));
+        return view('catalogo-preview', compact('modelo', 'modelos', 'productos', 'id', 'novedades'));
     }
 
     // Return the aside filters partial for a given modelo (used by preview AJAX)
@@ -249,7 +250,7 @@ class CatalogoController extends Controller
             default: $productosQuery->orderBy('created_at','desc'); break;
         }
 
-        $productos = $productosQuery->with('modelo')->paginate(9);
+        $productos = $productosQuery->with('modelo')->paginate(8);
 
         return view('partials.catalogo-products', compact('productos'));
     }
