@@ -560,7 +560,9 @@ body {
         </nav>
     </header><!-- End Header -->
 @endif
-    @yield('content')
+    <main id="main">
+        @yield('content')
+    </main>
 
     @hasSection('hide_header_footer')
         {{-- No mostrar footer --}}

@@ -46,3 +46,27 @@ Route::get('banners', [BannerMedioApiController::class, 'index']);
 Route::get('banners/{id}', [BannerMedioApiController::class, 'show']);
 Route::get('banners/posicion/{posicion}', [BannerMedioApiController::class, 'porPosicion']);
 Route::post('/productos/especificaciones/import', [ProductoController::class, 'importarEspecificaciones']);
+
+// ── Endpoint de sincronización de garantias ─────────────────────────────────
+// Solo accesible con token secreto. Usado por el comando `php artisan garantia:sync`
+// para copiar datos de producción al entorno local durante desarrollo.
+Route::get('garantia/export', function (\Illuminate\Http\Request $request) {
+    $expectedToken = env('GARANTIA_SYNC_TOKEN', '');
+
+    // Si no hay token configurado, el endpoint está desactivado
+    if ($expectedToken === '') {
+        return response()->json(['error' => 'Endpoint no configurado.'], 403);
+    }
+
+    if ($request->token !== $expectedToken) {
+        return response()->json(['error' => 'Token inválido.'], 401);
+    }
+
+    $garantias = \Illuminate\Support\Facades\DB::table('garantia')->orderBy('id')->get();
+
+    return response()->json([
+        'status' => 'ok',
+        'total'  => $garantias->count(),
+        'data'   => $garantias,
+    ]);
+});

@@ -224,10 +224,10 @@ body {
 /* ─── 6. CATÁLOGO / GRILLA ──────────────────────────────────────────────────── */
 /* Reducir padding general de secciones */
 .section,
-section {
+/*section {
     padding-top: 45px !important;
     padding-bottom: 45px !important;
-}
+}*/
 
 /* Encabezados de sección */
 .section-title h2 {

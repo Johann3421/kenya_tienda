@@ -7,8 +7,6 @@
             <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catalogo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li class="kenya-active"><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            {{-- Sorteo temporalmente oculto en producción --}}
-            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
             <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
     </nav>
@@ -19,7 +17,7 @@
         #garantia .container { max-width: 1400px; margin: 0 auto; width: 100%; padding: 0; }
 
         #garantia .support-hero {
-            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banersoporte.png") }}') center/cover no-repeat;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('/landing/img/slide/slide-1.jpg') center/cover no-repeat;
             padding: 90px 20px; text-align: left;
         }
         #garantia .support-hero h1 { font-size: 2.8rem; color: #000; font-weight: 400; margin-bottom: -3px; }
@@ -95,60 +93,16 @@
         #garantia .stage-labels span.active:nth-child(3) { background-color: #FFC107; }
         #garantia .stage-labels span.active:nth-child(4) { background-color: #4CAF50; }
 
-        /* ---- Drivers accordion ---- */
         #garantia .drivers-container { display: none; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); }
-        #garantia .drivers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-        #garantia .drivers-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        #garantia .filter-pill {
-            background: #f4f4f4; border: 1px solid #ddd; color: #555; padding: 6px 16px;
-            border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        #garantia .drivers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        #garantia .driver-card {
+            padding: 35px 20px; text-align: center; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; min-height: 140px; position: relative;
+            background: #f9f9f9; border-radius: 8px; transition: all 0.3s ease;
         }
-        #garantia .filter-pill.active { background: linear-gradient(to right,#ff3c00,#ff9c00); color:#fff; border-color: transparent; }
-        #garantia .view-icons { display: flex; gap: 10px; color: #aaa; font-size: 1.1rem; }
-        #garantia .view-icons i { cursor: pointer; transition: color 0.2s; }
-        #garantia .view-icons i.active-view { color: #f26522; }
-        #garantia .drivers-list-view { display: flex; flex-direction: column; gap: 12px; }
-        #garantia .driver-accordion-group { border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
-        #garantia .driver-accordion-trigger {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 16px 20px; background: #fafafa; cursor: pointer; transition: background 0.2s;
-        }
-        #garantia .driver-accordion-trigger:hover { background: #f0f0f0; }
-        #garantia .card-icon-title { display: flex; align-items: center; gap: 14px; font-weight: 700; color: #333; font-size: 0.95rem; }
-        #garantia .card-icon-title i { font-size: 1.3rem; color: #f26522; width: 24px; text-align: center; }
-        #garantia .toggle-icon { color: #aaa; font-size: 0.85rem; transition: transform 0.25s; }
-        #garantia .driver-accordion-group.open .toggle-icon { transform: rotate(180deg); }
-        #garantia .accordion-content { display: none; padding: 0 20px; background: #fff; }
-        #garantia .driver-accordion-group.open .accordion-content { display: block; }
-        #garantia .driver-file-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 14px 0; border-bottom: 1px solid #f0f0f0; gap: 16px; flex-wrap: wrap;
-        }
-        #garantia .driver-file-item:last-child { border-bottom: none; }
-        #garantia .file-details { flex: 1; min-width: 0; }
-        #garantia .file-details h4 { font-size: 0.9rem; color: #333; margin: 0 0 6px; font-weight: 600; }
-        #garantia .file-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.78rem; color: #777; }
-        #garantia .file-meta span strong { color: #555; }
-
-        /* ---- Drivers Grid View ---- */
-        #garantia .drivers-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
-        #garantia .driver-card-grid {
-            padding: 25px 15px; text-align: center; display: flex; flex-direction: column;
-            align-items: center; min-height: 180px; position: relative;
-            background: #f9f9f9; border-radius: 12px; transition: all 0.3s ease; border: 1px solid #eee;
-        }
-        #garantia .driver-card-grid:hover { border-color: #f26522; box-shadow: 0 5px 20px rgba(242,101,34,0.1); transform: translateY(-3px); }
-        #garantia .driver-card-grid .icon-wrapper {
-            width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-            display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
-        }
-        #garantia .driver-card-grid .icon-wrapper i { font-size: 1.8rem; color: #f26522; margin: 0; }
-        #garantia .driver-card-grid h4.driver-cat { font-size: 0.95rem; font-weight: 700; color: #333; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.02em; }
-        #garantia .driver-card-grid span.driver-name {
-            font-size: 0.75rem; color: #777; margin-bottom: 15px; 
-            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-            text-overflow: ellipsis; line-height: 1.3;
-        }
+        #garantia .driver-card:hover { border-color: #e0e0e0; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        #garantia .driver-card i { font-size: 2.2rem; color: #333; margin-bottom: 15px; }
+        #garantia .driver-card span { font-size: 0.95rem; color: #222; font-weight: 500; }
 
         #garantia .video-gallery-container { display: none; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); }
         #garantia .video-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
@@ -253,7 +207,7 @@
         </div>
 
         <div v-if="state == 'success' && !loading">
-            <article class="result-card" id="tab-garantia-content">
+            <article class="result-card">
                 <div class="result-image">
                     <img src="{{ asset('producto.jpg') }}" alt="Producto">
                 </div>
@@ -314,64 +268,16 @@
                 </div>
             </article>
 
-            <div class="drivers-container" style="display: none; margin-top: 0;" id="tab-controladores-content">
-                <div class="drivers-header">
-                    <div class="drivers-filters">
-                        <button class="filter-pill active">Todas las actualizaciones (@{{ filteredDrivers.length }})</button>
-                    </div>
-                    <div class="view-icons">
-                        <i class="fa-solid fa-table-cells-large" :class="{'active-view': viewMode === 'grid'}" @click="viewMode = 'grid'"></i>
-                        <i class="fa-solid fa-list" :class="{'active-view': viewMode === 'list'}" @click="viewMode = 'list'"></i>
+            <div class="drivers-container" style="display: block; margin-top: 30px;">
+                <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-microchip"></i> CONTROLADORES</h3>
+                <div v-if="filteredDrivers.length > 0" class="drivers-grid">
+                    <div v-for="driver in filteredDrivers" class="driver-card">
+                        <i class="fa-solid fa-download"></i>
+                        <span>@{{ driver.nombre }}</span>
+                        <a :href="'../storage/' + driver.link" target="_blank" class="btn-outline" style="margin-top: 10px;"><i class="fa-solid fa-download"></i> Descargar</a>
                     </div>
                 </div>
-
-                <div v-if="filteredDrivers.length > 0">
-                    
-                    <!-- VISTA DE LISTA (ACORDEÓN) -->
-                    <div class="drivers-list-view" v-if="viewMode === 'list'">
-                        <div v-for="(drivers, categoria) in driversByCategory" class="driver-accordion-group" :key="categoria">
-                            <div class="driver-accordion-trigger" @click="toggleAccordion($event)">
-                                <div class="card-icon-title">
-                                    <i :class="getCategoryIcon(categoria)"></i>
-                                    <span>@{{ categoria }} (@{{ drivers.length }})</span>
-                                </div>
-                                <i class="fa-solid fa-chevron-down toggle-icon"></i>
-                            </div>
-                            <div class="accordion-content">
-                                <div v-for="driver in drivers" class="driver-file-item" :key="driver.id">
-                                    <div class="file-details">
-                                        <h4>@{{ driver.nombre }}</h4>
-                                        <div class="file-meta">
-                                            <span v-if="driver.version"><strong>Versión:</strong> @{{ driver.version }}</span>
-                                            <span v-if="driver.liberado"><strong>Fecha:</strong> @{{ driver.liberado }}</span>
-                                            <span v-if="driver.tamano"><strong>Tamaño:</strong> @{{ driver.tamano }} @{{ driver.unidad }}</span>
-                                            <span v-if="driver.gravedad"><strong>Gravedad:</strong> @{{ driver.gravedad }}</span>
-                                        </div>
-                                    </div>
-                                    <a :href="'../storage/' + driver.link" target="_blank" class="btn-outline">
-                                        <i class="fa-solid fa-download"></i> Descargar
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- VISTA DE CUADRÍCULA (GRID) -->
-                    <div class="drivers-grid-view" v-if="viewMode === 'grid'">
-                        <div v-for="driver in filteredDrivers" class="driver-card-grid" :key="driver.id">
-                            <div class="icon-wrapper">
-                                <i :class="getCategoryIcon(driver.categoria)"></i>
-                            </div>
-                            <h4 class="driver-cat">@{{ driver.categoria }}</h4>
-                            <span class="driver-name" :title="driver.nombre">@{{ driver.nombre }}</span>
-                            <a :href="'../storage/' + driver.link" target="_blank" class="btn-outline" style="margin-top: auto;">
-                                <i class="fa-solid fa-download"></i> Descargar
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-                <div v-else class="no-data"><i class="fa-solid fa-magnifying-glass"></i> Sin controladores disponibles para este producto</div>
+                <div v-else class="no-data"><i class="fa-solid fa-search"></i> Sin controladores disponibles para este producto</div>
             </div>
         </div>
 
@@ -467,7 +373,7 @@
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
         }
     </script>
-    <script src="{{ asset('js/consultar/garantia.js') }}?v=5"></script>
+    <script src="{{ asset('js/consultar/garantia.js') }}?v=2"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
     <script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
     <script>
@@ -481,20 +387,15 @@
                     const target = this.getAttribute('data-target');
                     if (target === 'tab-garantia') {
                         document.getElementById('main-results-container').style.display = '';
-                        const gContent = document.getElementById('tab-garantia-content');
-                        if (gContent) gContent.style.display = '';
-                        const cContent = document.getElementById('tab-controladores-content');
-                        if (cContent) cContent.style.display = 'none';
                         document.getElementById('tab-galeria-content').style.display = 'none';
                         document.getElementById('tab-terminos-content').style.display = 'none';
                     } else if (target === 'tab-controladores') {
                         document.getElementById('main-results-container').style.display = '';
-                        const gContent = document.getElementById('tab-garantia-content');
-                        if (gContent) gContent.style.display = 'none';
-                        const cContent = document.getElementById('tab-controladores-content');
-                        if (cContent) cContent.style.display = 'block';
                         document.getElementById('tab-galeria-content').style.display = 'none';
                         document.getElementById('tab-terminos-content').style.display = 'none';
+                        // scroll to drivers section
+                        const drivers = document.querySelector('.drivers-container');
+                        if (drivers) drivers.scrollIntoView({ behavior: 'smooth' });
                     } else if (target === 'tab-galeria') {
                         document.getElementById('main-results-container').style.display = 'none';
                         document.getElementById('tab-galeria-content').style.display = 'block';
@@ -509,6 +410,12 @@
                 });
             });
 
+            // Switch to terms tab from warranty link
+            const switchTab = function(tab) {
+                if (tab === 'terminos') {
+                    document.querySelector('.support-tab[data-target="tab-terminos"]').click();
+                }
+            };
             document.querySelectorAll('.warranty-link').forEach(el => {
                 el.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -613,17 +520,20 @@
                 resizeTO = setTimeout(function() { if (pdfRendered) renderMainPDF(currentScale); }, 300);
             });
 
-            // Auto-search por sessionStorage o URL param
+            // Session storage auto-search
             setTimeout(() => {
                 const seriedelStorage = sessionStorage.getItem('garantia_serie');
                 const urlParams = new URLSearchParams(window.location.search);
                 const serieUrl = urlParams.get('serie');
                 const serie = seriedelStorage || serieUrl;
                 if (serie) {
-                    const vueApp = document.querySelector('#garantia');
-                    if (vueApp && vueApp.__vue__) {
-                        vueApp.__vue__.search = serie;
-                        vueApp.__vue__.Buscar();
+                    const input = document.querySelector('#garantia input');
+                    if (input) {
+                        const vueApp = document.querySelector('#garantia');
+                        if (vueApp && vueApp.__vue__) {
+                            vueApp.__vue__.search = serie;
+                            vueApp.__vue__.Buscar();
+                        }
                     }
                 }
             }, 500);

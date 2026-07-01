@@ -8,67 +8,94 @@ new Vue({
         state: null,
         whatsapp: my_whatsapp,
         vencido: mi_fecha,
-        tabsEnabled: false, // Nueva variable para controlar las pestañas
-        warrantyStage: 'new',
-        diasRestantes: 0,
+        tabsEnabled: false,
         mesesTotalesGarantia: 0,
+        viewMode: 'grid',
     },
     computed: {
-    filteredDrivers() {
-        if (!this.garantia.get_driversprod || !this.garantia.get_driversprod.get_drivers) return [];
-        return this.garantia.get_driversprod.get_drivers.filter(driver => {
-            // Si no tiene serie, mostrar siempre
-            if (!driver.serie || driver.serie.length === 0) return true;
-            // Si tiene serie como array, mostrar si alguna coincide con la buscada
-            if (Array.isArray(driver.serie)) {
-                return driver.serie.map(s => s.toUpperCase()).includes(this.search.toUpperCase());
-            }
-            // Si por alguna razón sigue siendo string, compara igual
-            return driver.serie.toUpperCase() === this.search.toUpperCase();
-        });
-    }
-},
+        filteredDrivers() {
+            if (!this.garantia.get_driversprod || !this.garantia.get_driversprod.get_drivers) return [];
+            return this.garantia.get_driversprod.get_drivers.filter(driver => {
+                if (!driver.serie || driver.serie.length === 0) return true;
+                if (Array.isArray(driver.serie)) {
+                    return driver.serie.map(s => s.toUpperCase()).includes(this.search.toUpperCase());
+                }
+                return driver.serie.toUpperCase() === this.search.toUpperCase();
+            });
+        },
+        porcentajeGarantia() {
+            if (!this.garantia || !this.garantia.fecha_venta || !this.garantia.fecha_Vencimiento) return 0;
+            const fechaInicio = new Date(this.garantia.fecha_venta);
+            const fechaFin = new Date(this.garantia.fecha_Vencimiento);
+            const hoy = new Date();
+
+            const diasTotales = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
+            const diasRest = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+
+            const porcentajeRestante = (diasRest / diasTotales) * 100;
+            return Math.max(0, Math.min(100, porcentajeRestante));
+        },
+        warrantyStage() {
+            if (!this.garantia || !this.garantia.fecha_Vencimiento) return 'new';
+            const fechaFin = new Date(this.garantia.fecha_Vencimiento);
+            const hoy = new Date();
+            const diasRest = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+            const porcentaje = this.porcentajeGarantia;
+
+            if (diasRest <= 0) return 'expired';
+            if (porcentaje <= 20) return 'ending';
+            if (porcentaje <= 50) return 'mid';
+            return 'new';
+        },
+        diasRestantes() {
+            if (!this.garantia || !this.garantia.fecha_Vencimiento) return 0;
+            const fechaFin = new Date(this.garantia.fecha_Vencimiento);
+            const hoy = new Date();
+            return Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+        },
+        warrantyStageClass() {
+            return {
+                'new-stage': this.warrantyStage === 'new',
+                'mid-stage': this.warrantyStage === 'mid',
+                'ending-stage': this.warrantyStage === 'ending',
+                'expired-stage': this.warrantyStage === 'expired',
+                'progress-bar-animated': this.warrantyStage === 'ending',
+                'progress-bar-striped': this.warrantyStage === 'ending'
+            };
+        },
+        driversByCategory() {
+            if (!this.filteredDrivers || this.filteredDrivers.length === 0) return {};
+            return this.filteredDrivers.reduce((groups, driver) => {
+                const cat = driver.categoria || 'General';
+                if (!groups[cat]) groups[cat] = [];
+                groups[cat].push(driver);
+                return groups;
+            }, {});
+        }
+    },
     methods: {
-
-        calcularPorcentajeGarantia() {
-    const fechaInicio = new Date(this.garantia.fecha_venta);
-    const fechaFin = new Date(this.garantia.fecha_Vencimiento);
-    const hoy = new Date();
-
-    // Calcular días totales y restantes
-    const diasTotales = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
-    this.diasRestantes = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
-
-    // Calcular porcentaje de tiempo RESTANTE (no transcurrido)
-    const porcentajeRestante = (this.diasRestantes / diasTotales) * 100;
-
-    // Determinar la etapa de la garantía
-    if (this.diasRestantes <= 0) {
-        this.warrantyStage = 'expired';
-    } else if (porcentajeRestante <= 20) {
-        this.warrantyStage = 'ending';  // Últimos 20% del tiempo
-    } else if (porcentajeRestante <= 50) {
-        this.warrantyStage = 'mid';     // Entre 20-50% del tiempo restante
-    } else {
-        this.warrantyStage = 'new';     // Más del 50% del tiempo restante
-    }
-
-    // Retornar porcentaje RESTANTE (para que la barra se vacíe)
-    return Math.max(0, Math.min(100, porcentajeRestante));
-},
-    getWarrantyStageClass() {
-        return {
-            'new-stage': this.warrantyStage === 'new',
-            'mid-stage': this.warrantyStage === 'mid',
-            'ending-stage': this.warrantyStage === 'ending',
-            'expired-stage': this.warrantyStage === 'expired',
-            'progress-bar-animated': this.warrantyStage === 'ending',
-            'progress-bar-striped': this.warrantyStage === 'ending'
-        };
-    },
-    showDaysCount() {
-        return this.warrantyStage !== 'expired' && this.diasRestantes <= 60;
-    },
+        getCategoryIcon(categoria) {
+            const map = {
+                'AUDIO':       'fa-solid fa-volume-high',
+                'CHIPSET':     'fa-solid fa-microchip',
+                'LAN':         'fa-solid fa-network-wired',
+                'SATA RAID':   'fa-solid fa-hard-drive',
+                'VGA':         'fa-solid fa-desktop',
+                'WLAN':        'fa-solid fa-wifi',
+                'BLUETOOTH':   'fa-brands fa-bluetooth-b',
+                'USB':         'fa-solid fa-plug',
+                'BIOS':        'fa-solid fa-memory',
+                'GENERAL':     'fa-solid fa-gear',
+            };
+            return map[(categoria || '').toUpperCase()] || 'fa-solid fa-gear';
+        },
+        toggleAccordion(event) {
+            const group = event.currentTarget.closest('.driver-accordion-group');
+            if (group) group.classList.toggle('open');
+        },
+        showDaysCount() {
+            return this.warrantyStage !== 'expired' && this.diasRestantes <= 60;
+        },
         Buscar() {
             this.errors = [];
             this.garantia = [];
@@ -127,10 +154,6 @@ new Vue({
         },
     },
     mounted() {
-
-    if (this.state == 'success') {
-        this.calcularPorcentajeGarantia();
-        setInterval(this.calcularPorcentajeGarantia, 86400000); // Actualiza cada 24 horas
+        // Los computed properties calculan porcentaje y estado reactivamente
     }
-},
 });
