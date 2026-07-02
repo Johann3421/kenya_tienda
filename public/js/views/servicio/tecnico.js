@@ -375,7 +375,7 @@ new Vue({
                     this.falla = seleccion.falla || null;
                     this.diagnostico = seleccion.diagnostico || null;
                     //PIEZAS RETIRADAS MULTIPLES
-                    this.piezas_retiradas_multiple = seleccion.piezas_retiradas_multiple ? JSON.parse(seleccion.piezas_retiradas_multiple) : [{ nombre: '', serie: '', falla: '' }];
+                    this.piezas_retiradas_multiple = seleccion.piezas_retiradas_multiple ? (typeof seleccion.piezas_retiradas_multiple === 'string' ? JSON.parse(seleccion.piezas_retiradas_multiple) : seleccion.piezas_retiradas_multiple) : [{ nombre: '', serie: '', falla: '' }];
                     this.piezas_adicionales_texto = seleccion.piezas_adicionales_texto || '';
                     //DETALLES
                     this.listDetalles = seleccion.get_detalles;
