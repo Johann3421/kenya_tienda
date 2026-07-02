@@ -19,7 +19,7 @@
     <style>
 .contact-banner {
             /* Puedes cambiar esta URL por la imagen real que desees de fondo */
-            background-image: linear-gradient(rgba(255 255 255 / 50%), rgba(255 255 255 / 50%)), url('banercontacto.png');
+            background-image: linear-gradient(rgba(255 255 255 / 50%), rgba(255 255 255 / 50%)), url('banercontacto.png?v=2');
             background-size: cover;
             background-position: right;
             color: #000000;
@@ -252,7 +252,7 @@
     
     </style>
 
-    <section class="contact-banner" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset('banercontacto.png') }}');">
+    <section class="contact-banner" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset('banercontacto.png?v=2') }}');">
         <div class="container">
             <h1>Comunicate con Nosotros</h1>
             <p>Ponemos a tu disposición todos nuestros canales para atenderte donde estés</p>

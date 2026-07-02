@@ -19,7 +19,7 @@
         #garantia .container { max-width: 1400px; margin: 0 auto; width: 100%; padding: 0; }
 
         #garantia .support-hero {
-            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banersoporte.png") }}') center/cover no-repeat;
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banersoporte.png?v=2") }}') center/cover no-repeat;
             padding: 90px 20px; text-align: left;
         }
         #garantia .support-hero h1 { font-size: 2.8rem; color: #000; font-weight: 400; margin-bottom: -3px; }

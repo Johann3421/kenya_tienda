@@ -66,7 +66,7 @@
             width: 100%;
             display: flex;
             align-items: center;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banernovedades.png") }}');
+            background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banernovedades.png?v=2") }}');
             background-size: cover;
             background-position: right;
             color: #000000;

@@ -298,7 +298,7 @@
             width: 100%;
             height: 284px; 
             background-color: #333;
-            background-image: url('{{ asset("banercatalogo.png") }}'); 
+            background-image: url('{{ asset("banercatalogo.png?v=2") }}'); 
             background-size: cover;
             background-position: center;
             display: flex;
