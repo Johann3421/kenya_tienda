@@ -23,7 +23,6 @@ INSERT INTO "detalles_soportes" ("id", "soporte_id", "descripcion", "precio", "d
 (20, 22, 'PROCESADOR ', 800.00, 'LGA 1700', 1, 800.00, '2026-01-13 15:12:20', '2026-01-13 15:12:20'),
 (22, 24, 'CAMBIO DE FUENTE-G850 80 PLUS GOLD ', 260.00, 'R149900', 1, 260.00, '2026-01-22 21:48:46', '2026-01-22 21:48:46') ON CONFLICT ("id") DO NOTHING;
 
-SELECT setval('detalles_soportes_id_seq', COALESCE((SELECT MAX(id)+1 FROM "detalles_soportes"), 1), false);
 
 COMMIT;
 

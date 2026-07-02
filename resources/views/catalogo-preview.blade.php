@@ -650,7 +650,7 @@
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
             {{-- Sorteo temporalmente oculto en producciÃ³n --}}
-            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">ContÃ¡ctenos</a></li>
+            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Cont&aacute;ctenos</a></li>
         </ul>
     </nav>
 @endsection
