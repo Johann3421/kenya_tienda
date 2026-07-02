@@ -1110,50 +1110,13 @@
              HERO SLIDER - 4 BANNERS ESTÁTICOS
              ══════════════════════════════════════════════════════════ -->
         <section class="hero-slider-section">
-            @php
-                $heroSlides = [
-                    [
-                        'image' => asset('banner-mundial.png'),
-                        'h1' => 'OFISZU SFF',
-                        'h2' => 'COMPUTADORA DE ESCRITORIO',
-                        'p' => 'Diseñada para oficinas modernas y espacios reducidos, ofreciendo equipos ultra compactos, elegantes y eficientes para todo tipo de usuarios.',
-                        'link' => route('catalogo'),
-                        'link_text' => 'Ver Catálogo'
-                    ],
-                    [
-                        'image' => asset('banner-mundial1.png'),
-                        'h1' => 'GENWORK',
-                        'h2' => 'COMPUTADORA DE ESCRITORIO',
-                        'p' => 'Diseñada para usuarios de oficina, profesionales y diseñadores que requieren mayor rendimiento gráfico y estabilidad para el trabajo diario.',
-                        'link' => route('catalogo'),
-                        'link_text' => 'Ver Catálogo'
-                    ],
-                    [
-                        'image' => asset('banner-mundial3.png'),
-                        'h1' => 'PROWORK',
-                        'h2' => 'ESTACIÓN DE TRABAJO',
-                        'p' => 'Diseñada especialmente para trabajo continuo y entornos profesionales exigentes, adaptándose a todo tipo de usuario y aplicaciones especializadas.',
-                        'link' => route('catalogo'),
-                        'link_text' => 'Ver Catálogo'
-                    ],
-                    [
-                        'image' => asset('banner-mundial2.png'),
-                        'h1' => 'EZENT',
-                        'h2' => 'COMPUTADORA DE ESCRITORIO',
-                        'p' => 'Diseñada especialmente para usuarios de oficina y empresas, ofreciendo múltiples configuraciones adaptadas a cada necesidad de trabajo.',
-                        'link' => route('catalogo'),
-                        'link_text' => 'Ver Catálogo'
-                    ],
-                ];
-            @endphp
-
-            @foreach ($heroSlides as $index => $slide)
-                <div class="hero-slide @if($index == 0) active @endif" style="background: url('{{ $slide['image'] }}') center/cover;">
+            @foreach ($banners as $index => $banner)
+                <div class="hero-slide @if($index == 0) active @endif" style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover;">
                     <div class="hero-slide-content">
-                        <h1>{{ $slide['h1'] }}</h1>
-                        <h2>{{ $slide['h2'] }}</h2>
-                        <p>{{ $slide['p'] }}</p>
-                        <a class="hero-btn" href="{{ $slide['link'] }}">{{ $slide['link_text'] }}</a>
+                        <h1>{{ $banner->titulo }}</h1>
+                        <h2>{{ $banner->descripcion }}</h2>
+                        <p>{{ $banner->contenido }}</p>
+                        <a class="hero-btn" href="{{ $banner->link }}">{{ $banner->link_nombre }}</a>
                     </div>
                 </div>
             @endforeach
