@@ -638,6 +638,7 @@
             min-width: 0 !important;
             flex: 0 0 calc(25% - 15px) !important;
             scroll-snap-align: start !important;
+            display: flex !important;
             flex-direction: column !important;
             text-align: left !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.07) !important;
@@ -654,6 +655,7 @@
 
         #main-welcome-container .novedad-badge {
             display: inline-block !important;
+            align-self: flex-start !important;
             background-color: #f26522 !important;
             color: #ffffff !important;
             font-size: 0.75rem !important;
@@ -793,7 +795,8 @@
                 padding: 0 !important;
             }
             #main-welcome-container .novedad-card {
-                flex: 0 0 85% !important;
+                flex: 0 0 100% !important;
+                min-width: 260px !important;
             }
             #main-welcome-container .novedades-prev {
                 left: 5px !important;

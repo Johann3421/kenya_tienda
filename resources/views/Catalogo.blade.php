@@ -545,6 +545,28 @@
 
         @media (max-width: 992px) {
             .catalog-section { grid-template-columns: 1fr; }
+            .catalog-sidebar { margin-bottom: 20px; }
+            .catalog-sidebar #filtros-form { 
+                display: grid; 
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+                gap: 15px; 
+                align-items: end;
+            }
+            .catalog-sidebar .filter-title { grid-column: 1 / -1; margin-bottom: 5px; padding-bottom: 5px; }
+            .catalog-sidebar .filter-group { margin-bottom: 0; }
+        }
+
+        @media (max-width: 576px) {
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            .product-card {
+                padding: 10px;
+            }
+            .product-title {
+                font-size: 0.9rem;
+            }
         }
     </style>
 

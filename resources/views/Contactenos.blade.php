@@ -1,6 +1,7 @@
 @extends('layouts.landing')
 
 @section('title', 'Contáctenos')
+
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">
@@ -9,333 +10,309 @@
             <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            {{-- Sorteo temporalmente oculto en producción --}}
-            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
             <li class="kenya-active"><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
     </nav>
 @endsection
 
 @section('content')
-    <section class="contactanos">
-        <div>
-            <h2>Escríbenos</h2>
-            <div class="frm_forms  with_frm_style frm_style_estilos-formidable" id="frm_form_3_container">
-                <form enctype="multipart/form-data" method="post" class="frm-show-form  frm_pro_form " id="form_contact3"
-                    style="overflow-x: visible;">
-                    <div class="frm_form_fields ">
-                        <fieldset>
-
-                            <div class="frm_fields_container">
-                                <input type="hidden" name="frm_action" value="create">
-                                <input type="hidden" name="form_id" value="3">
-                                <input type="hidden" name="frm_hide_fields_3" id="frm_hide_fields_3" value="">
-                                <input type="hidden" name="form_key" value="contact3">
-                                <input type="hidden" name="item_meta[0]" value="">
-                                <input type="hidden" id="frm_submit_entry_3" name="frm_submit_entry_3"
-                                    value="f69cccd0f8"><input type="hidden" name="_wp_http_referer" value="/contactanos/">
-                                <div id="frm_field_9_container"
-                                    class="frm_form_field form-field  frm_required_field frm_top_container frm_full">
-                                    <label for="field_xipbjr3" class="frm_primary_label">Nombre y Apellidos *
-
-                                    </label>
-                                    <input type="text" id="field_xipbjr3" name="item_meta[9]" value=""
-                                        placeholder="Nombre" data-reqmsg="Ingrese su nombre" aria-required="true"
-                                        data-invmsg="Name no es válido" aria-invalid="false">
-
-
-                                </div>
-                                <div id="frm_field_77_container"
-                                    class="frm_form_field form-field  frm_required_field frm_top_container frm_full">
-                                    <label for="field_fonyu" class="frm_primary_label">Correo electrónico *
-
-                                    </label>
-                                    <input type="email" id="field_fonyu" name="item_meta[77]" value=""
-                                        placeholder="Correo electrónico" data-reqmsg="Ingrese su correo electrónico"
-                                        aria-required="true" data-invmsg="Name no es válido" aria-invalid="false">
-
-
-                                </div>
-                                <div id="frm_field_11_container"
-                                    class="frm_form_field form-field  frm_required_field frm_top_container frm_full">
-                                    <label for="field_cqpguu3" class="frm_primary_label">Teléfono de contacto *
-
-                                    </label>
-                                    <input type="text" id="field_cqpguu3" name="item_meta[11]" value=""
-                                        placeholder="Teléfono de contacto" data-reqmsg="Ingrese su teléfono."
-                                        aria-required="true" data-invmsg="Phone no es válido" aria-invalid="false">
-
-
-                                </div>
-                                <div id="frm_field_13_container"
-                                    class="frm_form_field form-field  frm_required_field frm_top_container frm_full">
-                                    <label for="field_kggkvh3" class="frm_primary_label">Mensaje *
-
-                                    </label>
-                                    <textarea name="item_meta[13]" id="field_kggkvh3" rows="3" placeholder="Mensaje"
-                                        data-reqmsg="Ingrese su mensaje." aria-required="true" data-invmsg="Mensaje no es válido" aria-invalid="false"></textarea>
-
-
-                                </div>
-
-                                <div class="frm_submit">
-
-                                    <input type="submit" value="Enviar" class="frm_final_submit"
-                                        formnovalidate="formnovalidate">
-                                    <img decoding="async" class="frm_ajax_loading"
-                                        src="https://d394oln0r9mhpd.cloudfront.net/wp-content/plugins/formidable/images/ajax_loader.gif"
-                                        alt="Sending" style="visibility:hidden;">
-
-                                </div>
-                            </div>
-                        </fieldset>
-                    </div>
-
-                </form>
-            </div>
-
-        </div>
-        <div>
-            <h2>Información</h2>
-            <span><i class="fa-solid fa-envelope" aria-hidden="true"></i> soporte@kenya.com.pe</span>
-            <span><i class="fa-solid fa-phone" aria-hidden="true"></i> +51 958 021 778</span>
-            <span><i class="fa-solid fa-location-arrow" aria-hidden="true"></i> Av. Pablo Carriquiry N°455 Oficina 03</span>
-
-            <div>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i
-                        class="fa-brands fa-facebook" aria-hidden="true"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i
-                        class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i
-                        class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
-                <a href="#" target="_blank" rel="noopener noreferrer"><i
-                        class="fa-brands fa-youtube" aria-hidden="true"></i></a>
-            </div>
-<iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.6172522719596!2d-77.01817840277106!3d-12.096092161538214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8709d895a81%3A0x3ba45384561942b!2sOficina%2003%2C%20Av%20Pablo%20Carriquiry%20455%2C%20San%20Isidro%2015036!5e0!3m2!1ses!2spe!4v1762792365755!5m2!1ses!2spe"
-                width="500" height="250" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-    </section>
     <style>
-        /* Variables de color */
-        :root {
-            --primary-blue: #ee7c31;
-            --dark-blue: #ac6435;
-            --light-gray: #f5f7fa;
-            --medium-gray: #e0e6ed;
-            --dark-gray: #4a5568;
-            --white: #ffffff;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --border-radius: 8px;
-            --transition: all 0.3s ease;
+.contact-banner {
+            /* Puedes cambiar esta URL por la imagen real que desees de fondo */
+            background-image: linear-gradient(rgba(255 255 255 / 50%), rgba(255 255 255 / 50%)), url('banercontacto.png');
+            background-size: cover;
+            background-position: right;
+            color: #000000;
+            text-align: left; /* Texto alineado a la izquierda */
+            padding: 90px 20px;  /* Se ajustó para que la alineación dependa del contenedor */
+            margin-bottom: 40px;
         }
 
-        /* Sección de contacto */
-        .contactanos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    width: 100%;              /* <-- Añade esto */
-    max-width: 1200px;
-    margin: 4rem auto;
-    padding: 2rem;
-    background-color: var(--white);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    justify-self: center;     /* <-- Añade esto por si el padre es grid/flex */
-}
-
-        /* Títulos */
-        .contactanos h2 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.75rem;
+        .contact-banner h1 {
+            font-size: 3rem;
+            font-weight: 400;
+            margin-bottom: -3px;
         }
 
-        .contactanos h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background-color: var(--primary-blue);
+        .contact-banner p {
+            font-size: 1.2rem;
+            font-weight: 300;
         }
 
-        /* Formulario */
-        .frm_forms {
-            width: 100%;
+        /* ==========================================
+           NUEVA SECCIÓN: FORMULARIO E INFORMACIÓN
+           ========================================== */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            padding-bottom: 60px;
+            background-color: transparent;
+            padding: 0px;
+            border-radius: 10px;
+            box-shadow: none;
+            margin-bottom: 60px;
         }
 
-        .frm_form_fields fieldset {
-            border: none;
-            padding: 0;
-            margin: 0;
+        .contact-layout h2 {
+            color: #f26522; /* Azul similar a la imagen adjunta */
+            font-size: 2.0rem;
+            margin-bottom: 30px;
         }
 
-        .frm_fields_container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.25rem;
+        /* Estilos del Formulario (Izquierda) */
+        .contact-form .form-group {
+            margin-bottom: 20px;
         }
 
-        .frm_form_field {
-            margin-bottom: 0;
-        }
-
-        .frm_primary_label {
+        .contact-form label {
             display: block;
-            font-size: 0.95rem;
             font-weight: 600;
-            color: var(--dark-gray);
-            margin-bottom: 0.5rem;
+            color: #333333;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .frm_required {
-            color: #e53e3e;
+        .contact-form label span {
+            color: #f26522;
         }
 
-        /* Campos de formulario */
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        textarea {
+        .contact-form input, 
+        .contact-form textarea {
             width: 100%;
-            padding: 0.875rem 1rem;
-            border: 1px solid var(--medium-gray);
-            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            border: 1px solid #eaeaea;
+            background-color: #ffffff;
+            border-radius: 6px;
             font-size: 0.95rem;
-            transition: var(--transition);
-            background-color: var(--light-gray);
-        }
-
-        input[type="text"]:focus,
-        input[type="email"]:focus,
-        input[type="tel"]:focus,
-        textarea:focus {
+            color: #333;
             outline: none;
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(0, 114, 206, 0.1);
-            background-color: var(--white);
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        textarea {
-            min-height: 120px;
+        .contact-form input:focus, 
+        .contact-form textarea:focus {
+            border-color: #f26522;
+            box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.1);
+        }
+
+        .contact-form textarea {
             resize: vertical;
+            min-height: 140px;
         }
 
-        /* Botón de enviar */
-        .frm_submit {
-            margin-top: 1.5rem;
-        }
-
-        .frm_final_submit {
-            width: 100%;
-            padding: 0.875rem 1.5rem;
-            background-color: var(--primary-blue);
-            color: var(--white);
+        .contact-form button {
+            background: linear-gradient(to right, #ff3c00, #ff9c00);
+            color: #ffffff;
             border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 600;
+            padding: 14px 40px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 100px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: background 0.3s;
         }
 
-        .frm_final_submit:hover {
-            background-color: var(--dark-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .contact-form button:hover {
+            background-color: #004c99;
         }
 
-        /* Información de contacto */
-        .contactanos > div:nth-child(2) {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .contactanos span {
+        /* Estilos de Información (Derecha) */
+        .info-item {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-size: 1rem;
-            color: var(--dark-gray);
-            margin-bottom: 0.5rem;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            color: #333333;
         }
 
-        .contactanos i {
-            color: var(--primary-blue);
-            width: 1.25rem;
+        .info-item i {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #000;
+            width: 25px;
             text-align: center;
         }
 
-        /* Redes sociales */
-        .contactanos > div:nth-child(2) > div {
+        .contact-social {
             display: flex;
-            gap: 1rem;
-            margin: 1rem 0;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
-        .contactanos > div:nth-child(2) a {
+        .contact-social a {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 2.5rem;
-            height: 2.5rem;
-            background-color: var(--light-gray);
-            color: var(--primary-blue);
-            border-radius: 50%;
-            transition: var(--transition);
+            width: 45px;
+            height: 45px;
+            background-color: #494949;
+            color: #ffffff;
+            border-radius: 100px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            transition: background 0.3s;
         }
 
-        .contactanos > div:nth-child(2) a:hover {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            transform: translateY(-3px);
+        .contact-social a:hover {
+            background-color: #f26522;
         }
 
-        /* Mapa */
-        iframe {
+        .contact-map {
             width: 100%;
-            height: 250px;
-            border: none;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin-top: 1rem;
+            height: 280px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #eaeaea;
         }
 
-        /* Responsive */
+        /* ==========================================
+           FOOTER ORIGINAL
+           ========================================== */
+        .site-footer {
+            background-color: #222; 
+            color: #ccc; 
+            font-size: 0.9rem;
+            border-top: 0px solid #f26522; 
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            padding: 4rem 0 2rem;
+        }
+        .footer-col h4 {
+            color: #fff;
+            font-size: 1.05rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #f26522;
+        }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col ul li { margin-bottom: 0.8rem; }
+        .footer-col ul li a { color: #aaa; text-decoration: none; transition: color 0.3s ease; }
+        .footer-col ul li a:hover { color: #f26522; }
+        
+        .contact-info li { display: flex; align-items: flex-start; gap: 10px; color: #fff; }
+        .contact-info i { color: #f26522; margin-top: 4px; }
+
+        .footer-bottom-wrapper {
+            border-top: 1px solid #333;
+        }
+        .footer-bottom {
+            padding: 1.5rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .footer-extras { display: flex; align-items: center; gap: 20px; }
+        .libro-reclamaciones { color: #aaa; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.3s; }
+        .libro-reclamaciones:hover { color: #fff; }
+        .social-icons { display: flex; gap: 10px; align-items: center; }
+        .social-icons span { color: #aaa; margin-right: 5px; }
+        .social-icons a {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; background-color: #444; color: #fff;
+            border-radius: 50%; text-decoration: none; transition: background 0.3s;
+        }
+        .social-icons a:hover { background-color: #f26522; }
+
+        /* Responsividad general */
+        @media (max-width: 1300px) {
+            .header-nav ul { gap: 20px; }
+            .header-nav ul li a { font-size: 0.8rem; }
+            .header-search { margin: 0 20px; }
+        }
+
         @media (max-width: 992px) {
-            .contactanos {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                padding: 1.5rem;
-            }
-
-            .contactanos > div:first-child,
-            .contactanos > div:nth-child(2) {
-                width: 100%;
-            }
+            .header-content { flex-wrap: wrap; height: auto; padding-top: 15px; padding-bottom: 15px; gap: 15px;}
+            .header-left { flex: none; width: 100%; justify-content: center; }
+            .header-search { flex: none; width: 100%; justify-content: center; order: 2; max-width: 100%; margin: 0; }
+            .header-search-wrapper { max-width: 100%; }
+            .header-nav { flex: none; width: 100%; order: 3; justify-content: center; }
+            .header-nav ul { flex-wrap: wrap; justify-content: center; gap: 15px;}
+            
+            /* Ajuste de formulario en móviles */
+            .contact-layout { grid-template-columns: 1fr; }
         }
-
-        @media (max-width: 576px) {
-            .contactanos {
-                margin: 2rem auto;
-                padding: 1rem;
-            }
-
-            .contactanos h2 {
-                font-size: 1.5rem;
-            }
-
-            .frm_fields_container {
-                gap: 1rem;
-            }
-        }
+    
     </style>
+
+    <section class="contact-banner" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset('banercontacto.png') }}');">
+        <div class="container">
+            <h1>Comunicate con Nosotros</h1>
+            <p>Ponemos a tu disposición todos nuestros canales para atenderte donde estés</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="contact-layout">
+            
+            <div class="contact-form-container">
+                <h2>Escríbenos</h2>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label>Nombre y Apellidos <span>*</span></label>
+                        <input type="text" placeholder="NOMBRE" required="">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo electrónico <span>*</span></label>
+                        <input type="email" placeholder="CORREO ELECTRÓNICO" required="">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono de contacto <span>*</span></label>
+                        <input type="tel" placeholder="TELÉFONO DE CONTACTO" required="">
+                    </div>
+                    <div class="form-group">
+                        <label>Mensaje <span>*</span></label>
+                        <textarea placeholder="Mensaje" required=""></textarea>
+                    </div>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+
+            <div class="contact-info-container">
+                <h2>Información</h2>
+                <div class="info-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>soporte@kenya.com.pe</span>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>+51 958 021 778</span>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Av. Pablo Carriquiry N 455 Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
+                </div>
+                
+                <div class="contact-social">
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.6172522719596!2d-77.01817840277106!3d-12.096092161538214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8709d895a81%3A0x3ba45384561942b!2sOficina%2003%2C%20Av%20Pablo%20Carriquiry%20455%2C%20San%20Isidro%2015036!5e0!3m2!1ses!2spe!4v1762792365755!5m2!1ses!2spe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+    </div>
 @endsection

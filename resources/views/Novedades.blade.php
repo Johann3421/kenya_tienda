@@ -9,8 +9,6 @@
             <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
             <li class="kenya-active"><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            {{-- Sorteo temporalmente oculto en producción --}}
-            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁 Sorteo</a></li> --}}
             <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
         </ul>
     </nav>
@@ -18,31 +16,25 @@
 
 @section('content')
     <?php
-    // Configuración inicial
     use App\Producto;
     use App\Modelo;
 
-    // Obtener parámetros de filtro
     $busqueda = request('busqueda');
     $modeloId = request('modelo');
     $orden = request('orden', 'newest');
 
-    // Consulta base
     $productosQuery = Producto::query()
         ->where('pagina_web', 'SI')
         ->noSuspendido();
 
-    // Aplicar filtro de búsqueda
     if ($busqueda) {
         $productosQuery->where('descripcion', 'LIKE', "%{$busqueda}%")->orWhere('nro_parte', 'LIKE', "%{$busqueda}%");
     }
 
-    // Aplicar filtro por modelo
     if ($modeloId) {
         $productosQuery->where('modelo_id', $modeloId);
     }
 
-    // Aplicar ordenación
     switch ($orden) {
         case 'nombre_asc':
             $productosQuery->orderBy('descripcion', 'asc');
@@ -58,7 +50,6 @@
             $productosQuery->orderBy('created_at', 'desc');
     }
 
-    // Obtener modelos activos para el dropdown
     $modelos = Modelo::whereRaw("UPPER(activo) = 'SI'")
         ->whereHas('getProducto', function ($q) {
             $q->where('pagina_web', 'SI')->noSuspendido();
@@ -66,900 +57,450 @@
         ->orderBy('descripcion')
         ->get();
 
-    // Paginar resultados (con eager loading si es necesario)
-    $productos = $productosQuery->with('modelo')->paginate(9);
+    $productos = $productosQuery->with('modelo')->paginate(12);
     ?>
 
-    <!-- ======= Carrusel de Banners ======= -->
-    <section class="promo-banner-section">
-        <div class="promo-banner-container">
-            <div class="promo-banner-track">
-                @foreach (\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $banner)
-                    <div class="promo-banner-slide">
-                        <div class="promo-banner-content">
-                            <a href="{{ $banner->url_destino }}" target="_blank">
-                                <img src="{{ asset($banner->imagen_path) }}"
-                                    alt="{{ $banner->titulo ?? 'Banner promocional' }}" class="img-fluid">
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <!-- Controles de navegación -->
-            <button class="promo-banner-nav promo-banner-prev">
-                <i class='bx bx-chevron-left'></i>
-            </button>
-            <button class="promo-banner-nav promo-banner-next">
-                <i class='bx bx-chevron-right'></i>
-            </button>
-
-            <!-- Indicadores -->
-            <div class="promo-banner-dots">
-                @foreach (\App\Models\BannerMedio::where('activo', true)->orderBy('orden')->get() as $index => $banner)
-                    <button class="promo-banner-dot {{ $index === 0 ? 'active' : '' }}"
-                        data-slide="{{ $index }}"></button>
-                @endforeach
-            </div>
-        </div>
-    </section>
-
-    <section class="catalog-section">
-        <div class="container">
-            <!-- Hero Banner -->
-            <div class="catalog-hero">
-                <h1>Nuestras Novedades de Productos</h1>
-                <p>Descubre nuestra amplia gama de productos de alta calidad</p>
-            </div>
-
-            <!-- Filtros y búsqueda -->
-            <div class="catalog-filters">
-                <div class="row">
-                    <div class="col-md-6">
-                        <form method="GET" action="">
-                            <div class="search-box">
-                                <input type="text" name="busqueda" placeholder="Buscar productos..." class="search-input"
-                                    value="{{ request('busqueda') }}">
-                                <button type="submit" class="search-btn">
-                                    <i class="bx bx-search"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-md-6">
-                        <form method="GET" action="" id="filters-form">
-                            <input type="hidden" name="busqueda" value="{{ request('busqueda') }}">
-                            <div class="filter-controls">
-                                <!-- Filtro de modelos CORREGIDO -->
-                                <select name="modelo" class="category-filter"
-                                    onchange="document.getElementById('filters-form').submit()">
-                                    <option value="">Todos los modelos</option>
-                                    @foreach ($modelos as $modelo)
-                                        <option value="{{ $modelo->id }}"
-                                            {{ request('modelo') == $modelo->id ? 'selected' : '' }}>
-                                            {{ $modelo->descripcion }}
-                                        </option>
-                                    @endforeach
-                                </select>
-
-                                <!-- Filtro de ordenación MEJORADO -->
-                                <select name="orden" class="sort-filter"
-                                    onchange="document.getElementById('filters-form').submit()">
-                                    <option value="newest" {{ $orden == 'newest' ? 'selected' : '' }}>Más recientes
-                                    </option>
-                                    <option value="oldest" {{ $orden == 'oldest' ? 'selected' : '' }}>Más antiguos</option>
-                                    <option value="nombre_asc" {{ $orden == 'nombre_asc' ? 'selected' : '' }}>Nombre (A-Z)
-                                    </option>
-                                    <option value="nombre_desc" {{ $orden == 'nombre_desc' ? 'selected' : '' }}>Nombre
-                                        (Z-A)</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="product-grid">
-                <div class="row">
-                    @forelse($productos as $producto)
-                        <div class="col-lg-4 col-md-4 col-sm-6 mb-4">
-                            <div class="product-card">
-                                @if (($producto->stock ?? 100) <= 0)
-                                    <!-- Stock por defecto 100 -->
-                                    <div class="product-badge out-of-stock">Agotado</div>
-                                @elseif(isset($producto->created_at) && \Carbon\Carbon::parse($producto->created_at)->diffInDays(now()) <= 30)
-                                    <div class="product-badge">Nuevo</div>
-                                @endif
-
-                                <div class="product-image">
-                                    @php
-                                        // Imagen del modelo como fallback si la imagen del producto falla
-                                        $modelImg = asset('producto.jpg');
-                                        if ($producto->modelo && !empty($producto->modelo->img_mod)) {
-                                            $modelImg = asset('storage/' . $producto->modelo->img_mod);
-                                        } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_url)) {
-                                            $modelImg = $producto->getCategoria->img_url;
-                                        }
-
-                                        if (!empty($producto->imagen_1)) {
-                                            $img    = asset('storage/' . $producto->imagen_1);
-                                            $imgFb  = asset($producto->imagen_1);
-                                            $imgFb2 = $modelImg;
-                                        } elseif (!empty($producto->imagen)) {
-                                            $img    = asset('storage/' . $producto->imagen);
-                                            $imgFb  = $modelImg;
-                                            $imgFb2 = asset('producto.jpg');
-                                        } else {
-                                            $img    = $modelImg;
-                                            $imgFb  = asset('producto.jpg');
-                                            $imgFb2 = asset('producto.jpg');
-                                        }
-                                    @endphp
-
-                                    <img src="{{ $img }}" alt="{{ $producto->display_name ?? 'Producto' }}" class="img-fluid"
-                                        onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
-
-                                    <div class="product-actions">
-                                        <button class="quick-view" data-id="{{ $producto->id }}">
-                                            <i class="bx bx-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="product-info">
-                                    <!-- CATEGORÍA (nombre del modelo) -->
-                                    <span class="product-category">
-                                        {{ $producto->modelo->nombre ?? ($producto->modelo->descripcion ?? 'Sin categoría') }}
-                                    </span>
-
-                                    <!-- NOMBRE DEL PRODUCTO -->
-                                    <h3 class="product-title">{{ $producto->display_name ?? 'Nombre no disponible' }}</h3>
-
-                                    <div class="product-details">
-                                        <p><strong>Parte:</strong> {{ $producto->nro_parte ?? 'N/A' }}</p>
-                                        <p><strong>Stock:</strong>
-                                            @php
-                                                $stock = $producto->stock ?? 100; // Valor por defecto 100
-                                            @endphp
-                                            @if ($stock > 0)
-                                                <span class="in-stock">{{ $stock }} unidades</span>
-                                            @else
-                                                <span class="out-of-stock">No disponible</span>
-                                            @endif
-                                        </p>
-                                    </div>
-
-                                    <!-- Botón con nueva ruta de detalles -->
-<button class="view-details"
-    onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">
-    Ver detalles
-</button>
-
-                                </div>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <div class="alert alert-warning">No se encontraron productos.</div>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-
-
-            @if ($productos->hasPages())
-                <div class="catalog-pagination mt-4">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            {{-- Enlace Anterior --}}
-                            <li class="page-item {{ $productos->onFirstPage() ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $productos->previousPageUrl() }}" aria-label="Anterior">
-                                    &laquo;
-                                </a>
-                            </li>
-
-                            {{-- Mostrar primera página --}}
-                            @if ($productos->currentPage() > 3)
-                                <li class="page-item">
-                                    <a class="page-link" href="{{ $productos->url(1) }}">1</a>
-                                </li>
-                                @if ($productos->currentPage() > 4)
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                @endif
-                            @endif
-
-                            {{-- Rango de páginas alrededor de la actual --}}
-                            @foreach (range(max(1, $productos->currentPage() - 2), min($productos->lastPage(), $productos->currentPage() + 2)) as $page)
-                                <li class="page-item {{ $productos->currentPage() == $page ? 'active' : '' }}">
-                                    <a class="page-link" href="{{ $productos->url($page) }}">{{ $page }}</a>
-                                </li>
-                            @endforeach
-
-                            {{-- Mostrar última página --}}
-                            @if ($productos->currentPage() < $productos->lastPage() - 2)
-                                @if ($productos->currentPage() < $productos->lastPage() - 3)
-                                    <li class="page-item disabled">
-                                        <span class="page-link">...</span>
-                                    </li>
-                                @endif
-                                <li class="page-item">
-                                    <a class="page-link"
-                                        href="{{ $productos->url($productos->lastPage()) }}">{{ $productos->lastPage() }}</a>
-                                </li>
-                            @endif
-
-                            {{-- Enlace Siguiente --}}
-                            <li class="page-item {{ !$productos->hasMorePages() ? 'disabled' : '' }}">
-                                <a class="page-link" href="{{ $productos->nextPageUrl() }}" aria-label="Siguiente">
-                                    &raquo;
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            @endif
-        </div>
-    </section>
     <style>
-        :root {
-            --primary-color: #ee7c31;
-            --secondary-color: #ca7b46;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-            --success-color: #2ecc71;
-            --warning-color: #f39c12;
-            --border-radius: 8px;
-            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+.hero-banner {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banernovedades.png") }}');
+            background-size: cover;
+            background-position: right;
+            color: #000000;
+            text-align: left;
+            padding: 80px 5%;
+            margin-bottom: 0px;
         }
 
-        /* Estilos generales */
-        .catalog-section {
-            padding: 1rem 0 2rem 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #f9f9f9;
-
+        .hero-content {
+            position: relative;
+            z-index: 2; 
+            padding-left: 0px; 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; 
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
+        .hero-content h1 {
+            font-size: 2.8rem;
+            font-weight: 400;
+            margin-bottom: -3px;
         }
 
-        /* Hero Banner */
-        .catalog-hero {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem 0;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
+        .hero-content p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 20px; 
         }
 
-        .catalog-hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
+        /* ==========================================
+           SECCIÓN DE PRODUCTOS Y FILTROS
+           ========================================== */
+        .products-section {
+            padding: 40px 0;
         }
 
-        .catalog-hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        /* Filtros */
-        .catalog-filters {
-            background: white;
-            padding: 1.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 2rem;
+        /* Barra de Filtros */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0px 0px;
+            border-radius: 6px;
+            box-shadow: 0 0px 0px rgba(0,0,0,0.00);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+            border: 0px solid #eaeaea;
         }
 
         .search-box {
-            position: relative;
             display: flex;
+            flex: 1;
+            max-width: 500px;
         }
 
-        .search-input {
+        .search-box input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .search-input:focus {
-            border-color: var(--primary-color);
+            padding: 12px 15px;
+            border: 1px solid #eaeaea;
+            border-radius: 4px 0 0 4px;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            font-size: 0.95rem;
         }
 
-        .search-btn {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            width: 50px;
-            background: var(--primary-color);
+        .search-box button {
+            background: linear-gradient(90deg, #ff6200, #ff7d00);
             color: white;
             border: none;
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: 0 25px;
+            border-radius: 0 4px 4px 0;
             cursor: pointer;
-            transition: var(--transition);
+            transition: background 0.3s;
         }
 
-        .search-btn:hover {
-            background: var(--secondary-color);
+        .search-box button:hover {
+            background-color: #d9561b;
         }
 
-        .filter-controls {
+        .filter-dropdowns {
             display: flex;
-            gap: 1rem;
+            gap: 15px;
         }
 
-        .category-filter, .sort-filter {
-            flex: 1;
-            padding: 0.75rem;
-            border: 2px solid #ddd;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            background-color: white;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .category-filter:focus, .sort-filter:focus {
-            border-color: var(--primary-color);
+        .filter-dropdowns select {
+            padding: 12px 15px;
+            border: 1px solid #eaeaea;
+            border-radius: 10px;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background-color: #fff;
+            min-width: 200px;
+            font-size: 0.95rem;
+            color: #333;
+            cursor: pointer;
         }
 
-        /* Product Grid */
+        /* Cuadrícula de Productos */
         .product-grid {
-            margin-top: 2rem;
-            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
         }
 
+        /* Tarjeta de Producto */
         .product-card {
+            background-color: #ffffff;
+            border: 1px solid #eaeaea;
+            border-radius: 12px;
+            padding: 25px;
             position: relative;
-            background: white;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            height: 100%;
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: white;
-            z-index: 2;
-        }
-
-        .product-badge.out-of-stock {
-            background-color: var(--accent-color);
-        }
-
-        .product-badge {
-            background-color: var(--success-color);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
         }
 
         .product-image {
-            position: relative;
-            overflow: hidden;
-            padding-top: 75%; /* 4:3 Aspect Ratio */
-        }
-
-        .product-image img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .product-card:hover .product-image img {
-            transform: scale(1.05);
-        }
-
-        .product-actions {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            display: flex;
-            gap: 0.5rem;
-            z-index: 2;
-        }
-
-        .quick-view {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: none;
-            color: var(--dark-color);
+            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            position: relative;
         }
 
-        .quick-view:hover {
-            background-color: white;
-            color: var(--primary-color);
-            transform: scale(1.1);
+        .product-image img {
+            max-height: 100%;
+            max-width: 100%;
+            object-fit: contain;
         }
 
         .product-info {
-            padding: 1.5rem;
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
+            flex-grow: 1;
         }
 
-        .product-category {
-            font-size: 0.9rem;
-            color: var(--primary-color);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
+        /* Estilos de tarjeta actualizados según la imagen */
         .product-title {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
+            font-size: 1.05rem;
+            color: #333;
+            margin-bottom: 15px;
             font-weight: 700;
             line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex-grow: 1;
         }
 
         .product-details {
-            margin-bottom: 1.5rem;
-        }
-
-        .product-details p {
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-            color: #555;
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 8px;
         }
 
         .product-details strong {
-            color: var(--dark-color);
+            font-weight: normal; 
         }
 
-        .in-stock {
-            color: var(--success-color);
-            font-weight: 600;
+        .stock-green {
+            color: #20c997; 
+            font-weight: 700;
+            font-size: 0.95rem;
         }
 
-        .out-of-stock {
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-
-        .view-details {
-            margin-top: auto;
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--primary-color);
-            color: white;
+        .btn-details {
+            background: linear-gradient(90deg, #ff6200, #ff7d00);
+            color: #ffffff;
             border: none;
-            border-radius: var(--border-radius);
-            font-weight: 600;
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px; 
+            font-weight: 700;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: var(--transition);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-details:hover {
+            background-color: #d66836; 
+        }
+
+        /* ==========================================
+           FOOTER 
+           ========================================== */
+        .site-footer {
+            background-color: #222; 
+            color: #ccc; 
             font-size: 0.9rem;
+            border-top: 0px solid #f26522; 
         }
-
-        .view-details:hover {
-            background-color: var(--secondary-color);
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            padding: 4rem 0% 2rem;
         }
+        .footer-col h4 {
+            color: #fff;
+            font-size: 1.05rem;
+            margin-bottom: 1.2rem;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background-color: #f26522;
+        }
+        .footer-col ul { list-style: none; padding: 0; }
+        .footer-col ul li { margin-bottom: 0.8rem; }
+        .footer-col ul li a { color: #aaa; text-decoration: none; transition: color 0.3s ease; }
+        .footer-col ul li a:hover { color: #f26522; }
+        
+        .contact-info li { display: flex; align-items: flex-start; gap: 10px; color: #fff; }
+        .contact-info i { color: #f26522; margin-top: 4px; }
 
-        /* Paginación */
-        .catalog-pagination {
-            margin-top: 3rem;
+        .footer-bottom-wrapper {
+            border-top: 1px solid #333;
+        }
+        .footer-bottom {
+            padding: 1.5rem 0%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .footer-extras { display: flex; align-items: center; gap: 20px; }
+        .libro-reclamaciones { color: #aaa; text-decoration: none; display: flex; align-items: center; gap: 8px; transition: color 0.3s; }
+        .libro-reclamaciones:hover { color: #fff; }
+        .social-icons { display: flex; gap: 10px; align-items: center; }
+        .social-icons span { color: #aaa; margin-right: 5px; }
+        .social-icons a {
+            display: flex; align-items: center; justify-content: center;
+            width: 32px; height: 32px; background-color: #444; color: #fff;
+            border-radius: 50%; text-decoration: none; transition: background 0.3s;
+        }
+        .social-icons a:hover { background-color: #f26522; }
+
+        /* ==========================================
+           PAGINACIÓN
+           ========================================== */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .pagination {
             display: flex;
-            gap: 0.5rem;
+            list-style: none;
+            gap: 8px;
         }
 
-        .page-item.disabled .page-link {
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        .page-item.active .page-link {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
-        }
-
-        .page-link {
-            padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            color: var(--dark-color);
-            transition: var(--transition);
-        }
-
-        .page-link:hover {
-            background-color: #f8f9fa;
-            border-color: #ddd;
-        }
-
-        /* Alertas */
-        .alert {
-            padding: 1rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-        }
-
-        .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .filter-controls {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .catalog-hero h1 {
-                font-size: 2rem;
-            }
-
-            .product-title {
-                font-size: 1.1rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .catalog-filters .row > div {
-                margin-bottom: 1rem;
-            }
-
-            .product-card {
-                max-width: 320px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
-    </style>
-    <!-- Scripts para funcionalidad -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Filtrado de productos
-            const categoryFilter = document.querySelector('.category-filter');
-            const sortFilter = document.querySelector('.sort-filter');
-            const searchInput = document.querySelector('.search-input');
-
-            if (categoryFilter && sortFilter && searchInput) {
-                [categoryFilter, sortFilter, searchInput].forEach(element => {
-                    element.addEventListener('change', filterProducts);
-                });
-
-                searchInput.addEventListener('keyup', filterProducts);
-            }
-
-            function filterProducts() {
-                // Aquí iría la lógica para filtrar/ordenar los productos
-                console.log('Filtrando productos...');
-            }
-
-            // Quick view
-            const quickViewButtons = document.querySelectorAll('.quick-view');
-            quickViewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Lógica para mostrar vista rápida del producto
-                    console.log('Mostrando vista rápida');
-                });
-            });
-
-            // Wishlist
-            const wishlistButtons = document.querySelectorAll('.add-wishlist');
-            wishlistButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Lógica para añadir a wishlist
-                    console.log('Añadiendo a wishlist');
-                });
-            });
-        });
-    </script>
-
-    <style>
-        /* Estilos para el carrusel de banners */
-        .promo-banner-section {
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-            margin-top: 0;
-        }
-
-        .promo-banner-container {
-            position: relative;
-            margin: 0 auto;
-        }
-
-        .promo-banner-track {
+        .pagination li a, 
+        .pagination li span {
             display: flex;
-            transition: transform 0.5s ease;
-
-        }
-
-        .promo-banner-slide {
-            min-width: 100%;
-            position: relative;
-        }
-
-        .promo-banner-content {
-            width: 100%;
-            height: 100%;
-            display: flex;
+            justify-content: center;
             align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #ee7c31 0%, #e67125 100%);
-            color: white;
-            font-size: 2rem;
-            font-weight: bold;
+            min-width: 42px;
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #eaeaea;
+            border-radius: 6px;
+            background-color: #ffffff;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
         }
 
-        .promo-banner-placeholder {
-            padding: 20px 40px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
+        .pagination li a:hover {
+            border-color: #ef7b45;
+            color: #ef7b45;
         }
 
-        /* Controles de navegación */
-        .promo-banner-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            transition: all 0.3s ease;
+        .pagination li a.active {
+            background-color: #ef7b45;
+            color: #ffffff;
+            border-color: #ef7b45;
+            font-weight: 600;
         }
 
-        .promo-banner-nav:hover {
-            background: white;
+        .pagination-info {
+            color: #666;
+            font-size: 0.95rem;
         }
 
-        .promo-banner-prev {
-            left: 20px;
+        /* ==========================================
+           RESPONSIVIDAD
+           ========================================== */
+        @media (max-width: 1300px) {
+            .header-nav ul { gap: 20px; }
+            .header-nav ul li a { font-size: 0.8rem; }
+            .header-search { margin: 0 20px; }
         }
 
-        .promo-banner-next {
-            right: 20px;
-        }
-
-        .promo-banner-nav i {
-            font-size: 24px;
-            color: #ee7c31;
-        }
-
-        /* Indicadores */
-        .promo-banner-dots {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .promo-banner-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .promo-banner-dot.active {
-            background: white;
-            transform: scale(1.2);
-        }
-
-        /* Responsive Design */
         @media (max-width: 992px) {
-            .promo-banner-track {}
+            .header-content { 
+                flex-wrap: wrap; 
+                height: auto; 
+                padding-top: 15px; 
+                padding-bottom: 15px; 
+                gap: 15px;
+            }
+            .header-left { flex: none; width: 100%; justify-content: center; }
+            .header-search { flex: none; width: 100%; justify-content: center; order: 2; max-width: 100%; margin: 0; }
+            .header-search-wrapper { max-width: 100%; }
+            .header-nav { flex: none; width: 100%; order: 3; justify-content: center; }
+            .header-nav ul { flex-wrap: wrap; justify-content: center; gap: 15px;}
         }
 
         @media (max-width: 768px) {
-            .promo-banner-track {}
-
-            .promo-banner-content {
-                font-size: 1.5rem;
+            .hero-banner { padding: 40px 5%; } 
+            .hero-content h1 { font-size: 2rem; }
+            .hero-content p { font-size: 1rem; }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                max-width: 100%;
+            }
+            .filter-dropdowns {
+                flex-direction: column;
             }
         }
+    
+    </style>
 
-        @media (max-width: 576px) {
-            .promo-banner-track {}
+    <section class="hero-banner">
+        <div class="container hero-content">
+            <h1>Nuestras Novedades</h1>
+            <p>Descubre nuestra amplia gama de equipos de alta calidad</p>
+        </div>
+    </section>
 
-            .promo-banner-nav {
-                width: 30px;
-                height: 30px;
-            }
+    <section class="products-section container">
+        <div class="filter-bar">
+            <form method="GET" action="" style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+                <div class="search-box">
+                    <input type="text" name="busqueda" placeholder="Buscar productos..." value="{{ request('busqueda') }}">
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+                <div class="filter-dropdowns">
+                    <select name="modelo" onchange="this.form.submit()">
+                        <option value="">Todos los modelos</option>
+                        @foreach ($modelos as $modelo)
+                            <option value="{{ $modelo->id }}" {{ request('modelo') == $modelo->id ? 'selected' : '' }}>
+                                {{ $modelo->descripcion }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <select name="orden" onchange="this.form.submit()">
+                        <option value="newest" {{ $orden == 'newest' ? 'selected' : '' }}>Más recientes</option>
+                        <option value="oldest" {{ $orden == 'oldest' ? 'selected' : '' }}>Más antiguos</option>
+                        <option value="nombre_asc" {{ $orden == 'nombre_asc' ? 'selected' : '' }}>Nombre (A-Z)</option>
+                        <option value="nombre_desc" {{ $orden == 'nombre_desc' ? 'selected' : '' }}>Nombre (Z-A)</option>
+                    </select>
+                </div>
+            </form>
+        </div>
 
-            .promo-banner-nav i {
-                font-size: 18px;
-            }
-        }
-        </style>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const track = document.querySelector('.promo-banner-track');
-                const items = document.querySelectorAll('.promo-banner-slide'); // Cambiado a promo-banner-slide
-                const prevBtn = document.querySelector('.promo-banner-prev'); // Cambiado a promo-banner-prev
-                const nextBtn = document.querySelector('.promo-banner-next'); // Cambiado a promo-banner-next
-                const dotsContainer = document.querySelector('.promo-banner-dots'); // Cambiado a promo-banner-dots
-
-                let currentIndex = 0;
-                let visibleItems = 1; // Mostrar solo 1 banner a la vez
-                let totalSlides = items.length;
-
-                // Calcular items visibles según el ancho de pantalla
-                function updateVisibleItems() {
-                    // Mantenemos siempre 1 banner visible (carrusel clásico)
-                    visibleItems = 1;
-                    updateTrackPosition();
-                    createDots();
-                }
-
-                // Crear indicadores - MODIFICADO PARA MOSTRAR 1 DOT POR BANNER
-                function createDots() {
-                    dotsContainer.innerHTML = '';
-                    const dotCount = totalSlides; // Un dot por cada banner
-
-                    for (let i = 0; i < dotCount; i++) {
-                        const dot = document.createElement('button'); // Cambiado a button para mejor accesibilidad
-                        dot.classList.add('promo-banner-dot');
-                        if (i === currentIndex) dot.classList.add('active');
-                        dot.addEventListener('click', () => goToSlide(i));
-                        dotsContainer.appendChild(dot);
+        <div class="product-grid">
+            @forelse($productos as $producto)
+                @php
+                    $modelImg = asset('producto.jpg');
+                    if ($producto->modelo && !empty($producto->modelo->img_mod)) {
+                        $modelImg = asset('storage/' . $producto->modelo->img_mod);
+                    } elseif ($producto->getCategoria && !empty($producto->getCategoria->img_url)) {
+                        $modelImg = $producto->getCategoria->img_url;
                     }
-                }
 
-                // Actualizar posición del track
-                function updateTrackPosition() {
-                    const itemWidth = items[0].offsetWidth;
-                    const gap = 0; // Sin gap entre banners
-                    const newPosition = -(currentIndex * (itemWidth + gap));
-
-                    track.style.transform = `translateX(${newPosition}px)`;
-
-                    // Actualizar dots activos - MODIFICADO PARA SELECCIONAR SOLO EL DOT ACTUAL
-                    document.querySelectorAll('.promo-banner-dot').forEach((dot, i) => {
-                        dot.classList.toggle('active', i === currentIndex);
-                    });
-                }
-
-                // Navegación
-                function nextSlide() {
-                    if (currentIndex < totalSlides - visibleItems) {
-                        currentIndex++;
+                    if (!empty($producto->imagen_1)) {
+                        $img    = asset('storage/' . $producto->imagen_1);
+                        $imgFb  = asset($producto->imagen_1);
+                        $imgFb2 = $modelImg;
+                    } elseif (!empty($producto->imagen)) {
+                        $img    = asset('storage/' . $producto->imagen);
+                        $imgFb  = $modelImg;
+                        $imgFb2 = asset('producto.jpg');
                     } else {
-                        currentIndex = 0; // Volver al inicio
+                        $img    = $modelImg;
+                        $imgFb  = asset('producto.jpg');
+                        $imgFb2 = asset('producto.jpg');
                     }
-                    updateTrackPosition();
-                }
+                    $stock = $producto->stock ?? 100;
+                @endphp
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{{ $img }}" alt="{{ $producto->display_name ?? 'Producto' }}" 
+                            onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">{{ $producto->display_name ?? 'Nombre no disponible' }}</h3>
+                        <p class="product-details">N&deg; de parte: {{ $producto->nro_parte ?? 'N/A' }}</p>
+                        <p class="product-details">Stock: 
+                            @if($stock > 0)
+                                <span class="stock-green">&ge; {{ $stock }} unidades</span>
+                            @else
+                                <span class="stock-red" style="color: #d9534f; font-weight: 500;">Agotado</span>
+                            @endif
+                        </p>
+                        <button class="btn-details" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">VER DETALLES</button>
+                    </div>
+                </div>
+            @empty
+                <div class="col-12" style="grid-column: 1 / -1;">
+                    <div class="alert alert-warning" style="padding: 20px; background-color: #fff3cd; color: #856404; border-radius: 8px;">No se encontraron productos.</div>
+                </div>
+            @endforelse
+        </div>
 
-                function prevSlide() {
-                    if (currentIndex > 0) {
-                        currentIndex--;
-                    } else {
-                        currentIndex = totalSlides - visibleItems; // Ir al final
-                    }
-                    updateTrackPosition();
-                }
-
-                // Ir a slide específico - MODIFICADO PARA IR DIRECTAMENTE AL BANNER
-                function goToSlide(index) {
-                    currentIndex = index;
-                    updateTrackPosition();
-                }
-
-                // Event listeners
-                nextBtn.addEventListener('click', nextSlide);
-                prevBtn.addEventListener('click', prevSlide);
-
-                // Auto-desplazamiento
-                let slideInterval;
-
-                function startAutoSlide() {
-                    slideInterval = setInterval(() => {
-                        nextSlide();
-                    }, 5000);
-                }
-
-                function stopAutoSlide() {
-                    clearInterval(slideInterval);
-                }
-
-                // Inicializar
-                function initCarousel() {
-                    updateVisibleItems();
-                    startAutoSlide();
-
-                    // Pausar al interactuar
-                    track.addEventListener('mouseenter', stopAutoSlide);
-                    track.addEventListener('mouseleave', startAutoSlide);
-
-                    // Touch events para móviles
-                    let touchStartX = 0;
-                    let touchEndX = 0;
-
-                    track.addEventListener('touchstart', (e) => {
-                        touchStartX = e.changedTouches[0].screenX;
-                        stopAutoSlide();
-                    }, {
-                        passive: true
-                    });
-
-                    track.addEventListener('touchend', (e) => {
-                        touchEndX = e.changedTouches[0].screenX;
-                        handleSwipe();
-                        startAutoSlide();
-                    }, {
-                        passive: true
-                    });
-
-                    function handleSwipe() {
-                        const diff = touchStartX - touchEndX;
-                        if (diff > 50) nextSlide();
-                        if (diff < -50) prevSlide();
-                    }
-                }
-
-                // Redimensionamiento
-                window.addEventListener('resize', () => {
-                    updateVisibleItems();
-                });
-
-                // Iniciar carrusel
-                initCarousel();
-            });
-        </script>
+        @if ($productos->hasPages())
+            <div class="pagination-container" style="margin-top: 40px; display: flex; justify-content: center;">
+                {{ $productos->appends(request()->query())->links('pagination::bootstrap-4') }}
+            </div>
+        @endif
+    </section>
 @endsection

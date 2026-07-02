@@ -524,18 +524,121 @@
             border-color: #f26522;
         }
 
+        .catalog-filter-btn {
+            display: none;
+        }
+
         @media (max-width: 600px) {
             .catalog-top-bar {
                 flex-direction: column;
                 align-items: stretch;
+                gap: 8px;
+            }
+            .catalog-filter-btn {
+                width: 100%;
+                justify-content: center;
             }
             .custom-sort-select {
                 min-width: 100%;
                 width: 100%;
             }
+            .catalog-main-search {
+                max-width: 100%;
+            }
         }
 
 
+        @media (max-width: 992px) {
+            .catalog-section {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .catalog-main {
+                width: 100%;
+                min-width: 0;
+            }
+            .catalog-top-bar {
+                flex-wrap: wrap;
+            }
+            .catalog-main-search {
+                max-width: 100%;
+                flex: 1 1 100%;
+            }
+            .catalog-filter-btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: #fff;
+                border: 1px solid #ddd;
+                border-radius: 20px;
+                padding: 10px 18px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: #333;
+                cursor: pointer;
+                white-space: nowrap;
+                transition: all 0.2s;
+            }
+            .catalog-filter-btn:hover { background: #f5f5f5; }
+            .catalog-filter-btn.active { background: #f26522; color: #fff; border-color: #f26522; }
+            .catalog-section { 
+                grid-template-columns: 1fr !important; 
+            }
+            .catalog-sidebar { 
+                display: none; 
+                margin-bottom: 20px; 
+            }
+            .catalog-sidebar.show-filters { 
+                display: block; 
+            }
+            .catalog-sidebar #preview-filters {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 15px;
+                align-items: end;
+            }
+            .catalog-sidebar .filter-title { grid-column: 1 / -1; margin-bottom: 5px; padding-bottom: 5px; }
+            .catalog-sidebar .filter-group { margin-bottom: 0; }
+        }
+
+        @media (max-width: 576px) {
+            .catalog-top-bar {
+                gap: 6px;
+            }
+            .catalog-main-search input {
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
+            .catalog-filter-btn {
+                font-size: 0.85rem;
+                padding: 8px 14px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px;
+            }
+            .product-card {
+                padding: 8px;
+            }
+            .product-image-wrapper {
+                height: 140px;
+                margin-bottom: 12px;
+            }
+            .product-title {
+                font-size: 0.8rem;
+            }
+            .product-pn {
+                font-size: 0.7rem;
+            }
+            .product-stock {
+                font-size: 0.75rem;
+                margin-bottom: 12px;
+            }
+            .btn-details {
+                font-size: 0.75rem;
+                padding: 8px;
+            }
+        }
     </style>
 @endsection
 @section('menu')
@@ -560,11 +663,6 @@
     </div>
 
     <main class="container catalog-section">
-        <div class="col-12 d-lg-none mb-3">
-            <button id="toggleFiltersBtn" class="btn w-100" style="background-color: #ee7c31; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">
-                <i class="bx bx-filter-alt"></i> Mostrar / Ocultar Filtros
-            </button>
-        </div>
         <aside class="catalog-sidebar" id="filterSidebar">
             <div style="margin-bottom:12px;">
                 <label for="preview-modelo" style="font-weight:700">Seleccionar modelo</label>
@@ -584,6 +682,9 @@
         <div class="catalog-main">
             <!-- Barra superior: búsqueda + orden -->
             <div class="catalog-top-bar">
+                <button id="toggleFiltersBtn" class="catalog-filter-btn" aria-label="Filtros">
+                    <i class="fa-solid fa-sliders"></i> Filtros
+                </button>
                 <div class="catalog-main-search">
                     <input id="preview-search" type="text" placeholder="Buscar productos por nombre o parte..." aria-label="Buscar productos">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -620,14 +721,15 @@
             const productsUrl = @json(url('catalogo/preview-products'));
             const suggestUrl = @json(url('catalogo/preview-suggest'));
             let searchTimer = null;
-
             const toggleBtn = document.getElementById('toggleFiltersBtn');
             const filterSidebar = document.getElementById('filterSidebar');
-            if(toggleBtn && filterSidebar){
-                toggleBtn.addEventListener('click', function(){
+            if (toggleBtn && filterSidebar) {
+                toggleBtn.addEventListener('click', function () {
                     filterSidebar.classList.toggle('show-filters');
+                    toggleBtn.classList.toggle('active');
                 });
             }
+
 
             function executeScripts(container){
                 container.querySelectorAll('script').forEach(function(oldScript){
@@ -773,7 +875,7 @@
 
             // AJAX pagination via event delegation
             document.addEventListener('click', function(e) {
-                const link = e.target.closest('.page-link');
+                const link = e.target.closest('a.page-item');
                 if (!link) return;
                 if (!productsContainer.contains(link)) return;
                 e.preventDefault();

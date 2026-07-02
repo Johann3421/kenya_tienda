@@ -53,8 +53,8 @@
         min-width: 0;
         flex: 0 0 calc(25% - 15px);
         scroll-snap-align: start;
-       /* display: flex;
-        flex-direction: column;*/
+        display: flex;
+        flex-direction: column;
         text-align: left;
         box-shadow: 0 2px 8px rgba(0,0,0,0.07);
         transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -68,6 +68,7 @@
     }
     .comp-novedad-badge {
         display: inline-block;
+        align-self: flex-start;
         background-color: #f26522;
         color: #fff;
         font-size: 0.75rem;
@@ -170,10 +171,10 @@
         .comp-novedad-card { flex: 0 0 calc(50% - 10px); }
     }
     @media (max-width: 576px) {
-        .comp-novedades-wrapper { padding: 0; }
-        .comp-novedad-card { flex: 0 0 85%; }
-        .comp-novedades-prev { left: 5px; }
-        .comp-novedades-next { right: 5px; }
+        .comp-novedades-wrapper { padding: 0 35px; }
+        .comp-novedad-card { flex: 0 0 100%; min-width: 260px; }
+        .comp-novedades-prev { left: 2px; }
+        .comp-novedades-next { right: 2px; }
     }
 </style>
 
