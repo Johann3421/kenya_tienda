@@ -2133,5 +2133,5 @@
     </script>
     <script type="text/javascript" src="{{ asset('js/barcode.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/jquery.printarea.js') }}"></script>
-    <script src="{{ asset('js/views/servicio/tecnico.js') }}"></script>
+    <script src="{{ asset('js/views/servicio/tecnico.js') }}?v={{ time() }}"></script>
 @endsection
