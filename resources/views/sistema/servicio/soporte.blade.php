@@ -2010,7 +2010,7 @@
                                     <td>
                                         <div :class="soporte.estado">@{{ Estado(soporte.estado) }}</div>
                                     </td>
-                                    <td>@{{ soporte.get_cliente.nombres }}</td>
+                                    <td>@{{ soporte.get_cliente ? soporte.get_cliente.nombres : 'CLIENTE NO ENCONTRADO' }}</td>
                                     <td class="text-center">@{{ Fecha2(soporte.fecha_registro) + ' ' + Hora(soporte.fecha_registro) }}</td>
                                     <td class="text-center">@{{ Fecha2(soporte.fecha_entrega) + ' ' + Hora(soporte.fecha_entrega) }}</td>
                                     <td class="text-center">@{{ soporte.serie }}</td>

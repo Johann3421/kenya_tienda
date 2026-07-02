@@ -324,7 +324,7 @@ new Vue({
                     this.result_id = seleccion.id;
                     this.result_barra = seleccion.codigo_barras;
                     let numeroCase = seleccion.numero_caso;
-                    let nombreCliente = seleccion.get_cliente.nombres;
+                    let nombreCliente = seleccion.get_cliente ? seleccion.get_cliente.nombres : 'SIN CLIENTE';
                     let pdfLink = seleccion.pdf_link ? 'https://www.kenya.com.pe' + seleccion.pdf_link : '';
                     let plainMsg = 'Estimados señores de ' + nombreCliente +
                '\nreciban un cordial saludo.\n\nLes informamos que el proceso de garantía, atendido por nuestro Soporte Técnico y correspondiente al número de caso N.° ' +
@@ -344,11 +344,11 @@ new Vue({
                     this.tipo_servicio = seleccion.servicio;
                     this.estado_servicio = seleccion.estado;
                     this.numero_documento = seleccion.cliente_id;
-                    this.tipo_documento = seleccion.get_cliente.tipo;
-                    this.nombres = seleccion.get_cliente.nombres;
-                    this.direccion = seleccion.get_cliente.direccion;
-                    this.email = seleccion.get_cliente.email;
-                    this.celular = seleccion.get_cliente.celular;
+                    this.tipo_documento = seleccion.get_cliente ? seleccion.get_cliente.tipo : '';
+                    this.nombres = seleccion.get_cliente ? seleccion.get_cliente.nombres : 'CLIENTE NO ENCONTRADO';
+                    this.direccion = seleccion.get_cliente ? seleccion.get_cliente.direccion : '';
+                    this.email = seleccion.get_cliente ? seleccion.get_cliente.email : '';
+                    this.celular = seleccion.get_cliente ? seleccion.get_cliente.celular : '';
                     this.equipo = seleccion.equipo;
                     this.marca = seleccion.marca;
                     this.modelo = seleccion.modelo;
@@ -404,8 +404,8 @@ try {
                         this.factura.tipo_documento = 1;
                     }
                     this.factura.numero_documento = seleccion.cliente_id;
-                    this.factura.denominacion = seleccion.get_cliente.nombres;
-                    this.factura.direccion = seleccion.get_cliente.direccion;
+                    this.factura.denominacion = seleccion.get_cliente ? seleccion.get_cliente.nombres : '';
+                    this.factura.direccion = seleccion.get_cliente ? seleccion.get_cliente.direccion : '';
 
                     this.factura.monto = seleccion.costo_servicio;
 
