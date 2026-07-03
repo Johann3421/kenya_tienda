@@ -1,23 +1,27 @@
-{{-- Tabs de navegacion --}}
-<ul class="nav nav-tabs" id="modalTabs" role="tablist">
+{{-- Tabs de navegacion - Vue driven (sin dependencia de Bootstrap tab plugin) --}}
+<ul class="nav nav-tabs" role="tablist">
     <li class="nav-item">
-        <a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab">General &amp; CPU</a>
+        <a class="nav-link" :class="{ active: activeTab === 'general' }"
+            href="#" @click.prevent="activeTab = 'general'">General &amp; CPU</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="specs-tab" data-toggle="tab" href="#specs" role="tab">Hardware</a>
+        <a class="nav-link" :class="{ active: activeTab === 'specs' }"
+            href="#" @click.prevent="activeTab = 'specs'">Hardware</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="otros-tab" data-toggle="tab" href="#otros" role="tab">Ofimática &amp; Códigos</a>
+        <a class="nav-link" :class="{ active: activeTab === 'otros' }"
+            href="#" @click.prevent="activeTab = 'otros'">Ofimática &amp; Códigos</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="imagenes-tab" data-toggle="tab" href="#imagenes" role="tab">Imágenes &amp; Ficha</a>
+        <a class="nav-link" :class="{ active: activeTab === 'imagenes' }"
+            href="#" @click.prevent="activeTab = 'imagenes'">Imágenes &amp; Ficha</a>
     </li>
 </ul>
 
-<div class="tab-content mt-2" id="modalTabsContent">
+<div class="tab-content mt-2">
 
     {{-- TAB 1: General & CPU --}}
-    <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+    <div class="tab-pane" :class="{ 'show active': activeTab === 'general' }" style="display: block;" v-show="activeTab === 'general'">
         <div class="form-row mt-2">
             <div class="form-group col-lg-6">
                 <label for="nombre" class="label-sm">NOMBRE <span class="text-danger">*</span></label>
@@ -62,7 +66,7 @@
             <div class="form-group col-lg-3">
                 <template v-if="!new_procesador">
                     <label for="procesador" class="label-sm">PROCESADOR
-                        <a href="#" title="Agregar nuevo Procesador" v-on:click="new_procesador = !new_procesador">[+ Nuevo]</a>
+                        <a href="#" @click.prevent="new_procesador = !new_procesador">[+ Nuevo]</a>
                     </label>
                     <select id="procesador" v-model="producto.procesador"
                         class="form-control fc-new" :class="[errors.procesador ? 'is-invalid' : '']"
@@ -74,8 +78,8 @@
                 <template v-else>
                     <label for="txt_procesador" class="label-sm">
                         PROCESADOR
-                        <a href="#" v-on:click="StoreProcesador" style="color:green;">[+ Guardar]</a>
-                        <a href="#" v-on:click="new_procesador = !new_procesador" style="color:red;">[Cancelar]</a>
+                        <a href="#" @click.prevent="StoreProcesador" style="color:green;">[+ Guardar]</a>
+                        <a href="#" @click.prevent="new_procesador = !new_procesador" style="color:red;">[Cancelar]</a>
                     </label>
                     <input type="text" class="form-control fc-new" id="txt_procesador" v-model="txt_procesador">
                 </template>
@@ -85,12 +89,12 @@
     </div>
 
     {{-- TAB 2: Hardware & Conectividad --}}
-    <div class="tab-pane fade" id="specs" role="tabpanel" aria-labelledby="specs-tab">
+    <div v-show="activeTab === 'specs'">
         <div class="form-row mt-2">
             <div class="form-group col-lg-3">
                 <template v-if="!new_ram">
                     <label for="ram" class="label-sm">RAM
-                        <a href="#" title="Agregar nueva RAM" v-on:click="new_ram = !new_ram">[+ Nuevo]</a>
+                        <a href="#" @click.prevent="new_ram = !new_ram">[+ Nuevo]</a>
                     </label>
                     <select id="ram" v-model="producto.ram" class="form-control fc-new"
                         :class="[errors.ram ? 'is-invalid' : '']" :readonly="loading">
@@ -101,8 +105,8 @@
                 <template v-else>
                     <label for="txt_ram" class="label-sm">
                         RAM
-                        <a href="#" v-on:click="StoreRam" style="color:green;">[+ Guardar]</a>
-                        <a href="#" v-on:click="new_ram = !new_ram" style="color:red;">[Cancelar]</a>
+                        <a href="#" @click.prevent="StoreRam" style="color:green;">[+ Guardar]</a>
+                        <a href="#" @click.prevent="new_ram = !new_ram" style="color:red;">[Cancelar]</a>
                     </label>
                     <input type="text" class="form-control fc-new" id="txt_ram" v-model="txt_ram">
                 </template>
@@ -111,7 +115,7 @@
             <div class="form-group col-lg-3">
                 <template v-if="!new_almacenamiento">
                     <label for="almacenamiento" class="label-sm">ALMACENAMIENTO
-                        <a href="#" title="Agregar nuevo Almacenamiento" v-on:click="new_almacenamiento = !new_almacenamiento">[+ Nuevo]</a>
+                        <a href="#" @click.prevent="new_almacenamiento = !new_almacenamiento">[+ Nuevo]</a>
                     </label>
                     <select id="almacenamiento" v-model="producto.almacenamiento"
                         class="form-control fc-new" :class="[errors.almacenamiento ? 'is-invalid' : '']"
@@ -123,8 +127,8 @@
                 <template v-else>
                     <label for="txt_almacen" class="label-sm">
                         ALMACENAMIENTO
-                        <a href="#" v-on:click="StoreAlmacen" style="color:green;">[+ Guardar]</a>
-                        <a href="#" v-on:click="new_almacenamiento = !new_almacenamiento" style="color:red;">[Cancelar]</a>
+                        <a href="#" @click.prevent="StoreAlmacen" style="color:green;">[+ Guardar]</a>
+                        <a href="#" @click.prevent="new_almacenamiento = !new_almacenamiento" style="color:red;">[Cancelar]</a>
                     </label>
                     <input type="text" class="form-control fc-new" id="txt_almacen" v-model="txt_almacen">
                 </template>
@@ -133,7 +137,7 @@
             <div class="form-group col-lg-3">
                 <template v-if="!new_tarjetavideo">
                     <label for="tarjetavideo" class="label-sm">TARJETA DE VIDEO
-                        <a href="#" v-on:click="new_tarjetavideo = !new_tarjetavideo">[+ Nuevo]</a>
+                        <a href="#" @click.prevent="new_tarjetavideo = !new_tarjetavideo">[+ Nuevo]</a>
                     </label>
                     <select id="tarjetavideo" v-model="producto.tarjetavideo"
                         class="form-control fc-new" :class="[errors.tarjetavideo ? 'is-invalid' : '']"
@@ -145,15 +149,15 @@
                 <template v-else>
                     <label for="txt_video" class="label-sm">
                         TARJETA DE VIDEO
-                        <a href="#" v-on:click="StoreTarjetavideo" style="color:green;">[+ Guardar]</a>
-                        <a href="#" v-on:click="new_tarjetavideo = !new_tarjetavideo" style="color:red;">[Cancelar]</a>
+                        <a href="#" @click.prevent="StoreTarjetavideo" style="color:green;">[+ Guardar]</a>
+                        <a href="#" @click.prevent="new_tarjetavideo = !new_tarjetavideo" style="color:red;">[Cancelar]</a>
                     </label>
                     <input type="text" class="form-control fc-new" id="txt_video" v-model="txt_video">
                 </template>
                 <small class="form-text error-color" v-if="errors.tarjetavideo">@{{ errors.tarjetavideo[0] }}</small>
             </div>
             <div class="form-group col-lg-3">
-                <label for="tipo_afectacion" class="label-sm">TIPO DE AFECTACIÓN <span class="text-danger">*</span></label>
+                <label for="tipo_afectacion" class="label-sm">AFECTACIÓN <span class="text-danger">*</span></label>
                 <select id="tipo_afectacion" v-model="producto.tipo_afectacion"
                     class="form-control fc-new" :class="[errors.tipo_afectacion ? 'is-invalid' : '']"
                     :readonly="loading">
@@ -166,48 +170,42 @@
         <div class="form-row">
             <div class="form-group col-lg-2">
                 <label for="conectividad" class="label-sm">LAN</label>
-                <select id="conectividad" v-model="producto.conectividad"
-                    class="form-control fc-new" :class="[errors.conectividad ? 'is-invalid' : '']" :readonly="loading">
+                <select id="conectividad" v-model="producto.conectividad" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
             </div>
             <div class="form-group col-lg-2">
                 <label for="conectividad_wlan" class="label-sm">WLAN</label>
-                <select id="conectividad_wlan" v-model="producto.conectividad_wlan"
-                    class="form-control fc-new" :class="[errors.conectividad_wlan ? 'is-invalid' : '']" :readonly="loading">
+                <select id="conectividad_wlan" v-model="producto.conectividad_wlan" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
             </div>
             <div class="form-group col-lg-2">
                 <label for="conectividad_usb" class="label-sm">USB</label>
-                <select id="conectividad_usb" v-model="producto.conectividad_usb"
-                    class="form-control fc-new" :class="[errors.conectividad_usb ? 'is-invalid' : '']" :readonly="loading">
+                <select id="conectividad_usb" v-model="producto.conectividad_usb" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
             </div>
             <div class="form-group col-lg-2">
                 <label for="video_vga" class="label-sm">VGA</label>
-                <select id="video_vga" v-model="producto.video_vga"
-                    class="form-control fc-new" :class="[errors.video_vga ? 'is-invalid' : '']" :readonly="loading">
+                <select id="video_vga" v-model="producto.video_vga" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
             </div>
             <div class="form-group col-lg-2">
                 <label for="video_hdmi" class="label-sm">HDMI</label>
-                <select id="video_hdmi" v-model="producto.video_hdmi"
-                    class="form-control fc-new" :class="[errors.video_hdmi ? 'is-invalid' : '']" :readonly="loading">
+                <select id="video_hdmi" v-model="producto.video_hdmi" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
             </div>
             <div class="form-group col-lg-2">
-                <label for="unidad_optica" class="label-sm">UNIDAD ÓPTICA</label>
-                <select id="unidad_optica" v-model="producto.unidad_optica"
-                    class="form-control fc-new" :class="[errors.unidad_optica ? 'is-invalid' : '']" :readonly="loading">
+                <label for="unidad_optica" class="label-sm">UNID. ÓPTICA</label>
+                <select id="unidad_optica" v-model="producto.unidad_optica" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
@@ -217,21 +215,18 @@
             <div class="form-group col-lg-4">
                 <label for="sistema_operativo" class="label-sm">SISTEMA OPERATIVO</label>
                 <input type="text" id="sistema_operativo" v-model="producto.sistema_operativo"
-                    class="form-control fc-new" :class="[errors.sistema_operativo ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
             </div>
             <div class="form-group col-lg-2">
                 <label for="teclado" class="label-sm">TECLADO</label>
-                <select id="teclado" v-model="producto.teclado" class="form-control fc-new"
-                    :class="[errors.teclado ? 'is-invalid' : '']" :readonly="loading">
+                <select id="teclado" v-model="producto.teclado" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
             </div>
             <div class="form-group col-lg-2">
                 <label for="mouse" class="label-sm">MOUSE</label>
-                <select id="mouse" v-model="producto.mouse" class="form-control fc-new"
-                    :class="[errors.mouse ? 'is-invalid' : '']" :readonly="loading">
+                <select id="mouse" v-model="producto.mouse" class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
@@ -240,12 +235,12 @@
     </div>
 
     {{-- TAB 3: Ofimática & Códigos --}}
-    <div class="tab-pane fade" id="otros" role="tabpanel" aria-labelledby="otros-tab">
+    <div v-show="activeTab === 'otros'">
         <div class="form-row mt-2">
             <div class="form-group col-lg-4">
                 <template v-if="!new_ofimatica">
                     <label for="suite_ofimatica" class="label-sm">SUITE OFIMÁTICA
-                        <a href="#" v-on:click="new_ofimatica = !new_ofimatica">[+ Nuevo]</a>
+                        <a href="#" @click.prevent="new_ofimatica = !new_ofimatica">[+ Nuevo]</a>
                     </label>
                     <select id="suite_ofimatica" v-model="producto.suite_ofimatica"
                         class="form-control fc-new" :class="[errors.suite_ofimatica ? 'is-invalid' : '']"
@@ -257,8 +252,8 @@
                 <template v-else>
                     <label for="txt_ofimatica" class="label-sm">
                         SUITE OFIMÁTICA
-                        <a href="#" v-on:click="StoreOfimatica" style="color:green;">[+ Guardar]</a>
-                        <a href="#" v-on:click="new_ofimatica = !new_ofimatica" style="color:red;">[Cancelar]</a>
+                        <a href="#" @click.prevent="StoreOfimatica" style="color:green;">[+ Guardar]</a>
+                        <a href="#" @click.prevent="new_ofimatica = !new_ofimatica" style="color:red;">[Cancelar]</a>
                     </label>
                     <input type="text" class="form-control fc-new" id="txt_ofimatica" v-model="txt_ofimatica">
                 </template>
@@ -267,8 +262,7 @@
             <div class="form-group col-lg-2">
                 <label for="garantia_de_fabrica" class="label-sm">GARANTÍA</label>
                 <select id="garantia_de_fabrica" v-model="producto.garantia_de_fabrica"
-                    class="form-control fc-new" :class="[errors.garantia_de_fabrica ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
                     <option value="SI">SI</option>
                     <option value="NO">NO</option>
                 </select>
@@ -276,8 +270,7 @@
             <div class="form-group col-lg-3">
                 <label for="empaque_de_fabrica" class="label-sm">EMPAQUE</label>
                 <select id="empaque_de_fabrica" v-model="producto.empaque_de_fabrica"
-                    class="form-control fc-new" :class="[errors.empaque_de_fabrica ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
                     <option value="CAJA">CAJA</option>
                     <option value="OTRO">OTRO</option>
                 </select>
@@ -285,34 +278,29 @@
             <div class="form-group col-lg-3">
                 <label for="certificacion" class="label-sm">CERTIFICACIÓN</label>
                 <input type="text" id="certificacion" v-model="producto.certificacion"
-                    class="form-control fc-new" :class="[errors.certificacion ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
             </div>
         </div>
         <div class="form-row">
             <div class="form-group col-lg-3">
                 <label for="codigo_barras" class="label-sm">CÓDIGO BARRAS</label>
                 <input type="text" id="codigo_barras" v-model="producto.codigo_barras"
-                    class="form-control fc-new" :class="[errors.codigo_barras ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
             </div>
             <div class="form-group col-lg-3">
                 <label for="codigo_interno" class="label-sm">CÓDIGO INTERNO</label>
                 <input type="text" id="codigo_interno" v-model="producto.codigo_interno"
-                    class="form-control fc-new" :class="[errors.codigo_interno ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
             </div>
             <div class="form-group col-lg-3">
                 <label for="codigo_sunat" class="label-sm">CÓDIGO SUNAT</label>
                 <input type="text" id="codigo_sunat" v-model="producto.codigo_sunat"
-                    class="form-control fc-new" :class="[errors.codigo_sunat ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
             </div>
             <div class="form-group col-lg-3">
                 <label for="linea_producto" class="label-sm">LÍNEA PRODUCTO</label>
                 <input type="text" id="linea_producto" v-model="producto.linea_producto"
-                    class="form-control fc-new" :class="[errors.linea_producto ? 'is-invalid' : '']"
-                    :readonly="loading">
+                    class="form-control fc-new" :readonly="loading">
             </div>
         </div>
         <div class="form-row">
@@ -326,7 +314,7 @@
     </div>
 
     {{-- TAB 4: Imágenes & Ficha Técnica --}}
-    <div class="tab-pane fade" id="imagenes" role="tabpanel" aria-labelledby="imagenes-tab">
+    <div v-show="activeTab === 'imagenes'">
         <div class="form-row mt-2">
             {{-- PDF Ficha Técnica --}}
             <div class="col-lg-12 mb-3">
@@ -343,7 +331,6 @@
                     </a>
                     <span v-else class="text-muted small ml-2">Sin ficha adjunta</span>
                 </div>
-                <small class="form-text error-color" v-if="errors.pdf_ficha">@{{ errors.pdf_ficha[0] }}</small>
             </div>
 
             {{-- Imágenes --}}
@@ -380,7 +367,7 @@
                             Ficha Editada Localmente
                         </label>
                     </div>
-                    <small class="ml-3 text-muted">Al activar esto, la próxima sincronización de la API <strong>no sobreescribirá</strong> este producto.</small>
+                    <small class="ml-3 text-muted">Al activar, la API <strong>no sobreescribirá</strong> este producto en la próxima sincronización.</small>
                 </div>
             </div>
         </div>

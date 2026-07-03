@@ -106,6 +106,7 @@ new Vue({
         resultadosBusqueda: [],
         productoSeleccionado: null,
         archivosExcel: [],
+        activeTab: 'general',
     },
     created() {
         this.Buscar();
