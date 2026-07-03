@@ -34,7 +34,8 @@ Route::get('/', function () {
     $ofertas = App\Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->where('precio_anterior', '!=', null)->get();
     $novedades = App\Producto::with('modelo')->orderBy('created_at', 'DESC')->where('pagina_web', 'SI')->paginate(16);
     $banners = App\Models\Banner::where('activo', 'SI')->get();
-    return view('welcome', compact('categorias', 'productos', 'ofertas', 'novedades', 'banners', 'modelo'));
+    $ofertas_web = App\Models\OfertaWeb::where('activo', 'SI')->get();
+    return view('welcome', compact('categorias', 'productos', 'ofertas', 'novedades', 'banners', 'modelo', 'ofertas_web'));
     //return $productos;
 });
 Route::get('catalogo/{id}/detallemod', 'CatalogoController@detallemod')->name('detallemod');
@@ -386,6 +387,12 @@ Route::group(['middleware' => ['can:pagina_web']], function () {
     Route::post('/web/banners/store', 'BannerController@store');
     Route::post('/web/banners/update', 'BannerController@update');
     Route::post('/web/banners/delete', 'BannerController@delete');
+
+    Route::get('/web/ofertas', 'OfertasWebController@index')->name('ofertas');
+    Route::post('/web/ofertas/buscar', 'OfertasWebController@buscar');
+    Route::post('/web/ofertas/store', 'OfertasWebController@store');
+    Route::post('/web/ofertas/update', 'OfertasWebController@update');
+    Route::post('/web/ofertas/delete', 'OfertasWebController@delete');
 });
 
 // --------------------- CONFIGURACION --------------------------------

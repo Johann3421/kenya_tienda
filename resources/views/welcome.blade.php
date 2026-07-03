@@ -588,15 +588,15 @@
         #main-welcome-container .novedades-title h2 {
             font-size: 2.2rem !important;
             font-weight: 700 !important;
-            text-transform: uppercase !important;
-            color: white !important;
+            /*text-transform: uppercase !important;*/
+            color: black !important;
             display: inline-block !important;
-            background: linear-gradient(135deg, #f26522 0%, #e67125 100%) !important;
+            /*background: linear-gradient(135deg, #f26522 0%, #e67125 100%) !important;*/
             padding: 8px 25px !important;
             border-radius: 55px !important;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
             letter-spacing: 1.5px !important;
-            box-shadow: 0 6px 15px rgba(242,101,34,0.4) !important;
+            /*box-shadow: 0 6px 15px rgba(242,101,34,0.4) !important;*/
             border: 2px solid rgba(255,255,255,0.2) !important;
             margin: 0 !important;
         }
@@ -1074,6 +1074,14 @@
             background: linear-gradient(135deg, #c62828, #b71c1c) !important;
         }
 
+        @media (max-width: 768px) {
+            #main-welcome-container .ofertas-grid {
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+                gap: 16px !important;
+                padding: 0 !important;
+            }
+        }
+
         /* CLASES DE MARCA PARA TIPOGRAFÍAS */
         #main-welcome-container .brand-ezent .producto-titulo,
         #main-welcome-container .brand-ezent .hero-slide {
@@ -1159,7 +1167,7 @@
         <section class="productos-section">
             <div class="section-container">
                 <div class="section-title">
-                    <h2>Categorías</h2>
+                    <h2>Categorías de producto</h2>
                 </div>
 
                 <!-- GRID DE CATEGORÍAS -->
@@ -1248,33 +1256,22 @@
                 </div>
 
                 <div class="ofertas-grid">
+                    @foreach($ofertas_web as $oferta)
+                    @php
+                        $imgSrc = str_contains($oferta->imagen, '/')
+                            ? asset('storage/' . $oferta->imagen)
+                            : asset($oferta->imagen);
+                    @endphp
                     <div class="oferta-card">
                         <div class="oferta-content">
-                            <h3>OFISZU SFF</h3>
-                            <p>Ofreciendo equipos ultra compactos, elegantes y eficientes.</p>
+                            <h3>{{ $oferta->titulo }}</h3>
+                            <p>{{ $oferta->descripcion }}</p>
                         </div>
-                        <div class="oferta-image-wrapper bg-purple">
-                            <img src="{{ asset('ofiszusff.png') }}" alt="Ofiszu SFF">
-                        </div>
-                    </div>
-                    <div class="oferta-card">
-                        <div class="oferta-content">
-                            <h3>Grandes descuentos</h3>
-                            <p>Es tu oportunidad para renovar o adquirir tu equipo Kenya</p>
-                        </div>
-                        <div class="oferta-image-wrapper bg-dark-purple">
-                            <img src="{{ asset('descuentos.png') }}" alt="Descuentos Kenya">
+                        <div class="oferta-image-wrapper {{ $oferta->color_fondo }}">
+                            <img src="{{ $imgSrc }}" alt="{{ $oferta->titulo }}">
                         </div>
                     </div>
-                    <div class="oferta-card">
-                        <div class="oferta-content">
-                            <h3>EZENT V1_MT</h3>
-                            <p>Equipo diseñado especialmente para usuarios de oficina y empresas</p>
-                        </div>
-                        <div class="oferta-image-wrapper bg-red">
-                            <img src="{{ asset('cuabanner.png') }}" alt="Ezent V1 MT">
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </section>

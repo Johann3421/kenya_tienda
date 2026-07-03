@@ -119,6 +119,7 @@
                     <a href="#" class="nav-link "><span class="pcoded-micon"><i class="fas fa-tv"></i></span><span class="pcoded-mtext">Página Web</span></a>
                     <ul class="pcoded-submenu">
                         <li><a href="{{route('banners')}}">Banners</a></li>
+                        <li><a href="{{route('ofertas')}}">Ofertas</a></li>
                     </ul>
                 </li>
                 @endcan
