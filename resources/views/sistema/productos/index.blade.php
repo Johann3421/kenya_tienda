@@ -1948,8 +1948,9 @@ v-on:click="formularioModal('modal-lg', null, 'import_spec', null)">
                                             <td class="text-center">@{{ producto.ficha_tecnica }}</td>
 
                                             <td class="text-center">
-                                                <span v-if="producto.ficha_editada_localmente" class="badge badge-warning">Local</span>
-                                                <span v-else class="badge badge-info">API</span>
+                                                <span v-if="producto.codigo_pc && !producto.ficha_editada_localmente" class="badge badge-info">API</span>
+                                                <span v-else-if="producto.codigo_pc && producto.ficha_editada_localmente" class="badge badge-warning">API (Editado)</span>
+                                                <span v-else class="badge badge-secondary">Local</span>
                                             </td>
                                             <td class="text-center">
                                                 <span v-if="producto.activo === 'SI'" class="badge badge-success">SI</span>

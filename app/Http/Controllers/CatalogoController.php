@@ -140,7 +140,7 @@ class CatalogoController extends Controller
     {
         if ($request->id) {
             $productos = Producto::with('getCategoria', 'getMarca','getModelo')->where('pagina_web', 'SI')
-                                    ->where('categoria_id','modelo_id', $request->id)
+                                    ->where('categoria_id', $request->id)
                                     ->orderBy('nombre', 'ASC')->paginate(6);
         } else {
             $productos = Producto::where('pagina_web', 'SI')
