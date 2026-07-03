@@ -141,6 +141,7 @@ public function store(Request $request)
         $producto->linea_producto = Str::upper($request->linea_producto);
         $producto->categoria_id = $request->categoria;
         $producto->marca_id = $request->marca;
+        $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
 
         $producto->save();
 

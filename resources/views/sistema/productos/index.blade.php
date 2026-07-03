@@ -628,6 +628,15 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12 text-left p-0 m-0 pb-1 mt-1">
+                                    <div class="custom-control custom-switch pt-1 pb-1 pr-1 pl-3">
+                                        <input type="checkbox" class="custom-control-input" id="ficha_editada_localmente_nuevo"
+                                            v-model="producto.ficha_editada_localmente">
+                                        <label class="custom-control-label" for="ficha_editada_localmente_nuevo">
+                                            Ficha Editada Localmente (Bloquea actualización de API)
+                                        </label>
+                                    </div>
+                                </div>
                                 <div class="modal-footer" style="padding: 10px 15px;">
                                     <button class="btn btn-primary btn-block event-btn" v-on:click="Store"
                                         :disabled="loading">
@@ -1269,6 +1278,15 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-left p-0 m-0 pb-1 mt-1">
+                                    <div class="custom-control custom-switch pt-1 pb-1 pr-1 pl-3">
+                                        <input type="checkbox" class="custom-control-input" id="ficha_editada_localmente_editar"
+                                            v-model="producto.ficha_editada_localmente">
+                                        <label class="custom-control-label" for="ficha_editada_localmente_editar">
+                                            Ficha Editada Localmente (Bloquea actualización de API)
+                                        </label>
                                     </div>
                                 </div>
                                 <div class="modal-footer" style="padding: 10px 15px;">

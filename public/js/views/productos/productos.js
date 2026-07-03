@@ -531,6 +531,7 @@ eliminarArchivoExcel(index) {
             this.loading = true;
 
             var formData  = new FormData();
+            formData.append('ficha_editada_localmente', this.producto.ficha_editada_localmente ? 1 : 0);
             formData.append('id', this.id);
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
@@ -606,6 +607,7 @@ eliminarArchivoExcel(index) {
             this.loading = true;
 
             var formData  = new FormData();
+            formData.append('ficha_editada_localmente', this.producto.ficha_editada_localmente ? 1 : 0);
             formData.append('id', this.id);
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
