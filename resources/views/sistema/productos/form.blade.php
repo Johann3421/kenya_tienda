@@ -325,7 +325,7 @@
                         <input type="file" id="file" style="display: none;"
                             v-on:change="changePdf($event)" accept="application/pdf">
                     </label>
-                    <a v-if="producto.ficha_tecnica" :href="'/storage/' + producto.ficha_tecnica"
+                    <a v-if="producto.pdf_ficha" :href="getPdfUrl(producto.pdf_ficha)"
                         target="_blank" class="btn btn-outline-info btn-sm mb-0">
                         <i class="fa fa-eye mr-1"></i> Ver PDF actual
                     </a>

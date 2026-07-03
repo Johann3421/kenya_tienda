@@ -307,6 +307,23 @@ eliminarArchivoExcel(index) {
                     this.producto.descripcion = (seleccion.descripcion == null) ? '' : seleccion.descripcion;
                     this.producto.especificaciones = (seleccion.especificaciones == null) ? '' : seleccion.especificaciones;
 
+                    // Ensure DB values exist in dropdown lists so they don't appear blank
+                    if (seleccion.procesador && !this.listaProcesadores.find(p => p.nom_pros === seleccion.procesador)) {
+                        this.listaProcesadores.push({ nom_pros: seleccion.procesador });
+                    }
+                    if (seleccion.ram && !this.listaRam.find(r => r.nom_ram === seleccion.ram)) {
+                        this.listaRam.push({ nom_ram: seleccion.ram });
+                    }
+                    if (seleccion.tarjetavideo && !this.listaTarjetavideo.find(v => v.tarjetavideo === seleccion.tarjetavideo)) {
+                        this.listaTarjetavideo.push({ tarjetavideo: seleccion.tarjetavideo });
+                    }
+                    if (seleccion.almacenamiento && !this.listaAlmacenamiento.find(a => a.cant_almcen === seleccion.almacenamiento)) {
+                        this.listaAlmacenamiento.push({ cant_almcen: seleccion.almacenamiento });
+                    }
+                    if (seleccion.suite_ofimatica && !this.listaOfimatica.find(o => o.ofimatica === seleccion.suite_ofimatica)) {
+                        this.listaOfimatica.push({ ofimatica: seleccion.suite_ofimatica });
+                    }
+
                     this.producto.procesador = seleccion.procesador;
                     this.producto.tarjetavideo = seleccion.tarjetavideo;
                     this.producto.nro_parte = seleccion.nro_parte;
@@ -976,6 +993,12 @@ eliminarArchivoExcel(index) {
             }
 
             this.producto.pdf_ficha = files[0];
+        },
+        getPdfUrl(url) {
+            if (!url) return '#';
+            if (typeof url !== 'string') return '#';
+            if (url.startsWith('http')) return url;
+            return '/storage/' + url;
         },
         Soles(num){
             $soles = Number.parseFloat(num).toFixed(2)
