@@ -8,9 +8,37 @@
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
+@font-face {
+  font-family: 'Orbitron';
+  src: url('/TIPOGRAFIA/Orbitron-Black.ttf') format('truetype');
+  font-weight: 900;
+}
+@font-face {
+  font-family: 'Tourmaline';
+  src: url('/TIPOGRAFIA/Tourmaline-Evolution.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'United Kingdom';
+  src: url('/TIPOGRAFIA/United Kingdom.otf') format('opentype');
+}
+
+
 body {
   font-family: "Inter", sans-serif;
   color: #444;
+}
+
+/* CLASES DE NUEVA TIPOGRAFIA */
+.font-orbitron {
+  font-family: 'Orbitron', sans-serif !important;
+}
+
+.font-tourmaline {
+  font-family: 'Tourmaline', sans-serif !important;
+}
+
+.font-uk {
+  font-family: 'United Kingdom', sans-serif !important;
 }
 
 a {

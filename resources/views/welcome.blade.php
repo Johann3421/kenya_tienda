@@ -109,8 +109,10 @@
         }
 
         #main-welcome-container .hero-slide h1 {
-            font-size: 3.5rem !important;
-            font-weight: 700 !important;
+            font-size: 2.7rem !important;
+            font-weight: 900 !important;
+            letter-spacing: 2px !important;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5) !important;
             margin: 0 0 20px 0 !important;
             color: #ffffff !important;
             transform: translateY(30px) !important;
@@ -125,8 +127,9 @@
         }
 
         #main-welcome-container .hero-slide h2 {
-            font-size: 2.5rem !important;
-            font-weight: 700 !important;
+            font-size: 1.2rem !important;
+            font-weight: 400 !important;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5) !important;
             margin: 0 0 15px 0 !important;
             color: #ffffff !important;
             transform: translateY(30px) !important;
@@ -141,8 +144,8 @@
         }
 
         #main-welcome-container .hero-slide p {
-            font-size: 1.3rem !important;
-            font-weight: 500 !important;
+            font-size: 1.6rem !important;
+            font-weight: 300 !important;
             margin: 0 0 35px 0 !important;
             max-width: 550px !important;
             color: #fff !important;
