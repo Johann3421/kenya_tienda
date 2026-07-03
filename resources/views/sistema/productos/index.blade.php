@@ -1917,6 +1917,8 @@ v-on:click="formularioModal('modal-lg', null, 'import_spec', null)">
                                     <th class="cell-3">Num. Parte</th>
                                     <th class="cell-4 text-center">Modelo</th>
                                     <th class="cell-6 text-center">Ficha Tecnica</th>
+                                    <th class="text-center">Origen Ficha</th>
+                                    <th class="text-center">Activo</th>
                                     <th class="cell-8 text-center">Web</th>
                                 </tr>
                             </thead>
@@ -1944,6 +1946,15 @@ v-on:click="formularioModal('modal-lg', null, 'import_spec', null)">
                                             </td>
 
                                             <td class="text-center">@{{ producto.ficha_tecnica }}</td>
+
+                                            <td class="text-center">
+                                                <span v-if="producto.ficha_editada_localmente" class="badge badge-warning">Local</span>
+                                                <span v-else class="badge badge-info">API</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span v-if="producto.activo === 'SI'" class="badge badge-success">SI</span>
+                                                <span v-else class="badge badge-danger">NO</span>
+                                            </td>
 
                                             <td class="text-center">
                                                 <a href="#" v-if="producto.pagina_web == 'SI'"
