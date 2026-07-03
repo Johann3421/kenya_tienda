@@ -1087,28 +1087,29 @@
 
         /* CLASES DE MARCA PARA TIPOGRAFÍAS */
         #main-welcome-container .brand-ezent .producto-titulo,
-        #main-welcome-container .brand-ezent .hero-slide {
-            font-family: 'EzentFont', sans-serif !important;
+        #main-welcome-container .brand-ezent .hero-slide h1 {
+            font-family: 'United Kingdom', sans-serif !important;
+            font-weight: 900 !important;
         }
 
         #main-welcome-container .brand-genwork .producto-titulo,
-        #main-welcome-container .brand-genwork .hero-slide {
-            font-family: 'GenworkFont', sans-serif !important;
+        #main-welcome-container .brand-genwork .hero-slide h1 {
+            font-family: 'United Kingdom', sans-serif !important;
         }
 
         #main-welcome-container .brand-ofiszu .producto-titulo,
-        #main-welcome-container .brand-ofiszu .hero-slide {
-            font-family: 'OfiszuFont', sans-serif !important;
+        #main-welcome-container .brand-ofiszu .hero-slide h1 {
+            font-family: 'Tourmaline', sans-serif !important;
         }
 
         #main-welcome-container .brand-prowork .producto-titulo,
-        #main-welcome-container .brand-prowork .hero-slide {
-            font-family: 'ProworkFont', sans-serif !important;
+        #main-welcome-container .brand-prowork .hero-slide h1 {
+            font-family: 'Orbitron', sans-serif !important;
         }
 
         #main-welcome-container .brand-raito .producto-titulo,
-        #main-welcome-container .brand-raito .hero-slide {
-            font-family: 'RaitoFont', sans-serif !important;
+        #main-welcome-container .brand-raito .hero-slide h1 {
+            font-family: 'Orbitron', sans-serif !important;
         }
     </style>
 @endsection
