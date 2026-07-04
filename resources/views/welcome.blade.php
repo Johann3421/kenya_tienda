@@ -1123,7 +1123,17 @@
              ══════════════════════════════════════════════════════════ -->
         <section class="hero-slider-section">
             @foreach ($banners as $index => $banner)
-                <div class="hero-slide @if($index == 0) active @endif" style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover;">
+                @php
+                    $bannerTitulo = strtoupper($banner->titulo ?? '');
+                    $brandClass = '';
+                    if (str_contains($bannerTitulo, 'EZENT'))        $brandClass = 'brand-ezent';
+                    elseif (str_contains($bannerTitulo, 'GENWORK'))  $brandClass = 'brand-genwork';
+                    elseif (str_contains($bannerTitulo, 'OFISZU'))   $brandClass = 'brand-ofiszu';
+                    elseif (str_contains($bannerTitulo, 'HENKO'))    $brandClass = 'brand-henko';
+                    elseif (str_contains($bannerTitulo, 'PROWORK'))  $brandClass = 'brand-prowork';
+                    elseif (str_contains($bannerTitulo, 'RAITO'))    $brandClass = 'brand-raito';
+                @endphp
+                <div class="hero-slide {{ $brandClass }} @if($index == 0) active @endif" style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover;">
                     <div class="hero-slide-content">
                         <h1>{{ $banner->titulo }}</h1>
                         <h2>{{ $banner->descripcion }}</h2>
