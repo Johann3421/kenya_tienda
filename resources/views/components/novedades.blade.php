@@ -14,14 +14,14 @@
         font-size: 2.2rem;
         font-weight: 700;
         text-transform: uppercase;
-        color: white;
+        color: black;
         display: inline-block;
-        background: linear-gradient(135deg, #f26522 0%, #e67125 100%);
+        /*background: linear-gradient(135deg, #f26522 0%, #e67125 100%);*/
         padding: 8px 25px;
         border-radius: 55px;
         text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         letter-spacing: 1.5px;
-        box-shadow: 0 6px 15px rgba(242,101,34,0.4);
+        /*box-shadow: 0 6px 15px rgba(242,101,34,0.4);*/
         border: 2px solid rgba(255,255,255,0.2);
         margin: 0;
     }
