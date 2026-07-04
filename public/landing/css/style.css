@@ -10,16 +10,16 @@
 --------------------------------------------------------------*/
 @font-face {
   font-family: 'Orbitron';
-  src: url('/TIPOGRAFIA/Orbitron-Black.ttf') format('truetype');
+  src: url('../../TIPOGRAFIA/Orbitron-Black.ttf') format('truetype');
   font-weight: 900;
 }
 @font-face {
   font-family: 'Tourmaline';
-  src: url('/TIPOGRAFIA/Tourmaline-Evolution.ttf') format('truetype');
+  src: url('../../TIPOGRAFIA/Tourmaline-Evolution.ttf') format('truetype');
 }
 @font-face {
   font-family: 'United Kingdom';
-  src: url('/TIPOGRAFIA/United Kingdom.otf') format('opentype');
+  src: url('../../TIPOGRAFIA/United Kingdom.otf') format('opentype');
 }
 
 
