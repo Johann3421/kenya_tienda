@@ -1008,6 +1008,28 @@
             .slide h1 { font-size: 0.85rem; }
             .slide h2 { font-size: 1.1rem; margin-bottom: 10px; }
         }
+
+        /* FUENTES PERSONALIZADAS APLICADAS */
+        @font-face {
+            font-family: 'Orbitron';
+            src: url('./TIPOGRAFIA/Orbitron-Black.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'Tourmaline';
+            src: url('./TIPOGRAFIA/Tourmaline-Evolution.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'United Kingdom';
+            src: url('./TIPOGRAFIA/United Kingdom.otf') format('opentype');
+        }
+        
+        .slide:nth-child(1) h1 { font-family: 'Orbitron', sans-serif; }
+        .slide:nth-child(2) h1 { font-family: 'Tourmaline', sans-serif; font-weight: normal; }
+        .slide:nth-child(3) h1 { font-family: 'United Kingdom', sans-serif; font-weight: normal; letter-spacing: 2px; }
+        
+        /* Aplicar Orbitron a títulos secundarios como demo */
+        .section-title { font-family: 'Orbitron', sans-serif; }
+        .card h3 { font-family: 'Tourmaline', sans-serif; font-size: 1.6rem; }
     </style>
 </head>
 <body>
