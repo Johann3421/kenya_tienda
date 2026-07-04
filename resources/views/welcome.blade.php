@@ -819,44 +819,38 @@
         }
 
         #main-welcome-container .promo-content {
-            display: grid !important;
-            grid-template-columns: 1fr 1.5fr 1fr !important;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
             align-items: center !important;
+            justify-content: center !important;
             gap: 30px !important;
             max-width: 1400px !important;
             margin: 0 auto !important;
-            padding: 0 30px !important;
+            padding: 0 20px !important;
+            white-space: nowrap !important;
         }
 
         #main-welcome-container .promo-left {
-            text-align: right !important;
-            font-size: 1.2rem !important;
+            font-size: 1.15rem !important;
             font-weight: 700 !important;
             color: #000 !important;
-            line-height: 1.3 !important;
         }
 
         #main-welcome-container .promo-center {
-            text-align: center !important;
             display: flex !important;
-            flex-direction: column !important;
             align-items: center !important;
             color: #000 !important;
+            font-size: 1.1rem !important;
         }
 
         #main-welcome-container .promo-right {
             display: flex !important;
-            justify-content: flex-start !important;
-        }
-
-        #main-welcome-container .promo-center strong {
-            font-size: 1.05rem !important;
-            margin-bottom: 2px !important;
+            align-items: center !important;
         }
 
         #main-welcome-container .promo-center span {
-            font-size: 1.05rem !important;
-            color: #555 !important;
+            color: #444 !important;
         }
 
         #main-welcome-container .btn-saber-mas {
@@ -1089,6 +1083,18 @@
                 grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
                 gap: 16px !important;
                 padding: 0 !important;
+            }
+            #main-welcome-container .promo-content {
+                flex-wrap: wrap !important;
+                white-space: normal !important;
+                text-align: center !important;
+                gap: 15px !important;
+            }
+            #main-welcome-container .promo-center {
+                text-align: center !important;
+            }
+            #main-welcome-container .promo-left {
+                text-align: center !important;
             }
         }
 
