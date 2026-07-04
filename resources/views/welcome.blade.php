@@ -835,6 +835,10 @@
             font-size: 1.15rem !important;
             font-weight: 700 !important;
             color: #000 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 1.5px !important;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
         }
 
         #main-welcome-container .promo-center {

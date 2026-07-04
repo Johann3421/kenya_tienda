@@ -52,8 +52,12 @@
 
         #quienes-somos-page .hero-content h1 {
             font-size: 3rem;
-            font-weight: 800;
             margin-bottom: -3px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
         }
 
         #quienes-somos-page .hero-content p {

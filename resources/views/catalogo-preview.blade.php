@@ -44,10 +44,12 @@
         .page-banner h1 {
             color: #000000;
             font-size: 2.8rem;
-            font-weight: 800;
+            font-weight: 700;
             margin: 0;
-            letter-spacing: 1px;
-            text-shadow: 0px 0px 10px rgba(255,255,255,0.8);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
         }
 
         .page-banner .banner-subtitle {
