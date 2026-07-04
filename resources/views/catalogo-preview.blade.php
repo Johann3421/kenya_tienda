@@ -11,45 +11,51 @@
         .page-banner {
             position: relative;
             width: 100%;
-            height: 284px; 
-            background-color: #333;
+            height: 300px; 
+            background-color: #e6e6e6;
             background-image: url('{{ asset('banercatalogo.png?v=2') }}'); 
             background-size: cover;
             background-position: center;
             display: flex;
             align-items: center;
-            justify-content: center;
         }
 
         .page-banner::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255 255 255 / 35%); 
+            background: rgba(255 255 255 / 45%); 
             z-index: 1;
         }
 
-        .page-banner .banner-content {
+        .page-banner .banner-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
             position: relative;
             z-index: 2;
-            text-align: center;
-            padding: 0 20px;
+        }
+
+        .page-banner .banner-content {
+            text-align: left;
         }
 
         .page-banner h1 {
             color: #000000;
-            font-size: 2.2rem;
-            font-weight: 700;
+            font-size: 2.8rem;
+            font-weight: 800;
             margin: 0;
             letter-spacing: 1px;
-            text-shadow: 0px 0px 0px rgba(0,0,0,0.0);
+            text-shadow: 0px 0px 10px rgba(255,255,255,0.8);
         }
 
         .page-banner .banner-subtitle {
-            color: #333333;
-            font-size: 1.1rem;
+            color: #222222;
+            font-size: 1.25rem;
             margin-top: 10px;
-            font-weight: 500;
+            font-weight: 600;
+            max-width: 600px;
         }
 
         @media (max-width: 768px) {
