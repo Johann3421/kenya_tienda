@@ -39,10 +39,17 @@
         .page-banner h1 {
             color: #000000;
             font-size: 2.2rem;
-            font-weight: 400;
+            font-weight: 700;
             margin: 0;
             letter-spacing: 1px;
             text-shadow: 0px 0px 0px rgba(0,0,0,0.0);
+        }
+
+        .page-banner .banner-subtitle {
+            color: #333333;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
@@ -657,8 +664,11 @@
 
 @section('content')
     <div class="page-banner">
-        <div class="banner-content">
-            <h1>Catálogo Electrónico de Acuerdo Marco</h1>
+        <div class="container banner-container">
+            <div class="banner-content">
+                <h1>Catálogo Electrónico de Acuerdo Marco</h1>
+                <p class="banner-subtitle">Descubre nuestra selección de equipos de computo.</p>
+            </div>
         </div>
     </div>
 
