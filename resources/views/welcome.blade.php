@@ -35,32 +35,32 @@
            ═══════════════════════════════════════════════════════════════ */
         @font-face {
             font-family: 'EzentFont';
-            src: url('/TIPOGRAFIA%20KENYA/EZENT/Ezent-Regular.ttf') format('truetype'),
-                 url('/TIPOGRAFIA%20KENYA/EZENT/Ezent-Regular.otf') format('opentype');
+            src: url('{{ asset("TIPOGRAFIA%20KENYA/EZENT/Ezent-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA%20KENYA/EZENT/Ezent-Regular.otf") }}') format('opentype');
             font-display: swap;
         }
         @font-face {
             font-family: 'GenworkFont';
-            src: url('/TIPOGRAFIA%20KENYA/GENWORK/Genwork-Regular.ttf') format('truetype'),
-                 url('/TIPOGRAFIA%20KENYA/GENWORK/Genwork-Regular.otf') format('opentype');
+            src: url('{{ asset("TIPOGRAFIA%20KENYA/GENWORK/Genwork-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA%20KENYA/GENWORK/Genwork-Regular.otf") }}') format('opentype');
             font-display: swap;
         }
         @font-face {
             font-family: 'OfiszuFont';
-            src: url('/TIPOGRAFIA%20KENYA/OFISZU%20Y%20HENKO/OfiszuYHenko-Regular.ttf') format('truetype'),
-                 url('/TIPOGRAFIA%20KENYA/OFISZU%20Y%20HENKO/OfiszuYHenko-Regular.otf') format('opentype');
+            src: url('{{ asset("TIPOGRAFIA%20KENYA/OFISZU%20Y%20HENKO/OfiszuYHenko-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA%20KENYA/OFISZU%20Y%20HENKO/OfiszuYHenko-Regular.otf") }}') format('opentype');
             font-display: swap;
         }
         @font-face {
             font-family: 'ProworkFont';
-            src: url('/TIPOGRAFIA%20KENYA/PROWORK/Prowork-Regular.ttf') format('truetype'),
-                 url('/TIPOGRAFIA%20KENYA/PROWORK/Prowork-Regular.otf') format('opentype');
+            src: url('{{ asset("TIPOGRAFIA%20KENYA/PROWORK/Prowork-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA%20KENYA/PROWORK/Prowork-Regular.otf") }}') format('opentype');
             font-display: swap;
         }
         @font-face {
             font-family: 'RaitoFont';
-            src: url('/TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.ttf') format('truetype'),
-                 url('/TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.otf') format('opentype');
+            src: url('{{ asset("TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.ttf") }}') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.otf") }}') format('opentype');
             font-display: swap;
         }
 
@@ -1154,7 +1154,7 @@
         <section class="promo-empresas">
             <div class="promo-content">
                 <div class="promo-left">
-                    <strong>¿Busca equipos para su empresa?</strong>
+                    <strong>¿Busca equipos para Sector publico/privado?</strong>
                 </div>
                 <div class="promo-center">
                     <span>Las nuevas empresas afiliadas a Kenya reciben beneficios únicos en su primer pedido.</span>
