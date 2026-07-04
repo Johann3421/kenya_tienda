@@ -1218,7 +1218,14 @@
                         </button>
                     @endforeach
                 </div>
+            </div>
+        </section>
 
+        <!-- ═══════════════════════════════════════════════════════════
+             SECCIÓN DE OFERTAS (Y CARRUSEL)
+             ═══════════════════════════════════════════════════════════ -->
+        <section class="ofertas-section">
+            <div class="section-container">
                 <!-- CARRUSEL DE PRODUCTOS -->
                 <div class="productos-carousel">
                     <button class="carousel-btn carousel-prev" aria-label="Anterior">
@@ -1269,14 +1276,7 @@
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                 </div>
-            </div>
-        </section>
 
-        <!-- ═══════════════════════════════════════════════════════════
-             SECCIÓN DE OFERTAS
-             ═══════════════════════════════════════════════════════════ -->
-        <section class="ofertas-section">
-            <div class="section-container">
                 <div class="ofertas-heading">
                     <h2>Ver Ofertas</h2>
                     <p>Productos con super promociones y descuentos</p>
