@@ -397,7 +397,7 @@
 
         @media (max-width: 768px) {
             .hero-banner { padding: 40px 5%; } 
-            .hero-content h1 { font-size: 2rem; }
+            .hero-content h1 { font-size: 1.8rem; line-height: 1.2; }
             .hero-content p { font-size: 1rem; }
             
             .filter-bar {
@@ -409,6 +409,9 @@
             }
             .filter-dropdowns {
                 flex-direction: column;
+            }
+            .product-grid {
+                grid-template-columns: 1fr;
             }
         }
     

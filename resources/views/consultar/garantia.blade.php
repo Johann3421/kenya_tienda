@@ -210,10 +210,11 @@
             #garantia .support-nav li a { padding: 10px 16px; font-size: 0.85rem; gap: 6px; }
         }
         @media (max-width: 576px) {
-            #garantia .support-hero { padding: 55px 16px; }
-            #garantia .support-hero h1 { font-size: 1.5rem; }
+            #garantia .support-hero { padding: 40px 16px; }
+            #garantia .support-hero h1 { font-size: 1.4rem; line-height: 1.25; }
             #garantia .support-hero p { font-size: 0.95rem; }
             #garantia .search-box { flex-direction: column; align-items: stretch; }
+            #garantia .search-box input { width: 100%; min-width: 0; }
             #garantia .search-box button { width: 100%; }
             #garantia .video-grid { grid-template-columns: 1fr; }
         }

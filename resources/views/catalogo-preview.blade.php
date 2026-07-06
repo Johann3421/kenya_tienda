@@ -62,10 +62,18 @@
 
         @media (max-width: 768px) {
             .page-banner {
-                height: 100px;
+                height: auto;
+                padding: 30px 0;
+            }
+            .page-banner .banner-container {
+                padding: 0 20px;
             }
             .page-banner h1 {
                 font-size: 1.5rem;
+                line-height: 1.2;
+            }
+            .page-banner .banner-subtitle {
+                font-size: 1rem;
             }
         }
 
@@ -629,14 +637,14 @@
                 padding: 8px 14px;
             }
             .products-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 8px;
+                grid-template-columns: 1fr !important;
+                gap: 15px;
             }
             .product-card {
-                padding: 8px;
+                padding: 15px;
             }
             .product-image-wrapper {
-                height: 140px;
+                height: 180px;
                 margin-bottom: 12px;
             }
             .product-title {
