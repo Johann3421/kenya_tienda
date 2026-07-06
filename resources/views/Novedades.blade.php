@@ -105,16 +105,20 @@
 
         /* Barra de Filtros */
         .filter-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 0px 0px;
             border-radius: 6px;
             box-shadow: 0 0px 0px rgba(0,0,0,0.00);
             margin-bottom: 30px;
+            border: 0px solid #eaeaea;
+        }
+
+        .filter-form {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
             gap: 20px;
-            border: 0px solid #eaeaea;
         }
 
         .search-box {
@@ -400,7 +404,7 @@
             .hero-content h1 { font-size: 1.8rem; line-height: 1.2; }
             .hero-content p { font-size: 1rem; }
             
-            .filter-bar {
+            .filter-form {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -426,7 +430,7 @@
 
     <section class="products-section container">
         <div class="filter-bar">
-            <form method="GET" action="" style="display: flex; width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+            <form method="GET" action="" class="filter-form">
                 <div class="search-box">
                     <input type="text" name="busqueda" placeholder="Buscar productos..." value="{{ request('busqueda') }}">
                     <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
