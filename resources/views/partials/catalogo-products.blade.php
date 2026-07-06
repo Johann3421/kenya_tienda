@@ -57,7 +57,7 @@
 
             <p class="product-stock">Stock: 
             @if ($stock !== 0 && $stock !== '0')
-                <span>{{ $stock }}</span>
+                <span>≥ {{ $stock }}</span>
             @else
                 <span style="color:#f26522;">Agotado</span>
             @endif

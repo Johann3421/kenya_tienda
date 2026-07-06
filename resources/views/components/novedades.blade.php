@@ -211,7 +211,15 @@
                             $cleanName = trim($cleanName);
                             $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
                             $novedadPartNumber = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
-                            $novedadStock = $novedad->stock ?? '≥ 20';
+                              
+                              $novedadStock = 20;
+                              if(isset($novedad->procesador)) {
+                                  $proc = strtolower($novedad->procesador);
+                                  if(str_contains($proc, 'ultra')) $novedadStock = 20;
+                                  elseif(str_contains($proc, '14') || str_contains($proc, '14th')) $novedadStock = 20;
+                                  elseif(str_contains($proc, '13') || str_contains($proc, '13th')) $novedadStock = 3;
+                                  elseif(str_contains($proc, '12') || str_contains($proc, '12th')) $novedadStock = 10;
+                              }
                         @endphp
                         <div class="comp-novedad-card">
                             <span class="comp-novedad-badge">Nuevo</span>
@@ -229,7 +237,7 @@
                                     <li style="font-size: 0.85rem; color: #555; margin-bottom: 6px; line-height: 1.4;">
                                         <strong>STOCK:</strong>
                                         @if($novedadStock !== 0 && $novedadStock !== '0')
-                                            <span style="color: #2e7d32; font-weight: 600;">{{ $novedadStock }} unidades</span>
+                                            <span style="color: #2e7d32; font-weight: 600;">≥ {{ $novedadStock }} unidades</span>
                                         @else
                                             <span style="color: #c62828; font-weight: 600;">No disponible</span>
                                         @endif

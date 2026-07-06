@@ -1376,7 +1376,7 @@
                                             <li style="font-size: 0.85rem; color: #555; margin-bottom: 6px; line-height: 1.4;">
                                                 <strong>STOCK:</strong>
                                                 @if($novedadStock !== 0 && $novedadStock !== '0')
-                                                    <span style="color: #2e7d32; font-weight: 600;">{{ $novedadStock }} unidades</span>
+                                                    <span style="color: #2e7d32; font-weight: 600;">≥ {{ $novedadStock }} unidades</span>
                                                 @else
                                                     <span style="color: #c62828; font-weight: 600;">No disponible</span>
                                                 @endif
