@@ -106,7 +106,7 @@ public function filtros()
     {
         return $query->where(function ($q) {
             $q->whereNull('vigencia')->orWhereNotIn('vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
-        });
+        })->whereNotNull('nombre')->where('nombre', '!=', '');
     }
 
 }
