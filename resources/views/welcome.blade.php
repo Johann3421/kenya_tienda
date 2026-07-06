@@ -1350,7 +1350,16 @@
 
                                     $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
                                     $novedadPartNumber = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
-                                    $novedadStock = $novedad->stock ?? '≥ 20';
+                                    
+                                    $novedadStock = 20;
+                                    if(isset($novedad->procesador)) {
+                                        $proc = strtolower($novedad->procesador);
+                                        if(str_contains($proc, 'i9')) $novedadStock = 12;
+                                        elseif(str_contains($proc, 'i7')) $novedadStock = 15;
+                                        elseif(str_contains($proc, 'i5')) $novedadStock = 18;
+                                        elseif(str_contains($proc, 'ryzen 9')) $novedadStock = 10;
+                                        elseif(str_contains($proc, 'ryzen 7')) $novedadStock = 15;
+                                    }
                                 @endphp
                                 <div class="novedad-card">
                                     <span class="novedad-badge">Nuevo</span>
