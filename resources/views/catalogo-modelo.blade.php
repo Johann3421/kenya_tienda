@@ -203,7 +203,16 @@
                         <select id="preview-modelo" class="form-control">
                             <option value="">-- Todos los modelos --</option>
                             @foreach($modelos as $m)
-                                <option value="{{ $m->id }}" {{ ($id == $m->id) ? 'selected' : '' }}>{{ $m->descripcion }}</option>
+                                @php
+                                    $desc = strtoupper($m->descripcion);
+                                    $label = $m->descripcion;
+                                    if (str_contains($desc, 'EZENT')) $label .= ' (Mini PC)';
+                                    elseif (str_contains($desc, 'OFISZU')) $label .= ' (Escritorio)';
+                                    elseif (str_contains($desc, 'PROWORK') || str_contains($desc, 'GENWORK')) $label .= ' (Workstation)';
+                                    elseif (str_contains($desc, 'RAITO')) $label .= ' (Monitor)';
+                                    elseif (str_contains($desc, 'TONER')) $label .= ' (Tóner)';
+                                @endphp
+                                <option value="{{ $m->id }}" {{ ($id == $m->id) ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                     </div>
