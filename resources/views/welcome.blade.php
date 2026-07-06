@@ -1354,11 +1354,10 @@
                                     $novedadStock = 20;
                                     if(isset($novedad->procesador)) {
                                         $proc = strtolower($novedad->procesador);
-                                        if(str_contains($proc, 'i9')) $novedadStock = 12;
-                                        elseif(str_contains($proc, 'i7')) $novedadStock = 15;
-                                        elseif(str_contains($proc, 'i5')) $novedadStock = 18;
-                                        elseif(str_contains($proc, 'ryzen 9')) $novedadStock = 10;
-                                        elseif(str_contains($proc, 'ryzen 7')) $novedadStock = 15;
+                                        if(str_contains($proc, 'ultra')) $novedadStock = 20;
+                                        elseif(str_contains($proc, '14') || str_contains($proc, '14th')) $novedadStock = 20;
+                                        elseif(str_contains($proc, '13') || str_contains($proc, '13th')) $novedadStock = 3;
+                                        elseif(str_contains($proc, '12') || str_contains($proc, '12th')) $novedadStock = 10;
                                     }
                                 @endphp
                                 <div class="novedad-card">
