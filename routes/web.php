@@ -10,6 +10,30 @@ use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
+// Ruta temporal para limpiar cache y ver variables de entorno reales en el servidor
+Route::get('/limpiar-cache', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        
+        return response()->json([
+            'status' => 'Cache limpiada correctamente en el contenedor',
+            'config_mail_mailer' => config('mail.default'),
+            'config_mail_host' => config('mail.mailers.smtp.host'),
+            'config_mail_port' => config('mail.mailers.smtp.port'),
+            'config_mail_username' => config('mail.mailers.smtp.username'),
+            // Mostramos si el password existe y su longitud, sin revelarlo completo
+            'config_mail_password_exists' => !empty(config('mail.mailers.smtp.password')),
+            'config_mail_password_length' => strlen(config('mail.mailers.smtp.password') ?? ''),
+            'config_mail_encryption' => config('mail.mailers.smtp.encryption'),
+            'config_mail_from_address' => config('mail.from.address'),
+            'env_mail_username' => env('MAIL_USERNAME'),
+        ]);
+    } catch (\Exception $e) {
+        return 'Error limpiando cache: ' . $e->getMessage();
+    }
+});
+
 if (app()->environment('local')) {
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 }
