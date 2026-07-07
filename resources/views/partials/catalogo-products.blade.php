@@ -64,8 +64,10 @@
             @endphp
 
             @if(count($specs) > 0)
-                <div class="product-specs">
-                    {{ implode(' • ', $specs) }}
+                <div class="product-specs-chips">
+                    @foreach($specs as $spec)
+                        <span class="spec-chip">{{ $spec }}</span>
+                    @endforeach
                 </div>
             @endif
 
@@ -73,19 +75,25 @@
             
             <div class="product-sku">SKU: {{ $producto->nro_parte ?? 'N/A' }}</div>
 
-            <div class="product-stock-wrapper">
-                @if ($stock !== 0 && $stock !== '0')
-                    <span class="stock-status-dot available"></span>
-                    <span class="stock-text">Disponible (≥ {{ $stock }})</span>
-                @else
-                    <span class="stock-status-dot out-of-stock"></span>
-                    <span class="stock-text" style="color:#dc3545;">Agotado</span>
-                @endif
-            </div>
+            <div class="product-card-footer">
+                <div class="product-price-placeholder" style="display:none;">
+                    <!-- Espacio reservado para precio -->
+                </div>
+                
+                <div class="product-stock-wrapper">
+                    @if ($stock !== 0 && $stock !== '0')
+                        <span class="stock-status-dot available"></span>
+                        <span class="stock-text">Disponible (≥ {{ $stock }})</span>
+                    @else
+                        <span class="stock-status-dot out-of-stock"></span>
+                        <span class="stock-text" style="color:#dc3545;">Agotado</span>
+                    @endif
+                </div>
 
-            <button class="btn-details pill" onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
-                Más información
-            </button>
+                <button class="btn-details pill" onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
+                    Más información
+                </button>
+            </div>
         </div>
     @empty
         <div class="col-12" style="grid-column: 1 / -1;">

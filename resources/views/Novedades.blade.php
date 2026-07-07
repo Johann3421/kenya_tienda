@@ -211,11 +211,21 @@
             flex-direction: column;
             flex-grow: 1;
         }        /* Estilos de tarjeta actualizados */
-        .product-specs {
-            font-size: 0.8rem;
-            color: #666;
-            margin-bottom: 8px;
-            line-height: 1.4;
+        .product-specs-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .spec-chip {
+            background-color: #f8f9fa;
+            border: 1px solid #eaeaea;
+            color: #555;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 500;
         }
 
         .product-title {
@@ -236,12 +246,19 @@
             margin-bottom: 12px;
         }
 
+        .product-card-footer {
+            margin-top: auto;
+            border-top: 1px solid #f1f1f1;
+            padding-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
         .product-stock-wrapper {
             display: flex;
             align-items: center;
             gap: 6px;
-            margin-bottom: 15px;
-            margin-top: auto;
         }
 
         .stock-status-dot {
@@ -525,24 +542,30 @@
                         @endphp
 
                         @if(count($specs) > 0)
-                            <div class="product-specs">
-                                {{ implode(' • ', $specs) }}
+                            <div class="product-specs-chips">
+                                @foreach($specs as $spec)
+                                    <span class="spec-chip">{{ $spec }}</span>
+                                @endforeach
                             </div>
                         @endif
 
                         <h3 class="product-title">{{ trim($cleanName) }}</h3>
                         <div class="product-sku">SKU: {{ $producto->nro_parte ?? 'N/A' }}</div>
                         
-                        <div class="product-stock-wrapper">
-                            @if($stock > 0)
-                                <span class="stock-status-dot available"></span>
-                                <span class="stock-text">Disponible (≥ {{ $stock }})</span>
-                            @else
-                                <span class="stock-status-dot out-of-stock"></span>
-                                <span class="stock-text" style="color: #dc3545;">Agotado</span>
-                            @endif
+                        <div class="product-card-footer">
+                            <div class="product-price-placeholder" style="display:none;"></div>
+                            
+                            <div class="product-stock-wrapper">
+                                @if($stock > 0)
+                                    <span class="stock-status-dot available"></span>
+                                    <span class="stock-text">Disponible (≥ {{ $stock }})</span>
+                                @else
+                                    <span class="stock-status-dot out-of-stock"></span>
+                                    <span class="stock-text" style="color: #dc3545;">Agotado</span>
+                                @endif
+                            </div>
+                            <button class="btn-details pill" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">Más información</button>
                         </div>
-                        <button class="btn-details pill" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">Más información</button>
                     </div>
                 </div>
             @empty
