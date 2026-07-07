@@ -99,7 +99,14 @@ class RegistroClienteController extends Controller
             Mail::to($request->correo)->send(new CredencialesClienteMail($request->correo, $password));
             $correoEnviado = true;
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error enviando correo de credenciales: ' . $e->getMessage());
+            // Devolver error en JSON directamente para ver qué falla en producción
+            return response()->json([
+                'error' => 'Excepción atrapada al enviar e-mail',
+                'mensaje' => $e->getMessage(),
+                'archivo' => $e->getFile(),
+                'linea' => $e->getLine(),
+                'stack' => substr($e->getTraceAsString(), 0, 500)
+            ], 500);
         }
 
         return view('registro.resultado', [
