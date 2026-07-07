@@ -62,8 +62,7 @@ class RegistroClienteController extends Controller
                 $user->ape_materno = $request->documento; // Guardamos el documento completo aquí
                 $user->telefono = '000000000';
                 $user->email = $request->correo;
-                // username tiene un límite estricto de varchar(20) en la BD, truncamos el correo si es muy largo
-                $user->username = substr($request->correo, 0, 20);
+                $user->username = $request->correo;
                 $user->password = Hash::make($password);
                 $user->activo = 'SI';
                 $user->save();
