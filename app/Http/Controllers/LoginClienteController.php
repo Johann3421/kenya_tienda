@@ -30,31 +30,26 @@ class LoginClienteController extends Controller
 
         $loginField = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        $user = \App\User::where($loginField, $credentials['username'])->first();
+        $authData = [
+            $loginField => $credentials['username'],
+            'password' => $credentials['password']
+        ];
 
-        if ($user) {
-            $passCheck = \Illuminate\Support\Facades\Hash::check($credentials['password'], $user->password);
-            
-            // Retornamos JSON de depuración temporal para el VPS
-            return response()->json([
-                'info' => 'Usuario encontrado',
-                'user_id' => $user->id,
-                'user_email' => $user->email,
-                'user_username' => $user->username,
-                'user_activo' => $user->activo,
-                'password_ingresado' => $credentials['password'],
-                'password_hash_db' => $user->password,
-                'check_resultado' => $passCheck,
-                'roles' => method_exists($user, 'getRoleNames') ? $user->getRoleNames() : 'No roles method'
+        if (Auth::attempt($authData)) {
+            $request->session()->regenerate();
+
+            if (Auth::user()->hasRole('cliente_web')) {
+                return redirect()->intended('/cotizar');
+            }
+
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()->withErrors([
+                'username' => 'Acceso denegado. Este portal es exclusivo para clientes verificados.',
             ]);
         }
-
-        return response()->json([
-            'info' => 'Usuario NO encontrado',
-            'login_field_usado' => $loginField,
-            'valor_buscado' => $credentials['username'],
-            'total_usuarios_db' => \App\User::count()
-        ]);
 
         return back()->withErrors([
             'username' => 'Las credenciales no coinciden con nuestros registros.',

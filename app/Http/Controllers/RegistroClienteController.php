@@ -69,9 +69,13 @@ class RegistroClienteController extends Controller
 
                 // Asignar rol si Spatie Permission está instalado (ignorar si falla)
                 try { $user->assignRole('cliente_web'); } catch (\Exception $e) {}
+            } else {
+                // Si ya existe, actualizamos su contraseña al nuevo password generado para este intento
+                $user->password = Hash::make($password);
+                $user->save();
             }
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error creando usuario cliente: ' . $e->getMessage());
+            \Illuminate\Support\Facades\Log::error('Error creando o actualizando usuario cliente: ' . $e->getMessage());
         }
 
         // 3. Enviar correo con credenciales (Forzado directo por código)
