@@ -63,6 +63,12 @@
                 if (!empty($producto->tarjetavideo)) $specs[] = trim($producto->tarjetavideo);
             @endphp
 
+            <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
+            
+            <div class="product-sku" style="background-color: #f0f4f8; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 600; color: #0056b3; margin-bottom: 12px; font-size: 0.75rem; width: fit-content;">
+                SKU: {{ $producto->nro_parte ?? 'N/A' }}
+            </div>
+
             @if(count($specs) > 0)
                 <div class="product-specs-chips">
                     @foreach($specs as $spec)
@@ -70,10 +76,6 @@
                     @endforeach
                 </div>
             @endif
-
-            <h3 class="product-title">{{ trim($cleanName) }}</h3>
-            
-            <div class="product-sku">SKU: {{ $producto->nro_parte ?? 'N/A' }}</div>
 
             <div class="product-card-footer">
                 <div class="product-price-placeholder" style="display:none;">
