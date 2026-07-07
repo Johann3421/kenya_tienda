@@ -78,10 +78,30 @@
             @endif
 
             <div class="product-card-footer">
-                <div class="product-price-placeholder" style="display:none;">
-                    <!-- Espacio reservado para precio -->
-                </div>
-                
+                @if(Auth::check() && Auth::user()->hasRole('cliente_web'))
+                    <div class="product-prices-wrapper" style="margin-bottom: 12px; text-align: left; width: 100%;">
+                        @if(!empty($producto->precio_referencial))
+                            <div class="price-referencial" style="font-size: 0.85rem; color: #888; text-decoration: line-through;">
+                                Ref: S/ {{ number_format($producto->precio_referencial, 2) }}
+                            </div>
+                        @endif
+                        @if(!empty($producto->precio_especial))
+                            <div class="price-especial" style="font-size: 1.25rem; font-weight: 700; color: #ee7c31; margin-top: 2px;">
+                                S/ {{ number_format($producto->precio_especial, 2) }} <span style="font-size: 0.75rem; font-weight: normal; color: #28a745;">(Especial B2B)</span>
+                            </div>
+                        @else
+                            <div class="price-no-especial" style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 2px;">
+                                Precios exclusivos B2B
+                            </div>
+                        @endif
+                    </div>
+                @else
+                    <div class="product-prices-locked" style="background: #f8f9fa; border: 1px dashed #ee7c31; border-radius: 6px; padding: 8px; margin-bottom: 12px; font-size: 0.8rem; color: #ee7c31; text-align: center; width: 100%; font-weight: 500;">
+                        <i class="fa fa-lock"></i> Precios exclusivos B2B <br>
+                        <a href="{{ url('/acceso-clientes') }}" style="color: #0056b3; text-decoration: underline; font-weight: 600;">Ingresa aquí</a> para ver
+                    </div>
+                @endif
+
                 <div class="product-stock-wrapper">
                     @if ($stock !== 0 && $stock !== '0')
                         <span class="stock-status-dot available"></span>
