@@ -89,9 +89,6 @@ class RegistroClienteController extends Controller
                 ]
             ]);
 
-            // Forzar recreación del MailManager si es necesario restableciendo el mailer por defecto
-            app()->forgetInstances(); // Resetea instancias para que lea la nueva config
-
             Mail::to($request->correo)->send(new CredencialesClienteMail($request->correo, $password));
             $correoEnviado = true;
         } catch (\Exception $e) {
