@@ -39,7 +39,7 @@ class LoginClienteController extends Controller
             $request->session()->regenerate();
 
             if (Auth::user()->hasRole('cliente_web')) {
-                return redirect()->intended('/cotizar');
+                return redirect()->intended('/catalogo');
             }
 
             Auth::logout();
