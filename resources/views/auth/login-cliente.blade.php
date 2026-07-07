@@ -59,6 +59,9 @@
                     <button type="submit" class="btn-primary">Ingresar</button>
                 </form>
 
+                <div style="text-align: center; margin-top: 20px; font-size: 14px;">
+                    ¿No tienes una cuenta? <a href="{{ url('/registro/paso1') }}" style="color: #ee7c31; font-weight: 600; text-decoration: none;">Solicita tu acceso aquí</a>
+                </div>
                 <a href="{{ url('/') }}" class="back-link">← Volver a la tienda</a>
             </div>
         </div>
