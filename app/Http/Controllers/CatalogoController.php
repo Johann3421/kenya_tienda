@@ -45,7 +45,13 @@ class CatalogoController extends Controller
             default: $productosQuery->orderBy('created_at','desc'); break;
         }
 
-        $productos = $productosQuery->with('modelo')->paginate(8);
+        $perPage = $request->get('per_page', 8);
+        $allowedPerPage = [8, 12, 16, 24, 32];
+        if (!in_array((int)$perPage, $allowedPerPage)) {
+            $perPage = 8;
+        }
+
+        $productos = $productosQuery->with('modelo')->paginate($perPage);
 
         $novedades = \App\Producto::with('modelo')
             ->orderBy('created_at', 'DESC')
@@ -197,7 +203,7 @@ class CatalogoController extends Controller
 
         $this->applySpecFilters($productosQuery, $request);
 
-        $productos = $productosQuery->orderBy('created_at', 'desc')->paginate(8);
+        $productos = $productosQuery->orderBy('created_at', 'desc')->paginate($request->get('per_page', 8));
 
         $novedades = \App\Producto::with('modelo')
             ->orderBy('created_at', 'DESC')
@@ -250,7 +256,7 @@ class CatalogoController extends Controller
             default: $productosQuery->orderBy('created_at','desc'); break;
         }
 
-        $productos = $productosQuery->with('modelo')->paginate(8);
+        $productos = $productosQuery->with('modelo')->paginate($request->get('per_page', 8));
 
         return view('partials.catalogo-products', compact('productos'));
     }

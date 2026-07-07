@@ -526,7 +526,7 @@
             pointer-events: none;
         }
 
-        .catalog-sort {
+        .catalog-sort, .catalog-per-page {
             flex-shrink: 0;
         }
 
@@ -733,6 +733,14 @@
                         <option value="nombre_desc" {{ (request('orden') == 'nombre_desc') ? 'selected' : '' }}>Nombre: Z → A</option>
                     </select>
                 </div>
+                <div class="catalog-per-page">
+                    <select id="preview-per-page" class="custom-sort-select" aria-label="Productos por página">
+                        <option value="8" {{ (request('per_page', '8') == '8') ? 'selected' : '' }}>Ver 8 fichas</option>
+                        <option value="12" {{ (request('per_page') == '12') ? 'selected' : '' }}>Ver 12 fichas</option>
+                        <option value="16" {{ (request('per_page') == '16') ? 'selected' : '' }}>Ver 16 fichas</option>
+                        <option value="24" {{ (request('per_page') == '24') ? 'selected' : '' }}>Ver 24 fichas</option>
+                    </select>
+                </div>
             </div>
 
 
@@ -789,9 +797,12 @@
                 const params = new URLSearchParams(window.location.search);
                 const modelo = modeloSelect.value;
                 const ordenSelect = document.getElementById('preview-orden');
+                const perPageSelect = document.getElementById('preview-per-page');
                 const orden = ordenSelect ? ordenSelect.value : 'newest';
+                const perPage = perPageSelect ? perPageSelect.value : '8';
                 if (modelo) params.set('modelo', modelo); else params.delete('modelo');
                 if (orden) params.set('orden', orden); else params.delete('orden');
+                if (perPage) params.set('per_page', perPage); else params.delete('per_page');
                 if (page) params.set('page', page); else params.delete('page');
                 fetch(productsUrl + '?' + params.toString(), { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     productsContainer.innerHTML = html;
@@ -902,6 +913,17 @@
                 ordenSelect.addEventListener('change', () => {
                     const params = new URLSearchParams(window.location.search);
                     params.set('orden', ordenSelect.value);
+                    params.delete('page');
+                    history.replaceState({}, '', window.location.pathname + '?' + params.toString());
+                    fetchProducts();
+                });
+            }
+
+            const perPageSelect = document.getElementById('preview-per-page');
+            if (perPageSelect) {
+                perPageSelect.addEventListener('change', () => {
+                    const params = new URLSearchParams(window.location.search);
+                    params.set('per_page', perPageSelect.value);
                     params.delete('page');
                     history.replaceState({}, '', window.location.pathname + '?' + params.toString());
                     fetchProducts();
