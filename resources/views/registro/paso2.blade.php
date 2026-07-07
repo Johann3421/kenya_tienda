@@ -1,7 +1,22 @@
-@extends('layouts.app')
+@extends('layouts.landing')
+
+@section('title', 'Registro de Clientes - Paso 2')
+
+@section('menu')
+    <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
+        <ul class="kenya-nav-list">
+            <li><a href="{{ url('/') }}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
+            <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
+            <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
+            <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
+            <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
+            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
+        </ul>
+    </nav>
+@endsection
 
 @section('content')
-<div class="container mt-5 mb-5">
+<div class="container mb-5" style="padding-top: 120px;">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow-sm border-0" style="border-radius: 12px;">
