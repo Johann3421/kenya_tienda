@@ -67,9 +67,31 @@ class RegistroClienteController extends Controller
             // Falla silenciosa si no hay BD corriendo en dev
         }
 
-        // 3. Enviar correo con credenciales
+        // 3. Enviar correo con credenciales (Forzado directo por código)
         $correoEnviado = false;
         try {
+            config([
+                'mail.default' => 'smtp',
+                'mail.mailers.smtp.transport' => 'smtp',
+                'mail.mailers.smtp.host' => 'mail.abadgroup.tech',
+                'mail.mailers.smtp.port' => 587,
+                'mail.mailers.smtp.encryption' => 'tls',
+                'mail.mailers.smtp.username' => 'prueba@kenya.com.pe',
+                'mail.mailers.smtp.password' => 'nY5g5nDhoqhha3Ah',
+                'mail.from.address' => 'prueba@kenya.com.pe',
+                'mail.from.name' => 'Kenya',
+                'mail.mailers.smtp.stream' => [
+                    'ssl' => [
+                        'allow_self_signed' => true,
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                    ],
+                ]
+            ]);
+
+            // Forzar recreación del MailManager si es necesario restableciendo el mailer por defecto
+            app()->forgetInstances(); // Resetea instancias para que lea la nueva config
+
             Mail::to($request->correo)->send(new CredencialesClienteMail($request->correo, $password));
             $correoEnviado = true;
         } catch (\Exception $e) {
