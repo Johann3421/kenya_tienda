@@ -67,13 +67,13 @@ class RegistroClienteController extends Controller
             // Falla silenciosa si no hay BD corriendo en dev
         }
 
-        // 3. Enviar correo con credenciales (falla silenciosa si no hay SMTP en .env)
+        // 3. Enviar correo con credenciales
         $correoEnviado = false;
         try {
             Mail::to($request->correo)->send(new CredencialesClienteMail($request->correo, $password));
             $correoEnviado = true;
         } catch (\Exception $e) {
-            // Sin configuración SMTP
+            \Illuminate\Support\Facades\Log::error('Error enviando correo de credenciales: ' . $e->getMessage());
         }
 
         return view('registro.resultado', [
@@ -81,7 +81,6 @@ class RegistroClienteController extends Controller
             'documento' => $request->documento,
             'correo' => $request->correo,
             'tipo' => $request->tipo,
-            'password' => $password, // Solo para dev
             'correoEnviado' => $correoEnviado
         ]);
     }

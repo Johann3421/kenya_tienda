@@ -32,16 +32,14 @@
                             <strong>¡Excelente!</strong> Te hemos creado una cuenta para acceder a precios exclusivos.
                         </div>
 
-                        @if($correoEnviado)
-                            <p class="text-muted mt-3">
-                                Hemos enviado un correo electrónico a <strong>{{ $correo }}</strong> con tu contraseña temporal. <br>
-                                Úsala para iniciar sesión.
-                            </p>
-                        @else
-                            <div class="alert alert-warning mt-3" style="border-radius: 8px; text-align: left;">
-                                <i class="fa fa-exclamation-triangle"></i> <strong>Nota de Desarrollo:</strong> El envío de correos SMTP no está configurado localmente. <br>
-                                Tu contraseña temporal generada es: <strong style="font-size: 1.2rem;">{{ $password ?? 'No disponible' }}</strong><br>
-                                <small>(En producción, este mensaje no existirá y la contraseña llegará directamente al correo).</small>
+                        <p class="text-muted mt-3" style="font-size: 1.1rem;">
+                            Hemos enviado un correo electrónico a <strong>{{ $correo }}</strong> con tu contraseña temporal. <br>
+                            Úsala para iniciar sesión.
+                        </p>
+
+                        @if(!$correoEnviado)
+                            <div class="alert alert-danger mt-3" style="border-radius: 8px; text-align: left; font-size: 0.9rem;">
+                                <i class="fa fa-exclamation-triangle"></i> Tuvimos un problema enviando el correo. Por favor, contacta a soporte para recibir tu acceso.
                             </div>
                         @endif
 
