@@ -50,21 +50,28 @@ class RegistroClienteController extends Controller
         $password = Str::random(8);
 
         // 2. Buscar o crear el usuario (role = cliente_web, username = correo)
-        // Usamos YAGNI: no manejaremos todo el Cliente model si la base de datos no estǭ lista o conectada.
-        // Simulamos la creacin para no romper si no hay BD:
         try {
-            $user = User::firstOrCreate(
-                ['email' => $request->correo],
-                [
-                    'name' => 'Cliente ' . $request->documento,
-                    'username' => $request->correo, // En kenya el username suele ser el login
-                    'password' => Hash::make($password),
-                ]
-            );
-            // Asignar rol si Spatie Permission está instalado (ignorar si falla)
-            try { $user->assignRole('cliente_web'); } catch (\Exception $e) {}
+            // Buscamos si ya existe por email
+            $user = User::where('email', $request->correo)->first();
+            
+            if (!$user) {
+                $user = new User();
+                $user->dni = substr($request->documento, 0, 8); // DNI requiere 8 caracteres exactos
+                $user->nombres = 'Cliente';
+                $user->ape_paterno = 'Web';
+                $user->ape_materno = $request->documento; // Guardamos el documento completo aquí
+                $user->telefono = '000000000';
+                $user->email = $request->correo;
+                $user->username = $request->correo;
+                $user->password = Hash::make($password);
+                $user->activo = 'SI';
+                $user->save();
+
+                // Asignar rol si Spatie Permission está instalado (ignorar si falla)
+                try { $user->assignRole('cliente_web'); } catch (\Exception $e) {}
+            }
         } catch (\Exception $e) {
-            // Falla silenciosa si no hay BD corriendo en dev
+            \Illuminate\Support\Facades\Log::error('Error creando usuario cliente: ' . $e->getMessage());
         }
 
         // 3. Enviar correo con credenciales (Forzado directo por código)
