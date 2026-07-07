@@ -29,8 +29,11 @@
                         <input type="hidden" name="tipo" value="{{ $tipo }}">
                         
                         <div class="form-group mb-4">
-                            <label class="font-weight-bold">RUC</label>
-                            <input type="text" name="ruc" class="form-control" placeholder="Ingrese su RUC de 11 dígitos" required minlength="11" maxlength="11" style="border-radius: 8px;">
+                            <label class="font-weight-bold">RUC / DNI</label>
+                            <input type="text" name="documento" class="form-control" placeholder="Ingrese su RUC (11) o DNI (8)" required minlength="8" maxlength="11" style="border-radius: 8px;">
+                            <small class="form-text text-muted mt-2">
+                                <i class="fa fa-info-circle"></i> Su documento será utilizado para validar el acceso a condiciones especiales.
+                            </small>
                         </div>
 
                         <div class="form-group mb-4">
@@ -41,10 +44,6 @@
                         <button type="submit" class="btn btn-primary btn-block py-2" style="border-radius: 50px; font-weight: 600;">Validar Datos</button>
                     </form>
 
-                    <!-- ponytail: simplification -->
-                    <div class="mt-4 text-center text-muted small">
-                        <p><strong>Nota ponytail:</strong> Cualquier RUC de 11 dígitos y correo válido será "aprobado" temporalmente.</p>
-                    </div>
                 </div>
             </div>
         </div>

@@ -26,7 +26,7 @@
                             <i class="fa fa-check-circle" style="font-size: 4rem; color: #2ecca6;"></i>
                         </div>
                         <h3 class="font-weight-bold mb-3">¡Validación Exitosa!</h3>
-                        <p class="text-muted mb-4">El RUC <strong>{{ $ruc }}</strong> y correo <strong>{{ $correo }}</strong> han sido validados para el perfil <strong>{{ strtoupper($tipo) }}</strong>.</p>
+                        <p class="text-muted mb-4">El documento <strong>{{ $documento }}</strong> y correo <strong>{{ $correo }}</strong> han sido validados para el perfil <strong>{{ strtoupper($tipo) }}</strong>.</p>
                         
                         <div class="alert alert-success" style="border-radius: 8px;">
                             <strong>¡Excelente!</strong> Ahora tienes acceso a nuestros precios exclusivos e información técnica completa.

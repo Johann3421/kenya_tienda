@@ -17,7 +17,7 @@ class RegistroClienteController extends Controller
     }
 
     /**
-     * Muestra el paso 2: Formulario RUC y Correo
+     * Muestra el paso 2: Formulario RUC / DNI y Correo
      */
     public function paso2(Request $request)
     {
@@ -32,12 +32,12 @@ class RegistroClienteController extends Controller
     {
         $request->validate([
             'tipo' => 'required|string',
-            'ruc' => 'required|string|min:11|max:11',
+            'documento' => 'required|string|min:8|max:11',
             'correo' => 'required|email'
         ]);
 
-        // Ponytail: YAGNI. No complex SUNAT API or strict domain validation yet.
-        // Simplification: Any valid 11-digit RUC and valid email format is "aprobado" for now.
+        // Ponytail: YAGNI. No complex SUNAT/RENIEC API or strict domain validation yet.
+        // Simplification: Any valid 8 to 11-digit document and valid email format is "aprobado" for now.
         // The real business logic goes here later.
         
         $estado = 'aprobado'; // Asumimos aprobado por defecto para desatascar
@@ -47,7 +47,7 @@ class RegistroClienteController extends Controller
 
         return view('registro.resultado', [
             'estado' => $estado,
-            'ruc' => $request->ruc,
+            'documento' => $request->documento,
             'correo' => $request->correo,
             'tipo' => $request->tipo
         ]);
