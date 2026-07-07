@@ -538,6 +538,40 @@ body {
 
             @yield('menu')
 
+            <!-- User Auth Dropdown -->
+            <div class="kenya-user-dropdown" style="position: relative; margin-left: 15px; display: flex; align-items: center;">
+                @if(Auth::check())
+                    <button id="userMenuToggle" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #333;">
+                        <div style="position: relative;">
+                            <i class="fa-solid fa-user-circle" style="font-size: 1.5rem; color: #ee7c31;"></i>
+                            <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #2ecca6; border: 2px solid #fff; border-radius: 50%;"></span>
+                        </div>
+                        <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">Mi Cuenta <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i></span>
+                    </button>
+                    <div id="userMenuContent" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; min-width: 200px; z-index: 1000; overflow: hidden; margin-top: 10px;">
+                        <div style="padding: 15px; border-bottom: 1px solid #eee; background: #f8f9fa;">
+                            <p style="margin: 0; font-weight: 600; font-size: 0.9rem; color: #333;">{{ Auth::user()->name ?? 'Cliente' }}</p>
+                            <p style="margin: 0; font-size: 0.8rem; color: #777;">{{ Auth::user()->email }}</p>
+                        </div>
+                        <ul style="list-style: none; margin: 0; padding: 0;">
+                            <li><a href="#" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-id-card" style="width: 20px; color: #ee7c31;"></i> Mi Perfil</a></li>
+                            <li><a href="#" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-file-invoice-dollar" style="width: 20px; color: #ee7c31;"></i> Mis Cotizaciones</a></li>
+                            <li style="border-top: 1px solid #eee;">
+                                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                                    @csrf
+                                    <button type="submit" style="width: 100%; text-align: left; background: none; border: none; display: block; padding: 10px 15px; color: #dc3545; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;"><i class="fa-solid fa-sign-out-alt" style="width: 20px;"></i> Cerrar Sesión</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @else
+                    <a href="{{ url('/acceso-clientes') }}" style="color: #555; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-regular fa-user-circle" style="font-size: 1.5rem;"></i>
+                        <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">Ingresar</span>
+                    </a>
+                @endif
+            </div>
+
             <button class="kenya-search-toggle" id="kenyaSearchToggle" title="Buscar">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -828,6 +862,30 @@ body {
 
     @yield('js')
 
+    <!-- Script para el dropdown de usuario -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userMenuToggle = document.getElementById('userMenuToggle');
+            const userMenuContent = document.getElementById('userMenuContent');
+            
+            if (userMenuToggle && userMenuContent) {
+                userMenuToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (userMenuContent.style.display === 'none') {
+                        userMenuContent.style.display = 'block';
+                    } else {
+                        userMenuContent.style.display = 'none';
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!userMenuToggle.contains(e.target) && !userMenuContent.contains(e.target)) {
+                        userMenuContent.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

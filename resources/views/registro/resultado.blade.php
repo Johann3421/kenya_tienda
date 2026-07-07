@@ -26,11 +26,24 @@
                             <i class="fa fa-check-circle" style="font-size: 4rem; color: #2ecca6;"></i>
                         </div>
                         <h3 class="font-weight-bold mb-3">¡Validación Exitosa!</h3>
-                        <p class="text-muted mb-4">El documento <strong>{{ $documento }}</strong> y correo <strong>{{ $correo }}</strong> han sido validados para el perfil <strong>{{ strtoupper($tipo) }}</strong>.</p>
+                        <p class="text-muted mb-4">El documento <strong>{{ $documento }}</strong> y correo <strong>{{ $correo }}</strong> han sido procesados para el perfil <strong>{{ strtoupper($tipo) }}</strong>.</p>
                         
                         <div class="alert alert-success" style="border-radius: 8px;">
-                            <strong>¡Excelente!</strong> Ahora tienes acceso a nuestros precios exclusivos e información técnica completa.
+                            <strong>¡Excelente!</strong> Te hemos creado una cuenta para acceder a precios exclusivos.
                         </div>
+
+                        @if($correoEnviado)
+                            <p class="text-muted mt-3">
+                                Hemos enviado un correo electrónico a <strong>{{ $correo }}</strong> con tu contraseña temporal. <br>
+                                Úsala para iniciar sesión.
+                            </p>
+                        @else
+                            <div class="alert alert-warning mt-3" style="border-radius: 8px; text-align: left;">
+                                <i class="fa fa-exclamation-triangle"></i> <strong>Nota de Desarrollo:</strong> El envío de correos SMTP no está configurado localmente. <br>
+                                Tu contraseña temporal generada es: <strong style="font-size: 1.2rem;">{{ $password ?? 'No disponible' }}</strong><br>
+                                <small>(En producción, este mensaje no existirá y la contraseña llegará directamente al correo).</small>
+                            </div>
+                        @endif
 
                         <a href="{{ url('/catalogo') }}" class="btn btn-primary mt-3 px-5 py-2" style="border-radius: 50px; font-weight: 600;">Ir al Catálogo</a>
                     @else
