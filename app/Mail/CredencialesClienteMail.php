@@ -32,7 +32,11 @@ class CredencialesClienteMail extends Mailable
      */
     public function build()
     {
-        return $this->subject('Tus Accesos al Portal de Kenya')
+        $fromAddress = config('mail.from.address') ?: config('mail.mailers.smtp.username') ?: 'prueba@kenya.com.pe';
+        $fromName = config('mail.from.name') ?: 'Kenya';
+
+        return $this->from($fromAddress, $fromName)
+                    ->subject('Tus Accesos al Portal de Kenya')
                     ->view('emails.credenciales');
     }
 }
