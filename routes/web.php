@@ -478,3 +478,8 @@ Route::get('/limpiar-todo', function() {
     }
 });
 }
+
+// Rutas de Registro de Clientes
+Route::get('/registro/paso1', [\App\Http\Controllers\RegistroClienteController::class, 'paso1']);
+Route::get('/registro/paso2', [\App\Http\Controllers\RegistroClienteController::class, 'paso2']);
+Route::post('/registro/validar', [\App\Http\Controllers\RegistroClienteController::class, 'validarRegistro']);
