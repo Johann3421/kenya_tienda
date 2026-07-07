@@ -28,7 +28,15 @@ class LoginClienteController extends Controller
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($credentials)) {
+        // Verificamos si el input es un correo o un username
+        $loginField = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+
+        $authData = [
+            $loginField => $credentials['username'],
+            'password' => $credentials['password']
+        ];
+
+        if (Auth::attempt($authData)) {
             $request->session()->regenerate();
 
             if (Auth::user()->hasRole('cliente_web')) {
