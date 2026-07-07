@@ -464,19 +464,23 @@
                         $modelImg = $producto->getCategoria->img_url;
                     }
 
+                    $img = $modelImg;
                     if (!empty($producto->imagen_1)) {
-                        $img    = asset('storage/' . $producto->imagen_1);
-                        $imgFb  = asset($producto->imagen_1);
-                        $imgFb2 = $modelImg;
-                    } elseif (!empty($producto->imagen)) {
-                        $img    = asset('storage/' . $producto->imagen);
-                        $imgFb  = $modelImg;
-                        $imgFb2 = asset('producto.jpg');
-                    } else {
-                        $img    = $modelImg;
-                        $imgFb  = asset('producto.jpg');
-                        $imgFb2 = asset('producto.jpg');
+                        if (file_exists(public_path('storage/' . $producto->imagen_1))) {
+                            $img = asset('storage/' . $producto->imagen_1);
+                        } elseif (file_exists(public_path($producto->imagen_1))) {
+                            $img = asset($producto->imagen_1);
+                        }
+                    } 
+                    if ($img === $modelImg && !empty($producto->imagen)) {
+                        if (file_exists(public_path('storage/' . $producto->imagen))) {
+                            $img = asset('storage/' . $producto->imagen);
+                        } elseif (file_exists(public_path($producto->imagen))) {
+                            $img = asset($producto->imagen);
+                        }
                     }
+                    $imgFb  = $modelImg;
+                    $imgFb2 = asset('producto.jpg');
                     $stock = $producto->stock ?? 100;
                 @endphp
                 <div class="product-card">
