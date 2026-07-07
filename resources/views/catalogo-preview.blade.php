@@ -374,30 +374,58 @@
             opacity: 0.8;
         }
 
+        .product-specs {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
         .product-title {
             font-size: 0.95rem;
-            color: #333;
-            margin-bottom: 10px;
+            color: #222;
+            margin-bottom: 4px;
             line-height: 1.4;
-            font-weight: 700;
+            font-weight: 600;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
 
-        .product-pn {
+        .product-sku {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        .product-stock-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 15px;
+            margin-top: auto;
+        }
+
+        .stock-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .stock-status-dot.available {
+            background: #2ecca6;
+        }
+
+        .stock-status-dot.out-of-stock {
+            background: #dc3545;
+        }
+
+        .stock-text {
             font-size: 0.85rem;
-            color: #777;
-            margin-bottom: 0px;
-        }
-
-        .product-stock {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 20px;
-            flex-grow: 1; 
-        }
-
-        .product-stock span {
-            color: #2ecca6; 
-            font-weight: 700;
+            color: #444;
+            font-weight: 600;
         }
 
         .btn-details {
@@ -647,15 +675,20 @@
                 height: 180px;
                 margin-bottom: 12px;
             }
-            .product-title {
-                font-size: 0.8rem;
+            .product-specs {
+                font-size: 0.75rem;
             }
-            .product-pn {
+            .product-title {
+                font-size: 0.85rem;
+            }
+            .product-sku {
                 font-size: 0.7rem;
             }
-            .product-stock {
-                font-size: 0.75rem;
+            .product-stock-wrapper {
                 margin-bottom: 12px;
+            }
+            .stock-text {
+                font-size: 0.75rem;
             }
             .btn-details {
                 font-size: 0.75rem;

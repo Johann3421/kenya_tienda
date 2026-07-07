@@ -210,55 +210,78 @@
             display: flex;
             flex-direction: column;
             flex-grow: 1;
+        }        /* Estilos de tarjeta actualizados */
+        .product-specs {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
 
-        /* Estilos de tarjeta actualizados según la imagen */
         .product-title {
-            font-size: 1.05rem;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: 700;
-            line-height: 1.3;
+            font-size: 0.95rem;
+            color: #222;
+            margin-bottom: 4px;
+            line-height: 1.4;
+            font-weight: 600;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            flex-grow: 1;
         }
 
-        .product-details {
-            font-size: 0.9rem;
-            color: #777;
-            margin-bottom: 8px;
+        .product-sku {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 12px;
         }
 
-        .product-details strong {
-            font-weight: normal; 
+        .product-stock-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 15px;
+            margin-top: auto;
         }
 
-        .stock-green {
-            color: #20c997; 
-            font-weight: 700;
-            font-size: 0.95rem;
+        .stock-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
         }
 
-        .btn-details {
+        .stock-status-dot.available {
+            background: #2ecca6;
+        }
+
+        .stock-status-dot.out-of-stock {
+            background: #dc3545;
+        }
+
+        .stock-text {
+            font-size: 0.85rem;
+            color: #444;
+            font-weight: 600;
+        }
+
+        .btn-details.pill {
             background: linear-gradient(90deg, #ff6200, #ff7d00);
             color: #ffffff;
             border: none;
             width: 100%;
             padding: 12px;
-            border-radius: 30px; 
-            font-weight: 700;
+            border-radius: 50px; 
+            font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: auto;
             transition: background 0.3s ease;
         }
 
-        .btn-details:hover {
-            background-color: #d66836; 
-        }
+        .btn-details.pill:hover {
+            background: #d66836; 
+        }    }
 
         /* ==========================================
            FOOTER 
@@ -489,16 +512,37 @@
                             onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">{{ $producto->display_name ?? 'Nombre no disponible' }}</h3>
-                        <p class="product-details">N&deg; de parte: {{ $producto->nro_parte ?? 'N/A' }}</p>
-                        <p class="product-details">Stock: 
+                        @php
+                            $rawName = $producto->display_name ?? $producto->nombre ?? 'Nombre no disponible';
+                            $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $rawName);
+                            
+                            $specs = [];
+                            if (!empty($producto->procesador)) $specs[] = trim($producto->procesador);
+                            if (!empty($producto->ram)) $specs[] = trim($producto->ram);
+                            if (!empty($producto->almacenamiento)) $specs[] = trim($producto->almacenamiento);
+                            if (!empty($producto->sistema_operativo)) $specs[] = trim($producto->sistema_operativo);
+                            if (!empty($producto->tarjetavideo)) $specs[] = trim($producto->tarjetavideo);
+                        @endphp
+
+                        @if(count($specs) > 0)
+                            <div class="product-specs">
+                                {{ implode(' • ', $specs) }}
+                            </div>
+                        @endif
+
+                        <h3 class="product-title">{{ trim($cleanName) }}</h3>
+                        <div class="product-sku">SKU: {{ $producto->nro_parte ?? 'N/A' }}</div>
+                        
+                        <div class="product-stock-wrapper">
                             @if($stock > 0)
-                                <span class="stock-green">&ge; {{ $stock }} unidades</span>
+                                <span class="stock-status-dot available"></span>
+                                <span class="stock-text">Disponible (≥ {{ $stock }})</span>
                             @else
-                                <span class="stock-red" style="color: #d9534f; font-weight: 500;">Agotado</span>
+                                <span class="stock-status-dot out-of-stock"></span>
+                                <span class="stock-text" style="color: #dc3545;">Agotado</span>
                             @endif
-                        </p>
-                        <button class="btn-details" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">VER DETALLES</button>
+                        </div>
+                        <button class="btn-details pill" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">Más información</button>
                     </div>
                 </div>
             @empty

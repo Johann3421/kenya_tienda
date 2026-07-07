@@ -54,21 +54,37 @@
             @php
                 $rawName = $producto->display_name ?? $producto->nombre ?? 'Nombre no disponible';
                 $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $rawName);
+                
+                $specs = [];
+                if (!empty($producto->procesador)) $specs[] = trim($producto->procesador);
+                if (!empty($producto->ram)) $specs[] = trim($producto->ram);
+                if (!empty($producto->almacenamiento)) $specs[] = trim($producto->almacenamiento);
+                if (!empty($producto->sistema_operativo)) $specs[] = trim($producto->sistema_operativo);
+                if (!empty($producto->tarjetavideo)) $specs[] = trim($producto->tarjetavideo);
             @endphp
 
-            <h3 class="product-title">{{ trim($cleanName) }}</h3>
-            <p class="product-pn">N&deg; de parte: {{ $producto->nro_parte ?? 'N/A' }}</p>
-
-            <p class="product-stock">Stock: 
-            @if ($stock !== 0 && $stock !== '0')
-                <span>≥ {{ $stock }}</span>
-            @else
-                <span style="color:#f26522;">Agotado</span>
+            @if(count($specs) > 0)
+                <div class="product-specs">
+                    {{ implode(' • ', $specs) }}
+                </div>
             @endif
-            </p>
 
-            <button class="btn-details" onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
-                Ver detalles
+            <h3 class="product-title">{{ trim($cleanName) }}</h3>
+            
+            <div class="product-sku">SKU: {{ $producto->nro_parte ?? 'N/A' }}</div>
+
+            <div class="product-stock-wrapper">
+                @if ($stock !== 0 && $stock !== '0')
+                    <span class="stock-status-dot available"></span>
+                    <span class="stock-text">Disponible (≥ {{ $stock }})</span>
+                @else
+                    <span class="stock-status-dot out-of-stock"></span>
+                    <span class="stock-text" style="color:#dc3545;">Agotado</span>
+                @endif
+            </div>
+
+            <button class="btn-details pill" onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
+                Más información
             </button>
         </div>
     @empty
