@@ -187,6 +187,10 @@ class ConsultarController extends Controller {
                 ->with(['getManuales.getManual', 'getDriversprod.getDrivers'])
                 ->first();
 
+            if (!$garantia) {
+                return redirect()->route('consultar.garantia', ['serie' => $serie]);
+            }
+
             // Mapeo de nombres de campos de DB a nombres esperados en el template
             $campoMapping = [
                 'Procesador' => 'procesador',
