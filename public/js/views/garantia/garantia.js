@@ -26,7 +26,7 @@ new Vue({
         id: null,
         state: null,
         loading: false,
-        errors: [],
+        errors: {},
         seleccion: null,
 
         productos: [],
@@ -244,7 +244,7 @@ new Vue({
             }
         },
         Store() {
-            this.errors = [];
+            this.errors = {};
             this.loading = true;
             this.ValidarCampos("garantia");
 
@@ -276,14 +276,14 @@ new Vue({
                             this.resetDatos();
                             this.Buscar(this.page);
                         } else {
-                            this.errors = response.data.errors;
+                            this.errors = response.data.errors || {};
                         }
                     })
                     .catch((error) => {
                         this.loading = false;
                         console.log(error);
                         if (error.response.status == 422) {
-                            this.errors = error.response.data.errors;
+                            this.errors = error.response.data.errors || {};
                         } else {
                             // console.log(error.response)
                             // console.log([this.descripcion, this.estado, this.categoria])
@@ -297,11 +297,11 @@ new Vue({
             }
         },
         Update() {
-            this.errors = [];
+            this.errors = {};
             this.loading = true;
             this.ValidarCampos("garantia");
 
-            if (this.errors.length === 0) {
+            if (Object.keys(this.errors).length === 0) {
                 axios
                     .post("../garantias/update", {
                         id: this.id,
@@ -332,13 +332,13 @@ new Vue({
                             }
                             this.methods = '';
                         } else {
-                            this.errors = response.data.errors;
+                            this.errors = response.data.errors || {};
                         }
                     })
                     .catch((error) => {
                         this.loading = false;
                         if (error.response.status == 422) {
-                            this.errors = error.response.data.errors;
+                            this.errors = error.response.data.errors || {};
                         } else {
                             alert(
                                 "Algo salio mal, por favor intente nuevamente."
@@ -399,7 +399,7 @@ new Vue({
             this.loading = false;
             this.state = null;
             this.message = null;
-            this.errors = [];
+            this.errors = {};
 
             // Limpiar backdrop de Bootstrap 5
             const modalElement = document.getElementById('formularioModal');
