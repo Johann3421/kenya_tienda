@@ -35,18 +35,31 @@ class RegistroClienteController extends Controller
     public function validarRegistro(Request $request)
     {
         $request->validate([
-            'tipo' => 'required|string',
+            'tipo'      => 'required|string',
             'documento' => 'required|string|min:8|max:11',
-            'correo' => 'required|email'
+            'correo'    => 'required|email',
         ]);
 
-        // Ponytail: YAGNI. No complex SUNAT/RENIEC API or strict domain validation yet.
-        // Simplification: Any valid 8 to 11-digit document and valid email format is "aprobado" for now.
-        // The real business logic goes here later.
-        
-        $estado = 'aprobado'; // Asumimos aprobado por defecto para desatascar
+        // Ponytail: YAGNI — no SUNAT/RENIEC API, simple format check only
+        $estado = 'aprobado';
 
-        // 1. Generar contraseña aleatoria
+        // 1. Detectar si el email YA está registrado
+        $existingUser = User::where('email', $request->correo)->first();
+        if ($existingUser) {
+            return back()
+                ->withInput()
+                ->withErrors(['correo' => 'Este correo electrónico ya está registrado. Por favor ingresa al portal directamente.']);
+        }
+
+        // 2. Detectar si el DNI ya existe
+        $dniCorto = substr($request->documento, 0, 8);
+        if (User::where('dni', $dniCorto)->exists()) {
+            return back()
+                ->withInput()
+                ->withErrors(['documento' => 'Este documento ya está registrado en el sistema. Contacta a soporte si tienes problemas para ingresar.']);
+        }
+
+        // 3. Generar contraseña aleatoria
         $password = Str::random(8);
 
         // 2. Buscar o crear el usuario (role = cliente_web, username = correo)

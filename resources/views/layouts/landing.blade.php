@@ -554,10 +554,10 @@ body {
                             <p style="margin: 0; font-size: 0.8rem; color: #777;">{{ Auth::user()->email }}</p>
                         </div>
                         <ul style="list-style: none; margin: 0; padding: 0;">
-                            <li><a href="#" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-id-card" style="width: 20px; color: #ee7c31;"></i> Mi Perfil</a></li>
-                            <li><a href="#" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-file-invoice-dollar" style="width: 20px; color: #ee7c31;"></i> Mis Cotizaciones</a></li>
+                            <li><a href="{{ url('/mi-perfil') }}" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-id-card" style="width: 20px; color: #ee7c31;"></i> Mi Perfil</a></li>
+                            <li><a href="{{ url('/mis-cotizaciones') }}" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-file-invoice-dollar" style="width: 20px; color: #ee7c31;"></i> Mis Cotizaciones</a></li>
                             <li style="border-top: 1px solid #eee;">
-                                <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
+                                <form action="{{ url('/cliente/logout') }}" method="POST" style="margin: 0;">
                                     @csrf
                                     <button type="submit" style="width: 100%; text-align: left; background: none; border: none; display: block; padding: 10px 15px; color: #dc3545; font-size: 0.9rem; cursor: pointer; transition: background 0.2s;"><i class="fa-solid fa-sign-out-alt" style="width: 20px;"></i> Cerrar Sesión</button>
                                 </form>
@@ -590,6 +590,18 @@ body {
                 {{-- Sorteo temporalmente oculto en producción --}}
                 {{-- <li><a href="{{ route('serial.draw') }}">🎁 Sorteo</a></li> --}}
                 <li><a href="{{ route('contactenos') }}">Contáctenos</a></li>
+                @if(Auth::check())
+                    <li><a href="{{ url('/mi-perfil') }}"><i class="bx bx-user"></i> Mi Perfil</a></li>
+                    <li><a href="{{ url('/mis-cotizaciones') }}"><i class="bx bx-file"></i> Mis Cotizaciones</a></li>
+                    <li>
+                        <form action="{{ url('/cliente/logout') }}" method="POST" style="margin:0;padding:0;">
+                            @csrf
+                            <button type="submit" style="background:none;border:none;padding:13px 24px;color:#dc3545;font-weight:500;font-size:0.95rem;width:100%;text-align:left;cursor:pointer;"><i class="bx bx-log-out"></i> Cerrar Sesión</button>
+                        </form>
+                    </li>
+                @else
+                    <li><a href="{{ url('/acceso-clientes') }}"><i class="bx bx-lock-open"></i> Ingresar</a></li>
+                @endif
             </ul>
         </nav>
     </header><!-- End Header -->

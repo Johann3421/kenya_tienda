@@ -30,7 +30,12 @@
                         
                         <div class="form-group mb-4">
                             <label class="font-weight-bold">RUC / DNI</label>
-                            <input type="text" name="documento" class="form-control" placeholder="Ingrese su RUC (11) o DNI (8)" required minlength="8" maxlength="11" style="border-radius: 8px;">
+                            <input type="text" name="documento" class="form-control @error('documento') is-invalid @enderror" placeholder="Ingrese su RUC (11) o DNI (8)" value="{{ old('documento') }}" required minlength="8" maxlength="11" style="border-radius: 8px;">
+                            @error('documento')
+                                <div class="invalid-feedback" style="display:block; color:#dc3545; font-size:0.85rem; margin-top:4px;">
+                                    <i class="fa fa-exclamation-circle"></i> {{ $message }}
+                                </div>
+                            @enderror
                             <small class="form-text text-muted mt-2">
                                 <i class="fa fa-info-circle"></i> Su documento será utilizado para validar el acceso a condiciones especiales.
                             </small>
@@ -38,7 +43,15 @@
 
                         <div class="form-group mb-4">
                             <label class="font-weight-bold">Correo Electrónico</label>
-                            <input type="email" name="correo" class="form-control" placeholder="nombre@empresa.com" required style="border-radius: 8px;">
+                            <input type="email" name="correo" class="form-control @error('correo') is-invalid @enderror" placeholder="nombre@empresa.com" value="{{ old('correo') }}" required style="border-radius: 8px;">
+                            @error('correo')
+                                <div class="invalid-feedback" style="display:block; color:#dc3545; font-size:0.85rem; margin-top:4px;">
+                                    <i class="fa fa-exclamation-circle"></i> {{ $message }}
+                                    @if(str_contains($message, 'ya está registrado'))
+                                        — <a href="{{ url('/acceso-clientes') }}" style="color:#ee7c31; font-weight:600;">Ingresar al portal</a>
+                                    @endif
+                                </div>
+                            @enderror
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-block py-2" style="border-radius: 50px; font-weight: 600;">Validar Datos</button>

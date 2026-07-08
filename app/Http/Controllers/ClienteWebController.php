@@ -187,4 +187,38 @@ class ClienteWebController extends Controller
             ];
         }
     }
+
+    // ── Landing portal: Mi Perfil ───────────────────────────────────────────
+    public function perfil()
+    {
+        $user = auth()->user();
+        return view('cliente.perfil', compact('user'));
+    }
+
+    public function actualizarPerfil(Request $request)
+    {
+        $user = auth()->user();
+        $request->validate([
+            'nombres'    => 'required|string|max:255',
+            'telefono'   => 'nullable|string|max:20',
+            'email'      => 'required|email|unique:users,email,' . $user->id,
+            'password'   => 'nullable|min:6|confirmed',
+        ]);
+
+        $data = $request->only(['nombres', 'telefono', 'email']);
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($request->password);
+        }
+        $user->update($data);
+
+        return back()->with('success', 'Perfil actualizado correctamente.');
+    }
+
+    // ── Landing portal: Mis Cotizaciones ───────────────────────────────────
+    public function cotizaciones()
+    {
+        $user = auth()->user();
+        // ponytail: no hay tabla de cotizaciones aún — vista placeholder lista para conectar
+        return view('cliente.cotizaciones', compact('user'));
+    }
 }

@@ -182,6 +182,7 @@ Route::group(['middleware' => ['auth', 'can:productos']], function () {
          Route::put('/producto/especificaciones/{id}/editar', [ProductoController::class, 'actualizarEspecificacion']);
 });
 
+
 Route::view('/quienes-somos', 'quienes-somos')->name('quienes.somos');
 Route::view('/Catalogo', 'Catalogo')->name('catalogo.static');
 Route::view('/Novedades', 'Novedades')->name('novedades');
@@ -191,18 +192,24 @@ Route::view('/Reclamaciones', 'Reclamaciones')->name('reclamaciones');
 // --------------------- PORTAL COTIZACIÓN (clientes verificados) --------
 Route::get('/acceso-clientes', [App\Http\Controllers\LoginClienteController::class, 'showLoginForm'])->name('login-cliente.show');
 Route::post('/acceso-clientes', [App\Http\Controllers\LoginClienteController::class, 'login'])->name('login-cliente.post');
+// Logout desde cualquier página del sitio
+Route::post('/cliente/logout', [App\Http\Controllers\LoginClienteController::class, 'logout'])->name('cliente.logout');
 
-Route::middleware(['auth', 'role:cliente_web'])->prefix('cotizar')->name('cotizar.')->group(function () {
-    Route::get('/', [App\Http\Controllers\CotizarController::class, 'index'])->name('index');
-    Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('detalle');
-    Route::post('/logout', [App\Http\Controllers\LoginClienteController::class, 'logout'])->name('logout');
-});
-// -----------------------------------------------------------------------
-
-// Sorteo temporalmente oculto en producción — redirige al inicio
+// Sorteo temporalmente oculto en producción
 Route::get('/sorteo', fn() => redirect('/'))->name('serial.draw');
 Route::post('/sorteo', fn() => redirect('/'))->name('serial.draw.store');
 Route::post('/sorteo/claim', fn() => redirect('/'))->name('serial.draw.claim');
+
+Route::middleware(['auth', 'role:cliente_web'])->group(function () {
+    Route::get('/mi-perfil',        [App\Http\Controllers\ClienteWebController::class, 'perfil'])->name('cliente.perfil');
+    Route::post('/mi-perfil',       [App\Http\Controllers\ClienteWebController::class, 'actualizarPerfil'])->name('cliente.perfil.update');
+    Route::get('/mis-cotizaciones', [App\Http\Controllers\ClienteWebController::class, 'cotizaciones'])->name('cliente.cotizaciones');
+    Route::prefix('cotizar')->name('cotizar.')->group(function () {
+        Route::get('/', [App\Http\Controllers\CotizarController::class, 'index'])->name('index');
+        Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('detalle');
+    });
+});
+// -----------------------------------------------------------------------
 
 Route::post('/reclamaciones/enviar', [ReclamacionController::class, 'enviar']);
 
