@@ -14,7 +14,6 @@ class SyncPricesCommand extends Command
 
     public function handle()
     {
-        // Esta URL te la dará Google Apps Script cuando publiques la Web App.
         $scriptUrl = env('GOOGLE_SCRIPT_URL', 'https://script.google.com/macros/s/AKfycbywCyOlDZxjAonCPJeavoIRe0GuPuY4n_EahViAnP-SjIPvoucQ5IDxOTnxqZWggzSW/exec');
         $token = env('GOOGLE_SCRIPT_TOKEN', 'KENYA_2026_SECRETO');
 
@@ -50,14 +49,22 @@ class SyncPricesCommand extends Command
         $this->info("Se han leído " . count($values) . " filas correctamente desde el Excel.");
 
         if ($this->option('test')) {
-            $this->line("MODO TEST: Mostrando las primeras 2 filas para entender la estructura.");
-            $this->table(
-                ['Columna A', 'Columna B', 'Columna C', 'Columna D', 'Columna E', 'Columna F'],
-                [
-                    array_slice($values[0] ?? [], 0, 6),
-                    array_slice($values[1] ?? [], 0, 6)
-                ]
-            );
+            $this->line("CABECERAS COMPLETAS DEL EXCEL:");
+            foreach ($values[0] as $i => $header) {
+                $this->line("Columna [$i]: $header");
+            }
+            
+            // Debug: Buscar 5 nro_parte de la BD a ver qué pasa
+            $this->line("\nDiagnosticando NRO_PARTE de la BD vs Google Sheet...");
+            $sampleDbParts = DB::table('productos')->whereNotNull('nro_parte')->where('nro_parte', '!=', '')->limit(5)->pluck('nro_parte')->toArray();
+            $this->line("5 Nros de parte aleatorios en la BD: " . implode(', ', $sampleDbParts));
+            
+            $sheetParts = [];
+            for($i = 1; $i <= 10; $i++) {
+                if(isset($values[$i][4])) $sheetParts[] = $values[$i][4];
+            }
+            $this->line("10 Nros de parte en las primeras filas del Sheet: " . implode(', ', $sheetParts));
+
             return 0;
         }
 
@@ -66,20 +73,34 @@ class SyncPricesCommand extends Command
         // Suponemos que la fila 0 son cabeceras, iteramos desde 1
         $actualizados = 0;
         $noEncontrados = 0;
-        $tc = env('TIPO_CAMBIO_USD', 3.75); // Tipo de cambio base si no existe
+
+        // Tipo de cambio desde el mismo Excel (Fila 1, Columna 11 -> Indice [0][10])
+        $tc = 3.75; // Default
+        if (isset($values[0][10]) && is_numeric($values[0][10])) {
+            $tc = (float) $values[0][10];
+            $this->info("Usando Tipo de Cambio del Excel: " . $tc);
+        }
+
+        // Identificamos indices
+        $idxNroParte = array_search('NRO_PARTE', $values[0]);
+        $idxPrecio = array_search('PRECIO REFERENCIAL CLIENTE (USD SIN IGV)', $values[0]);
+
+        if ($idxNroParte === false || $idxPrecio === false) {
+            $this->error("No se encontraron las columnas necesarias (NRO_PARTE o PRECIO REFERENCIAL CLIENTE (USD SIN IGV)) en la fila de cabeceras.");
+            return 1;
+        }
 
         foreach ($values as $index => $row) {
             if ($index === 0) continue; // Saltar cabeceras
 
-            $nroParte = $row[4] ?? null;
-            $precioUsd = $row[5] ?? null;
+            $nroParte = $row[$idxNroParte] ?? null;
+            $precioUsd = $row[$idxPrecio] ?? null;
 
             if (!$nroParte || !is_numeric($precioUsd)) {
                 continue;
             }
 
-            // Convertir a soles + IGV si el catálogo muestra S/ con IGV
-            // Ponytail shortcut: Asumimos cálculo fijo, luego el usuario lo ajusta si necesita.
+            // Guardamos el precio convertido a soles
             $precioSoles = round($precioUsd * $tc * 1.18, 2);
 
             $afectados = DB::table('productos')
@@ -95,7 +116,7 @@ class SyncPricesCommand extends Command
 
         $this->info("Sincronización completada.");
         $this->info("Productos actualizados: $actualizados");
-        $this->warn("Nro de parte no encontrados en BD: $noEncontrados (Normal si hay productos descatalogados)");
+        $this->warn("Nro de parte no encontrados en BD: $noEncontrados (El Excel tiene productos que no están en tu BD)");
 
         return 0;
     }
