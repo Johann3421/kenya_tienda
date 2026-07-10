@@ -55,7 +55,7 @@ class ProductoController extends Controller
     public function buscar(Request $request)
     {
         $productos = Producto::with('getCategoria', 'getMarca', 'getModelo')
-            ->orderBy('nombre', 'ASC');
+            ->orderBy('id', 'desc');
         if ($request->search) {
             switch ($request->search_por) {
                 case 'codigo_barras':
