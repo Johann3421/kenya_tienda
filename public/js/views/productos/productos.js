@@ -380,26 +380,42 @@ eliminarArchivoExcel(index) {
                     this.producto.nombre_secundario = (seleccion.nombre_secundario == null) ? '' : seleccion.nombre_secundario;
                     this.producto.descripcion = (seleccion.descripcion == null) ? '' : seleccion.descripcion;
                     this.producto.especificaciones = (seleccion.especificaciones == null) ? '' : seleccion.especificaciones;
+
+                    // Ensure DB values exist in dropdown lists so they don't appear blank
+                    if (seleccion.procesador && !this.listaProcesadores.find(p => p.nom_pros === seleccion.procesador)) {
+                        this.listaProcesadores.push({ nom_pros: seleccion.procesador });
+                    }
+                    if (seleccion.ram && !this.listaRam.find(r => r.nom_ram === seleccion.ram)) {
+                        this.listaRam.push({ nom_ram: seleccion.ram });
+                    }
+                    if (seleccion.tarjetavideo && !this.listaTarjetavideo.find(v => v.tarjetavideo === seleccion.tarjetavideo)) {
+                        this.listaTarjetavideo.push({ tarjetavideo: seleccion.tarjetavideo });
+                    }
+                    if (seleccion.almacenamiento && !this.listaAlmacenamiento.find(a => a.cant_almcen === seleccion.almacenamiento)) {
+                        this.listaAlmacenamiento.push({ cant_almcen: seleccion.almacenamiento });
+                    }
+                    if (seleccion.suite_ofimatica && !this.listaOfimatica.find(o => o.ofimatica === seleccion.suite_ofimatica)) {
+                        this.listaOfimatica.push({ ofimatica: seleccion.suite_ofimatica });
+                    }
+
                     this.producto.procesador = (seleccion.procesador == null) ? '' : seleccion.procesador;
-                    this.producto.tarjetavideo = seleccion.tarjetavideo;
-                    this.producto.nro_parte = seleccion.nro_parte;
-                    this.producto.ram = seleccion.ram;
-                    this.producto.almacenamiento = seleccion.almacenamiento;
-                    this.producto.conectividad = seleccion.conectividad;
-                    this.producto.conectividad_wlan = seleccion.conectividad_wlan;
-                    this.producto.conectividad_usb = seleccion.conectividad_usb;
-                    this.producto.video_vga = seleccion.video_vga;
-                    this.producto.video_hdmi = seleccion.video_hdmi;
-                    this.producto.sistema_operativo = seleccion.sistema_operativo;
-                    this.producto.unidad_optica = seleccion.unidad_optica;
-                    this.producto.teclado = seleccion.teclado;
-                    //this.producto.ficha_tecnica = seleccion.ficha_tecnica;
-                    this.producto.mouse = seleccion.mouse;
-                    this.producto.teclado = seleccion.teclado;
-                    this.producto.suite_ofimatica = seleccion.suite_ofimatica;
-                    this.producto.garantia_de_fabrica = seleccion.garantia_de_fabrica;
-                    this.producto.empaque_de_fabrica = seleccion.empaque_de_fabrica;
-                    this.producto.certificacion = seleccion.certificacion;
+                    this.producto.tarjetavideo = (seleccion.tarjetavideo == null) ? '' : seleccion.tarjetavideo;
+                    this.producto.nro_parte = (seleccion.nro_parte == null) ? '' : seleccion.nro_parte;
+                    this.producto.ram = (seleccion.ram == null) ? '' : seleccion.ram;
+                    this.producto.almacenamiento = (seleccion.almacenamiento == null) ? '' : seleccion.almacenamiento;
+                    this.producto.conectividad = (seleccion.conectividad == null) ? '' : seleccion.conectividad;
+                    this.producto.conectividad_wlan = (seleccion.conectividad_wlan == null) ? '' : seleccion.conectividad_wlan;
+                    this.producto.conectividad_usb = (seleccion.conectividad_usb == null) ? '' : seleccion.conectividad_usb;
+                    this.producto.video_vga = (seleccion.video_vga == null) ? '' : seleccion.video_vga;
+                    this.producto.video_hdmi = (seleccion.video_hdmi == null) ? '' : seleccion.video_hdmi;
+                    this.producto.sistema_operativo = (seleccion.sistema_operativo == null) ? '' : seleccion.sistema_operativo;
+                    this.producto.unidad_optica = (seleccion.unidad_optica == null) ? '' : seleccion.unidad_optica;
+                    this.producto.teclado = (seleccion.teclado == null) ? '' : seleccion.teclado;
+                    this.producto.mouse = (seleccion.mouse == null) ? '' : seleccion.mouse;
+                    this.producto.suite_ofimatica = (seleccion.suite_ofimatica == null) ? '' : seleccion.suite_ofimatica;
+                    this.producto.garantia_de_fabrica = (seleccion.garantia_de_fabrica == null) ? '' : seleccion.garantia_de_fabrica;
+                    this.producto.empaque_de_fabrica = (seleccion.empaque_de_fabrica == null) ? '' : seleccion.empaque_de_fabrica;
+                    this.producto.certificacion = (seleccion.certificacion == null) ? '' : seleccion.certificacion;
                     this.producto.modelo_id = seleccion.modelo_id;
                     //this.producto.unidad = seleccion.unidad;
                     //this.producto.moneda = seleccion.moneda;
