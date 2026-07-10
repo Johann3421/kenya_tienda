@@ -162,6 +162,8 @@ public function store(Request $request)
         }
         $producto->save();
 
+        $this->syncSpecs($producto); // ponytail: drag basic fields to especificaciones like API does
+
         DB::commit();
 
         return [
@@ -241,6 +243,8 @@ public function update(Request $request)
             }
         }
         $producto->save();
+
+        $this->syncSpecs($producto); // ponytail: drag basic fields to especificaciones like API does
 
         DB::commit();
 
@@ -627,6 +631,36 @@ public function subirFichaTecnica(Request $request, $producto)
         $producto->incluye_percepcion    = $request->incluye_percepcion;
         $producto->linea_producto        = mb_strtoupper($request->linea_producto);
         $producto->save();
+    }
+
+    private function syncSpecs($producto) {
+        $fields = [
+            'Procesador' => 'procesador',
+            'Memoria Ram' => 'ram',
+            'Almacenamiento' => 'almacenamiento',
+            'Gráficos' => 'tarjetavideo',
+            'Sistema Operativo' => 'sistema_operativo',
+            'Suite Ofimática' => 'suite_ofimatica',
+            'Garantía de Fábrica' => 'garantia_de_fabrica',
+            'Empaque' => 'empaque_de_fabrica',
+            'Certificaciones' => 'certificacion',
+            'Lan' => 'conectividad',
+            'Wlan' => 'conectividad_wlan',
+            'Puertos Mínimos' => 'conectividad_usb',
+            'Video VGA' => 'video_vga',
+            'Video HDMI' => 'video_hdmi',
+            'Unidad Óptica' => 'unidad_optica',
+            'Teclado' => 'teclado',
+            'Mouse' => 'mouse',
+        ];
+        foreach($fields as $campo => $attr) {
+            if (!empty($producto->$attr)) {
+                Especificacion::updateOrCreate(
+                    ['producto_id' => $producto->id, 'campo' => $campo],
+                    ['descripcion' => $producto->$attr]
+                );
+            }
+        }
     }
 
     public function mdlEliminarProducto(Request $request)
