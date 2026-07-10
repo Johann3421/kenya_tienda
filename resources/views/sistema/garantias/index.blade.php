@@ -626,5 +626,5 @@
 
 @section('js')
     <script src="{{ asset('moment.min.js') }}"></script>
-    <script src="{{ asset('js/views/garantia/garantia.js') }}"></script>
+    <script src="{{ asset('js/views/garantia/garantia.js') }}?v={{ filemtime(public_path('js/views/garantia/garantia.js')) }}"></script>
 @endsection
