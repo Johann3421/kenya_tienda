@@ -65,7 +65,7 @@ class ProductoController extends Controller
                     $productos->where('codigo_interno', $request->search);
                     break;
                 case 'nombre':
-                    $productos->where('nombre', 'like', '%' . $request->search . '%');
+                    $productos->where('nombre', 'ilike', '%' . $request->search . '%');
                     break;
             }
         }
