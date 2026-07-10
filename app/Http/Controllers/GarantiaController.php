@@ -130,7 +130,7 @@ class GarantiaController extends Controller
             });
         }
 
-        $garantias = $garantias->orderBy('garantia.created_at', 'desc')->orderBy('garantia.id', 'desc')->paginate(10);
+        $garantias = $garantias->orderBy('garantia.fecha_venta', 'desc')->orderBy('garantia.id', 'desc')->paginate(10);
 
         return [
             'pagination' => [
