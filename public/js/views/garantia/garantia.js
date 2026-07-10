@@ -45,6 +45,8 @@ new Vue({
         producto_id_actualizar: null,
         filtroEstado: '',
         mostrarLeyenda: false,
+        fecha_inicio: "",
+        fecha_fin: "",
     },
     created() {
         this.Buscar();
@@ -142,7 +144,9 @@ new Vue({
     axios
         .post(urlBuscar, {
             search: this.search,
-            filtroEstado: this.filtroEstado // <--- agrega esto
+            filtroEstado: this.filtroEstado,
+            fecha_inicio: this.fecha_inicio,
+            fecha_fin: this.fecha_fin
         })
         .then((response) => {
             if (exe == 0) {

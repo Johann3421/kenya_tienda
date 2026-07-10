@@ -347,7 +347,7 @@
                     {{-- MODAL --}}
 
                     <div class="row">
-                        <div class="mb-3 mt-3 col-md-9">
+                        <div class="mb-3 mt-3 col-md-7">
                             <button type="button" class="btn btn-icon btn-primary mr-2" style="min-width: 88px;"
                                 data-bs-toggle="modal" data-bs-target="#formularioModal"
                                 v-on:click="formularioModal('', null, 'create', null)">
@@ -379,12 +379,31 @@
                                 <div>Eliminar</div>
                             </button>
                         </div>
-                        <div class="mb-3 mt-3 col-md-3">
-                            <div class="p-b-10">
-                                <input type="text" class="form-control" id="seacrh" v-model="search"
-                                    placeholder="Busca por N°ro de Serie" v-on:keyup.enter="Buscar">
+                        <div class="mb-3 mt-3 col-md-5">
+                            <div class="form-row align-items-end">
+                                <div class="col-sm-5 mb-2">
+                                    <label class="label-sm">FECHA INICIO</label>
+                                    <input type="date" class="form-control" v-model="fecha_inicio" v-on:change="Buscar(1)">
+                                </div>
+                                <div class="col-sm-5 mb-2">
+                                    <label class="label-sm">FECHA FIN</label>
+                                    <input type="date" class="form-control" v-model="fecha_fin" v-on:change="Buscar(1)">
+                                </div>
+                                <div class="col-sm-2 mb-2">
+                                    <button class="btn btn-warning btn-block" style="padding: 10px 5px;" v-on:click="fecha_inicio = ''; fecha_fin = ''; Buscar(1)" title="Limpiar Fechas">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="col-12">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="seacrh" v-model="search"
+                                            placeholder="Busca por N°ro de Serie" v-on:keyup.enter="Buscar(1)">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-secondary" type="button" v-on:click="Buscar(1)">Buscar</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <button class="btn btn-secondary btn-block" v-on:click="Buscar">Buscar</button>
                         </div>
                     </div>
                     <div class="row mb-3">

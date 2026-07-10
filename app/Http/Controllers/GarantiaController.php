@@ -24,6 +24,8 @@ class GarantiaController extends Controller
     {
         $search = $request->search;
         $filtroEstado = $request->filtroEstado;
+        $fecha_inicio = $request->fecha_inicio;
+        $fecha_fin = $request->fecha_fin;
 
         $garantias = Garantia::join('productos', 'productos.id', '=', "garantia.producto_id")
             ->select(
@@ -35,12 +37,23 @@ class GarantiaController extends Controller
                 "garantia.fecha_Vencimiento",
                 "garantia.serie",
                 "garantia.activo"
-            )
-            ->where(function ($query) use ($search) {
+            );
+
+        if ($search) {
+            $garantias = $garantias->where(function ($query) use ($search) {
                 $query->where('garantia.garantia', 'LIKE', '%' . $search . '%')
                     ->orWhereRaw("garantia.id::text LIKE ?", ["%{$search}%"])
                     ->orWhere('garantia.serie', 'LIKE', '%' . $search . '%');
             });
+        }
+
+        if ($fecha_inicio) {
+            $garantias = $garantias->where('garantia.fecha_venta', '>=', $fecha_inicio);
+        }
+
+        if ($fecha_fin) {
+            $garantias = $garantias->where('garantia.fecha_venta', '<=', $fecha_fin);
+        }
 
         // Filtro por estado de barra
         if ($filtroEstado) {
@@ -117,7 +130,7 @@ class GarantiaController extends Controller
             });
         }
 
-        $garantias = $garantias->orderBy('garantia.id', 'desc')->paginate(10);
+        $garantias = $garantias->orderBy('garantia.created_at', 'desc')->orderBy('garantia.id', 'desc')->paginate(10);
 
         return [
             'pagination' => [
