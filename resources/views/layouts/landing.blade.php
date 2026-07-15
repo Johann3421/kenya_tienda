@@ -503,6 +503,23 @@ body {
     margin: 0 auto;
     padding: 0 24px;
 }
+
+.kenya-contact-list li {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+}
+
+.kenya-contact-list li .kenya-icon {
+    flex-shrink: 0;
+    margin-top: 3px;
+    width: 14px;
+    text-align: center;
+}
+
+.kenya-contact-list li span {
+    line-height: 1.45;
+}
 </style>
 
     @yield('css')
