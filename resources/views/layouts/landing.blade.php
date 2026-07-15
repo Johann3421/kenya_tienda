@@ -654,7 +654,11 @@ body {
                     <ul class="kenya-footer-list kenya-contact-list">
                         <li>
                             <i class="kenya-icon fas fa-map-marker-alt"></i>
-                            <span>Av. Pablo Carriquiry N°455 Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
+                            <span><strong>Principal:</strong> Jr Huallayco N° 135 - Huánuco</span>
+                        </li>
+                        <li>
+                            <i class="kenya-icon fas fa-map-marker-alt"></i>
+                            <span><strong>Oficina:</strong> Av. Pablo Carriquiry N° 455 - Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-envelope"></i>

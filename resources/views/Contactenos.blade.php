@@ -79,7 +79,7 @@
             color: #f26522;
         }
 
-        .contact-form input, 
+        .contact-form input,
         .contact-form textarea {
             width: 100%;
             padding: 15px 20px;
@@ -92,7 +92,7 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        .contact-form input:focus, 
+        .contact-form input:focus,
         .contact-form textarea:focus {
             border-color: #f26522;
             box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.1);
@@ -173,10 +173,10 @@
            FOOTER ORIGINAL
            ========================================== */
         .site-footer {
-            background-color: #222; 
-            color: #ccc; 
+            background-color: #222;
+            color: #ccc;
             font-size: 0.9rem;
-            border-top: 0px solid #f26522; 
+            border-top: 0px solid #f26522;
         }
         .footer-grid {
             display: grid;
@@ -204,7 +204,7 @@
         .footer-col ul li { margin-bottom: 0.8rem; }
         .footer-col ul li a { color: #aaa; text-decoration: none; transition: color 0.3s ease; }
         .footer-col ul li a:hover { color: #f26522; }
-        
+
         .contact-info li { display: flex; align-items: flex-start; gap: 10px; color: #fff; }
         .contact-info i { color: #f26522; margin-top: 4px; }
 
@@ -245,11 +245,11 @@
             .header-search-wrapper { max-width: 100%; }
             .header-nav { flex: none; width: 100%; order: 3; justify-content: center; }
             .header-nav ul { flex-wrap: wrap; justify-content: center; gap: 15px;}
-            
+
             /* Ajuste de formulario en móviles */
             .contact-layout { grid-template-columns: 1fr; }
         }
-    
+
     </style>
 
     <section class="contact-banner" style="background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset('banercontacto.png?v=2') }}');">
@@ -261,7 +261,7 @@
 
     <div class="container">
         <div class="contact-layout">
-            
+
             <div class="contact-form-container">
                 <h2>Escríbenos</h2>
                 <form class="contact-form">
@@ -296,10 +296,14 @@
                     <span>+51 958 021 778</span>
                 </div>
                 <div class="info-item">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span>Av. Pablo Carriquiry N 455 Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span><strong>Principal:</strong> Jr Huallayco N° 135 - Huánuco</span>
                 </div>
-                
+                <div class="info-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span><strong>Oficina:</strong> Av. Pablo Carriquiry N° 455 - Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
+                </div>
+
                 <div class="contact-social">
                     <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#"><i class="fa-brands fa-instagram"></i></a>
@@ -307,10 +311,98 @@
                     <a href="#"><i class="fa-brands fa-youtube"></i></a>
                 </div>
 
-                <div class="contact-map">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.6172522719596!2d-77.01817840277106!3d-12.096092161538214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8709d895a81%3A0x3ba45384561942b!2sOficina%2003%2C%20Av%20Pablo%20Carriquiry%20455%2C%20San%20Isidro%2015036!5e0!3m2!1ses!2spe!4v1762792365755!5m2!1ses!2spe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
+                <div class="contact-map-wrapper">
+                    <div class="map-tabs">
+                        <button class="map-tab active" data-map="oficina">
+                            <i class="fa-solid fa-building"></i> Oficina &mdash; Lima
+                        </button>
+                        <button class="map-tab" data-map="principal">
+                            <i class="fa-solid fa-house"></i> Principal &mdash; Huánuco
+                        </button>
+                    </div>
+                    <div class="map-address-badge" id="mapAddressBadge">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span id="mapAddressText">Av. Pablo Carriquiry N° 455 - Oficina 03 - Corpac - San Isidro - Lima</span>
+                    </div>
+                    <div class="contact-map">
+                        <iframe id="mapOficina" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.6172522719596!2d-77.01817840277106!3d-12.096092161538214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8709d895a81%3A0x3ba45384561942b!2sOficina%2003%2C%20Av%20Pablo%20Carriquiry%20455%2C%20San%20Isidro%2015036!5e0!3m2!1ses!2spe!4v1762792365755!5m2!1ses!2spe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+                        <iframe id="mapPrincipal" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.9701847870056!2d-76.2504416240538!3d-9.93643870620815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c2e77ffd63b3%3A0x64a120db4e5c4fc3!2sJir%C3%B3n%20Huallayco%20135%2C%20Hu%C3%A1nuco%2010003!5e0!3m2!1ses!2spe!4v1784158167240!5m2!1ses!2spe" width="100%" height="100%" style="border:0; display:none;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+                    </div>
                 </div>
+
+                <style>
+                    .contact-map-wrapper { width: 100%; }
+                    .map-tabs {
+                        display: flex;
+                        border-radius: 10px 10px 0 0;
+                        overflow: hidden;
+                        border: 1px solid #eaeaea;
+                        border-bottom: none;
+                    }
+                    .map-tab {
+                        flex: 1;
+                        padding: 11px 16px;
+                        background: #f5f5f5;
+                        border: none;
+                        cursor: pointer;
+                        font-size: 0.88rem;
+                        font-weight: 600;
+                        color: #666;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 7px;
+                        transition: background 0.2s, color 0.2s;
+                        border-right: 1px solid #eaeaea;
+                    }
+                    .map-tab:last-child { border-right: none; }
+                    .map-tab.active {
+                        background: #fff;
+                        color: #f26522;
+                        border-bottom: 2px solid #f26522;
+                    }
+                    .map-tab:hover:not(.active) { background: #ffe8d6; color: #f26522; }
+                    .map-address-badge {
+                        background: #fff8f5;
+                        border: 1px solid #eaeaea;
+                        border-top: none;
+                        border-bottom: none;
+                        padding: 8px 14px;
+                        font-size: 0.82rem;
+                        color: #555;
+                        display: flex;
+                        align-items: center;
+                        gap: 7px;
+                    }
+                    .map-address-badge i { color: #f26522; flex-shrink: 0; }
+                    .contact-map {
+                        width: 100%;
+                        height: 280px;
+                        border-radius: 0 0 12px 12px;
+                        overflow: hidden;
+                        border: 1px solid #eaeaea;
+                    }
+                    .contact-map iframe { width: 100%; height: 100%; border: 0; }
+                </style>
+
+                <script>
+                    (function(){
+                        const addresses = {
+                            oficina: 'Av. Pablo Carriquiry N° 455 - Oficina 03 - Corpac - San Isidro - Lima',
+                            principal: 'Jr Huallayco N° 135 - Huánuco'
+                        };
+                        document.querySelectorAll('.map-tab').forEach(function(btn) {
+                            btn.addEventListener('click', function() {
+                                const target = this.dataset.map;
+                                document.querySelectorAll('.map-tab').forEach(t => t.classList.remove('active'));
+                                this.classList.add('active');
+                                document.getElementById('mapOficina').style.display   = target === 'oficina'   ? 'block' : 'none';
+                                document.getElementById('mapPrincipal').style.display = target === 'principal' ? 'block' : 'none';
+                                document.getElementById('mapAddressText').textContent = addresses[target];
+                            });
+                        });
+                    })();
+                </script>
             </div>
 
         </div>
