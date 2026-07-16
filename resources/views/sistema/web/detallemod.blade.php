@@ -92,8 +92,20 @@
              */
             $normalizarTV = function(string $v): string {
                 $v = trim($v);
-                // Quitar la palabra "dedicado" y similares
-                $v = preg_replace('/\bdedicad[oa]s?\b/i', '', $v);
+                // Quitar palabras "dedicado", "integrado" y similares
+                $v = preg_replace('/\b(dedicad[oa]s?|integrad[oa]s?)\b/i', '', $v);
+                $v = trim($v);
+
+                // Consolidar espacios múltiples (incluye tabs) a un solo espacio
+                $v = preg_replace('/\s+/', ' ', $v);
+                $v = trim($v);
+                
+                // Normalizar guiones sueltos: "- 8GB" → "-8GB"
+                $v = preg_replace('/\s*-\s*/', '-', $v);
+                $v = trim($v);
+
+                // Quitar la palabra "Conectividad" (y variante con º) que aparece como sufijo espurio
+                $v = preg_replace('/\bConectividadº?\b/i', '', $v);
                 $v = trim($v);
 
                 // Caso 1: si tiene VRAM (ej. "8GB", "12 GB") conservar solo hasta ahí
@@ -111,6 +123,10 @@
                 }
                 // Consolidar espaciado de GB (ej. "4 GB" o "4  GB" -> "4GB")
                 $v = preg_replace('/(\d+)\s*GB/i', '$1GB', $v);
+                
+                // Remover guión o espacio inicial si quedaron "huérfanos" (ej: "-12GB" o "-Intel")
+                $v = ltrim($v, '- ');
+                
                 return trim($v);
             };
 
