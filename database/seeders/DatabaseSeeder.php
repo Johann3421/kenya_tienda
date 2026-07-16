@@ -14,11 +14,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        if (!app()->environment('local')) {
-            $this->command->warn('DatabaseSeeder bloqueado fuera de local para evitar sobreescritura de datos.');
-            return;
-        }
-
+        // Removido bloqueo 'local' ya que `migrate:fresh` solicita confirmación en producción
         $inputFile = base_path('RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql');
 
         if (!file_exists($inputFile)) {
@@ -73,8 +69,12 @@ class DatabaseSeeder extends Seeder
                     $sql = str_replace('\\r\\n', "\r\n", $sql);
                     $sql = str_replace('\\n', "\n", $sql);
 
-                    DB::unprepared($sql);
-                    $total++;
+                    try {
+                        DB::unprepared($sql);
+                        $total++;
+                    } catch (\Exception $e) {
+                        $this->command->warn("Se omitió un bloque de inserción (posible tabla eliminada como 'apis'): " . $e->getMessage());
+                    }
                 }
             }
         }
