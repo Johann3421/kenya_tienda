@@ -83,13 +83,27 @@ class CatalogoController extends Controller
             $v = trim($v);
             $v = preg_replace('/\bConectividadº?\b/i', '', $v);
             $v = trim($v);
-            if (preg_match('/^(.*?\d+\s*GB)/i', $v, $m)) {
+            // Caso 1: si tiene VRAM (ej. "12 GB GDDR6") conservar hasta ahí
+            if (preg_match('/^(.*?\d+\s*GB(?:\s*G?DDR\d[X]?)?)/i', $v, $m)) {
                 $v = trim($m[1]);
             } else {
-                $v = preg_replace('/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i', '', $v);
+                // Caso 2: sin VRAM → eliminar sufijos de marketing conocidos
+                $v = preg_replace(
+                    '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
+                    . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
+                    . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
+                    '',
+                    $v
+                );
             }
-            $v = preg_replace('/(\d+)\s*GB/i', '$1GB', $v);
+            // Forzar formato "12 GB" (con espacio)
+            $v = preg_replace('/(\d+)\s*GB/i', '$1 GB', $v);
+            // Forzar formato "GB GDDR6" (asegurar espacio si está pegado)
+            $v = preg_replace('/GB\s*(G?DDR\d[X]?)/i', 'GB $1', $v);
+            
+            // Remover guión o espacio inicial si quedaron "huérfanos" (ej: "-12 GB" o "-Intel")
             $v = ltrim($v, '- ');
+            
             return trim($v);
         };
 

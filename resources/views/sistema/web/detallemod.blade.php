@@ -108,8 +108,8 @@
                 $v = preg_replace('/\bConectividadº?\b/i', '', $v);
                 $v = trim($v);
 
-                // Caso 1: si tiene VRAM (ej. "8GB", "12 GB") conservar solo hasta ahí
-                if (preg_match('/^(.*?\d+\s*GB)/i', $v, $m)) {
+                // Caso 1: si tiene VRAM (ej. "12 GB GDDR6") conservar hasta ahí
+                if (preg_match('/^(.*?\d+\s*GB(?:\s*G?DDR\d[X]?)?)/i', $v, $m)) {
                     $v = trim($m[1]);
                 } else {
                     // Caso 2: sin VRAM → eliminar sufijos de marketing conocidos
@@ -121,10 +121,12 @@
                         $v
                     );
                 }
-                // Consolidar espaciado de GB (ej. "4 GB" o "4  GB" -> "4GB")
-                $v = preg_replace('/(\d+)\s*GB/i', '$1GB', $v);
+                // Forzar formato "12 GB" (con espacio)
+                $v = preg_replace('/(\d+)\s*GB/i', '$1 GB', $v);
+                // Forzar formato "GB GDDR6" (asegurar espacio si está pegado)
+                $v = preg_replace('/GB\s*(G?DDR\d[X]?)/i', 'GB $1', $v);
                 
-                // Remover guión o espacio inicial si quedaron "huérfanos" (ej: "-12GB" o "-Intel")
+                // Remover guión o espacio inicial si quedaron "huérfanos" (ej: "-12 GB" o "-Intel")
                 $v = ltrim($v, '- ');
                 
                 return trim($v);
