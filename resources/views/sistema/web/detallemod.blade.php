@@ -79,14 +79,10 @@
                 'tarjetavideo',
                 'sistema_operativo',
                 'unidad_optica',
-                'conectividad',
                 'conectividad_wlan',
-                'conectividad_usb',
                 'video_vga',
                 'video_hdmi',
                 'suite_ofimatica',
-                'teclado',
-                'mouse',
             ];
 
             /**
