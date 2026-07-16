@@ -205,12 +205,16 @@
                             @foreach($modelos as $m)
                                 @php
                                     $desc = strtoupper($m->descripcion);
+                                    if (str_contains($desc, 'HENKO') || str_contains($desc, 'TONER')) {
+                                        continue;
+                                    }
+                                    
                                     $label = $m->descripcion;
-                                    if (str_contains($desc, 'EZENT')) $label .= ' (Mini PC)';
-                                    elseif (str_contains($desc, 'OFISZU')) $label .= ' (Escritorio)';
-                                    elseif (str_contains($desc, 'PROWORK') || str_contains($desc, 'GENWORK')) $label .= ' (Workstation)';
+                                    if (str_contains($desc, 'EZENT')) $label .= ' (PC ESCRITORIO)';
+                                    elseif (str_contains($desc, 'GENWORK')) $label .= ' (PC ESCRITORIO PRO)';
+                                    elseif (str_contains($desc, 'OFISZU')) $label .= ' (ESCRITORIO)';
+                                    elseif (str_contains($desc, 'PROWORK')) $label .= ' (PC WORKSTATION)';
                                     elseif (str_contains($desc, 'RAITO')) $label .= ' (Monitor)';
-                                    elseif (str_contains($desc, 'TONER')) $label .= ' (Tóner)';
                                 @endphp
                                 <option value="{{ $m->id }}" {{ ($id == $m->id) ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
