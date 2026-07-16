@@ -154,6 +154,25 @@
             return trim($v);
         };
 
+        $normalizarCPU = function(string $v): string {
+            $v = trim($v);
+            // Remover frecuencias al final, ej: " 2.10 GHZ" o " 3.20 GHZ"
+            $v = preg_replace('/\s+\d+(\.\d+)?\s*GHZ$/i', '', $v);
+            return trim($v);
+        };
+
+        $normalizarRAM = function(string $v): string {
+            $v = trim($v);
+            // Capturar la estructura principal: Capacidad + Tipo + Frecuencia Principal
+            // Ej: "16 GB DDR5 4800"
+            if (preg_match('/^(\d+\s*GB\s+DDR\d\s+\d{3,4})/i', $v, $m)) {
+                return trim(strtoupper($m[1])) . ' MHz';
+            }
+            // Si no coincide con el patrón exacto, solo normalizar espacios
+            $v = preg_replace('/\s+/', ' ', $v);
+            return strtoupper(trim($v));
+        };
+
         foreach ($specFields as $col => $label) {
             $rawValues = Producto::select($col)
                 ->where('modelo_id', $modId)
@@ -173,11 +192,17 @@
                 continue;
             }
 
-            // Para tarjeta de video: normalizar y deduplicar por forma canónica
-            if ($col === 'tarjetavideo') {
+            // Normalizar y deduplicar por forma canónica
+            if (in_array($col, ['tarjetavideo', 'procesador', 'ram'])) {
                 $normSet = [];
                 foreach ($rawValues as $raw) {
-                    $norm = $normalizarTV($raw);
+                    if ($col === 'tarjetavideo') {
+                        $norm = $normalizarTV($raw);
+                    } elseif ($col === 'procesador') {
+                        $norm = $normalizarCPU($raw);
+                    } elseif ($col === 'ram') {
+                        $norm = $normalizarRAM($raw);
+                    }
                     if (!isset($normSet[$norm])) {
                         $normSet[$norm] = true;
                     }

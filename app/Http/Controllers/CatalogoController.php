@@ -73,36 +73,75 @@ class CatalogoController extends Controller
             'video_vga', 'video_hdmi', 'suite_ofimatica',
         ];
 
+        $normalizarTV = function(string $v): string {
+            $v = trim($v);
+            $v = preg_replace('/\b(dedicad[oa]s?|integrad[oa]s?)\b/i', '', $v);
+            $v = trim($v);
+            $v = preg_replace('/\s+/', ' ', $v);
+            $v = trim($v);
+            $v = preg_replace('/\s*-\s*/', '-', $v);
+            $v = trim($v);
+            $v = preg_replace('/\bConectividadº?\b/i', '', $v);
+            $v = trim($v);
+            if (preg_match('/^(.*?\d+\s*GB)/i', $v, $m)) {
+                $v = trim($m[1]);
+            } else {
+                $v = preg_replace('/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i', '', $v);
+            }
+            $v = preg_replace('/(\d+)\s*GB/i', '$1GB', $v);
+            $v = ltrim($v, '- ');
+            return trim($v);
+        };
+
+        $normalizarCPU = function(string $v): string {
+            $v = trim($v);
+            $v = preg_replace('/\s+\d+(\.\d+)?\s*GHZ$/i', '', $v);
+            return trim($v);
+        };
+
+        $normalizarRAM = function(string $v): string {
+            $v = trim($v);
+            if (preg_match('/^(\d+\s*GB\s+DDR\d\s+\d{3,4})/i', $v, $m)) {
+                return trim(strtoupper($m[1])) . ' MHz';
+            }
+            $v = preg_replace('/\s+/', ' ', $v);
+            return strtoupper(trim($v));
+        };
+
         foreach ($directColumns as $col) {
             if ($request->filled($col)) {
                 $values = array_map('trim', explode(',', $request->$col));
                 $values = array_filter($values, fn($v) => $v !== '');
 
                 if (!empty($values)) {
-                    if ($col === 'tarjetavideo') {
-                        // Para tarjeta de video: buscar por la capacidad (ej. "12GB") en cualquier posición
-                        // del valor crudo, con coincidencia insensible a mayúsculas y flexible en espacios
-                        // (acepta "12GB", "12 GB", "12  GB"). Usa regex con word boundary para evitar
-                        // falsos positivos (ej. "12GB" no debe matchear "120GB" o "112GB").
-                        $query->where(function($q) use ($values) {
-                            foreach ($values as $i => $val) {
-                                $tv = strtolower(trim($val));
-                                $tv = ltrim($tv, '-');
-                                $tv = trim($tv);
-                                // Extraer el número del valor (ej. "12" de "12gb")
-                                if (preg_match('/(\d+)/', $tv, $m)) {
-                                    $num = $m[1];
-                                    // Buscar el número seguido de "gb" con espacio opcional y word boundary
-                                    $matchExpr = "LOWER(tarjetavideo) ~ ?";
-                                    $matchParams = ['(?:^|[^0-9])' . $num . '\s*gb(?:[^0-9]|$)'];
-                                    if ($i === 0) {
-                                        $q->whereRaw($matchExpr, $matchParams);
-                                    } else {
-                                        $q->orWhereRaw($matchExpr, $matchParams);
-                                    }
-                                }
-                            }
-                        });
+                    if (in_array($col, ['tarjetavideo', 'procesador', 'ram'])) {
+                        // Expandimos a los valores crudos
+                        $todosLosCrudos = \App\Producto::whereNotNull($col)
+                            ->whereRaw("TRIM($col) != ''")
+                            ->distinct()
+                            ->pluck($col)
+                            ->map(fn($v) => trim($v))
+                            ->filter(fn($v) => $v !== '')
+                            ->values();
+
+                        $expandidos = $todosLosCrudos
+                            ->filter(function($raw) use ($col, $values, $normalizarTV, $normalizarCPU, $normalizarRAM) {
+                                if ($col === 'tarjetavideo') $norm = $normalizarTV($raw);
+                                elseif ($col === 'procesador') $norm = $normalizarCPU($raw);
+                                elseif ($col === 'ram') $norm = $normalizarRAM($raw);
+                                else $norm = $raw;
+                                
+                                return in_array($norm, $values, true);
+                            })
+                            ->values()
+                            ->toArray();
+
+                        if (!empty($expandidos)) {
+                            $query->whereIn($col, $expandidos);
+                        } else {
+                            // Si no matcheó nada, forzamos a que no encuentre resultados para este filtro
+                            $query->whereIn($col, ['__NO_MATCH__']);
+                        }
                     } else {
                         $query->whereIn($col, $values);
                     }

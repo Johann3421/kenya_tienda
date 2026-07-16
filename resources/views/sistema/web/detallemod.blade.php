@@ -130,6 +130,21 @@
                 return trim($v);
             };
 
+            $normalizarCPU = function(string $v): string {
+                $v = trim($v);
+                $v = preg_replace('/\s+\d+(\.\d+)?\s*GHZ$/i', '', $v);
+                return trim($v);
+            };
+
+            $normalizarRAM = function(string $v): string {
+                $v = trim($v);
+                if (preg_match('/^(\d+\s*GB\s+DDR\d\s+\d{3,4})/i', $v, $m)) {
+                    return trim(strtoupper($m[1])) . ' MHz';
+                }
+                $v = preg_replace('/\s+/', ' ', $v);
+                return strtoupper(trim($v));
+            };
+
             foreach ($specFields as $field) {
                 if (!request()->filled($field)) {
                     continue;
@@ -140,25 +155,32 @@
                     continue;
                 }
 
-                if ($field === 'tarjetavideo') {
-                    // Los valores en la URL son formas normalizadas (ej. "NVIDIA RTX 4060 8GB").
+                if (in_array($field, ['tarjetavideo', 'procesador', 'ram'])) {
+                    // Los valores en la URL son formas normalizadas.
                     // Expandimos a todos los valores crudos de la BD que normalizan a lo mismo.
                     $todosLosCrudos = \App\Producto::where('modelo_id', $modeloId)
-                        ->whereNotNull('tarjetavideo')
-                        ->whereRaw("TRIM(tarjetavideo) != ''")
+                        ->whereNotNull($field)
+                        ->whereRaw("TRIM($field) != ''")
                         ->distinct()
-                        ->pluck('tarjetavideo')
+                        ->pluck($field)
                         ->map(fn($v) => trim($v))
                         ->filter(fn($v) => $v !== '')
                         ->values();
 
                     $expandidos = $todosLosCrudos
-                        ->filter(fn($raw) => in_array($normalizarTV($raw), $valores, true))
+                        ->filter(function($raw) use ($field, $valores, $normalizarTV, $normalizarCPU, $normalizarRAM) {
+                            if ($field === 'tarjetavideo') $norm = $normalizarTV($raw);
+                            elseif ($field === 'procesador') $norm = $normalizarCPU($raw);
+                            elseif ($field === 'ram') $norm = $normalizarRAM($raw);
+                            else $norm = $raw;
+                            
+                            return in_array($norm, $valores, true);
+                        })
                         ->values()
                         ->toArray();
 
                     if (!empty($expandidos)) {
-                        $productosQuery->whereIn('tarjetavideo', $expandidos);
+                        $productosQuery->whereIn($field, $expandidos);
                     }
                 } else {
                     $productosQuery->whereIn($field, array_values($valores));
