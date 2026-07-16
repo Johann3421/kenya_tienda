@@ -35,7 +35,7 @@ class SyncKenyaProducts extends Command
         Log::info('SyncKenyaProducts: Iniciando sincronización.');
 
         try {
-            $response = Http::timeout(30)->get('https://api-auditor.sekaitech.com.pe/api/v1/fichas/export/kenya');
+            $response = Http::timeout(30)->get('https://api-auditor.sekaitech.com.pe/api/v1/fichas/export?marca=KENYA+TECHNOLOGY');
 
             if ($response->failed()) {
                 $this->error('Error al conectar con la API.');
