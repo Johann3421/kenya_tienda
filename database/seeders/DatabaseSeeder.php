@@ -14,11 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        if (!app()->environment('local')) {
-            $this->command->warn('DatabaseSeeder bloqueado fuera de local para evitar sobreescritura de datos.');
-            return;
-        }
-
         $inputFile = base_path('RESPALDO_KENYA_DESPLEGADO_2-01-2026.sql');
 
         if (!file_exists($inputFile)) {
