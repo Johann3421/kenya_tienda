@@ -65,20 +65,19 @@ class DatabaseSeeder extends Seeder
         // 1. Backticks → comillas dobles (identificadores Postgres)
         $sql = str_replace('`', '"', $sql);
 
-        // 2. Escape de comilla simple: \' → ''
+        // 2. Escapes de MySQL — el ORDEN importa:
+        //    a) \\\\ (dos backslashes en archivo) → \  (antes de procesar \")
+        $sql = str_replace('\\\\', '\\', $sql);
+        //    b) \' → '' (comilla simple escapada → dos comillas simples para Postgres)
         $sql = str_replace("\\'", "''", $sql);
-
-        // 3. Escape de comilla doble dentro de strings: \" → "
-        //    Esto convierte '[\"v1\",\"v2\"]' → '["v1","v2"]'
-        //    Y '"[{\"k\":\"v\"}]"' → '"[{"k":"v"}]"'
+        //    c) \" → "  (ya no hay doble-backslash, así que esto es seguro)
         $sql = str_replace('\\"', '"', $sql);
 
-        // 4. Quitar outer double-quotes de JSON generados por MySQL:
-        //    '"[{"k":"v"}]"' → '[{"k":"v"}]'   (JSON arrays)
-        //    '"{"k":"v"}"'   → '{"k":"v"}'     (JSON objects)
+        // 3. Quitar outer double-quotes de JSON generados por MySQL:
+        //    '"[{"k":"v"}]"' → '[{"k":"v"}]'
         $sql = preg_replace("/'\"([\[{].*?[}\]])\"/s", "'$1'", $sql);
 
-        // 5. Saltos de línea escapados
+        // 4. Saltos de línea escapados
         $sql = str_replace('\\r\\n', "\r\n", $sql);
         $sql = str_replace('\\n', "\n", $sql);
 
