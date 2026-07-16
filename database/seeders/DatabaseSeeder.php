@@ -59,6 +59,21 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        // Resetear secuencias en PostgreSQL para evitar errores de Unique Constraint al insertar registros nuevos
+        $this->command->info("Sincronizando secuencias de ID en PostgreSQL...");
+        foreach ($truncatedTables as $table) {
+            try {
+                // Obtenemos el nombre de la secuencia asociada a la columna 'id' de la tabla
+                $seqQuery = DB::select("SELECT pg_get_serial_sequence('\"{$table}\"', 'id') AS seq");
+                $seq = $seqQuery[0]->seq ?? null;
+                if ($seq) {
+                    DB::statement("SELECT setval('{$seq}', COALESCE(MAX(id), 1), MAX(id) IS NOT NULL) FROM \"{$table}\"");
+                }
+            } catch (\Exception $e) {
+                // Ignorar si la tabla no tiene llave primaria serial o auto-incrementable
+            }
+        }
+
         DB::unprepared("SET session_replication_role = 'origin';");
         $this->command->info("Exito! Se insertaron {$total} bloques en PostgreSQL.");
     }
