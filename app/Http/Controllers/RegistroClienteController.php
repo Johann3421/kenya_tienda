@@ -36,11 +36,22 @@ class RegistroClienteController extends Controller
     {
         $request->validate([
             'tipo'      => 'required|string',
-            'documento' => 'required|string|min:8|max:11',
-            'correo'    => 'required|email',
+            'documento' => ['required', 'string', 'size:11', 'regex:/^(10|15|17|20)\d{9}$/'],
+            'correo'    => [
+                'required', 
+                'email', 
+                function ($attribute, $value, $fail) {
+                    $domain = substr(strrchr($value, "@"), 1);
+                    if (!in_array($domain, ['hotmail.com', 'gmail.com', 'outlook.com'])) {
+                        $fail('El correo electrónico debe ser de dominio @hotmail.com, @gmail.com o @outlook.com');
+                    }
+                }
+            ],
+        ], [
+            'documento.size' => 'El RUC debe tener exactamente 11 dígitos.',
+            'documento.regex' => 'El RUC ingresado no tiene un formato válido.',
         ]);
 
-        // Ponytail: YAGNI — no SUNAT/RENIEC API, simple format check only
         $estado = 'aprobado';
 
         // 1. Detectar si el email YA está registrado
@@ -51,15 +62,16 @@ class RegistroClienteController extends Controller
                 ->withErrors(['correo' => 'Este correo electrónico ya está registrado. Por favor ingresa al portal directamente.']);
         }
 
-        // 2. Detectar si el DNI ya existe
-        $dniCorto = substr($request->documento, 0, 8);
-        if (User::where('dni', $dniCorto)->exists()) {
+        // 2. Detectar si el RUC ya existe
+        if (User::where('ape_materno', $request->documento)->exists()) {
             return back()
                 ->withInput()
-                ->withErrors(['documento' => 'Este documento ya está registrado en el sistema. Contacta a soporte si tienes problemas para ingresar.']);
+                ->withErrors(['documento' => 'Este RUC ya está registrado en el sistema. Contacta a soporte si tienes problemas para ingresar.']);
         }
 
-        // 3. Generar contraseña aleatoria
+        // 3. TODO: Inyectar llamada a la API de RUC aquí cuando el usuario brinde las credenciales
+
+        // 4. Generar contraseña aleatoria
         $password = Str::random(8);
 
         // 2. Buscar o crear el usuario (role = cliente_web, username = correo)

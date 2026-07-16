@@ -29,21 +29,21 @@
                         <input type="hidden" name="tipo" value="{{ $tipo }}">
                         
                         <div class="form-group mb-4">
-                            <label class="font-weight-bold">RUC / DNI</label>
-                            <input type="text" name="documento" class="form-control @error('documento') is-invalid @enderror" placeholder="Ingrese su RUC (11) o DNI (8)" value="{{ old('documento') }}" required minlength="8" maxlength="11" style="border-radius: 8px;">
+                            <label class="font-weight-bold">RUC</label>
+                            <input type="text" name="documento" class="form-control @error('documento') is-invalid @enderror" placeholder="Ingrese su RUC (11 dígitos)" value="{{ old('documento') }}" required minlength="11" maxlength="11" pattern="^(10|15|17|20)\d{9}$" title="El RUC debe tener 11 dígitos y empezar con 10, 15, 17 o 20" style="border-radius: 8px;">
                             @error('documento')
                                 <div class="invalid-feedback" style="display:block; color:#dc3545; font-size:0.85rem; margin-top:4px;">
                                     <i class="fa fa-exclamation-circle"></i> {{ $message }}
                                 </div>
                             @enderror
                             <small class="form-text text-muted mt-2">
-                                <i class="fa fa-info-circle"></i> Su documento será utilizado para validar el acceso a condiciones especiales.
+                                <i class="fa fa-info-circle"></i> Su RUC será validado para otorgarle acceso a condiciones especiales.
                             </small>
                         </div>
 
                         <div class="form-group mb-4">
                             <label class="font-weight-bold">Correo Electrónico</label>
-                            <input type="email" name="correo" class="form-control @error('correo') is-invalid @enderror" placeholder="nombre@empresa.com" value="{{ old('correo') }}" required style="border-radius: 8px;">
+                            <input type="email" name="correo" class="form-control @error('correo') is-invalid @enderror" placeholder="usuario@hotmail.com" value="{{ old('correo') }}" required pattern="^.+@(hotmail\.com|gmail\.com|outlook\.com)$" title="Solo se permiten correos de @hotmail.com, @gmail.com o @outlook.com" style="border-radius: 8px;">
                             @error('correo')
                                 <div class="invalid-feedback" style="display:block; color:#dc3545; font-size:0.85rem; margin-top:4px;">
                                     <i class="fa fa-exclamation-circle"></i> {{ $message }}
