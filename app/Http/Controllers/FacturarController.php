@@ -32,7 +32,7 @@ class FacturarController extends Controller
         ]);
 
         try {
-            $factura = Api::where('descripcion', 'FACTURA')->where('activo', 'SI')->select('url', 'token', 'descripcion')->first();
+            $factura = (object)['url' => env('API_PERU_FACTURA_URL', 'http://apiperu.dev/api/factura'), 'token' => env('API_PERU_TOKEN', '54eb479a6c436dbefca61ea8e85e1884ced95a4591243fbfc3b7a4a79028ea3d')];
 
             if (!$factura) {
                 return [

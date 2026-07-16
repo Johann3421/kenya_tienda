@@ -18,7 +18,7 @@ class CreateSoportesTable extends Migration
             $table->id();
             $table->string('codigo_barras', 20)->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->bigInteger('cliente_id')->unsined();
+            $table->foreignId('cliente_id')->constrained('clientes');
             $table->string('servicio', 20);
             $table->string('estado', 10);
             $table->string('equipo', 100);
@@ -41,15 +41,7 @@ class CreateSoportesTable extends Migration
             $table->timestamps();
         });
 
-        DB::statement("CREATE VIEW view_soportes AS SELECT
-            SUM(CASE WHEN estado = 'E1' THEN 1 ELSE 0 END) AS pendiente,
-            SUM(CASE WHEN estado = 'E2' THEN 1 ELSE 0 END) AS diagnostico,
-            SUM(CASE WHEN estado = 'E3' THEN 1 ELSE 0 END) AS sinsolucion,
-            SUM(CASE WHEN estado = 'E4' THEN 1 ELSE 0 END) AS reparando,
-            SUM(CASE WHEN estado = 'E5' THEN 1 ELSE 0 END) AS listo,
-            SUM(CASE WHEN estado = 'E6' THEN 1 ELSE 0 END) AS entregado
-            FROM soportes;
-        ");
+
     }
 
     /**

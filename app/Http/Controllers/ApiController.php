@@ -148,7 +148,7 @@ class ApiController extends Controller
     {
         if (!$cliente = Cliente::find($numero)) {
 
-            $ruc = Api::where('descripcion', 'DNI')->where('activo', 'SI')->select('url', 'token', 'descripcion')->first();
+            $ruc = (object)['url' => env('API_PERU_DNI_URL', 'http://apiperu.dev/api/dni'), 'token' => env('API_PERU_TOKEN', '54eb479a6c436dbefca61ea8e85e1884ced95a4591243fbfc3b7a4a79028ea3d')];
 
             $curl = curl_init();
 
@@ -182,7 +182,7 @@ class ApiController extends Controller
     public function ruc($numero)
     {
         if (!$cliente = Cliente::find($numero)) {
-            $ruc = Api::where('descripcion', 'RUC')->where('activo', 'SI')->select('url', 'token', 'descripcion')->first();
+            $ruc = (object)['url' => env('API_PERU_RUC_URL', 'http://apiperu.dev/api/ruc'), 'token' => env('API_PERU_TOKEN', '54eb479a6c436dbefca61ea8e85e1884ced95a4591243fbfc3b7a4a79028ea3d')];
 
             $curl = curl_init();
 
@@ -216,7 +216,7 @@ class ApiController extends Controller
     public function proveedor($numero)
     {
         if (!$cliente = Proveedor::where('numero_documento', $numero)->first()) {
-            $ruc = Api::where('descripcion', 'RUC')->where('activo', 'SI')->select('url', 'token', 'descripcion')->first();
+            $ruc = (object)['url' => env('API_PERU_RUC_URL', 'http://apiperu.dev/api/ruc'), 'token' => env('API_PERU_TOKEN', '54eb479a6c436dbefca61ea8e85e1884ced95a4591243fbfc3b7a4a79028ea3d')];
 
             $curl = curl_init();
 

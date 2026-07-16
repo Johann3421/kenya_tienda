@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\DetallePedido;
-use App\Models\ViewPedido;
 use App\Pedido;
 use App\Producto;
 use App\Serie;

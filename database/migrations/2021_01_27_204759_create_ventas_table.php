@@ -20,7 +20,7 @@ class CreateVentasTable extends Migration
             $table->string('serie', 10);
             $table->string('numero', 10);
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->bigInteger('cliente_id')->unsined();
+            $table->foreignId('cliente_id')->constrained('clientes');
             $table->string('medio_pago', 100);
             $table->double('credito', 9, 2)->default(0.00);
             $table->double('comision', 9, 2)->default(0.00);

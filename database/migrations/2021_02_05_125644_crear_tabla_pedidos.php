@@ -19,7 +19,7 @@ class CrearTablaPedidos extends Migration
             $table->id();
             $table->string('codigo_barras', 20)->nullable();
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->bigInteger('cliente_id')->unsined();
+            $table->foreignId('cliente_id')->constrained('clientes');
             $table->dateTime('fecha_registro');
             $table->date('fecha_entrega')->nullable();
             $table->string('tipo_entrega', 20)->comment('LOCAL, DOMICILIO, AGENCIA');
@@ -35,14 +35,7 @@ class CrearTablaPedidos extends Migration
             $table->timestamps();
         });
 
-        DB::statement("CREATE VIEW view_pedidos AS SELECT
-            SUM(CASE WHEN estado_entrega = 'P1' THEN 1 ELSE 0 END) AS realizado,
-            SUM(CASE WHEN estado_entrega = 'P2' THEN 1 ELSE 0 END) AS transito,
-            SUM(CASE WHEN estado_entrega = 'P3' THEN 1 ELSE 0 END) AS tienda,
-            SUM(CASE WHEN estado_entrega = 'P4' THEN 1 ELSE 0 END) AS entregado,
-            SUM(CASE WHEN estado_entrega = 'P5' THEN 1 ELSE 0 END) AS cancelado
-            FROM pedidos;
-        ");
+
     }
 
     /**
