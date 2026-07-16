@@ -20,23 +20,23 @@ class DatabaseSeeder extends Seeder
 
         DB::unprepared("SET session_replication_role = 'replica';");
 
-        $lines   = file($inputFile);
-        $total   = 0;
-        $buffer  = '';
+        $lines    = file($inputFile);
+        $total    = 0;
+        $buffer   = '';
         $inInsert = false;
         $truncatedTables = [];
 
         foreach ($lines as $line) {
             if (strpos($line, 'INSERT INTO') === 0) {
                 if (preg_match('/INSERT INTO `([^`]+)`/', $line, $m)) {
-                    $tableName = $m[1];
-                    if (!in_array($tableName, $truncatedTables)) {
-                        try { DB::unprepared("TRUNCATE TABLE \"$tableName\" CASCADE;"); } catch (\Exception $e) {}
-                        $truncatedTables[] = $tableName;
+                    $t = $m[1];
+                    if (!in_array($t, $truncatedTables)) {
+                        try { DB::unprepared("TRUNCATE TABLE \"$t\" CASCADE;"); } catch (\Exception $e) {}
+                        $truncatedTables[] = $t;
                     }
                 }
                 $inInsert = true;
-                $buffer = '';
+                $buffer   = '';
             }
 
             if ($inInsert) {
@@ -45,42 +45,55 @@ class DatabaseSeeder extends Seeder
                 if (substr(rtrim($line), -1) === ';') {
                     $inInsert = false;
                     $sql = $this->mysqlToPostgres($buffer);
-
                     try {
                         DB::unprepared($sql);
                         $total++;
                     } catch (\Exception $e) {
-                        $this->command->warn("Fila omitida: " . substr($e->getMessage(), 0, 250));
+                        $this->command->warn("Fila omitida: " . substr($e->getMessage(), 0, 300));
                     }
                 }
             }
         }
 
         DB::unprepared("SET session_replication_role = 'origin';");
-        $this->command->info("¡Exito! Se extrajeron e insertaron {$total} bloques de registros en PostgreSQL.");
+        $this->command->info("Exito! Se insertaron {$total} bloques en PostgreSQL.");
     }
 
     private function mysqlToPostgres(string $sql): string
     {
-        // 1. Backticks → comillas dobles (identificadores Postgres)
-        $sql = str_replace('`', '"', $sql);
+        $bs = chr(92); // backslash literal
+        $dq = chr(34); // double-quote literal
+        $sq = chr(39); // single-quote literal
 
-        // 2. Escapes de MySQL — el ORDEN importa:
-        //    a) \\\\ (dos backslashes en archivo) → \  (antes de procesar \")
-        $sql = str_replace('\\\\', '\\', $sql);
-        //    b) \' → '' (comilla simple escapada → dos comillas simples para Postgres)
-        $sql = str_replace("\\'", "''", $sql);
-        //    c) \" → "  (ya no hay doble-backslash, así que esto es seguro)
-        $sql = str_replace('\\"', '"', $sql);
+        // Paso 1: backticks → comillas dobles (identificadores Postgres)
+        $sql = str_replace('`', $dq, $sql);
 
-        // 3. Quitar outer double-quotes de JSON generados por MySQL:
-        //    '"[{"k":"v"}]"' → '[{"k":"v"}]'
-        //    El patrón incluye la ' de cierre para no dejar una '' suelta al reemplazar
-        $sql = preg_replace("/'\"([\[{].*?[}\]])\"'/s", "'$1'", $sql);
+        // Paso 2: des-escapar secuencias MySQL. Orden crítico: secuencias largas primero.
+        //
+        // a) \\" (dos backslashes + comilla) es MySQL \\  (literal \) seguido de "
+        //    → en Postgres queremos \" que en JSON es una comilla literal. Pero para
+        //      columnas JSON tipadas de Postgres, la comilla doble debe ser literal "
+        //      dentro del string SQL, así que simplificamos a solo ": \\" → "
+        $sql = str_replace($bs.$bs.$dq, $dq, $sql);
 
-        // 4. Saltos de línea escapados
-        $sql = str_replace('\\r\\n', "\r\n", $sql);
-        $sql = str_replace('\\n', "\n", $sql);
+        // b) \" (un backslash + comilla doble) → " (comilla literal en el string SQL)
+        $sql = str_replace($bs.$dq, $dq, $sql);
+
+        // c) \' (backslash + comilla simple) → '' (escape SQL para comilla simple)
+        $sql = str_replace($bs.$sq, $sq.$sq, $sql);
+
+        // d) \\ (dos backslashes) → \ (backslash literal, si quedó alguno)
+        $sql = str_replace($bs.$bs, $bs, $sql);
+
+        // Paso 3: remover outer double-quotes de JSON que MySQL genera en ciertos campos.
+        // Después del paso 2 el patrón es: '"[{"k":"v"}]"' con ' de SQL alrededor.
+        // El patrón incluye la ' de apertura y cierre para reemplazar exactamente.
+        $sql = preg_replace("/{$sq}{$dq}(\\[.*?\\]){$dq}{$sq}/s", "{$sq}$1{$sq}", $sql);
+        $sql = preg_replace("/{$sq}{$dq}(\\{.*?\\}){$dq}{$sq}/s", "{$sq}$1{$sq}", $sql);
+
+        // Paso 4: secuencias de salto de línea
+        $sql = str_replace($bs.'r'.$bs.'n', "\r\n", $sql);
+        $sql = str_replace($bs.'n', "\n", $sql);
 
         return $sql;
     }
