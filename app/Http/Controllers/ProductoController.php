@@ -6,11 +6,7 @@ use App\Producto;
 use App\Models\Categoria;
 use App\Models\Marca;
 use App\Modelo;
-use App\Procesador;
-use App\Tarjetavideo;
-use App\Ram;
-use App\Almacenamiento;
-use App\Ofimatica;
+
 use App\Driver;
 use App\Imports\EspecificacionesImport;
 use App\Models\Especificacion;
@@ -32,11 +28,11 @@ class ProductoController extends Controller
     {
         $marcas = Marca::where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
         $modelos = Modelo::where('activo', 'SI')->orderBy('id', 'ASC')->get();
-        $procesador = Procesador::orderBy('id', 'ASC')->get();
-        $tarjetavideo = Tarjetavideo::orderBy('id', 'ASC')->get();
-        $ram = Ram::orderBy('id', 'ASC')->get();
-        $almacenamiento = Almacenamiento::orderBy('id', 'ASC')->get();
-        $ofimatica = Ofimatica::orderBy('id', 'ASC')->get();
+        $procesador = Producto::whereNotNull('procesador')->where('procesador', '!=', '')->distinct()->pluck('procesador')->map(function($item) { return (object)['nom_pros' => $item]; });
+        $tarjetavideo = Producto::whereNotNull('tarjetavideo')->where('tarjetavideo', '!=', '')->distinct()->pluck('tarjetavideo')->map(function($item) { return (object)['tarjetavideo' => $item]; });
+        $ram = Producto::whereNotNull('ram')->where('ram', '!=', '')->distinct()->pluck('ram')->map(function($item) { return (object)['nom_ram' => $item]; });
+        $almacenamiento = Producto::whereNotNull('almacenamiento')->where('almacenamiento', '!=', '')->distinct()->pluck('almacenamiento')->map(function($item) { return (object)['cant_almcen' => $item]; });
+        $ofimatica = Producto::whereNotNull('suite_ofimatica')->where('suite_ofimatica', '!=', '')->distinct()->pluck('suite_ofimatica')->map(function($item) { return (object)['ofimatica' => $item]; });
         $categorias = Categoria::where('activo', 'SI')->orderBy('nombre', 'ASC')->get();
         $productos = Producto::with('especificaciones')->paginate(10); // Ajusta según necesites
         return view('sistema.productos.index', compact(

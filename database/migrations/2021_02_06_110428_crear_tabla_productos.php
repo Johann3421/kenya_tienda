@@ -63,6 +63,22 @@ class CrearTablaProductos extends Migration
             $table->bigInteger('marca_id')->nullable();
             $table->char('pagina_web', 2)->default('NO');
             $table->foreignId('modelo_id')->references('id')->on('modelos')->onDelete('restrict');
+                        // Squashed columns from later migrations
+            $table->string('tarjetavideo')->nullable();
+            $table->string('ficha_tecnica')->nullable();
+            $table->string('sku')->nullable()->unique();
+            $table->string('pdf_link', 500)->nullable();
+            $table->char('activo', 2)->default('SI')->comment('SI / NO');
+            $table->string('imagen')->nullable();
+            $table->string('ficha')->nullable();
+            $table->string('vigencia', 20)->nullable()->comment('OFERTADA=visible en catalogo, SUSPENDIDA=oculto');
+            $table->timestamp('ficha_sync_at')->nullable();
+            $table->string('codigo_pc', 60)->nullable()->comment('Codigo unico de Peru Compras');
+            $table->index('codigo_pc', 'idx_productos_codigo_pc');
+            $table->text('descripcion_2')->nullable();
+            $table->boolean('ficha_editada_localmente')->default(false);
+            $table->decimal('precio_referencial', 10, 2)->nullable();
+            $table->decimal('precio_especial', 10, 2)->nullable();
             $table->timestamps();
         });
     }

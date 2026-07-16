@@ -298,30 +298,7 @@ Route::group(['middleware' => ['can:categorias']], function () {
     Route::post('/categorias/autobuscar', 'CategoriaController@auto_buscar_producto');
 });
 
-//---------------------PROCESADOR------------------//
-Route::get('/procesador', 'ProcesadorController@index')->name('procesador');
-Route::post('/procesador/buscar', 'ProcesadorController@buscar');
-Route::post('/procesador/store', 'ProcesadorController@store');
 
-//---------------------Video------------------//
-Route::get('/tarjetavideo', 'TarjetavideoController@index')->name('tarjetavideo');
-Route::post('/tarjetavideo/buscar', 'TarjetavideoController@buscar');
-Route::post('/tarjetavideo/store', 'TarjetavideoController@store');
-
-//---------------------RAM------------------//
-Route::get('/ram', 'RamController@index')->name('ram');
-Route::post('/ram/buscar', 'RamController@buscar');
-Route::post('/ram/store', 'RamController@store');
-
-//---------------------ALMACENAMIENTO------------------//
-Route::get('/almacenamiento', 'AlmacenamientoController@index')->name('almacenamiento');
-Route::post('/almacenamiento/buscar', 'AlmacenamientoController@buscar');
-Route::post('/almacenamiento/store', 'AlmacenamientoController@store');
-
-//---------------------OFIMATICA------------------//
-Route::get('/ofimatica', 'OfimaticaController@index')->name('ofimatica');
-Route::post('/ofimatica/buscar', 'OfimaticaController@buscar');
-Route::post('/ofimatica/store', 'OfimaticaController@store');
 
 
 // --------------------- MODELOS --------------------------------
