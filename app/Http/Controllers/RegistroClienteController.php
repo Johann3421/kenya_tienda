@@ -69,20 +69,48 @@ class RegistroClienteController extends Controller
                 ->withErrors(['documento' => 'Este RUC ya está registrado en el sistema. Contacta a soporte si tienes problemas para ingresar.']);
         }
 
-        // 3. TODO: Inyectar llamada a la API de RUC aquí cuando el usuario brinde las credenciales
+        // 3. Validar RUC con API externa
+        $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imxvcml0b3gzNDIxQGdtYWlsLmNvbSJ9.WN9y8akxDNlUsWzvwD1Nv7eJGk3qx5Gaaa6VHmjJyf4';
+        $url = "https://dniruc.apisperu.com/api/v1/ruc/{$request->documento}?token={$token}";
+        $razonSocial = 'Cliente Web'; // Default
+        
+        try {
+            $response = \Illuminate\Support\Facades\Http::timeout(10)->get($url);
+            
+            if (!$response->successful() || !isset($response->json()['ruc'])) {
+                return back()
+                    ->withInput()
+                    ->withErrors(['documento' => 'El RUC ingresado no existe o no es válido.']);
+            }
+            
+            $apiData = $response->json();
+            if (isset($apiData['estado']) && strtoupper($apiData['estado']) !== 'ACTIVO') {
+                return back()
+                    ->withInput()
+                    ->withErrors(['documento' => 'El RUC ingresado se encuentra ' . $apiData['estado'] . '. Solo se permiten RUCs activos.']);
+            }
+            
+            $razonSocial = $apiData['razonSocial'] ?? 'Cliente Web';
+            
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error consultando API RUC: ' . $e->getMessage());
+            return back()
+                ->withInput()
+                ->withErrors(['documento' => 'Error de conexión al validar el RUC. Por favor intenta más tarde.']);
+        }
 
         // 4. Generar contraseña aleatoria
         $password = Str::random(8);
 
-        // 2. Buscar o crear el usuario (role = cliente_web, username = correo)
+        // 5. Buscar o crear el usuario (role = cliente_web, username = correo)
         try {
             // Buscamos si ya existe por email
             $user = User::where('email', $request->correo)->first();
             
             if (!$user) {
                 $user = new User();
-                $user->dni = substr($request->documento, 0, 8); // DNI requiere 8 caracteres exactos
-                $user->nombres = 'Cliente';
+                $user->dni = substr($request->documento, 0, 8); // DNI requiere 8 caracteres exactos en la BD
+                $user->nombres = substr($razonSocial, 0, 100);
                 $user->ape_paterno = 'Web';
                 $user->ape_materno = $request->documento; // Guardamos el documento completo aquí
                 $user->telefono = '000000000';
