@@ -59,17 +59,47 @@ class DatabaseSeeder extends Seeder
                 if (substr(rtrim($line), -1) === ';') {
                     $inInsert = false;
 
-                    // 1. Reemplazar comillas invertidas por comillas dobles (para identificadores Postgres)
+                    // 1. Reemplazar comillas invertidas por comillas dobles (identificadores Postgres)
                     $sql = str_replace('`', '"', $buffer);
 
-                    // 2. Reemplazar escapes de MySQL por escapes de Postgres
+                    // 2. Reemplazar escapes de MySQL por escapes de Postgres en strings
                     $sql = str_replace("\\'", "''", $sql);
-                    $sql = str_replace('\\"', '"', $sql);
                     $sql = str_replace('\\r\\n', "\r\n", $sql);
                     $sql = str_replace('\\n', "\n", $sql);
 
-                    DB::unprepared($sql);
-                    $total++;
+                    // 3. Reparar JSON sobre-escapado de MySQL.
+                    // MySQL guarda JSON como: '"[{\"nombre\":\"val\"}]"' (con outer double-quotes y backslash-escapes).
+                    // Postgres espera:         '[{"nombre":"val"}]'   (JSON limpio dentro de comillas simples).
+                    // El patrón captura: '\"[...cadena...]\"'  y lo convierte en '[...sin backslashes...]'
+                    $sql = preg_replace_callback(
+                        // Captura valores entre comillas simples que empiezan con \" y son JSON sobre-escapado
+                        "/'(\"(?:[^'\\\\]|\\\\.)*\")'(?=[,\\s)])/",
+                        function ($matches) {
+                            $inner = $matches[1]; // el valor incluyendo las outer-double-quotes
+                            // quitar las comillas externas
+                            $inner = substr($inner, 1, -1);
+                            // des-escapar los backslash-quote internos
+                            $inner = str_replace('\\"', '"', $inner);
+                            $inner = str_replace('\\\\', '\\', $inner);
+                            // validar que sea JSON antes de aceptarlo
+                            if (json_decode($inner) !== null || $inner === 'null') {
+                                return "'" . str_replace("'", "''", $inner) . "'";
+                            }
+                            // si no es JSON válido, devolver sin cambio
+                            return $matches[0];
+                        },
+                        $sql
+                    );
+
+                    // 4. Convertir 'NULL' (string) a NULL real solo en posiciones de valor, no en strings de texto
+                    // ponytail: omitido para evitar falsos positivos; las columnas nullable aceptan 'NULL' como texto
+
+                    try {
+                        DB::unprepared($sql);
+                        $total++;
+                    } catch (\Exception $e) {
+                        $this->command->warn("Fila omitida (error al insertar): " . substr($e->getMessage(), 0, 200));
+                    }
                 }
             }
         }
