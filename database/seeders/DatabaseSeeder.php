@@ -31,7 +31,11 @@ class DatabaseSeeder extends Seeder
                 if (preg_match('/INSERT INTO `([^`]+)`/', $line, $m)) {
                     $t = $m[1];
                     if (!in_array($t, $truncatedTables)) {
-                        try { DB::unprepared("TRUNCATE TABLE \"$t\" CASCADE;"); } catch (\Exception $e) {}
+                        // ponytail: DELETE en vez de TRUNCATE CASCADE para evitar que al limpiar 'roles'
+                        // se borre en cascada 'model_has_roles' (que ya fue insertado antes en el dump).
+                        // Con session_replication_role=replica los triggers de FK están desactivados,
+                        // así que DELETE funciona sin violar constraints.
+                        try { DB::unprepared("DELETE FROM \"$t\";"); } catch (\Exception $e) {}
                         $truncatedTables[] = $t;
                     }
                 }
