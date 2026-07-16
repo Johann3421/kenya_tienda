@@ -557,11 +557,11 @@ body {
 
             <!-- User Auth Dropdown -->
             <div class="kenya-user-dropdown" style="position: relative; margin-left: 15px; display: flex; align-items: center;">
-                @if(Auth::check())
+                @if(Auth::check() && Auth::user()->hasRole('cliente_web'))
                     <button id="userMenuToggle" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; color: #333;">
                         <div style="position: relative;">
                             <i class="fa-solid fa-user-circle" style="font-size: 1.5rem; color: #ee7c31;"></i>
-                            <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #2ecca6; border: 2px solid #fff; border-radius: 50%;"></span>
+                            <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #22cca6; border: 2px solid #fff; border-radius: 50%;"></span>
                         </div>
                         <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">Mi Cuenta <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i></span>
                     </button>

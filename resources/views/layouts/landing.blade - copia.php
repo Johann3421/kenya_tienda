@@ -272,9 +272,15 @@ header, footer {
                             <i class="fas fa-book-open"></i> Libro de reclamaciones
                         </a>
 
-                        <a href="{{ url('/login') }}" title="Iniciar sesión" class="kenya-login-link">
-                            <i class="fas fa-user"></i> Iniciar sesión
-                        </a>
+                        @if(Auth::check() && Auth::user()->hasRole('cliente_web'))
+                            <a href="{{ url('/mi-perfil') }}" title="Mi Cuenta" class="kenya-login-link">
+                                <i class="fas fa-user"></i> {{ Auth::user()->name ?? 'Mi Cuenta' }}
+                            </a>
+                        @else
+                            <a href="{{ url('/login') }}" title="Iniciar sesión" class="kenya-login-link">
+                                <i class="fas fa-user"></i> Iniciar sesión
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
