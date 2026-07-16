@@ -75,7 +75,8 @@ class DatabaseSeeder extends Seeder
 
         // 3. Quitar outer double-quotes de JSON generados por MySQL:
         //    '"[{"k":"v"}]"' → '[{"k":"v"}]'
-        $sql = preg_replace("/'\"([\[{].*?[}\]])\"/s", "'$1'", $sql);
+        //    El patrón incluye la ' de cierre para no dejar una '' suelta al reemplazar
+        $sql = preg_replace("/'\"([\[{].*?[}\]])\"'/s", "'$1'", $sql);
 
         // 4. Saltos de línea escapados
         $sql = str_replace('\\r\\n', "\r\n", $sql);
