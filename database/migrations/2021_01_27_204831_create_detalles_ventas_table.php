@@ -17,7 +17,6 @@ class CreateDetallesVentasTable extends Migration
             $table->id();
             $table->string('codigo_sunat', 10)->nullable();
             $table->foreignId('venta_id')->references('id')->on('ventas')->onDelete('cascade');
-            $table->foreignId('producto_id')->nullable()->constrained('productos')->onDelete('set null');
             $table->string('descripcion');
             $table->double('precio', 9, 2)->default(0.00);
             $table->double('descuento', 9, 2)->default(0.00);

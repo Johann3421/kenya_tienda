@@ -16,7 +16,6 @@ class CrearTablaDetallesPedidos extends Migration
         Schema::create('detalles_pedidos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pedido_id')->references('id')->on('pedidos')->onDelete('cascade');
-            $table->foreignId('producto_id')->nullable()->constrained('productos')->onDelete('set null');
             $table->text('descripcion');
             $table->double('precio', 9, 2)->default(0.00);
             $table->smallInteger('cantidad')->default(0);
