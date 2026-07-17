@@ -155,14 +155,14 @@
                         </div>
                         <div class="form-group col-lg-3">
                             <template v-if="!new_tarjetavideo">
-                                <label for="tarjetavideo" class="label-sm text-muted">T. VIDEO <a href="#" @click.prevent="new_tarjetavideo = !new_tarjetavideo" class="text-info ml-1">[+ Nuevo]</a></label>
+                                <label for="tarjetavideo" class="label-sm text-muted">GRÁFICOS / VIDEO <a href="#" @click.prevent="new_tarjetavideo = !new_tarjetavideo" class="text-info ml-1">[+ Nuevo]</a></label>
                                 <select id="tarjetavideo" v-model="producto.tarjetavideo" class="form-control fc-new" :class="[errors.tarjetavideo ? 'is-invalid' : '']" :readonly="loading">
                                     <option value="">--- Seleccionar ---</option>
                                     <option v-for="vid in listaTarjetavideo" :value="vid.tarjetavideo">@{{ vid.tarjetavideo }}</option>
                                 </select>
                             </template>
                             <template v-else>
-                                <label for="txt_video" class="label-sm text-muted">T. VIDEO
+                                <label for="txt_video" class="label-sm text-muted">GRÁFICOS / VIDEO
                                     <a href="#" @click.prevent="StoreTarjetavideo" class="text-success ml-1">[Guardar]</a>
                                     <a href="#" @click.prevent="new_tarjetavideo = !new_tarjetavideo" class="text-danger ml-1">[X]</a>
                                 </label>
@@ -170,47 +170,50 @@
                             </template>
                         </div>
                     </div>
-                    <div class="form-row">
+                    <div class="form-row mt-2">
+                        <div class="form-group col-lg-3">
+                            <label for="tipo_suministro_pc" class="label-sm text-muted">FORMATO</label>
+                            <input type="text" id="tipo_suministro_pc" v-model="producto.tipo_suministro" class="form-control fc-new" placeholder="Ej: Mid Tower, SFF" :readonly="loading">
+                        </div>
                         <div class="form-group col-lg-3">
                             <label for="sistema_operativo" class="label-sm text-muted">SISTEMA OPERATIVO</label>
                             <input type="text" id="sistema_operativo" v-model="producto.sistema_operativo" class="form-control fc-new" :readonly="loading">
                         </div>
-                        <div class="form-group col-lg-9">
-                            <label class="label-sm text-muted d-block">PUERTOS Y PERIFÉRICOS INCLUIDOS</label>
-                            <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_lan" v-model="producto.conectividad" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_lan">LAN</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_wlan" v-model="producto.conectividad_wlan" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_wlan">WIFI (WLAN)</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_usb" v-model="producto.conectividad_usb" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_usb">USB</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_hdmi" v-model="producto.video_hdmi" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_hdmi">HDMI</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_vga" v-model="producto.video_vga" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_vga">VGA</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_optica" v-model="producto.unidad_optica" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_optica">UNIDAD ÓPTICA</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_teclado" v-model="producto.teclado" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_teclado">TECLADO</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_mouse" v-model="producto.mouse" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_mouse">MOUSE</label>
-                                </div>
-                            </div>
+                        <div class="form-group col-lg-3">
+                            <label for="chipset" class="label-sm text-muted">CHIPSET</label>
+                            <input type="text" id="chipset" v-model="producto.chipset" class="form-control fc-new" placeholder="Ej: Intel, AMD B550" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="sonido" class="label-sm text-muted">SONIDO</label>
+                            <input type="text" id="sonido" v-model="producto.sonido" class="form-control fc-new" placeholder="Ej: Integrado - HD Audio" :readonly="loading">
+                        </div>
+                    </div>
+                    <div class="form-row mt-2">
+                        <div class="form-group col-lg-3">
+                            <label for="fuente_poder" class="label-sm text-muted">FUENTE DE PODER</label>
+                            <input type="text" id="fuente_poder" v-model="producto.fuente_poder" class="form-control fc-new" placeholder="Ej: 550W 80 Plus" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="conectividad" class="label-sm text-muted">LAN</label>
+                            <input type="text" id="conectividad" v-model="producto.conectividad" class="form-control fc-new" placeholder="Ej: SI, 10/100/1000" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="conectividad_wlan" class="label-sm text-muted">WLAN (WIFI)</label>
+                            <input type="text" id="conectividad_wlan" v-model="producto.conectividad_wlan" class="form-control fc-new" placeholder="Ej: SI, Wi-Fi 6" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="conectividad_usb" class="label-sm text-muted">PUERTOS MÍNIMOS</label>
+                            <input type="text" id="conectividad_usb" v-model="producto.conectividad_usb" class="form-control fc-new" placeholder="Ej: Frontal: x2 USB 2.0..." :readonly="loading">
+                        </div>
+                    </div>
+                    <div class="form-row mt-2">
+                        <div class="form-group col-lg-6">
+                            <label for="slot_expansion" class="label-sm text-muted">SLOT DE EXPANSIÓN</label>
+                            <input type="text" id="slot_expansion" v-model="producto.slot_expansion" class="form-control fc-new" placeholder="Ej: x1 PCIe, x1 M.2" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label for="accesorios" class="label-sm text-muted">ACCESORIOS Y OTROS</label>
+                            <input type="text" id="accesorios" v-model="producto.accesorios" class="form-control fc-new" placeholder="Ej: Teclado, Mouse, Cable de Poder..." :readonly="loading">
                         </div>
                     </div>
                 </div>

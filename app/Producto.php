@@ -26,6 +26,11 @@ class Producto extends Model
         'Unidad',
         'Número de parte',
         'Dimensiones',
+        'sonido',
+        'chipset',
+        'slot_expansion',
+        'fuente_poder',
+        'accesorios',
     ];
     protected $table = 'productos';
 

@@ -153,6 +153,12 @@ public function store(Request $request)
         $producto->{'Empaque'} = $request->empaque;
         $producto->{'Dimensiones'} = $request->dimensiones;
 
+        $producto->sonido = $request->sonido;
+        $producto->chipset = $request->chipset;
+        $producto->slot_expansion = $request->slot_expansion;
+        $producto->fuente_poder = $request->fuente_poder;
+        $producto->accesorios = $request->accesorios;
+
         $producto->save();
 
         // Subir PDF de ficha técnica
@@ -244,6 +250,12 @@ public function update(Request $request)
         $producto->{'Sistema RAEE'} = $request->sistema_raee;
         $producto->{'Empaque'} = $request->empaque;
         $producto->{'Dimensiones'} = $request->dimensiones;
+        
+        $producto->sonido = $request->sonido;
+        $producto->chipset = $request->chipset;
+        $producto->slot_expansion = $request->slot_expansion;
+        $producto->fuente_poder = $request->fuente_poder;
+        $producto->accesorios = $request->accesorios;
 
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
@@ -668,11 +680,11 @@ public function subirFichaTecnica(Request $request, $producto)
             'Lan' => 'conectividad',
             'Wlan' => 'conectividad_wlan',
             'Puertos Mínimos' => 'conectividad_usb',
-            'Video VGA' => 'video_vga',
-            'Video HDMI' => 'video_hdmi',
-            'Unidad Óptica' => 'unidad_optica',
-            'Teclado' => 'teclado',
-            'Mouse' => 'mouse',
+            'Sonido' => 'sonido',
+            'Chipset' => 'chipset',
+            'Slot de Expansión' => 'slot_expansion',
+            'Fuente de Poder' => 'fuente_poder',
+            'Accesorios y Otros' => 'accesorios',
         ];
         foreach($fields as $campo => $attr) {
             if (!empty($producto->$attr)) {
@@ -680,6 +692,8 @@ public function subirFichaTecnica(Request $request, $producto)
                     ['producto_id' => $producto->id, 'campo' => $campo],
                     ['descripcion' => $producto->$attr]
                 );
+            } else {
+                Especificacion::where('producto_id', $producto->id)->where('campo', $campo)->delete();
             }
         }
     }

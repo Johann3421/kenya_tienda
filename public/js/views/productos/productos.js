@@ -75,14 +75,22 @@ new Vue({
             'imagen_5': '',
             'pdf_ficha': null,
             // Nuevos campos
-            'tipo_suministro': '',
-            'tipo_panel': '',
-            'color': '',
-            'rendimiento': '',
-            'garantia': '',
-            'sistema_raee': '',
-            'empaque': '',
-            'dimensiones': '',
+        tipo_suministro: '',
+        tipo_panel: '',
+        color: '',
+        rendimiento: '',
+        garantia: '',
+        sistema_raee: '',
+        empaque: '',
+        dimensiones: '',
+        
+        sonido: '',
+        chipset: '',
+        slot_expansion: '',
+        fuente_poder: '',
+        accesorios: '',
+
+        buscar_tabla: '',
         },
 
         listaCategorias: mis_categorias,
@@ -389,6 +397,12 @@ eliminarArchivoExcel(index) {
                     this.producto.empaque = seleccion.Empaque || '';
                     this.producto.dimensiones = seleccion.Dimensiones || '';
 
+                    this.producto.sonido = seleccion.sonido || '';
+                    this.producto.chipset = seleccion.chipset || '';
+                    this.producto.slot_expansion = seleccion.slot_expansion || '';
+                    this.producto.fuente_poder = seleccion.fuente_poder || '';
+                    this.producto.accesorios = seleccion.accesorios || '';
+
                     this.producto.pdf_ficha = seleccion.ficha_tecnica;
 
                     if (seleccion.imagen_1) {
@@ -470,6 +484,12 @@ eliminarArchivoExcel(index) {
                     this.producto.sistema_raee = seleccion['Sistema RAEE'] || '';
                     this.producto.empaque = seleccion.Empaque || '';
                     this.producto.dimensiones = seleccion.Dimensiones || '';
+                    
+                    this.producto.sonido = seleccion.sonido || '';
+                    this.producto.chipset = seleccion.chipset || '';
+                    this.producto.slot_expansion = seleccion.slot_expansion || '';
+                    this.producto.fuente_poder = seleccion.fuente_poder || '';
+                    this.producto.accesorios = seleccion.accesorios || '';
                     this.producto.pdf_ficha = seleccion.ficha_tecnica;
                     if (seleccion.imagen_1) {
                         this.producto.imagen_1 = seleccion.imagen_1;
