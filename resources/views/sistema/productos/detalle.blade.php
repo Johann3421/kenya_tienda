@@ -629,13 +629,14 @@
                 </div>
                 @else
                 <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:flex-end; flex-grow:1;">
-                    <div style="text-align:right;">
+                    <div style="display:flex; align-items:center; gap:12px; background:#fff; padding:6px 16px; border:1px solid #e0e0e0; border-radius:8px;">
                         @if(!empty($producto->precio_especial))
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #ee7c31; line-height: 1.1;">
+                            <div style="font-size: 1.4rem; font-weight: 700; color: #ee7c31; line-height: 1;">
                                 $ {{ number_format($producto->precio_especial, 2) }}
                             </div>
-                            <div style="font-size: 1rem; font-weight: 600; color: #333; line-height: 1.1;">
-                                S/ {{ number_format($producto->precio_especial * 3.4, 2) }} <span style="font-size: 0.8rem; font-weight: normal; color: #888;">+ IGV</span>
+                            <div style="width:1px; height:24px; background:#ccc;"></div>
+                            <div style="font-size: 1.4rem; font-weight: 600; color: #333; line-height: 1;">
+                                S/ {{ number_format($producto->precio_especial * 3.4, 2) }} <span style="font-size: 0.85rem; font-weight: normal; color: #888;">+ IGV</span>
                             </div>
                         @else
                             <div style="font-size: 1.2rem; font-weight: 600; color: #333;">
