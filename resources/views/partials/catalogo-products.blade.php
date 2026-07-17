@@ -158,7 +158,11 @@
                 <div class="product-stock-wrapper">
                     @if ($stock !== 0 && $stock !== '0')
                         <span class="stock-status-dot available"></span>
-                        <span class="stock-text">Disponible (≥ {{ $stock }})</span>
+                        @if ($isMonitor)
+                            <span class="stock-text">A pedido</span>
+                        @else
+                            <span class="stock-text">Disponible (≥ {{ $stock }})</span>
+                        @endif
                     @else
                         <span class="stock-status-dot out-of-stock"></span>
                         <span class="stock-text" style="color:#dc3545;">Agotado</span>
