@@ -60,12 +60,47 @@ class HideMissingFichasCommand extends Command
         
         $this->info("Fichas vigentes en el API: {$totalApi}");
 
-        // ponytail: Update where codigo_pc is not null, not in API, and currently pagina_web = 'SI'
+        // Identificar modelos que son de Peru Compras (PCs/Laptops)
+        $pcModelGroups = ['EZENT', 'PROWORK', 'OFISZU', 'RAITO', 'GENWORK'];
+        $modeloIds = DB::table('modelos')
+            ->where(function ($q) use ($pcModelGroups) {
+                foreach ($pcModelGroups as $g) {
+                    $q->orWhereRaw("UPPER(descripcion) LIKE ?", [$g . '%']);
+                }
+            })
+            ->pluck('id')
+            ->toArray();
+
+        // Identificar categoría TONER
+        $catToner = DB::table('categorias')->where('nombre', 'like', '%TONER%')->first();
+        $tonerId = $catToner ? $catToner->id : -1;
+
+        // Buscar productos huérfanos:
+        // 1. Están visibles en la web
+        // 2. Pertenecen a un modelo de Peru Compras o son Tóneres
+        // 3. Su nro_parte y codigo_pc NO están en la lista del API
         $query = DB::table('productos')
-            ->whereNotNull('codigo_pc')
-            ->where('codigo_pc', '!=', '')
-            ->whereNotIn('codigo_pc', $codigosApi)
-            ->where('pagina_web', 'SI');
+            ->where('pagina_web', 'SI')
+            ->where(function ($q) use ($modeloIds, $tonerId) {
+                if (!empty($modeloIds)) {
+                    $q->whereIn('modelo_id', $modeloIds);
+                }
+                if ($tonerId !== -1) {
+                    $q->orWhere('categoria_id', $tonerId);
+                }
+            })
+            ->where(function ($q) use ($codigosApi) {
+                // nro_parte es NULO o NO ESTÁ en el API
+                $q->where(function ($q2) use ($codigosApi) {
+                    $q2->whereNull('nro_parte')
+                       ->orWhereNotIn('nro_parte', $codigosApi);
+                });
+                // Y codigo_pc es NULO o NO ESTÁ en el API
+                $q->where(function ($q3) use ($codigosApi) {
+                    $q3->whereNull('codigo_pc')
+                       ->orWhereNotIn('codigo_pc', $codigosApi);
+                });
+            });
             
         $count = $query->count();
         
