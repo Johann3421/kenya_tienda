@@ -68,12 +68,12 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3">
                         <label for="modelo_id" class="label-sm text-muted">MODELO ASIGNADO <span class="text-danger">*</span></label>
-                        <select id="modelo_id" v-model="producto.modelo_id" class="form-control fc-new" :class="[errors.modelo_id ? 'border-error' : '']">
-                            @foreach ($modelos as $mod)
-                                <option value="{{ $mod->id }}">{{ $mod['descripcion'] }}</option>
-                            @endforeach
+                        <select id="modelo_id" v-model="producto.modelo_id" class="form-control fc-new" :class="[errors.modelo_id ? 'border-error' : '']" :disabled="!producto.categoria">
+                            <option value="">--- Seleccionar Modelo ---</option>
+                            <option v-for="mod in modelosFiltradosForm" :value="mod.id">@{{ mod.descripcion }}</option>
                         </select>
-                        <small class="form-text error-color" v-if="errors.modelo">@{{ errors.modelo[0] }}</small>
+                        <small class="form-text text-muted" v-if="!producto.categoria" style="font-size: 10px;">Selecciona una categoría primero</small>
+                        <small class="form-text error-color" v-if="errors.modelo_id">@{{ errors.modelo_id[0] }}</small>
                     </div>
                     <div class="form-group col-lg-3">
                         <label for="nro_parte" class="label-sm text-muted">NRO. PARTE (PN)</label>
@@ -279,10 +279,13 @@
 
         <!-- CARD 4: VENTAS, CONFIGURACION Y EXTRAS -->
         <div class="card shadow-sm mb-3 border-0">
-            <div class="card-header bg-white py-2 border-bottom">
+            <div class="card-header bg-white py-2 border-bottom d-flex justify-content-between align-items-center" style="cursor:pointer" @click="mostrar_opciones_comerciales = !mostrar_opciones_comerciales">
                 <h6 class="mb-0 font-weight-bold text-dark"><i class="fa fa-shopping-cart mr-1 text-success"></i> 4. Configuración Comercial y Códigos</h6>
+                <button type="button" class="btn btn-sm btn-light p-1">
+                    <i class="fa" :class="mostrar_opciones_comerciales ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                </button>
             </div>
-            <div class="card-body pb-1">
+            <div class="card-body pb-1" v-show="mostrar_opciones_comerciales" style="animation: fadeIn 0.3s ease-out;">
                 <div class="form-row">
                     <div class="form-group col-lg-3">
                         <label for="tipo_afectacion" class="label-sm text-muted">TIPO DE AFECTACIÓN TRIBUTARIA <span class="text-danger">*</span></label>

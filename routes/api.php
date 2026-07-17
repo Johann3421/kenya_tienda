@@ -33,7 +33,7 @@ Route::get('productos', function () {
 Route::post('productos/especificaciones/import-multiple', [ProductoController::class, 'importMultipleEspecificaciones']);
 Route::get('productos/{id}', [ProductoApiController::class, 'show']);
 Route::get('modelos', function () {
-    return App\Modelo::select('id', 'descripcion')->get();
+    return App\Modelo::select('id', 'descripcion', 'categoria_id')->get();
 });
 Route::get('modelos/{id}', [ModeloApiController::class, 'show']);
 Route::get('modelos/categoria/{categoria_id}', [ModeloApiController::class, 'porCategoria']);

@@ -124,6 +124,7 @@ new Vue({
         productoSeleccionado: null,
         archivosExcel: [],
         activeTab: 'general',
+        mostrar_opciones_comerciales: false,
     },
     created() {
         this.Buscar();
@@ -135,6 +136,10 @@ new Vue({
             if (!this.producto.categoria) return '';
             let cat = this.listaCategorias.find(c => c.id == this.producto.categoria);
             return cat ? cat.nombre.toUpperCase() : '';
+        },
+        modelosFiltradosForm() {
+            if (!this.producto.categoria) return [];
+            return this.listaModelos.filter(m => m.categoria_id == this.producto.categoria);
         },
         esPC() {
             return this.categoriaNombre.includes('COMPUTADORA') || this.categoriaNombre.includes('DESKTOP') || this.categoriaNombre.includes('LAPTOP') || this.categoriaNombre.includes('WORKSTATION');
