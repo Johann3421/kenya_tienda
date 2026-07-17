@@ -24,22 +24,19 @@ class ClienteWebController extends Controller
     public function buscar(Request $request)
     {
         try {
-            // Asegurar que el rol existe (idempotente)
-            \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'cliente_web', 'guard_name' => 'web']);
-
-            $clientes = User::role('cliente_web')
-                ->with(['roles' => function ($query) {
-                    $query->select('id', 'name');
-                }]);
+            $clientes = \App\Models\UserPrecio::query();
 
             if ($request->search) {
                 $clientes->where(function ($q) use ($request) {
                     $q->where('nombres', 'LIKE', "%{$request->search}%")
-                      ->orWhere('ape_paterno', 'LIKE', "%{$request->search}%")
+                      ->orWhere('dni', 'LIKE', "%{$request->search}%")
                       ->orWhere('username', 'LIKE', "%{$request->search}%")
                       ->orWhere('email', 'LIKE', "%{$request->search}%");
                 });
             }
+
+            // Ordenar por más recientes
+            $clientes->orderBy('id', 'desc');
 
             $clientes = $clientes->paginate(10);
 
@@ -74,30 +71,27 @@ class ClienteWebController extends Controller
     {
         $this->validate($request, [
             'nombres'  => 'required|string|max:100',
-            'paterno'  => 'required|string|max:100',
-            'materno'  => 'required|string|max:100',
-            'email'    => 'required|email|unique:users',
+            'dni'      => 'required|string|max:20',
+            'email'    => 'required|email|unique:users_precios,email',
             'telefono' => 'nullable|digits:9',
-            'username' => 'required|string|unique:users',
+            'username' => 'required|string|unique:users_precios,username',
             'password' => 'required|min:8',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $user = new User();
+            $user = new \App\Models\UserPrecio();
             $user->nombres      = strtoupper($request->nombres);
-            $user->ape_paterno  = strtoupper($request->paterno);
-            $user->ape_materno  = strtoupper($request->materno);
+            $user->ape_paterno  = 'Web'; // Hardcoded para identificar que fue desde admin/web
+            $user->ape_materno  = $request->dni; // Guardar RUC
+            $user->dni          = substr($request->dni, 0, 8); // DNI requiere 8
             $user->email        = $request->email;
             $user->telefono     = $request->telefono ?? '';
             $user->username     = $request->username;
             $user->password     = Hash::make($request->password);
-            $user->dni          = $request->dni ?? '00000000';
+            $user->activo       = 'SI';
             $user->save();
-
-            // Asignar siempre el rol cliente_web
-            $user->assignRole('cliente_web');
 
             DB::commit();
 
@@ -120,20 +114,19 @@ class ClienteWebController extends Controller
     {
         $this->validate($request, [
             'nombres'  => 'required|string|max:100',
-            'paterno'  => 'required|string|max:100',
-            'materno'  => 'required|string|max:100',
-            'email'    => 'required|email|unique:users,email,' . $request->id,
+            'dni'      => 'required|string|max:20',
+            'email'    => 'required|email|unique:users_precios,email,' . $request->id,
             'telefono' => 'nullable|digits:9',
-            'username' => 'required|string|unique:users,username,' . $request->id,
+            'username' => 'required|string|unique:users_precios,username,' . $request->id,
         ]);
 
         try {
             DB::beginTransaction();
 
-            $user = User::findOrFail($request->id);
+            $user = \App\Models\UserPrecio::findOrFail($request->id);
             $user->nombres     = strtoupper($request->nombres);
-            $user->ape_paterno = strtoupper($request->paterno);
-            $user->ape_materno = strtoupper($request->materno);
+            $user->ape_materno = $request->dni;
+            $user->dni         = substr($request->dni, 0, 8);
             $user->email       = $request->email;
             $user->telefono    = $request->telefono ?? $user->telefono;
             $user->username    = $request->username;
@@ -167,8 +160,7 @@ class ClienteWebController extends Controller
         try {
             DB::beginTransaction();
 
-            $user = User::findOrFail($request->id);
-            $user->removeRole('cliente_web');
+            $user = \App\Models\UserPrecio::findOrFail($request->id);
             $user->delete();
 
             DB::commit();

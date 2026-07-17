@@ -68,19 +68,14 @@
                                 <div class="modal-body">
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label class="label-sm">NOMBRES</label>
-                                            <input type="text" v-model="nombres" class="form-control" :class="[errors.nombres ? 'is-invalid' : '']" :readonly="loading" placeholder="Nombres del cliente">
+                                            <label class="label-sm">RAZÓN SOCIAL / NOMBRES</label>
+                                            <input type="text" v-model="nombres" class="form-control" :class="[errors.nombres ? 'is-invalid' : '']" :readonly="loading" placeholder="Razón social o nombres del cliente">
                                             <small class="form-text error-color" v-if="errors.nombres">@{{ errors.nombres[0] }}</small>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label class="label-sm">APELLIDO PATERNO</label>
-                                            <input type="text" v-model="paterno" class="form-control" :class="[errors.paterno ? 'is-invalid' : '']" :readonly="loading">
-                                            <small class="form-text error-color" v-if="errors.paterno">@{{ errors.paterno[0] }}</small>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label class="label-sm">APELLIDO MATERNO</label>
-                                            <input type="text" v-model="materno" class="form-control" :class="[errors.materno ? 'is-invalid' : '']" :readonly="loading">
-                                            <small class="form-text error-color" v-if="errors.materno">@{{ errors.materno[0] }}</small>
+                                            <label class="label-sm">DOCUMENTO (RUC/DNI)</label>
+                                            <input type="text" v-model="dni" class="form-control" :class="[errors.dni ? 'is-invalid' : '']" :readonly="loading" maxlength="20" placeholder="10... / 20...">
+                                            <small class="form-text error-color" v-if="errors.dni">@{{ errors.dni[0] }}</small>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label class="label-sm">TELÉFONO</label>
@@ -134,19 +129,14 @@
                                 <div class="modal-body">
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
-                                            <label class="label-sm">NOMBRES</label>
-                                            <input type="text" v-model="nombres" class="form-control" :class="[errors.nombres ? 'is-invalid' : '']" :readonly="loading">
+                                            <label class="label-sm">RAZÓN SOCIAL / NOMBRES</label>
+                                            <input type="text" v-model="nombres" class="form-control" :class="[errors.nombres ? 'is-invalid' : '']" :readonly="loading" placeholder="Razón social o nombres del cliente">
                                             <small class="form-text error-color" v-if="errors.nombres">@{{ errors.nombres[0] }}</small>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label class="label-sm">APELLIDO PATERNO</label>
-                                            <input type="text" v-model="paterno" class="form-control" :class="[errors.paterno ? 'is-invalid' : '']" :readonly="loading">
-                                            <small class="form-text error-color" v-if="errors.paterno">@{{ errors.paterno[0] }}</small>
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            <label class="label-sm">APELLIDO MATERNO</label>
-                                            <input type="text" v-model="materno" class="form-control" :class="[errors.materno ? 'is-invalid' : '']" :readonly="loading">
-                                            <small class="form-text error-color" v-if="errors.materno">@{{ errors.materno[0] }}</small>
+                                            <label class="label-sm">DOCUMENTO (RUC/DNI)</label>
+                                            <input type="text" v-model="dni" class="form-control" :class="[errors.dni ? 'is-invalid' : '']" :readonly="loading" maxlength="20">
+                                            <small class="form-text error-color" v-if="errors.dni">@{{ errors.dni[0] }}</small>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label class="label-sm">TELÉFONO</label>
@@ -259,9 +249,9 @@
                             <thead>
                                 <tr>
                                     <th class="cell-1 text-center">#</th>
-                                    <th class="cell-2 text-center">Usuario</th>
-                                    <th class="cell-3">Datos</th>
-                                    <th class="cell-4 text-center">Email</th>
+                                    <th class="cell-2 text-center">Documento</th>
+                                    <th class="cell-3">Razón Social / Nombre</th>
+                                    <th class="cell-4 text-center">Contacto</th>
                                     <th class="cell-5 text-center">Fecha Alta</th>
                                     <th class="cell-6 text-center">Estado</th>
                                 </tr>
@@ -281,12 +271,14 @@
                                             :class="{ activado : active == cliente.id }"
                                             v-on:click="Fila(cliente.id, cliente)" style="cursor:pointer;">
                                             <td class="text-center">@{{ index + pagination.index + 1 }}</td>
-                                            <td class="text-center"><strong>@{{ cliente.username }}</strong></td>
+                                            <td class="text-center"><strong>@{{ cliente.dni }}</strong><br><small class="text-muted">@{{ cliente.username }}</small></td>
                                             <td>
-                                                <div><i class="fas fa-user"></i> @{{ cliente.nombres + ' ' + cliente.ape_paterno + ' ' + cliente.ape_materno }}</div>
-                                                <div><i class="fas fa-phone-square"></i> @{{ cliente.telefono }}</div>
+                                                <div><i class="fas fa-building text-primary"></i> <strong>@{{ cliente.nombres }}</strong></div>
                                             </td>
-                                            <td class="text-center"><small>@{{ cliente.email }}</small></td>
+                                            <td class="text-center">
+                                                <div><small><i class="fas fa-envelope"></i> @{{ cliente.email }}</small></div>
+                                                <div><small><i class="fas fa-phone-alt"></i> @{{ cliente.telefono }}</small></div>
+                                            </td>
                                             <td class="text-center"><small>@{{ Fecha(cliente.created_at) }}</small></td>
                                             <td class="text-center">
                                                 <i class="fas fa-check-circle font-green" style="font-size:15px;" v-if="cliente.activo == 'SI'"></i>
@@ -352,7 +344,7 @@ new Vue({
         search: '',
         errors: {},
         // Campos
-        nombres: '', paterno: '', materno: '', email: '',
+        nombres: '', dni: '', email: '',
         telefono: '', username: '', password: '', activo: 'SI',
         password_show: false,
     },
@@ -369,15 +361,14 @@ new Vue({
             this.modal_size = size;
             this.errors     = {};
             if (method === 'create') {
-                this.nombres = ''; this.paterno = ''; this.materno = '';
+                this.nombres = ''; this.dni = '';
                 this.email = ''; this.telefono = ''; this.username = '';
                 this.password = ''; this.activo = 'SI'; this.password_show = false;
             }
             if ((method === 'edit') && data) {
                 this.active   = id;
                 this.nombres  = data.nombres;
-                this.paterno  = data.ape_paterno;
-                this.materno  = data.ape_materno;
+                this.dni      = data.ape_materno || data.dni;
                 this.email    = data.email;
                 this.telefono = data.telefono;
                 this.username = data.username;
@@ -431,7 +422,7 @@ new Vue({
         Store() {
             this.loading = true; this.errors = {};
             axios.post('/clientes-web/store', {
-                nombres: this.nombres, paterno: this.paterno, materno: this.materno,
+                nombres: this.nombres, dni: this.dni,
                 email: this.email, telefono: this.telefono, username: this.username,
                 password: this.password, _token: '{{ csrf_token() }}'
             }).then(res => {
@@ -446,7 +437,7 @@ new Vue({
         Update() {
             this.loading = true; this.errors = {};
             axios.post('/clientes-web/update', {
-                id: this.active, nombres: this.nombres, paterno: this.paterno, materno: this.materno,
+                id: this.active, nombres: this.nombres, dni: this.dni,
                 email: this.email, telefono: this.telefono, username: this.username,
                 password: this.password, activo: this.activo, _token: '{{ csrf_token() }}'
             }).then(res => {
