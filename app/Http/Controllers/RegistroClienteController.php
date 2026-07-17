@@ -55,7 +55,7 @@ class RegistroClienteController extends Controller
         $estado = 'aprobado';
 
         // 1. Detectar si el email YA está registrado
-        $existingUser = User::where('email', $request->correo)->first();
+        $existingUser = \App\Models\UserPrecio::where('email', $request->correo)->first();
         if ($existingUser) {
             return back()
                 ->withInput()
@@ -63,7 +63,7 @@ class RegistroClienteController extends Controller
         }
 
         // 2. Detectar si el RUC ya existe
-        if (User::where('ape_materno', $request->documento)->exists()) {
+        if (\App\Models\UserPrecio::where('ape_materno', $request->documento)->exists()) {
             return back()
                 ->withInput()
                 ->withErrors(['documento' => 'Este RUC ya está registrado en el sistema. Contacta a soporte si tienes problemas para ingresar.']);
@@ -102,13 +102,13 @@ class RegistroClienteController extends Controller
         // 4. Generar contraseña aleatoria
         $password = Str::random(8);
 
-        // 5. Buscar o crear el usuario (role = cliente_web, username = correo)
+        // 5. Buscar o crear el usuario en users_precios
         try {
             // Buscamos si ya existe por email
-            $user = User::where('email', $request->correo)->first();
+            $user = \App\Models\UserPrecio::where('email', $request->correo)->first();
             
             if (!$user) {
-                $user = new User();
+                $user = new \App\Models\UserPrecio();
                 $user->dni = substr($request->documento, 0, 8); // DNI requiere 8 caracteres exactos en la BD
                 $user->nombres = substr($razonSocial, 0, 100);
                 $user->ape_paterno = 'Web';
@@ -119,9 +119,6 @@ class RegistroClienteController extends Controller
                 $user->password = Hash::make($password);
                 $user->activo = 'SI';
                 $user->save();
-
-                // Asignar rol si Spatie Permission está instalado (ignorar si falla)
-                try { $user->assignRole('cliente_web'); } catch (\Exception $e) {}
             } else {
                 // Si ya existe, actualizamos su contraseña al nuevo password generado para este intento
                 $user->password = Hash::make($password);

@@ -200,7 +200,7 @@ Route::get('/sorteo', fn() => redirect('/'))->name('serial.draw');
 Route::post('/sorteo', fn() => redirect('/'))->name('serial.draw.store');
 Route::post('/sorteo/claim', fn() => redirect('/'))->name('serial.draw.claim');
 
-Route::middleware(['auth', 'role:cliente_web'])->group(function () {
+Route::middleware(['auth:cliente'])->group(function () {
     Route::get('/mi-perfil',        [App\Http\Controllers\ClienteWebController::class, 'perfil'])->name('cliente.perfil');
     Route::post('/mi-perfil',       [App\Http\Controllers\ClienteWebController::class, 'actualizarPerfil'])->name('cliente.perfil.update');
     Route::get('/mis-cotizaciones', [App\Http\Controllers\ClienteWebController::class, 'cotizaciones'])->name('cliente.cotizaciones');

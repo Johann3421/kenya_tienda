@@ -1,0 +1,106 @@
+root@fe64999f3a8d:/var/www/html# php artisan sync:fichas --crear
+Obteniendo fichas del auditor...
+Video-specs: 0 fichas
+Catálogo: 1136 fichas
+Total fichas fusionadas: 1136
+Fichas obtenidas: 1136
+Fichas únicas (nro_parte): 1136
+    0/1136 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0%[2026-07-16 11:56:47] production.ERROR: SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "especificaciones_pkey"
+DETAIL:  Key (id)=(21) already exists. (Connection: pgsql, SQL: insert into "especificaciones" ("campo", "created_at", "descripcion", "producto_id", "updated_at") values (Procesador, 2026-07-16 11:56:47, INTEL CORE I7-14700, 1, 2026-07-16 11:56:47), (RAM, 2026-07-16 11:56:47, 16 GB DDR4 3200 400 MHZ, 1, 2026-07-16 11:56:47), (Almacenamiento, 2026-07-16 11:56:47, 500 GB M.2 SSD, 1, 2026-07-16 11:56:47), (Gráficos, 2026-07-16 11:56:47, Integrado - Intel® UHD Graphics, 1, 2026-07-16 11:56:47), (Conectividad LAN, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Conectividad WLAN, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Conectividad USB, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Salida VGA, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Salida HDMI, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Sistema Operativo, 2026-07-16 11:56:47, WINDOWS 11 PRO 64 BITS ESPAÑOL, 1, 2026-07-16 11:56:47), (Unidad Óptica, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Teclado, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Mouse, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Suite Ofimática, 2026-07-16 11:56:47, NO, 1, 2026-07-16 11:56:47), (Garantía de Fábrica, 2026-07-16 11:56:47, 36 MESES CARRY-IN UNIDAD KENYA TECHNOLOGY EZENT S70 E7C1B69NWVHDT, 1, 2026-07-16 11:56:47), (Formato, 2026-07-16 11:56:47, Reducido, 1, 2026-07-16 11:56:47), (Sonido, 2026-07-16 11:56:47, Integrado - Salida Audio HD / Entrada Micrófono, 1, 2026-07-16 11:56:47), (Chipset, 2026-07-16 11:56:47, B760 - LGA 1700, 1, 2026-07-16 11:56:47), (Puertos Mínimos, 2026-07-16 11:56:47, podría integrar más Puertos y/o Slots ¹Potencia Mínima ²Certificación de componentes Internos ESPECIFICACIONES KENYA TECHNOLOGY Marca Registrada, 1, 2026-07-16 11:56:47), (Slot de Expansión, 2026-07-16 11:56:47, ? x1 PCIe; x1 M.2, 1, 2026-07-16 11:56:47), (Fuente de Poder, 2026-07-16 11:56:47, Alimentacion 220V - Potencia Sostenida 300W Seguridad TPM 2.0, 1, 2026-07-16 11:56:47), (Empaque, 2026-07-16 11:56:47, En caja - Unidad Certificacion² ROSH, FCC, CE Sistema de Manejo de RaeeColectivo, 1, 2026-07-16 11:56:47), (Accesorios y Otros, 2026-07-16 11:56:47, y, 1, 2026-07-16 11:56:47), (Sistema RAEE, 2026-07-16 11:56:47, COLECTIVO, 1, 2026-07-16 11:56:47)) {"exception":"[object] (Illuminate\\Database\\UniqueConstraintViolationException(code: 23505): SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint \"especificaciones_pkey\"
+DETAIL:  Key (id)=(21) already exists. (Connection: pgsql, SQL: insert into \"especificaciones\" (\"campo\", \"created_at\", \"descripcion\", \"producto_id\", \"updated_at\") values (Procesador, 2026-07-16 11:56:47, INTEL CORE I7-14700, 1, 2026-07-16 11:56:47), (RAM, 2026-07-16 11:56:47, 16 GB DDR4 3200 400 MHZ, 1, 2026-07-16 11:56:47), (Almacenamiento, 2026-07-16 11:56:47, 500 GB M.2 SSD, 1, 2026-07-16 11:56:47), (Gráficos, 2026-07-16 11:56:47, Integrado - Intel® UHD Graphics, 1, 2026-07-16 11:56:47), (Conectividad LAN, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Conectividad WLAN, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Conectividad USB, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Salida VGA, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Salida HDMI, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Sistema Operativo, 2026-07-16 11:56:47, WINDOWS 11 PRO 64 BITS ESPAÑOL, 1, 2026-07-16 11:56:47), (Unidad Óptica, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Teclado, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Mouse, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Suite Ofimática, 2026-07-16 11:56:47, NO, 1, 2026-07-16 11:56:47), (Garantía de Fábrica, 2026-07-16 11:56:47, 36 MESES CARRY-IN UNIDAD KENYA TECHNOLOGY EZENT S70 E7C1B69NWVHDT, 1, 2026-07-16 11:56:47), (Formato, 2026-07-16 11:56:47, Reducido, 1, 2026-07-16 11:56:47), (Sonido, 2026-07-16 11:56:47, Integrado - Salida Audio HD / Entrada Micrófono, 1, 2026-07-16 11:56:47), (Chipset, 2026-07-16 11:56:47, B760 - LGA 1700, 1, 2026-07-16 11:56:47), (Puertos Mínimos, 2026-07-16 11:56:47, podría integrar más Puertos y/o Slots ¹Potencia Mínima ²Certificación de componentes Internos ESPECIFICACIONES KENYA TECHNOLOGY Marca Registrada, 1, 2026-07-16 11:56:47), (Slot de Expansión, 2026-07-16 11:56:47, ? x1 PCIe; x1 M.2, 1, 2026-07-16 11:56:47), (Fuente de Poder, 2026-07-16 11:56:47, Alimentacion 220V - Potencia Sostenida 300W Seguridad TPM 2.0, 1, 2026-07-16 11:56:47), (Empaque, 2026-07-16 11:56:47, En caja - Unidad Certificacion² ROSH, FCC, CE Sistema de Manejo de RaeeColectivo, 1, 2026-07-16 11:56:47), (Accesorios y Otros, 2026-07-16 11:56:47, y, 1, 2026-07-16 11:56:47), (Sistema RAEE, 2026-07-16 11:56:47, COLECTIVO, 1, 2026-07-16 11:56:47)) at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php:820)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('insert into \"es...', Array, Object(Closure))
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run('insert into \"es...', Array, Object(Closure))
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(524): Illuminate\\Database\\Connection->statement('insert into \"es...', Array)
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3717): Illuminate\\Database\\Connection->insert('insert into \"es...', Array)
+#4 /var/www/html/app/Console/Commands/SyncFichasCommand.php(434): Illuminate\\Database\\Query\\Builder->insert(Array)
+#5 /var/www/html/app/Console/Commands/SyncFichasCommand.php(401): App\\Console\\Commands\\SyncFichasCommand->syncEspecificaciones(1, Array)
+#6 /var/www/html/app/Console/Commands/SyncFichasCommand.php(244): App\\Console\\Commands\\SyncFichasCommand->crearProducto('E7C1B69NWVHDT', Array, false)
+#7 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\SyncFichasCommand->handle()
+#8 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#13 /var/www/html/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#15 /var/www/html/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#16 /var/www/html/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\SyncFichasCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#17 /var/www/html/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#20 {main}
+
+[previous exception] [object] (PDOException(code: 23505): SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint \"especificaciones_pkey\"
+DETAIL:  Key (id)=(21) already exists. at /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php:571)
+[stacktrace]
+#0 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(571): PDOStatement->execute()
+#1 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(812): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('insert into \"es...', Array)
+#2 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(779): Illuminate\\Database\\Connection->runQueryCallback('insert into \"es...', Array, Object(Closure))
+#3 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(560): Illuminate\\Database\\Connection->run('insert into \"es...', Array, Object(Closure))
+#4 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Connection.php(524): Illuminate\\Database\\Connection->statement('insert into \"es...', Array)
+#5 /var/www/html/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3717): Illuminate\\Database\\Connection->insert('insert into \"es...', Array)
+#6 /var/www/html/app/Console/Commands/SyncFichasCommand.php(434): Illuminate\\Database\\Query\\Builder->insert(Array)
+#7 /var/www/html/app/Console/Commands/SyncFichasCommand.php(401): App\\Console\\Commands\\SyncFichasCommand->syncEspecificaciones(1, Array)
+#8 /var/www/html/app/Console/Commands/SyncFichasCommand.php(244): App\\Console\\Commands\\SyncFichasCommand->crearProducto('E7C1B69NWVHDT', Array, false)
+#9 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Commands\\SyncFichasCommand->handle()
+#10 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#11 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(95): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#12 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#13 /var/www/html/vendor/laravel/framework/src/Illuminate/Container/Container.php(696): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#14 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(213): Illuminate\\Container\\Container->call(Array)
+#15 /var/www/html/vendor/symfony/console/Command/Command.php(341): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#16 /var/www/html/vendor/laravel/framework/src/Illuminate/Console/Command.php(182): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#17 /var/www/html/vendor/symfony/console/Application.php(1117): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 /var/www/html/vendor/symfony/console/Application.php(356): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\SyncFichasCommand), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 /var/www/html/vendor/symfony/console/Application.php(195): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#20 /var/www/html/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#21 /var/www/html/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 {main}
+"}
+
+In Connection.php line 820:
+
+  SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates u
+  nique constraint "especificaciones_pkey"
+  DETAIL:  Key (id)=(21) already exists. (Connection: pgsql, SQL: insert into
+   "especificaciones" ("campo", "created_at", "descripcion", "producto_id", "
+  updated_at") values (Procesador, 2026-07-16 11:56:47, INTEL CORE I7-14700,
+  1, 2026-07-16 11:56:47), (RAM, 2026-07-16 11:56:47, 16 GB DDR4 3200 400 MHZ
+  , 1, 2026-07-16 11:56:47), (Almacenamiento, 2026-07-16 11:56:47, 500 GB M.2
+   SSD, 1, 2026-07-16 11:56:47), (Gráficos, 2026-07-16 11:56:47, Integrado -
+  Intel® UHD Graphics, 1, 2026-07-16 11:56:47), (Conectividad LAN, 2026-07-16
+   11:56:47, SI, 1, 2026-07-16 11:56:47), (Conectividad WLAN, 2026-07-16 11:5
+  6:47, SI, 1, 2026-07-16 11:56:47), (Conectividad USB, 2026-07-16 11:56:47,
+  SI, 1, 2026-07-16 11:56:47), (Salida VGA, 2026-07-16 11:56:47, SI, 1, 2026-
+  07-16 11:56:47), (Salida HDMI, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56
+  :47), (Sistema Operativo, 2026-07-16 11:56:47, WINDOWS 11 PRO 64 BITS ESPAÑ
+  OL, 1, 2026-07-16 11:56:47), (Unidad Óptica, 2026-07-16 11:56:47, SI, 1, 20
+  26-07-16 11:56:47), (Teclado, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:
+  47), (Mouse, 2026-07-16 11:56:47, SI, 1, 2026-07-16 11:56:47), (Suite Ofimá
+  tica, 2026-07-16 11:56:47, NO, 1, 2026-07-16 11:56:47), (Garantía de Fábric
+  a, 2026-07-16 11:56:47, 36 MESES CARRY-IN UNIDAD KENYA TECHNOLOGY EZENT S70
+   E7C1B69NWVHDT, 1, 2026-07-16 11:56:47), (Formato, 2026-07-16 11:56:47, Red
+  ucido, 1, 2026-07-16 11:56:47), (Sonido, 2026-07-16 11:56:47, Integrado - S
+  alida Audio HD / Entrada Micrófono, 1, 2026-07-16 11:56:47), (Chipset, 2026
+  -07-16 11:56:47, B760 - LGA 1700, 1, 2026-07-16 11:56:47), (Puertos Mínimos
+  , 2026-07-16 11:56:47, podría integrar más Puertos y/o Slots ¹Potencia Míni
+  ma ²Certificación de componentes Internos ESPECIFICACIONES KENYA TECHNOLOGY
+   Marca Registrada, 1, 2026-07-16 11:56:47), (Slot de Expansión, 2026-07-16
+  11:56:47, ? x1 PCIe; x1 M.2, 1, 2026-07-16 11:56:47), (Fuente de Poder, 202
+  6-07-16 11:56:47, Alimentacion 220V - Potencia Sostenida 300W Seguridad TPM
+   2.0, 1, 2026-07-16 11:56:47), (Empaque, 2026-07-16 11:56:47, En caja - Uni
+  dad Certificacion² ROSH, FCC, CE Sistema de Manejo de RaeeColectivo, 1, 202
+  6-07-16 11:56:47), (Accesorios y Otros, 2026-07-16 11:56:47, y, 1, 2026-07-
+  16 11:56:47), (Sistema RAEE, 2026-07-16 11:56:47, COLECTIVO, 1, 2026-07-16
+  11:56:47))
+
+
+In Connection.php line 571:
+
+  SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates u
+  nique constraint "especificaciones_pkey"
+  DETAIL:  Key (id)=(21) already exists.
+
+
+root@fe64999f3a8d:/var/www/html# 

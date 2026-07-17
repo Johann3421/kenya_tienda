@@ -9,7 +9,7 @@ class LoginClienteController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest:cliente')->except('logout');
     }
 
     public function showLoginForm(Request $request)
@@ -32,33 +32,23 @@ class LoginClienteController extends Controller
 
         $authData = [
             $loginField => $credentials['username'],
-            'password' => $credentials['password']
+            'password' => $credentials['password'],
+            'activo' => 'SI'
         ];
 
-        if (Auth::attempt($authData)) {
+        if (Auth::guard('cliente')->attempt($authData)) {
             $request->session()->regenerate();
-
-            if (Auth::user()->hasRole('cliente_web')) {
-                return redirect()->intended('/catalogo');
-            }
-
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
-            return back()->withErrors([
-                'username' => 'Acceso denegado. Este portal es exclusivo para clientes verificados.',
-            ]);
+            return redirect()->intended('/catalogo');
         }
 
         return back()->withErrors([
-            'username' => 'Las credenciales no coinciden con nuestros registros.',
+            'username' => 'Las credenciales no coinciden con nuestros registros o la cuenta está inactiva.',
         ]);
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('cliente')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         // Al cerrar sesión en el portal, lo mandamos al index público

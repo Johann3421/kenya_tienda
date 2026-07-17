@@ -131,7 +131,7 @@
             @endif
 
             <div class="product-card-footer">
-                @if(Auth::check() && Auth::user()->hasRole('cliente_web'))
+                @if(Auth::guard('cliente')->check())
                     <div class="product-prices-wrapper" style="margin-bottom: 12px; text-align: left; width: 100%;">
                         @if(!empty($producto->precio_referencial))
                             <div class="price-referencial" style="font-size: 0.85rem; color: #888; text-decoration: line-through;">
