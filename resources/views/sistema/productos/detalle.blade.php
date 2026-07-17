@@ -593,36 +593,7 @@
                 <div class="mt-3" style="font-size:11px; color:#bbb; padding-left:2px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
             </div>
             
-            {{-- ── PRECIO (solo clientes verificados) ── --}}
-            @auth
-                @hasrole('cliente_web')
-                <div style="background:linear-gradient(135deg,#fff8f4,#fff3ec); border:1.5px solid #f5d4bb; border-radius:12px; padding:18px 22px; margin:0 0 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
-                    <div>
-                        <div style="font-size:11px; color:#b0502a; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; margin-bottom:4px;">
-                            <i class="fa-solid fa-tag" style="margin-right:4px;"></i>Precio referencial (cliente verificado)
-                        </div>
-                        @if($producto->precio_anterior)
-                            <div style="font-size:14px; color:#ccc; text-decoration:line-through; margin-bottom:2px;">
-                                S/ {{ number_format($producto->precio_anterior, 2) }}
-                                <span style="background:#e74c3c; color:#fff; font-size:10px; font-weight:700; border-radius:4px; padding:1px 6px; margin-left:4px;">OFERTA</span>
-                            </div>
-                        @endif
-                        @if($producto->precio_unitario)
-                            <div style="font-size:30px; font-weight:800; color:#ee7c31; letter-spacing:-1px; line-height:1;">
-                                S/ {{ number_format($producto->precio_unitario, 2) }}
-                            </div>
-                        @else
-                            <div style="font-size:16px; color:#bbb; font-style:italic;">Precio a consultar</div>
-                        @endif
-                    </div>
-                    <a target="_blank"
-                       href="https://wa.me/+51958021778?text=Hola, soy cliente verificado y quiero cotizar: {{ urlencode($producto->display_name) }}"
-                       class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600;">
-                        <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Solicitar cotización
-                    </a>
-                </div>
-                @endhasrole
-            @endauth
+            {{-- BLOQUE DE PRECIO ELIMINADO: Se unificó en la barra inferior para simplificar UX --}}
 
             <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin:20px 0 24px; padding:16px 20px; background:#fafafa; border:1px solid #eee; border-radius:12px;">
                 <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
@@ -647,9 +618,9 @@
                         @endif
                     </div>
                 </div>
-                @guest
+                @if(!Auth::guard('cliente')->check())
                 <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:38px; padding:6px 14px;">
+                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto: {{ urlencode($producto->display_name) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:38px; padding:6px 14px;">
                         <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                     </a>
                     <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; border:1px solid #ee7c31; color:#ee7c31; background:transparent; padding:6px 14px; min-height:38px; border-radius:4px; text-decoration:none; transition:all 0.2s; box-sizing:border-box;" onmouseover="this.style.background='#ee7c31'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ee7c31';">
@@ -657,15 +628,26 @@
                     </a>
                 </div>
                 @else
-                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:38px; padding:6px 14px;">
-                        <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
-                    </a>
-                    <a href="{{ route('cotizar.detalle', $producto->id, false) }}" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; border:1px solid #ee7c31; color:#ee7c31; background:transparent; padding:6px 14px; min-height:38px; border-radius:4px; text-decoration:none; transition:all 0.2s; box-sizing:border-box;" onmouseover="this.style.background='#ee7c31'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ee7c31';">
-                        <i class="fa-solid fa-tag"></i> Ver precio
+                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:flex-end; flex-grow:1;">
+                    <div style="text-align:right;">
+                        @if(!empty($producto->precio_especial))
+                            <div style="font-size: 1.5rem; font-weight: 700; color: #ee7c31; line-height: 1.1;">
+                                $ {{ number_format($producto->precio_especial, 2) }}
+                            </div>
+                            <div style="font-size: 1rem; font-weight: 600; color: #333; line-height: 1.1;">
+                                S/ {{ number_format($producto->precio_especial * 3.4, 2) }} <span style="font-size: 0.8rem; font-weight: normal; color: #888;">+ IGV</span>
+                            </div>
+                        @else
+                            <div style="font-size: 1.2rem; font-weight: 600; color: #333;">
+                                (A cotizar)
+                            </div>
+                        @endif
+                    </div>
+                    <a target="_blank" href="https://wa.me/+51958021778?text=Hola, soy cliente verificado y quiero cotizar el producto: {{ urlencode($producto->display_name) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:45px; padding:8px 18px; border-radius:8px;">
+                        <i class="bx bxl-whatsapp" style="font-size:22px;"></i> Cotizar
                     </a>
                 </div>
-                @endguest
+                @endif
             </div>
         </div>{{-- close #design-v2 --}}
 
