@@ -8,10 +8,7 @@ use Illuminate\Http\Request;
 
 class CotizarController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'role:cliente_web']);
-    }
+
 
     public function index(Request $request)
     {
