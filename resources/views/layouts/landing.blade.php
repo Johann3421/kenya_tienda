@@ -565,9 +565,17 @@ body {
                         </div>
                         @php
                             $nombresArr = explode(' ', trim(Auth::guard('cliente')->user()->nombres ?? 'Cliente'));
-                            $shortName = ucfirst(strtolower($nombresArr[0] ?? 'Cliente'));
-                            if (isset($nombresArr[1])) {
-                                $shortName .= ' ' . strtoupper(substr($nombresArr[1], 0, 1)) . '.';
+                            if (count($nombresArr) >= 3) {
+                                // Formato RUC: PATERNO MATERNO NOMBRES
+                                // ej: ABAD CAMPOS JOHANN CRISTOPHER
+                                // [0] = ABAD, [1] = CAMPOS, [2] = JOHANN
+                                $shortName = ucfirst(strtolower($nombresArr[2])) . ' ' . strtoupper(substr($nombresArr[0], 0, 1)) . '.';
+                            } else {
+                                // Formato corto o empresa: IMPORTACIONES KENYA
+                                $shortName = ucfirst(strtolower($nombresArr[0] ?? 'Cliente'));
+                                if (isset($nombresArr[1])) {
+                                    $shortName .= ' ' . strtoupper(substr($nombresArr[1], 0, 1)) . '.';
+                                }
                             }
                         @endphp
                         <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">{{ $shortName }} <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i></span>
