@@ -340,6 +340,7 @@ eliminarArchivoExcel(index) {
                     break;
 
                 case 'edit':
+                    console.log('[EDIT] seleccion:', { id: seleccion.id, categoria_id: seleccion.categoria_id, modelo_id: seleccion.modelo_id, get_modelo: seleccion.get_modelo, specs: seleccion.especificaciones?.length });
                     this.producto.nombre = seleccion.nombre;
                     this.producto.nombre_secundario = seleccion.nombre_secundario || '';
                     this.producto.descripcion = seleccion.descripcion || '';
@@ -377,7 +378,9 @@ eliminarArchivoExcel(index) {
                     this.producto.codigo_interno     = seleccion.codigo_interno     || '';
                     this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
                     this.producto.linea_producto     = seleccion.linea_producto     || '';
-                    this.producto.categoria          = seleccion.categoria_id       || '';
+                    // categoria_id puede ser null en productos del API; fallback al categoria_id del modelo
+                    this.producto.categoria = seleccion.categoria_id
+                        || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
                     this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
                     this.producto.color              = seleccion.Color              || '';
                     this.producto.rendimiento        = seleccion.Rendimiento        || '';
@@ -431,7 +434,8 @@ eliminarArchivoExcel(index) {
                     this.producto.codigo_interno     = seleccion.codigo_interno     || '';
                     this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
                     this.producto.linea_producto     = seleccion.linea_producto     || '';
-                    this.producto.categoria          = seleccion.categoria_id       || '';
+                    this.producto.categoria = seleccion.categoria_id
+                        || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
                     this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
                     this.producto.color              = seleccion.Color              || '';
                     this.producto.rendimiento        = seleccion.Rendimiento        || '';
