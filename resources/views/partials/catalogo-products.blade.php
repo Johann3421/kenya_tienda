@@ -91,11 +91,15 @@
                     if (!$producto->relationLoaded('especificaciones')) {
                         $producto->load('especificaciones');
                     }
-                    $pantalla = $producto->especificaciones->firstWhere('campo', 'Tamaño de Pantalla')->descripcion ?? null;
-                    if ($pantalla) $specs[] = trim($pantalla);
                     
-                    $resolucion = $producto->especificaciones->firstWhere('campo', 'Resolución')->descripcion ?? null;
-                    if ($resolucion) $specs[] = trim($resolucion);
+                    $especs = $producto->getRelation('especificaciones');
+                    if ($especs) {
+                        $pantalla = $especs->firstWhere('campo', 'Tamaño de Pantalla')->descripcion ?? null;
+                        if ($pantalla) $specs[] = trim($pantalla);
+                        
+                        $resolucion = $especs->firstWhere('campo', 'Resolución')->descripcion ?? null;
+                        if ($resolucion) $specs[] = trim($resolucion);
+                    }
                     
                     if (!empty($producto->video_vga)) {
                         $specs[] = 'VGA: ' . trim($producto->video_vga);
