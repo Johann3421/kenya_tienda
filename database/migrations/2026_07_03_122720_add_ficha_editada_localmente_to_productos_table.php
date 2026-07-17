@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('productos', function (Blueprint $table) {
-            $table->boolean('ficha_editada_localmente')->default(false)->comment('Bandera para evitar que la API sobrescriba ediciones locales');
-        });
+        if (!Schema::hasColumn('productos', 'ficha_editada_localmente')) {
+            Schema::table('productos', function (Blueprint $table) {
+                $table->boolean('ficha_editada_localmente')->default(false)->comment('Bandera para evitar que la API sobrescriba ediciones locales');
+            });
+        }
     }
 
     /**
