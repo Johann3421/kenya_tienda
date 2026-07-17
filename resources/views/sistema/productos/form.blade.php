@@ -28,17 +28,18 @@
                     <label for="categoria" class="label-sm text-muted">CATEGORÍA PRINCIPAL <span class="text-danger">*</span></label>
                     <select id="categoria" v-model="producto.categoria" class="form-control form-control-lg border-primary shadow-sm" style="font-size: 16px; font-weight: bold;" :class="[errors.categoria ? 'is-invalid' : '']" :readonly="loading">
                         <option value="">--- ¿Qué vas a registrar? ---</option>
-                        <option v-for="cat in listaCategorias" :value="cat.id">@{{ cat.nombre }}</option>
+                        <option v-for="cat in categoriasFiltradas" :value="cat.id">@{{ cat.nombre }}</option>
                     </select>
                     <small class="form-text error-color" v-if="errors.categoria">@{{ errors.categoria[0] }}</small>
                 </div>
                 <div class="form-group col-lg-6 mb-0">
-                    <label for="marca" class="label-sm text-muted">MARCA <span class="text-danger">*</span></label>
-                    <select id="marca" v-model="producto.marca" class="form-control form-control-lg shadow-sm" style="font-size: 15px;" :class="[errors.marca ? 'is-invalid' : '']" :readonly="loading">
-                        <option value="">--- Selecciona la Marca ---</option>
-                        <option v-for="marca in listaMarcas" :value="marca.id">@{{ marca.nombre }}</option>
+                    <label for="modelo_id" class="label-sm text-muted">MODELO ASIGNADO <span class="text-danger">*</span></label>
+                    <select id="modelo_id" v-model="producto.modelo_id" class="form-control form-control-lg shadow-sm" style="font-size: 15px;" :class="[errors.modelo_id ? 'border-error' : '']" :disabled="!producto.categoria">
+                        <option value="">--- Seleccionar Modelo ---</option>
+                        <option v-for="mod in modelosFiltradosForm" :value="mod.id">@{{ mod.descripcion }}</option>
                     </select>
-                    <small class="form-text error-color" v-if="errors.marca">@{{ errors.marca[0] }}</small>
+                    <small class="form-text text-muted" v-if="!producto.categoria" style="font-size: 10px;">Selecciona una categoría primero</small>
+                    <small class="form-text error-color" v-if="errors.modelo_id">@{{ errors.modelo_id[0] }}</small>
                 </div>
             </div>
         </div>
@@ -67,23 +68,17 @@
                 </div>
                 <div class="form-row">
                     <div class="form-group col-lg-3">
-                        <label for="modelo_id" class="label-sm text-muted">MODELO ASIGNADO <span class="text-danger">*</span></label>
-                        <select id="modelo_id" v-model="producto.modelo_id" class="form-control fc-new" :class="[errors.modelo_id ? 'border-error' : '']" :disabled="!producto.categoria">
-                            <option value="">--- Seleccionar Modelo ---</option>
-                            <option v-for="mod in modelosFiltradosForm" :value="mod.id">@{{ mod.descripcion }}</option>
-                        </select>
-                        <small class="form-text text-muted" v-if="!producto.categoria" style="font-size: 10px;">Selecciona una categoría primero</small>
-                        <small class="form-text error-color" v-if="errors.modelo_id">@{{ errors.modelo_id[0] }}</small>
-                    </div>
-                    <div class="form-group col-lg-3">
                         <label for="nro_parte" class="label-sm text-muted">NRO. PARTE (PN)</label>
-                        <input type="text" id="nro_parte" v-model="producto.nro_parte" class="form-control fc-new font-weight-bold" :class="[errors.nro_parte ? 'is-invalid' : '']" :readonly="loading">
-                        <small class="form-text error-color" v-if="errors.nro_parte">@{{ errors.nro_parte[0] }}</small>
+                        <input type="text" id="nro_parte" v-model="producto.nro_parte" class="form-control fc-new" :readonly="loading">
                     </div>
                     <div class="form-group col-lg-6">
-                        <label for="descripcion" class="label-sm text-muted">BREVE DESCRIPCIÓN O RESUMEN</label>
-                        <input type="text" id="descripcion" v-model="producto.descripcion" class="form-control fc-new" :class="[errors.descripcion ? 'is-invalid' : '']" :readonly="loading">
-                        <small class="form-text error-color" v-if="errors.descripcion">@{{ errors.descripcion[0] }}</small>
+                        <label for="nombre" class="label-sm text-muted">TÍTULO DEL PRODUCTO <span class="text-danger">*</span></label>
+                        <input type="text" id="nombre" v-model="producto.nombre" class="form-control fc-new" :class="[errors.nombre ? 'border-error' : '']" :readonly="loading">
+                        <small class="form-text error-color" v-if="errors.nombre">@{{ errors.nombre[0] }}</small>
+                    </div>
+                    <div class="form-group col-lg-3">
+                        <label for="descripcion_2" class="label-sm text-muted">SUB TÍTULO</label>
+                        <input type="text" id="descripcion_2" v-model="producto.descripcion_2" class="form-control fc-new" :readonly="loading">
                     </div>
                 </div>
             </div>
@@ -176,44 +171,12 @@
                             <input type="text" id="tipo_suministro_pc" v-model="producto.tipo_suministro" class="form-control fc-new" placeholder="Ej: Mid Tower, SFF" :readonly="loading">
                         </div>
                         <div class="form-group col-lg-3">
-                            <label for="sistema_operativo" class="label-sm text-muted">SISTEMA OPERATIVO</label>
-                            <input type="text" id="sistema_operativo" v-model="producto.sistema_operativo" class="form-control fc-new" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
                             <label for="chipset" class="label-sm text-muted">CHIPSET</label>
                             <input type="text" id="chipset" v-model="producto.chipset" class="form-control fc-new" placeholder="Ej: Intel, AMD B550" :readonly="loading">
                         </div>
                         <div class="form-group col-lg-3">
-                            <label for="sonido" class="label-sm text-muted">SONIDO</label>
-                            <input type="text" id="sonido" v-model="producto.sonido" class="form-control fc-new" placeholder="Ej: Integrado - HD Audio" :readonly="loading">
-                        </div>
-                    </div>
-                    <div class="form-row mt-2">
-                        <div class="form-group col-lg-3">
                             <label for="fuente_poder" class="label-sm text-muted">FUENTE DE PODER</label>
                             <input type="text" id="fuente_poder" v-model="producto.fuente_poder" class="form-control fc-new" placeholder="Ej: 550W 80 Plus" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="conectividad" class="label-sm text-muted">LAN</label>
-                            <input type="text" id="conectividad" v-model="producto.conectividad" class="form-control fc-new" placeholder="Ej: SI, 10/100/1000" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="conectividad_wlan" class="label-sm text-muted">WLAN (WIFI)</label>
-                            <input type="text" id="conectividad_wlan" v-model="producto.conectividad_wlan" class="form-control fc-new" placeholder="Ej: SI, Wi-Fi 6" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="conectividad_usb" class="label-sm text-muted">PUERTOS MÍNIMOS</label>
-                            <input type="text" id="conectividad_usb" v-model="producto.conectividad_usb" class="form-control fc-new" placeholder="Ej: Frontal: x2 USB 2.0..." :readonly="loading">
-                        </div>
-                    </div>
-                    <div class="form-row mt-2">
-                        <div class="form-group col-lg-6">
-                            <label for="slot_expansion" class="label-sm text-muted">SLOT DE EXPANSIÓN</label>
-                            <input type="text" id="slot_expansion" v-model="producto.slot_expansion" class="form-control fc-new" placeholder="Ej: x1 PCIe, x1 M.2" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-6">
-                            <label for="accesorios" class="label-sm text-muted">ACCESORIOS Y OTROS</label>
-                            <input type="text" id="accesorios" v-model="producto.accesorios" class="form-control fc-new" placeholder="Ej: Teclado, Mouse, Cable de Poder..." :readonly="loading">
                         </div>
                     </div>
                 </div>

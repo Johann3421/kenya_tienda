@@ -153,11 +153,11 @@ public function store(Request $request)
         $producto->{'Empaque'} = $request->empaque;
         $producto->{'Dimensiones'} = $request->dimensiones;
 
-        $producto->sonido = $request->sonido;
+        $producto->sonido = null;
         $producto->chipset = $request->chipset;
-        $producto->slot_expansion = $request->slot_expansion;
+        $producto->slot_expansion = null;
         $producto->fuente_poder = $request->fuente_poder;
-        $producto->accesorios = $request->accesorios;
+        $producto->accesorios = null;
 
         $producto->save();
 
@@ -251,11 +251,11 @@ public function update(Request $request)
         $producto->{'Empaque'} = $request->empaque;
         $producto->{'Dimensiones'} = $request->dimensiones;
         
-        $producto->sonido = $request->sonido;
+        $producto->sonido = null;
         $producto->chipset = $request->chipset;
-        $producto->slot_expansion = $request->slot_expansion;
+        $producto->slot_expansion = null;
         $producto->fuente_poder = $request->fuente_poder;
-        $producto->accesorios = $request->accesorios;
+        $producto->accesorios = null;
 
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);

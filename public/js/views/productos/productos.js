@@ -84,11 +84,8 @@ new Vue({
         empaque: '',
         dimensiones: '',
         
-        sonido: '',
         chipset: '',
-        slot_expansion: '',
         fuente_poder: '',
-        accesorios: '',
 
         buscar_tabla: '',
         },
@@ -136,6 +133,12 @@ new Vue({
             if (!this.producto.categoria) return '';
             let cat = this.listaCategorias.find(c => c.id == this.producto.categoria);
             return cat ? cat.nombre.toUpperCase() : '';
+        },
+        categoriasFiltradas() {
+            return this.listaCategorias.filter(c => {
+                let nom = c.nombre.toUpperCase();
+                return !nom.includes('ACCESORIO') && !nom.includes('CONSUMIBLE');
+            });
         },
         modelosFiltradosForm() {
             if (!this.producto.categoria) return [];
@@ -400,13 +403,10 @@ eliminarArchivoExcel(index) {
                     this.producto.garantia = seleccion.Garantia || '';
                     this.producto.sistema_raee = seleccion['Sistema RAEE'] || '';
                     this.producto.empaque = seleccion.Empaque || '';
-                    this.producto.dimensiones = seleccion.Dimensiones || '';
-
-                    this.producto.sonido = seleccion.sonido || '';
-                    this.producto.chipset = seleccion.chipset || '';
-                    this.producto.slot_expansion = seleccion.slot_expansion || '';
-                    this.producto.fuente_poder = seleccion.fuente_poder || '';
-                    this.producto.accesorios = seleccion.accesorios || '';
+                    this.producto.dimensiones = (seleccion.dimensiones == null) ? '' : seleccion.dimensiones;
+                      
+                    this.producto.chipset = (seleccion.chipset == null) ? '' : seleccion.chipset;
+                    this.producto.fuente_poder = (seleccion.fuente_poder == null) ? '' : seleccion.fuente_poder;
 
                     this.producto.pdf_ficha = seleccion.ficha_tecnica;
 
@@ -488,13 +488,10 @@ eliminarArchivoExcel(index) {
                     this.producto.garantia = seleccion.Garantia || '';
                     this.producto.sistema_raee = seleccion['Sistema RAEE'] || '';
                     this.producto.empaque = seleccion.Empaque || '';
-                    this.producto.dimensiones = seleccion.Dimensiones || '';
+                    this.producto.dimensiones = (seleccion.dimensiones == null) ? '' : seleccion.dimensiones;
                     
-                    this.producto.sonido = seleccion.sonido || '';
-                    this.producto.chipset = seleccion.chipset || '';
-                    this.producto.slot_expansion = seleccion.slot_expansion || '';
-                    this.producto.fuente_poder = seleccion.fuente_poder || '';
-                    this.producto.accesorios = seleccion.accesorios || '';
+                    this.producto.chipset = (seleccion.chipset == null) ? '' : seleccion.chipset;
+                    this.producto.fuente_poder = (seleccion.fuente_poder == null) ? '' : seleccion.fuente_poder;
                     this.producto.pdf_ficha = seleccion.ficha_tecnica;
                     if (seleccion.imagen_1) {
                         this.producto.imagen_1 = seleccion.imagen_1;
@@ -581,8 +578,7 @@ eliminarArchivoExcel(index) {
             formData.append('suite_ofimatica', this.producto.suite_ofimatica);
             formData.append('garantia_de_fabrica', this.producto.garantia_de_fabrica);
             formData.append('empaque_de_fabrica', this.producto.empaque_de_fabrica);
-            formData.append('certificacion', this.producto.certificacion);
-            formData.append('especificaciones', this.producto.especificaciones);
+            formData.append('certificacion', this.producto.especificaciones);
             formData.append('modelo_id', this.producto.modelo_id);
             //formData.append('unidad', this.producto.unidad);
             //formData.append('moneda', this.producto.moneda);
@@ -609,6 +605,9 @@ eliminarArchivoExcel(index) {
             formData.append('sistema_raee', this.producto.sistema_raee || '');
             formData.append('empaque', this.producto.empaque || '');
             formData.append('dimensiones', this.producto.dimensiones || '');
+
+            formData.append('chipset', this.producto.chipset || '');
+            formData.append('fuente_poder', this.producto.fuente_poder || '');
 
             axios.post('producto/store',
                 formData,
@@ -695,6 +694,9 @@ eliminarArchivoExcel(index) {
             formData.append('empaque', this.producto.empaque || '');
             formData.append('dimensiones', this.producto.dimensiones || '');
 
+            formData.append('chipset', this.producto.chipset || '');
+            formData.append('fuente_poder', this.producto.fuente_poder || '');
+
             axios.post('producto/update',
                 formData,
                 {
@@ -779,6 +781,9 @@ eliminarArchivoExcel(index) {
             formData.append('sistema_raee', this.producto.sistema_raee || '');
             formData.append('empaque', this.producto.empaque || '');
             formData.append('dimensiones', this.producto.dimensiones || '');
+
+            formData.append('chipset', this.producto.chipset || '');
+            formData.append('fuente_poder', this.producto.fuente_poder || '');
 
             axios.post('producto/store',
                 formData,
@@ -871,6 +876,9 @@ eliminarArchivoExcel(index) {
                 'imagen_3': '',
                 'imagen_4': '',
                 'imagen_5': '',
+                'dimensiones': '',
+                'chipset': '',
+                'fuente_poder': '',
             };
         },
         closeModal() {
