@@ -84,11 +84,32 @@
                 };
 
                 $specs = [];
-                if (!empty($producto->procesador)) $specs[] = $normalizarCPU($producto->procesador);
-                if (!empty($producto->ram)) $specs[] = $normalizarRAM($producto->ram);
-                if (!empty($producto->almacenamiento)) $specs[] = trim($producto->almacenamiento);
-                if (!empty($producto->sistema_operativo)) $specs[] = trim($producto->sistema_operativo);
-                if (!empty($producto->tarjetavideo)) $specs[] = $normalizarTV($producto->tarjetavideo);
+                $isMonitor = (isset($producto->modelo_id) && $producto->modelo_id == 16) || 
+                             (isset($producto->modelo) && str_contains(strtoupper($producto->modelo->descripcion ?? ''), 'MONITOR'));
+                
+                if ($isMonitor) {
+                    if (!$producto->relationLoaded('especificaciones')) {
+                        $producto->load('especificaciones');
+                    }
+                    $pantalla = $producto->especificaciones->firstWhere('campo', 'Tamaño de Pantalla')->descripcion ?? null;
+                    if ($pantalla) $specs[] = trim($pantalla);
+                    
+                    $resolucion = $producto->especificaciones->firstWhere('campo', 'Resolución')->descripcion ?? null;
+                    if ($resolucion) $specs[] = trim($resolucion);
+                    
+                    if (!empty($producto->video_vga)) {
+                        $specs[] = 'VGA: ' . trim($producto->video_vga);
+                    }
+                    if (!empty($producto->video_hdmi)) {
+                        $specs[] = 'HDMI: ' . trim($producto->video_hdmi);
+                    }
+                } else {
+                    if (!empty($producto->procesador)) $specs[] = $normalizarCPU($producto->procesador);
+                    if (!empty($producto->ram)) $specs[] = $normalizarRAM($producto->ram);
+                    if (!empty($producto->almacenamiento)) $specs[] = trim($producto->almacenamiento);
+                    if (!empty($producto->sistema_operativo)) $specs[] = trim($producto->sistema_operativo);
+                    if (!empty($producto->tarjetavideo)) $specs[] = $normalizarTV($producto->tarjetavideo);
+                }
             @endphp
 
             <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
