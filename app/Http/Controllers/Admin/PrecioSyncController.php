@@ -107,7 +107,7 @@ class PrecioSyncController extends Controller
                                         ->update(['precio_unitario' => $precioLimpio]);
 
                 if ($affectedRows > 0) {
-                    $actualizados += clone $affectedRows;
+                    $actualizados += $affectedRows;
                 } else {
                     $noEncontrados++;
                 }
