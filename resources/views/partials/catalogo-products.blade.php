@@ -133,14 +133,12 @@
             <div class="product-card-footer">
                 @if(Auth::guard('cliente')->check())
                     <div class="product-prices-wrapper" style="margin-bottom: 12px; text-align: left; width: 100%;">
-                        @if(!empty($producto->precio_referencial))
-                            <div class="price-referencial" style="font-size: 0.85rem; color: #888; text-decoration: line-through;">
-                                Ref: $ {{ number_format($producto->precio_referencial, 2) }}
-                            </div>
-                        @endif
                         @if(!empty($producto->precio_especial))
-                            <div class="price-especial" style="font-size: 1.25rem; font-weight: 700; color: #ee7c31; margin-top: 2px;">
-                                $ {{ number_format($producto->precio_especial, 2) }} <span style="font-size: 0.75rem; font-weight: normal; color: #888;">(sin IGV)</span>
+                            <div class="price-especial" style="font-size: 1.25rem; font-weight: 700; color: #ee7c31; margin-bottom: 2px;">
+                                $ {{ number_format($producto->precio_especial, 2) }}
+                            </div>
+                            <div class="price-soles" style="font-size: 0.95rem; font-weight: 600; color: #333;">
+                                S/ {{ number_format($producto->precio_especial * 3.4, 2) }} <span style="font-size: 0.75rem; font-weight: normal; color: #888;">+ IGV</span>
                             </div>
                         @else
                             <div class="price-no-especial" style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 2px;">
