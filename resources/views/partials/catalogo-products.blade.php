@@ -55,12 +55,40 @@
                 $rawName = $producto->display_name ?? $producto->nombre ?? 'Nombre no disponible';
                 $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $rawName);
                 
+                // Normalizadores para consistencia con los filtros
+                $normalizarTV = function(string $v): string {
+                    $v = preg_replace('/\b(dedicad[oa]s?|integrad[oa]s?)\b/i', '', trim($v));
+                    $v = preg_replace('/\s+/', ' ', trim($v));
+                    $v = preg_replace('/\s*-\s*/', '-', trim($v));
+                    $v = preg_replace('/\bConectividadº?\b/i', '', trim($v));
+                    if (preg_match('/^(.*?\d+\s*GB(?:\s*G?DDR\d[X]?)?)/i', $v, $m)) {
+                        $v = trim($m[1]);
+                    } else {
+                        $v = preg_replace('/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i', '', $v);
+                    }
+                    $v = preg_replace('/(\d+)\s*GB/i', '$1 GB', $v);
+                    $v = preg_replace('/GB\s*(G?DDR\d[X]?)/i', 'GB $1', $v);
+                    return trim(ltrim($v, '- '));
+                };
+
+                $normalizarCPU = function(string $v): string {
+                    return trim(preg_replace('/\s+\d+(\.\d+)?\s*GHZ$/i', '', trim($v)));
+                };
+
+                $normalizarRAM = function(string $v): string {
+                    $v = trim($v);
+                    if (preg_match('/^(\d+\s*GB\s+DDR\d\s+\d{3,4})/i', $v, $m)) {
+                        return trim(strtoupper($m[1])) . ' MHz';
+                    }
+                    return strtoupper(trim(preg_replace('/\s+/', ' ', $v)));
+                };
+
                 $specs = [];
-                if (!empty($producto->procesador)) $specs[] = trim($producto->procesador);
-                if (!empty($producto->ram)) $specs[] = trim($producto->ram);
+                if (!empty($producto->procesador)) $specs[] = $normalizarCPU($producto->procesador);
+                if (!empty($producto->ram)) $specs[] = $normalizarRAM($producto->ram);
                 if (!empty($producto->almacenamiento)) $specs[] = trim($producto->almacenamiento);
                 if (!empty($producto->sistema_operativo)) $specs[] = trim($producto->sistema_operativo);
-                if (!empty($producto->tarjetavideo)) $specs[] = trim($producto->tarjetavideo);
+                if (!empty($producto->tarjetavideo)) $specs[] = $normalizarTV($producto->tarjetavideo);
             @endphp
 
             <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
