@@ -563,13 +563,9 @@ body {
                             <i class="fa-solid fa-user-circle" style="font-size: 1.5rem; color: #ee7c31;"></i>
                             <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #22cca6; border: 2px solid #fff; border-radius: 50%;"></span>
                         </div>
-                        <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">Mi Cuenta <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i></span>
+                        <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">{{ Str::limit(Auth::guard('cliente')->user()->name ?? 'Cliente', 10) }} <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i></span>
                     </button>
                     <div id="userMenuContent" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; min-width: 200px; z-index: 1000; overflow: hidden; margin-top: 10px;">
-                        <div style="padding: 15px; border-bottom: 1px solid #eee; background: #f8f9fa;">
-                            <p style="margin: 0; font-weight: 600; font-size: 0.9rem; color: #333;">{{ Auth::guard('cliente')->user()->name ?? 'Cliente' }}</p>
-                            <p style="margin: 0; font-size: 0.8rem; color: #777;">{{ Auth::guard('cliente')->user()->email }}</p>
-                        </div>
                         <ul style="list-style: none; margin: 0; padding: 0;">
                             <li><a href="{{ url('/mi-perfil') }}" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-id-card" style="width: 20px; color: #ee7c31;"></i> Mi Perfil</a></li>
                             <li><a href="{{ url('/mis-cotizaciones') }}" style="display: block; padding: 10px 15px; color: #555; text-decoration: none; font-size: 0.9rem; transition: background 0.2s;"><i class="fa-solid fa-file-invoice-dollar" style="width: 20px; color: #ee7c31;"></i> Mis Cotizaciones</a></li>
