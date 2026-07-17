@@ -67,7 +67,8 @@ class PrecioSyncController extends Controller
             
             // Buscar índices de las columnas importantes (indiferente a mayúsculas)
             $nroParteIndex = -1;
-            $precioIndex = -1;
+            $precioEspecialIndex = -1;
+            $precioReferencialIndex = -1;
             
             if (!$header) {
                 return back()->with('error', 'El archivo o JSON está vacío.');
@@ -79,11 +80,14 @@ class PrecioSyncController extends Controller
                     $nroParteIndex = $index;
                 }
                 if ($cleanColName === 'precio' || $cleanColName === 'precio unitario' || $cleanColName === 'precio_unitario' || str_contains($cleanColName, 'valor venta canal')) {
-                    $precioIndex = $index;
+                    $precioEspecialIndex = $index;
+                }
+                if (str_contains($cleanColName, 'precio referencial')) {
+                    $precioReferencialIndex = $index;
                 }
             }
 
-            if ($nroParteIndex === -1 || $precioIndex === -1) {
+            if ($nroParteIndex === -1 || $precioEspecialIndex === -1) {
                 return back()->with('error', 'No se encontraron las columnas necesarias. Asegúrate de que existan cabeceras llamadas "NRO_PARTE" y "VALOR VENTA CANAL". Columnas encontradas: ' . implode(', ', $header));
             }
 
@@ -93,18 +97,31 @@ class PrecioSyncController extends Controller
             DB::beginTransaction();
 
             foreach ($rows as $row) {
-                if (!is_array($row) || !isset($row[$nroParteIndex]) || !isset($row[$precioIndex])) continue;
+                if (!is_array($row) || !isset($row[$nroParteIndex]) || !isset($row[$precioEspecialIndex])) continue;
 
                 $nroParte = trim((string)$row[$nroParteIndex]);
-                // Limpiar el precio (quitar símbolos de moneda, comas, etc)
-                $precioStr = trim((string)$row[$precioIndex]);
-                $precioLimpio = preg_replace('/[^0-9.]/', '', $precioStr);
                 
-                if (empty($nroParte) || !is_numeric($precioLimpio)) continue;
+                $precioEspecialStr = trim((string)$row[$precioEspecialIndex]);
+                $precioEspecialLimpio = preg_replace('/[^0-9.]/', '', $precioEspecialStr);
+                
+                $precioReferencialLimpio = null;
+                if ($precioReferencialIndex !== -1 && isset($row[$precioReferencialIndex])) {
+                    $precioRefStr = trim((string)$row[$precioReferencialIndex]);
+                    $precioReferencialLimpio = preg_replace('/[^0-9.]/', '', $precioRefStr);
+                }
+                
+                if (empty($nroParte) || !is_numeric($precioEspecialLimpio)) continue;
 
                 // Actualizar producto en la BD
-                $affectedRows = Producto::where('nro_parte', $nroParte)
-                                        ->update(['precio_unitario' => $precioLimpio]);
+                $updateData = [
+                    'precio_especial' => $precioEspecialLimpio,
+                    'precio_unitario' => $precioEspecialLimpio // Keep for backwards compatibility
+                ];
+                if (is_numeric($precioReferencialLimpio)) {
+                    $updateData['precio_referencial'] = $precioReferencialLimpio;
+                }
+
+                $affectedRows = Producto::where('nro_parte', $nroParte)->update($updateData);
 
                 if ($affectedRows > 0) {
                     $actualizados += $affectedRows;

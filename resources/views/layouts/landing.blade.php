@@ -563,7 +563,14 @@ body {
                             <i class="fa-solid fa-user-circle" style="font-size: 1.5rem; color: #ee7c31;"></i>
                             <span style="position: absolute; bottom: 0; right: 0; width: 10px; height: 10px; background: #22cca6; border: 2px solid #fff; border-radius: 50%;"></span>
                         </div>
-                        <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">{{ Str::limit(Auth::guard('cliente')->user()->name ?? 'Cliente', 10) }} <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i></span>
+                        @php
+                            $nombresArr = explode(' ', trim(Auth::guard('cliente')->user()->nombres ?? 'Cliente'));
+                            $shortName = ucfirst(strtolower($nombresArr[0] ?? 'Cliente'));
+                            if (isset($nombresArr[1])) {
+                                $shortName .= ' ' . strtoupper(substr($nombresArr[1], 0, 1)) . '.';
+                            }
+                        @endphp
+                        <span class="d-none d-md-inline" style="font-weight: 500; font-size: 0.9rem;">{{ $shortName }} <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i></span>
                     </button>
                     <div id="userMenuContent" style="display: none; position: absolute; top: 100%; right: 0; background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; min-width: 200px; z-index: 1000; overflow: hidden; margin-top: 10px;">
                         <ul style="list-style: none; margin: 0; padding: 0;">
