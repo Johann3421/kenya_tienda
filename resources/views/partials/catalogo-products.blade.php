@@ -142,7 +142,7 @@
                             </div>
                         @else
                             <div class="price-no-especial" style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 2px;">
-                                Precios exclusivos B2B
+                                (A cotizar)
                             </div>
                         @endif
                     </div>
