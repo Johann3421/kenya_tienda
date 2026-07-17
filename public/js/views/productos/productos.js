@@ -74,6 +74,15 @@ new Vue({
             'imagen_4': '',
             'imagen_5': '',
             'pdf_ficha': null,
+            // Nuevos campos
+            'tipo_suministro': '',
+            'tipo_panel': '',
+            'color': '',
+            'rendimiento': '',
+            'garantia': '',
+            'sistema_raee': '',
+            'empaque': '',
+            'dimensiones': '',
         },
 
         listaCategorias: mis_categorias,
@@ -114,6 +123,20 @@ new Vue({
         this.cargarProductos();
     },
     computed: {
+        categoriaNombre() {
+            if (!this.producto.categoria) return '';
+            let cat = this.listaCategorias.find(c => c.id == this.producto.categoria);
+            return cat ? cat.nombre.toUpperCase() : '';
+        },
+        esPC() {
+            return this.categoriaNombre.includes('COMPUTADORA') || this.categoriaNombre.includes('DESKTOP') || this.categoriaNombre.includes('LAPTOP') || this.categoriaNombre.includes('WORKSTATION');
+        },
+        esMonitor() {
+            return this.categoriaNombre.includes('MONITOR') || this.categoriaNombre.includes('PANTALLA');
+        },
+        esToner() {
+            return this.categoriaNombre.includes('TONER') || this.categoriaNombre.includes('TINTA') || this.categoriaNombre.includes('SUMINISTRO') || this.categoriaNombre.includes('CINTA');
+        },
         isActive: function () {
             return this.pagination.current_page;
         },
@@ -355,6 +378,16 @@ eliminarArchivoExcel(index) {
                     this.producto.linea_producto = seleccion.linea_producto;
                     this.producto.categoria = (seleccion.categoria_id == null) ? '' : seleccion.categoria_id;
                     this.producto.marca = (seleccion.marca_id == null) ? '' : seleccion.marca_id;
+                    
+                    // Nuevos campos
+                    this.producto.tipo_suministro = seleccion['Tipo de suministro'] || '';
+                    this.producto.tipo_panel = seleccion['Tipo de panel'] || '';
+                    this.producto.color = seleccion.Color || '';
+                    this.producto.rendimiento = seleccion.Rendimiento || '';
+                    this.producto.garantia = seleccion.Garantia || '';
+                    this.producto.sistema_raee = seleccion['Sistema RAEE'] || '';
+                    this.producto.empaque = seleccion.Empaque || '';
+                    this.producto.dimensiones = seleccion.Dimensiones || '';
 
                     this.producto.pdf_ficha = seleccion.ficha_tecnica;
 
@@ -427,6 +460,16 @@ eliminarArchivoExcel(index) {
                     this.producto.linea_producto = seleccion.linea_producto;
                     this.producto.categoria = (seleccion.categoria_id == null) ? '' : seleccion.categoria_id;
                     this.producto.marca = (seleccion.marca_id == null) ? '' : seleccion.marca_id;
+                    
+                    // Nuevos campos
+                    this.producto.tipo_suministro = seleccion['Tipo de suministro'] || '';
+                    this.producto.tipo_panel = seleccion['Tipo de panel'] || '';
+                    this.producto.color = seleccion.Color || '';
+                    this.producto.rendimiento = seleccion.Rendimiento || '';
+                    this.producto.garantia = seleccion.Garantia || '';
+                    this.producto.sistema_raee = seleccion['Sistema RAEE'] || '';
+                    this.producto.empaque = seleccion.Empaque || '';
+                    this.producto.dimensiones = seleccion.Dimensiones || '';
                     this.producto.pdf_ficha = seleccion.ficha_tecnica;
                     if (seleccion.imagen_1) {
                         this.producto.imagen_1 = seleccion.imagen_1;
@@ -532,6 +575,15 @@ eliminarArchivoExcel(index) {
             formData.append('imagen_3', this.producto.imagen_3);
             formData.append('imagen_4', this.producto.imagen_4);
             formData.append('imagen_5', this.producto.imagen_5);
+            // Nuevos campos
+            formData.append('tipo_suministro', this.producto.tipo_suministro || '');
+            formData.append('tipo_panel', this.producto.tipo_panel || '');
+            formData.append('color', this.producto.color || '');
+            formData.append('rendimiento', this.producto.rendimiento || '');
+            formData.append('garantia', this.producto.garantia || '');
+            formData.append('sistema_raee', this.producto.sistema_raee || '');
+            formData.append('empaque', this.producto.empaque || '');
+            formData.append('dimensiones', this.producto.dimensiones || '');
 
             axios.post('producto/store',
                 formData,
@@ -608,6 +660,15 @@ eliminarArchivoExcel(index) {
             formData.append('imagen_3', this.producto.imagen_3);
             formData.append('imagen_4', this.producto.imagen_4);
             formData.append('imagen_5', this.producto.imagen_5);
+            // Nuevos campos
+            formData.append('tipo_suministro', this.producto.tipo_suministro || '');
+            formData.append('tipo_panel', this.producto.tipo_panel || '');
+            formData.append('color', this.producto.color || '');
+            formData.append('rendimiento', this.producto.rendimiento || '');
+            formData.append('garantia', this.producto.garantia || '');
+            formData.append('sistema_raee', this.producto.sistema_raee || '');
+            formData.append('empaque', this.producto.empaque || '');
+            formData.append('dimensiones', this.producto.dimensiones || '');
 
             axios.post('producto/update',
                 formData,
@@ -684,6 +745,15 @@ eliminarArchivoExcel(index) {
             formData.append('imagen_3', this.producto.imagen_3);
             formData.append('imagen_4', this.producto.imagen_4);
             formData.append('imagen_5', this.producto.imagen_5);
+            // Nuevos campos
+            formData.append('tipo_suministro', this.producto.tipo_suministro || '');
+            formData.append('tipo_panel', this.producto.tipo_panel || '');
+            formData.append('color', this.producto.color || '');
+            formData.append('rendimiento', this.producto.rendimiento || '');
+            formData.append('garantia', this.producto.garantia || '');
+            formData.append('sistema_raee', this.producto.sistema_raee || '');
+            formData.append('empaque', this.producto.empaque || '');
+            formData.append('dimensiones', this.producto.dimensiones || '');
 
             axios.post('producto/store',
                 formData,

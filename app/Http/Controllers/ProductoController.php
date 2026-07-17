@@ -142,6 +142,16 @@ public function store(Request $request)
         $producto->categoria_id = $request->categoria;
         $producto->marca_id = $request->marca;
         $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
+        
+        // Nuevos campos
+        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
+        $producto->{'Tipo de panel'} = $request->tipo_panel;
+        $producto->{'Color'} = $request->color;
+        $producto->{'Rendimiento'} = $request->rendimiento;
+        $producto->{'Garantia'} = $request->garantia;
+        $producto->{'Sistema RAEE'} = $request->sistema_raee;
+        $producto->{'Empaque'} = $request->empaque;
+        $producto->{'Dimensiones'} = $request->dimensiones;
 
         $producto->save();
 
@@ -223,6 +233,17 @@ public function update(Request $request)
         $producto->linea_producto = Str::upper($request->linea_producto);
         $producto->categoria_id = $request->categoria;
         $producto->marca_id = $request->marca;
+        $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
+        
+        // Nuevos campos
+        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
+        $producto->{'Tipo de panel'} = $request->tipo_panel;
+        $producto->{'Color'} = $request->color;
+        $producto->{'Rendimiento'} = $request->rendimiento;
+        $producto->{'Garantia'} = $request->garantia;
+        $producto->{'Sistema RAEE'} = $request->sistema_raee;
+        $producto->{'Empaque'} = $request->empaque;
+        $producto->{'Dimensiones'} = $request->dimensiones;
 
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
