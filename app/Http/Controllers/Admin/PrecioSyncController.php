@@ -78,13 +78,13 @@ class PrecioSyncController extends Controller
                 if ($cleanColName === 'nro_parte' || $cleanColName === 'nro parte' || $cleanColName === 'numero de parte') {
                     $nroParteIndex = $index;
                 }
-                if ($cleanColName === 'precio' || $cleanColName === 'precio unitario' || $cleanColName === 'precio_unitario') {
+                if ($cleanColName === 'precio' || $cleanColName === 'precio unitario' || $cleanColName === 'precio_unitario' || str_contains($cleanColName, 'valor venta canal')) {
                     $precioIndex = $index;
                 }
             }
 
             if ($nroParteIndex === -1 || $precioIndex === -1) {
-                return back()->with('error', 'No se encontraron las columnas necesarias. Asegúrate de que existan cabeceras llamadas "nro_parte" y "precio". Columnas encontradas: ' . implode(', ', $header));
+                return back()->with('error', 'No se encontraron las columnas necesarias. Asegúrate de que existan cabeceras llamadas "NRO_PARTE" y "VALOR VENTA CANAL". Columnas encontradas: ' . implode(', ', $header));
             }
 
             $actualizados = 0;
