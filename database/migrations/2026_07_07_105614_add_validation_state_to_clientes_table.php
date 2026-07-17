@@ -13,10 +13,12 @@ class AddValidationStateToClientesTable extends Migration
      */
     public function up()
     {
-        Schema::table('clientes', function (Blueprint $table) {
-            // Ponytail: adding a simple string enum for validation state
-            $table->string('estado_validacion', 20)->default('pendiente')->after('tipo');
-        });
+        if (!Schema::hasColumn('clientes', 'estado_validacion')) {
+            Schema::table('clientes', function (Blueprint $table) {
+                // Ponytail: adding a simple string enum for validation state
+                $table->string('estado_validacion', 20)->default('pendiente')->after('tipo');
+            });
+        }
     }
 
     /**

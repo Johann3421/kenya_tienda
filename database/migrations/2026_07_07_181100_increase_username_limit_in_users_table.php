@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('username', 100)->change();
-        });
+        try {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('username', 100)->change();
+            });
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::warning('Could not change username column length: ' . $e->getMessage());
+        }
     }
 
     /**

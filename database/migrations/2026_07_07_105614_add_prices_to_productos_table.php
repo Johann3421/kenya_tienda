@@ -13,10 +13,12 @@ class AddPricesToProductosTable extends Migration
      */
     public function up()
     {
-        Schema::table('productos', function (Blueprint $table) {
-            $table->decimal('precio_referencial', 10, 2)->nullable();
-            $table->decimal('precio_especial', 10, 2)->nullable();
-        });
+        if (!Schema::hasColumn('productos', 'precio_referencial')) {
+            Schema::table('productos', function (Blueprint $table) {
+                $table->decimal('precio_referencial', 10, 2)->nullable();
+                $table->decimal('precio_especial', 10, 2)->nullable();
+            });
+        }
     }
 
     /**
