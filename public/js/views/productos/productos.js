@@ -340,174 +340,112 @@ eliminarArchivoExcel(index) {
                     break;
 
                 case 'edit':
-                    //this.producto.incluye_igv = seleccion.incluye_igv;
                     this.producto.nombre = seleccion.nombre;
-                    this.producto.nombre_secundario = (seleccion.nombre_secundario == null) ? '' : seleccion.nombre_secundario;
-                    this.producto.descripcion = (seleccion.descripcion == null) ? '' : seleccion.descripcion;
-                    this.producto.especificaciones = (seleccion.especificaciones == null) ? '' : seleccion.especificaciones;
+                    this.producto.nombre_secundario = seleccion.nombre_secundario || '';
+                    this.producto.descripcion = seleccion.descripcion || '';
+                    this.producto.descripcion_2 = seleccion.descripcion_2 || '';
+                    this.producto.especificaciones = typeof seleccion.especificaciones === 'string' ? seleccion.especificaciones : '';
 
-                    // Ensure DB values exist in dropdown lists so they don't appear blank
-                    if (seleccion.procesador && !this.listaProcesadores.find(p => p.nom_pros === seleccion.procesador)) {
-                        this.listaProcesadores.push({ nom_pros: seleccion.procesador });
-                    }
-                    if (seleccion.ram && !this.listaRam.find(r => r.nom_ram === seleccion.ram)) {
-                        this.listaRam.push({ nom_ram: seleccion.ram });
-                    }
-                    if (seleccion.tarjetavideo && !this.listaTarjetavideo.find(v => v.tarjetavideo === seleccion.tarjetavideo)) {
-                        this.listaTarjetavideo.push({ tarjetavideo: seleccion.tarjetavideo });
-                    }
-                    if (seleccion.almacenamiento && !this.listaAlmacenamiento.find(a => a.cant_almcen === seleccion.almacenamiento)) {
-                        this.listaAlmacenamiento.push({ cant_almcen: seleccion.almacenamiento });
-                    }
-                    if (seleccion.suite_ofimatica && !this.listaOfimatica.find(o => o.ofimatica === seleccion.suite_ofimatica)) {
-                        this.listaOfimatica.push({ ofimatica: seleccion.suite_ofimatica });
-                    }
+                    // Helper: lee de la tabla especificaciones por nombre de campo (fallback para productos del API)
+                    const findSpecEdit = (patterns) => {
+                        const specs = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
+                        for (let s of specs) {
+                            const campo = (s.campo || '').toLowerCase();
+                            for (let p of patterns) {
+                                if (campo.includes(p)) return s.descripcion || '';
+                            }
+                        }
+                        return '';
+                    };
 
-                    this.producto.procesador = seleccion.procesador;
-                    this.producto.tarjetavideo = seleccion.tarjetavideo;
-                    this.producto.nro_parte = seleccion.nro_parte;
-                    this.producto.ram = seleccion.ram;
-                    this.producto.almacenamiento = seleccion.almacenamiento;
-                    this.producto.conectividad = seleccion.conectividad;
-                    this.producto.conectividad_wlan = seleccion.conectividad_wlan;
-                    this.producto.conectividad_usb = seleccion.conectividad_usb;
-                    this.producto.video_vga = seleccion.video_vga;
-                    this.producto.video_hdmi = seleccion.video_hdmi;
-                    this.producto.sistema_operativo = seleccion.sistema_operativo;
-                    this.producto.unidad_optica = seleccion.unidad_optica;
-                    this.producto.teclado = seleccion.teclado;
-                    //this.producto.ficha_tecnica = seleccion.ficha_tecnica;
-                    this.producto.mouse = seleccion.mouse;
-                    this.producto.teclado = seleccion.teclado;
-                    this.producto.suite_ofimatica = seleccion.suite_ofimatica;
-                    this.producto.garantia_de_fabrica = seleccion.garantia_de_fabrica;
-                    this.producto.empaque_de_fabrica = seleccion.empaque_de_fabrica;
-                    this.producto.certificacion = seleccion.certificacion;
-                    this.producto.modelo_id = seleccion.modelo_id;
-                    //this.producto.unidad = seleccion.unidad;
-                    //this.producto.moneda = seleccion.moneda;
-                    //this.producto.precio_unitario = seleccion.precio_unitario;
-                    this.producto.tipo_afectacion = seleccion.tipo_afectacion;
-                    this.producto.codigo_barras = seleccion.codigo_barras;
-                    this.producto.codigo_interno = seleccion.codigo_interno;
-                    this.producto.codigo_sunat = seleccion.codigo_sunat;
-                    this.producto.linea_producto = seleccion.linea_producto;
-                    this.producto.categoria = (seleccion.categoria_id == null) ? '' : seleccion.categoria_id;
-                    this.producto.marca = (seleccion.marca_id == null) ? '' : seleccion.marca_id;
-                    
-                    // Nuevos campos
-                    this.producto.tipo_suministro = seleccion['Tipo de suministro'] || '';
-                    this.producto.tipo_panel = seleccion['Tipo de panel'] || '';
-                    this.producto.color = seleccion.Color || '';
-                    this.producto.rendimiento = seleccion.Rendimiento || '';
-                    this.producto.garantia = seleccion.Garantia || '';
-                    this.producto.sistema_raee = seleccion['Sistema RAEE'] || '';
-                    this.producto.empaque = seleccion.Empaque || '';
-                    this.producto.dimensiones = (seleccion.dimensiones == null) ? '' : seleccion.dimensiones;
-                      
-                    this.producto.chipset = (seleccion.chipset == null) ? '' : seleccion.chipset;
-                    this.producto.fuente_poder = (seleccion.fuente_poder == null) ? '' : seleccion.fuente_poder;
+                    this.producto.nro_parte          = seleccion.nro_parte          || '';
+                    this.producto.procesador         = seleccion.procesador         || findSpecEdit(['procesador', 'cpu']);
+                    this.producto.tarjetavideo       = seleccion.tarjetavideo       || findSpecEdit(['video', 'gráf', 'grafico', 'controlador']);
+                    this.producto.ram                = seleccion.ram                || findSpecEdit(['memoria', 'ram']);
+                    this.producto.almacenamiento     = seleccion.almacenamiento     || findSpecEdit(['almacenamiento', 'disco']);
+                    this.producto.chipset            = seleccion.chipset            || findSpecEdit(['chipset']);
+                    this.producto.fuente_poder       = seleccion.fuente_poder       || findSpecEdit(['fuente']);
+                    this.producto.tipo_suministro    = seleccion['Tipo de suministro'] || findSpecEdit(['formato']);
+                    this.producto.sistema_operativo  = seleccion.sistema_operativo  || findSpecEdit(['sistema operativo']);
+                    this.producto.suite_ofimatica    = seleccion.suite_ofimatica    || findSpecEdit(['ofim']);
+                    this.producto.garantia_de_fabrica = seleccion.garantia_de_fabrica || '';
+                    this.producto.empaque_de_fabrica = seleccion.empaque_de_fabrica || '';
+                    this.producto.certificacion      = seleccion.certificacion      || '';
+                    this.producto.modelo_id          = seleccion.modelo_id;
+                    this.producto.tipo_afectacion    = seleccion.tipo_afectacion    || '';
+                    this.producto.codigo_barras      = seleccion.codigo_barras      || '';
+                    this.producto.codigo_interno     = seleccion.codigo_interno     || '';
+                    this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
+                    this.producto.linea_producto     = seleccion.linea_producto     || '';
+                    this.producto.categoria          = seleccion.categoria_id       || '';
+                    this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
+                    this.producto.color              = seleccion.Color              || '';
+                    this.producto.rendimiento        = seleccion.Rendimiento        || '';
+                    this.producto.garantia           = seleccion.Garantia           || '';
+                    this.producto.sistema_raee       = seleccion['Sistema RAEE']    || '';
+                    this.producto.empaque            = seleccion.Empaque            || '';
+                    this.producto.dimensiones        = seleccion.dimensiones        || '';
+                    this.producto.pdf_ficha          = seleccion.ficha_tecnica      || '';
 
-                    this.producto.pdf_ficha = seleccion.ficha_tecnica;
-
-                    if (seleccion.imagen_1) {
-                        this.producto.imagen_1 = seleccion.imagen_1;
-                    }
-                    if (seleccion.imagen_2) {
-                        this.producto.imagen_2 = seleccion.imagen_2;
-                    }
-                    if (seleccion.imagen_3) {
-                        this.producto.imagen_3 = seleccion.imagen_3;
-                    }
-                    if (seleccion.imagen_4) {
-                        this.producto.imagen_4 = seleccion.imagen_4;
-                    }
-                    if (seleccion.imagen_5) {
-                        this.producto.imagen_5 = seleccion.imagen_5;
-                    }
+                    if (seleccion.imagen_1) { this.producto.imagen_1 = seleccion.imagen_1; }
+                    if (seleccion.imagen_2) { this.producto.imagen_2 = seleccion.imagen_2; }
+                    if (seleccion.imagen_3) { this.producto.imagen_3 = seleccion.imagen_3; }
+                    if (seleccion.imagen_4) { this.producto.imagen_4 = seleccion.imagen_4; }
+                    if (seleccion.imagen_5) { this.producto.imagen_5 = seleccion.imagen_5; }
                     break;
                 case 'duplicate':
-                    //this.producto.incluye_igv = seleccion.incluye_igv;
                     this.producto.nombre = seleccion.nombre;
-                    this.producto.nombre_secundario = (seleccion.nombre_secundario == null) ? '' : seleccion.nombre_secundario;
-                    this.producto.descripcion = (seleccion.descripcion == null) ? '' : seleccion.descripcion;
-                    this.producto.especificaciones = (seleccion.especificaciones == null) ? '' : seleccion.especificaciones;
+                    this.producto.nombre_secundario = seleccion.nombre_secundario || '';
+                    this.producto.descripcion = seleccion.descripcion || '';
+                    this.producto.descripcion_2 = seleccion.descripcion_2 || '';
+                    this.producto.especificaciones = typeof seleccion.especificaciones === 'string' ? seleccion.especificaciones : '';
 
-                    // Ensure DB values exist in dropdown lists so they don't appear blank
-                    if (seleccion.procesador && !this.listaProcesadores.find(p => p.nom_pros === seleccion.procesador)) {
-                        this.listaProcesadores.push({ nom_pros: seleccion.procesador });
-                    }
-                    if (seleccion.ram && !this.listaRam.find(r => r.nom_ram === seleccion.ram)) {
-                        this.listaRam.push({ nom_ram: seleccion.ram });
-                    }
-                    if (seleccion.tarjetavideo && !this.listaTarjetavideo.find(v => v.tarjetavideo === seleccion.tarjetavideo)) {
-                        this.listaTarjetavideo.push({ tarjetavideo: seleccion.tarjetavideo });
-                    }
-                    if (seleccion.almacenamiento && !this.listaAlmacenamiento.find(a => a.cant_almcen === seleccion.almacenamiento)) {
-                        this.listaAlmacenamiento.push({ cant_almcen: seleccion.almacenamiento });
-                    }
-                    if (seleccion.suite_ofimatica && !this.listaOfimatica.find(o => o.ofimatica === seleccion.suite_ofimatica)) {
-                        this.listaOfimatica.push({ ofimatica: seleccion.suite_ofimatica });
-                    }
+                    // Mismo helper: fallback a especificaciones para productos del API
+                    const findSpecDup = (patterns) => {
+                        const specs = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
+                        for (let s of specs) {
+                            const campo = (s.campo || '').toLowerCase();
+                            for (let p of patterns) {
+                                if (campo.includes(p)) return s.descripcion || '';
+                            }
+                        }
+                        return '';
+                    };
 
-                    this.producto.procesador = (seleccion.procesador == null) ? '' : seleccion.procesador;
-                    this.producto.tarjetavideo = (seleccion.tarjetavideo == null) ? '' : seleccion.tarjetavideo;
-                    this.producto.nro_parte = (seleccion.nro_parte == null) ? '' : seleccion.nro_parte;
-                    this.producto.ram = (seleccion.ram == null) ? '' : seleccion.ram;
-                    this.producto.almacenamiento = (seleccion.almacenamiento == null) ? '' : seleccion.almacenamiento;
-                    this.producto.conectividad = (seleccion.conectividad == null) ? '' : seleccion.conectividad;
-                    this.producto.conectividad_wlan = (seleccion.conectividad_wlan == null) ? '' : seleccion.conectividad_wlan;
-                    this.producto.conectividad_usb = (seleccion.conectividad_usb == null) ? '' : seleccion.conectividad_usb;
-                    this.producto.video_vga = (seleccion.video_vga == null) ? '' : seleccion.video_vga;
-                    this.producto.video_hdmi = (seleccion.video_hdmi == null) ? '' : seleccion.video_hdmi;
-                    this.producto.sistema_operativo = (seleccion.sistema_operativo == null) ? '' : seleccion.sistema_operativo;
-                    this.producto.unidad_optica = (seleccion.unidad_optica == null) ? '' : seleccion.unidad_optica;
-                    this.producto.teclado = (seleccion.teclado == null) ? '' : seleccion.teclado;
-                    this.producto.mouse = (seleccion.mouse == null) ? '' : seleccion.mouse;
-                    this.producto.suite_ofimatica = (seleccion.suite_ofimatica == null) ? '' : seleccion.suite_ofimatica;
-                    this.producto.garantia_de_fabrica = (seleccion.garantia_de_fabrica == null) ? '' : seleccion.garantia_de_fabrica;
-                    this.producto.empaque_de_fabrica = (seleccion.empaque_de_fabrica == null) ? '' : seleccion.empaque_de_fabrica;
-                    this.producto.certificacion = (seleccion.certificacion == null) ? '' : seleccion.certificacion;
-                    this.producto.modelo_id = seleccion.modelo_id;
-                    //this.producto.unidad = seleccion.unidad;
-                    //this.producto.moneda = seleccion.moneda;
-                    //this.producto.precio_unitario = seleccion.precio_unitario;
-                    this.producto.tipo_afectacion = seleccion.tipo_afectacion;
-                    this.producto.codigo_barras = seleccion.codigo_barras;
-                    this.producto.codigo_interno = seleccion.codigo_interno;
-                    this.producto.codigo_sunat = seleccion.codigo_sunat;
-                    this.producto.linea_producto = seleccion.linea_producto;
-                    this.producto.categoria = (seleccion.categoria_id == null) ? '' : seleccion.categoria_id;
-                    this.producto.marca = (seleccion.marca_id == null) ? '' : seleccion.marca_id;
-                    
-                    // Nuevos campos
-                    this.producto.tipo_suministro = seleccion['Tipo de suministro'] || '';
-                    this.producto.tipo_panel = seleccion['Tipo de panel'] || '';
-                    this.producto.color = seleccion.Color || '';
-                    this.producto.rendimiento = seleccion.Rendimiento || '';
-                    this.producto.garantia = seleccion.Garantia || '';
-                    this.producto.sistema_raee = seleccion['Sistema RAEE'] || '';
-                    this.producto.empaque = seleccion.Empaque || '';
-                    this.producto.dimensiones = (seleccion.dimensiones == null) ? '' : seleccion.dimensiones;
-                    
-                    this.producto.chipset = (seleccion.chipset == null) ? '' : seleccion.chipset;
-                    this.producto.fuente_poder = (seleccion.fuente_poder == null) ? '' : seleccion.fuente_poder;
-                    this.producto.pdf_ficha = seleccion.ficha_tecnica;
-                    if (seleccion.imagen_1) {
-                        this.producto.imagen_1 = seleccion.imagen_1;
-                        }
-                    if (seleccion.imagen_2) {
-                        this.producto.imagen_2 = seleccion.imagen_2;
-                        }
-                    if (seleccion.imagen_3) {
-                        this.producto.imagen_3 = seleccion.imagen_3;
-                        }
-                    if (seleccion.imagen_4) {
-                        this.producto.imagen_4 = seleccion.imagen_4;
-                        }
-                    if (seleccion.imagen_5) {
-                        this.producto.imagen_5 = seleccion.imagen_5;
-                        }
+                    this.producto.nro_parte          = seleccion.nro_parte          || '';
+                    this.producto.procesador         = seleccion.procesador         || findSpecDup(['procesador', 'cpu']);
+                    this.producto.tarjetavideo       = seleccion.tarjetavideo       || findSpecDup(['video', 'gráf', 'grafico', 'controlador']);
+                    this.producto.ram                = seleccion.ram                || findSpecDup(['memoria', 'ram']);
+                    this.producto.almacenamiento     = seleccion.almacenamiento     || findSpecDup(['almacenamiento', 'disco']);
+                    this.producto.chipset            = seleccion.chipset            || findSpecDup(['chipset']);
+                    this.producto.fuente_poder       = seleccion.fuente_poder       || findSpecDup(['fuente']);
+                    this.producto.tipo_suministro    = seleccion['Tipo de suministro'] || findSpecDup(['formato']);
+                    this.producto.sistema_operativo  = seleccion.sistema_operativo  || findSpecDup(['sistema operativo']);
+                    this.producto.suite_ofimatica    = seleccion.suite_ofimatica    || findSpecDup(['ofim']);
+                    this.producto.garantia_de_fabrica = seleccion.garantia_de_fabrica || '';
+                    this.producto.empaque_de_fabrica = seleccion.empaque_de_fabrica || '';
+                    this.producto.certificacion      = seleccion.certificacion      || '';
+                    this.producto.modelo_id          = seleccion.modelo_id;
+                    this.producto.tipo_afectacion    = seleccion.tipo_afectacion    || '';
+                    this.producto.codigo_barras      = seleccion.codigo_barras      || '';
+                    this.producto.codigo_interno     = seleccion.codigo_interno     || '';
+                    this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
+                    this.producto.linea_producto     = seleccion.linea_producto     || '';
+                    this.producto.categoria          = seleccion.categoria_id       || '';
+                    this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
+                    this.producto.color              = seleccion.Color              || '';
+                    this.producto.rendimiento        = seleccion.Rendimiento        || '';
+                    this.producto.garantia           = seleccion.Garantia           || '';
+                    this.producto.sistema_raee       = seleccion['Sistema RAEE']    || '';
+                    this.producto.empaque            = seleccion.Empaque            || '';
+                    this.producto.dimensiones        = seleccion.dimensiones        || '';
+                    this.producto.pdf_ficha          = seleccion.ficha_tecnica      || '';
+
+                    if (seleccion.imagen_1) { this.producto.imagen_1 = seleccion.imagen_1; }
+                    if (seleccion.imagen_2) { this.producto.imagen_2 = seleccion.imagen_2; }
+                    if (seleccion.imagen_3) { this.producto.imagen_3 = seleccion.imagen_3; }
+                    if (seleccion.imagen_4) { this.producto.imagen_4 = seleccion.imagen_4; }
+                    if (seleccion.imagen_5) { this.producto.imagen_5 = seleccion.imagen_5; }
                     break;
                 case 'delete':
                     this.nombres = seleccion;

@@ -100,69 +100,20 @@
                 <div v-if="esPC">
                     <div class="form-row">
                         <div class="form-group col-lg-4">
-                            <template v-if="!new_procesador">
-                                <label for="procesador" class="label-sm text-muted">PROCESADOR <a href="#" @click.prevent="new_procesador = !new_procesador" class="text-info ml-1">[+ Nuevo]</a></label>
-                                <select id="procesador" v-model="producto.procesador" class="form-control fc-new" :class="[errors.procesador ? 'is-invalid' : '']" :readonly="loading">
-                                    <option value="">--- Seleccionar ---</option>
-                                    <option v-for="proces in listaProcesadores" :value="proces.nom_pros">@{{ proces.nom_pros }}</option>
-                                </select>
-                            </template>
-                            <template v-else>
-                                <label for="txt_procesador" class="label-sm text-muted">PROCESADOR
-                                    <a href="#" @click.prevent="StoreProcesador" class="text-success ml-1">[Guardar]</a>
-                                    <a href="#" @click.prevent="new_procesador = !new_procesador" class="text-danger ml-1">[Cancelar]</a>
-                                </label>
-                                <input type="text" class="form-control fc-new" id="txt_procesador" v-model="txt_procesador">
-                            </template>
-                            <small class="form-text error-color" v-if="errors.procesador">@{{ errors.procesador[0] }}</small>
+                            <label for="procesador" class="label-sm text-muted">PROCESADOR</label>
+                            <input type="text" id="procesador" v-model="producto.procesador" class="form-control fc-new" placeholder="Ej: INTEL CORE I7-14700" :readonly="loading">
                         </div>
                         <div class="form-group col-lg-2">
-                            <template v-if="!new_ram">
-                                <label for="ram" class="label-sm text-muted">MEMORIA RAM <a href="#" @click.prevent="new_ram = !new_ram" class="text-info ml-1">[+ Nuevo]</a></label>
-                                <select id="ram" v-model="producto.ram" class="form-control fc-new" :class="[errors.ram ? 'is-invalid' : '']" :readonly="loading">
-                                    <option value="">--- Seleccionar ---</option>
-                                    <option v-for="ram in listaRam" :value="ram.nom_ram">@{{ ram.nom_ram }}</option>
-                                </select>
-                            </template>
-                            <template v-else>
-                                <label for="txt_ram" class="label-sm text-muted">MEMORIA RAM
-                                    <a href="#" @click.prevent="StoreRam" class="text-success ml-1">[Guardar]</a>
-                                    <a href="#" @click.prevent="new_ram = !new_ram" class="text-danger ml-1">[X]</a>
-                                </label>
-                                <input type="text" class="form-control fc-new" id="txt_ram" v-model="txt_ram">
-                            </template>
+                            <label for="ram" class="label-sm text-muted">MEMORIA RAM</label>
+                            <input type="text" id="ram" v-model="producto.ram" class="form-control fc-new" placeholder="Ej: 32 GB DDR5" :readonly="loading">
                         </div>
                         <div class="form-group col-lg-3">
-                            <template v-if="!new_almacenamiento">
-                                <label for="almacenamiento" class="label-sm text-muted">ALMACENAMIENTO <a href="#" @click.prevent="new_almacenamiento = !new_almacenamiento" class="text-info ml-1">[+ Nuevo]</a></label>
-                                <select id="almacenamiento" v-model="producto.almacenamiento" class="form-control fc-new" :class="[errors.almacenamiento ? 'is-invalid' : '']" :readonly="loading">
-                                    <option value="">--- Seleccionar ---</option>
-                                    <option v-for="alm in listaAlmacenamiento" :value="alm.cant_almcen">@{{ alm.cant_almcen }}</option>
-                                </select>
-                            </template>
-                            <template v-else>
-                                <label for="txt_almacen" class="label-sm text-muted">ALMACENAMIENTO
-                                    <a href="#" @click.prevent="StoreAlmacen" class="text-success ml-1">[Guardar]</a>
-                                    <a href="#" @click.prevent="new_almacenamiento = !new_almacenamiento" class="text-danger ml-1">[X]</a>
-                                </label>
-                                <input type="text" class="form-control fc-new" id="txt_almacen" v-model="txt_almacen">
-                            </template>
+                            <label for="almacenamiento" class="label-sm text-muted">ALMACENAMIENTO</label>
+                            <input type="text" id="almacenamiento" v-model="producto.almacenamiento" class="form-control fc-new" placeholder="Ej: 1 TB M.2 SSD NVME" :readonly="loading">
                         </div>
                         <div class="form-group col-lg-3">
-                            <template v-if="!new_tarjetavideo">
-                                <label for="tarjetavideo" class="label-sm text-muted">GRÁFICOS / VIDEO <a href="#" @click.prevent="new_tarjetavideo = !new_tarjetavideo" class="text-info ml-1">[+ Nuevo]</a></label>
-                                <select id="tarjetavideo" v-model="producto.tarjetavideo" class="form-control fc-new" :class="[errors.tarjetavideo ? 'is-invalid' : '']" :readonly="loading">
-                                    <option value="">--- Seleccionar ---</option>
-                                    <option v-for="vid in listaTarjetavideo" :value="vid.tarjetavideo">@{{ vid.tarjetavideo }}</option>
-                                </select>
-                            </template>
-                            <template v-else>
-                                <label for="txt_video" class="label-sm text-muted">GRÁFICOS / VIDEO
-                                    <a href="#" @click.prevent="StoreTarjetavideo" class="text-success ml-1">[Guardar]</a>
-                                    <a href="#" @click.prevent="new_tarjetavideo = !new_tarjetavideo" class="text-danger ml-1">[X]</a>
-                                </label>
-                                <input type="text" class="form-control fc-new" id="txt_video" v-model="txt_video">
-                            </template>
+                            <label for="tarjetavideo" class="label-sm text-muted">GRÁFICOS / VIDEO</label>
+                            <input type="text" id="tarjetavideo" v-model="producto.tarjetavideo" class="form-control fc-new" placeholder="Ej: Dedicado - 12 GB GDDR6" :readonly="loading">
                         </div>
                     </div>
                     <div class="form-row mt-2">
