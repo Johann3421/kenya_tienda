@@ -301,7 +301,7 @@
                 </div>
                 <div class="info-item">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span><strong>Oficina:</strong> Av. Pablo Carriquiry N° 455 - Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
+                    <span><strong>Oficina:</strong> Av. Pablo Carriquiry N° 455 - San Isidro - Lima - Perú</span>
                 </div>
 
                 <div class="contact-social">

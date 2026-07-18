@@ -895,6 +895,13 @@ eliminarArchivoExcel(index) {
             this.message = null;
             this.errors = [];
         },
+        onSpecOptionPick(index) {
+            var spec = this.producto.especificaciones_raw[index];
+            if (spec && spec.descripcion === '__custom__') {
+                spec._writing = true;
+                spec.descripcion = '';
+            }
+        },
         agregarEspecificacion() {
             if (!this.producto.especificaciones_raw) {
                 this.producto.especificaciones_raw = [];

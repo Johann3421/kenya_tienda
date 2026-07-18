@@ -95,10 +95,18 @@
                         </div>
                         <div class="form-group col-lg-7 mb-0">
                             <label class="label-sm text-muted" v-if="index === 0">VALOR</label>
-                            <input type="text" v-model="spec.descripcion" :list="'dl-' + index" class="form-control fc-new" placeholder="Valor de la especificación..." :readonly="loading">
-                            <datalist :id="'dl-' + index" v-if="spec.opciones">
-                                <option v-for="opc in spec.opciones" :value="opc"></option>
-                            </datalist>
+                            <select v-if="spec.opciones && spec.opciones.length > 0 && !spec._writing" v-model="spec.descripcion" class="form-control fc-new" :disabled="loading" @change="onSpecOptionPick(index)">
+                                <option value="">-- Seleccionar --</option>
+                                <option v-for="opc in spec.opciones" :value="opc">@{{ opc }}</option>
+                                <option value="__custom__">Otra (escribir...)</option>
+                            </select>
+                            <div v-else-if="spec._writing" class="input-group input-group-sm">
+                                <input type="text" v-model="spec.descripcion" class="form-control fc-new" placeholder="Escribir valor personalizado..." :readonly="loading">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary" @click="spec._writing = false; spec.descripcion = ''" title="Volver al listado"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <input v-else type="text" v-model="spec.descripcion" class="form-control fc-new" placeholder="Valor de la especificación..." :readonly="loading">
                         </div>
                         <div class="form-group col-lg-1 mb-0 text-center">
                             <button type="button" class="btn btn-sm btn-danger mt-4" @click="eliminarEspecificacion(index)" title="Eliminar campo" v-if="!spec.is_template">

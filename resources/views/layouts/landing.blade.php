@@ -686,7 +686,7 @@ body {
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-map-marker-alt"></i>
-                            <span><strong>Oficina:</strong> Av. Pablo Carriquiry N° 455 - Oficina 03 - Corpac - San Isidro - Lima - Perú</span>
+                            <span><strong>Oficina:</strong> Av. Pablo Carriquiry N° 455 - San Isidro - Lima - Perú</span>
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-envelope"></i>
@@ -911,7 +911,7 @@ body {
         document.addEventListener('DOMContentLoaded', function() {
             const userMenuToggle = document.getElementById('userMenuToggle');
             const userMenuContent = document.getElementById('userMenuContent');
-            
+
             if (userMenuToggle && userMenuContent) {
                 userMenuToggle.addEventListener('click', function(e) {
                     e.stopPropagation();
