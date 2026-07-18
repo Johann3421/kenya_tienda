@@ -54,6 +54,7 @@ new Vue({
             'empaque_de_fabrica':'',
             'certificacion':'',
             'especificaciones': '',
+            'especificaciones_raw': [],
             'modelo_id': '',
             //'unidad': 'UNIDADES',
             //'moneda': 'SOLES',
@@ -346,6 +347,7 @@ eliminarArchivoExcel(index) {
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
                     this.producto.especificaciones = typeof seleccion.especificaciones === 'string' ? seleccion.especificaciones : '';
+                    this.producto.especificaciones_raw = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
 
                     // Helper: lee de la tabla especificaciones por nombre de campo (fallback para productos del API)
                     const findSpecEdit = (patterns) => {
@@ -379,8 +381,8 @@ eliminarArchivoExcel(index) {
                     this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
                     this.producto.linea_producto     = seleccion.linea_producto     || '';
                     // categoria_id puede ser null en productos del API; fallback al categoria_id del modelo
-                    this.producto.categoria = seleccion.categoria_id
-                        || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
+                    let catId = seleccion.categoria_id || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
+                    this.producto.categoria = catId ? Number(catId) : '';
                     this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
                     this.producto.color              = seleccion.Color              || '';
                     this.producto.rendimiento        = seleccion.Rendimiento        || '';
@@ -402,6 +404,7 @@ eliminarArchivoExcel(index) {
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
                     this.producto.especificaciones = typeof seleccion.especificaciones === 'string' ? seleccion.especificaciones : '';
+                    this.producto.especificaciones_raw = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
 
                     // Mismo helper: fallback a especificaciones para productos del API
                     const findSpecDup = (patterns) => {
@@ -434,8 +437,8 @@ eliminarArchivoExcel(index) {
                     this.producto.codigo_interno     = seleccion.codigo_interno     || '';
                     this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
                     this.producto.linea_producto     = seleccion.linea_producto     || '';
-                    this.producto.categoria = seleccion.categoria_id
-                        || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
+                    let catIdDup = seleccion.categoria_id || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
+                    this.producto.categoria = catIdDup ? Number(catIdDup) : '';
                     this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
                     this.producto.color              = seleccion.Color              || '';
                     this.producto.rendimiento        = seleccion.Rendimiento        || '';
@@ -800,6 +803,8 @@ eliminarArchivoExcel(index) {
                 'garantia_de_fabrica':'',
                 'empaque_de_fabrica':'',
                 'certificacion':'',
+                'especificaciones': '',
+                'especificaciones_raw': [],
                 'modelo_id': '',
                 //'unidad': 'UNIDADES',
                 //'moneda': 'SOLES',

@@ -55,28 +55,23 @@
             </div>
             <div class="card-body pb-1">
                 <div class="form-row">
-                    <div class="form-group col-lg-6">
-                        <label for="nombre" class="label-sm text-muted">NOMBRE DEL PRODUCTO <span class="text-danger">*</span></label>
+                    <div class="form-group col-lg-9">
+                        <label for="nombre" class="label-sm text-muted">NOMBRE / TÍTULO DEL PRODUCTO <span class="text-danger">*</span></label>
                         <input type="text" id="nombre" v-model="producto.nombre" class="form-control fc-new font-weight-bold" :class="[errors.nombre ? 'is-invalid' : '']" :readonly="loading" placeholder="Ej: Laptop Lenovo ThinkPad E14...">
                         <small class="form-text error-color" v-if="errors.nombre">@{{ errors.nombre[0] }}</small>
                     </div>
+                    <div class="form-group col-lg-3">
+                        <label for="nro_parte" class="label-sm text-muted">NRO. PARTE (PN)</label>
+                        <input type="text" id="nro_parte" v-model="producto.nro_parte" class="form-control fc-new" :readonly="loading">
+                    </div>
+                </div>
+                <div class="form-row">
                     <div class="form-group col-lg-6">
                         <label for="nombre_secundario" class="label-sm text-muted">NOMBRE SECUNDARIO / COMERCIAL</label>
                         <input type="text" id="nombre_secundario" v-model="producto.nombre_secundario" class="form-control fc-new" :class="[errors.nombre_secundario ? 'is-invalid' : '']" :readonly="loading">
                         <small class="form-text error-color" v-if="errors.nombre_secundario">@{{ errors.nombre_secundario[0] }}</small>
                     </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-lg-3">
-                        <label for="nro_parte" class="label-sm text-muted">NRO. PARTE (PN)</label>
-                        <input type="text" id="nro_parte" v-model="producto.nro_parte" class="form-control fc-new" :readonly="loading">
-                    </div>
                     <div class="form-group col-lg-6">
-                        <label for="nombre" class="label-sm text-muted">TÍTULO DEL PRODUCTO <span class="text-danger">*</span></label>
-                        <input type="text" id="nombre" v-model="producto.nombre" class="form-control fc-new" :class="[errors.nombre ? 'border-error' : '']" :readonly="loading">
-                        <small class="form-text error-color" v-if="errors.nombre">@{{ errors.nombre[0] }}</small>
-                    </div>
-                    <div class="form-group col-lg-3">
                         <label for="descripcion_2" class="label-sm text-muted">SUB TÍTULO</label>
                         <input type="text" id="descripcion_2" v-model="producto.descripcion_2" class="form-control fc-new" :readonly="loading">
                     </div>
@@ -186,6 +181,24 @@
                     <div class="form-group col-lg-12">
                         <label for="especificaciones" class="label-sm text-muted mt-2">NOTAS / ESPECIFICACIONES ADICIONALES (TEXTO LIBRE)</label>
                         <textarea id="especificaciones" v-model="producto.especificaciones" class="form-control fc-new" rows="3" :class="[errors.especificaciones ? 'is-invalid' : '']" :readonly="loading" placeholder="Cualquier otra especificación que deba saber el cliente..."></textarea>
+                    </div>
+                </div>
+
+                {{-- ESPECIFICACIONES CRUDAS DEL API (SOLO LECTURA) --}}
+                <div class="form-row mt-3" v-if="producto.especificaciones_raw && producto.especificaciones_raw.length > 0">
+                    <div class="col-12">
+                        <label class="label-sm text-info font-weight-bold mb-2"><i class="fa fa-list"></i> DATOS ORIGINALES IMPORTADOS DEL API</label>
+                        <div style="max-height: 200px; overflow-y: auto; border: 1px solid #b8daff; border-radius: 4px; background: #cce5ff1a;">
+                            <table class="table table-sm table-striped mb-0" style="font-size: 11px;">
+                                <tbody>
+                                    <tr v-for="(spec, index) in producto.especificaciones_raw" :key="index">
+                                        <td class="font-weight-bold text-dark w-25 border-right" style="vertical-align: middle;">@{{ spec.campo }}</td>
+                                        <td class="text-secondary">@{{ spec.descripcion }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <small class="text-muted">Estos son los datos exactos recibidos desde Perú Compras. Los campos superiores se autocompletan en base a esto.</small>
                     </div>
                 </div>
             </div>
