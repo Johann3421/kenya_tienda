@@ -912,4 +912,36 @@ public function importarEspecificaciones(Request $request)
         return response()->json(['message' => 'Error al importar: ' . $e->getMessage()], 500);
     }
 }
+
+    public function getSpecsTemplateByModel($id)
+    {
+        $product_ids = Producto::where('modelo_id', $id)->pluck('id');
+        $specs = Especificacion::whereIn('producto_id', $product_ids)
+            ->whereNotNull('descripcion')
+            ->where('descripcion', '!=', '')
+            ->get();
+
+        $template = [];
+        foreach ($specs as $spec) {
+            $campo = trim($spec->campo);
+            $valor = trim($spec->descripcion);
+            if (!isset($template[$campo])) {
+                $template[$campo] = [];
+            }
+            if (!in_array($valor, $template[$campo])) {
+                $template[$campo][] = $valor;
+            }
+        }
+
+        $result = [];
+        foreach ($template as $campo => $opciones) {
+            sort($opciones);
+            $result[] = [
+                'campo' => $campo,
+                'opciones' => $opciones
+            ];
+        }
+
+        return response()->json($result);
+    }
 }

@@ -91,14 +91,17 @@
                     <div class="form-row align-items-end mb-2 pb-2 border-bottom" v-for="(spec, index) in producto.especificaciones_raw" :key="index">
                         <div class="form-group col-lg-4 mb-0">
                             <label class="label-sm text-muted" v-if="index === 0">NOMBRE DEL CAMPO</label>
-                            <input type="text" v-model="spec.campo" class="form-control fc-new font-weight-bold" placeholder="Ej: Procesador, RAM, Resolución..." :readonly="loading">
+                            <input type="text" v-model="spec.campo" class="form-control fc-new font-weight-bold" placeholder="Ej: Procesador, RAM, Resolución..." :readonly="loading || spec.is_template">
                         </div>
                         <div class="form-group col-lg-7 mb-0">
                             <label class="label-sm text-muted" v-if="index === 0">VALOR</label>
-                            <input type="text" v-model="spec.descripcion" class="form-control fc-new" placeholder="Valor de la especificación..." :readonly="loading">
+                            <input type="text" v-model="spec.descripcion" :list="'dl-' + index" class="form-control fc-new" placeholder="Valor de la especificación..." :readonly="loading">
+                            <datalist :id="'dl-' + index" v-if="spec.opciones">
+                                <option v-for="opc in spec.opciones" :value="opc"></option>
+                            </datalist>
                         </div>
                         <div class="form-group col-lg-1 mb-0 text-center">
-                            <button type="button" class="btn btn-sm btn-danger mt-4" @click="eliminarEspecificacion(index)" title="Eliminar campo">
+                            <button type="button" class="btn btn-sm btn-danger mt-4" @click="eliminarEspecificacion(index)" title="Eliminar campo" v-if="!spec.is_template">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </div>

@@ -181,6 +181,30 @@ new Vue({
             return pagesArray;
         }
     },
+    watch: {
+        'producto.modelo_id': function(newVal) {
+            // Only fetch template if we are creating a new product (no ID) and a model is selected
+            if (!this.producto.id && newVal) {
+                this.loading = true;
+                axios.get('/producto/modelo/' + newVal + '/specs-template')
+                    .then(response => {
+                        // response.data is an array of {campo: '...', opciones: [...]}
+                        this.producto.especificaciones_raw = response.data.map(spec => ({
+                            campo: spec.campo,
+                            descripcion: '',
+                            opciones: spec.opciones,
+                            is_template: true
+                        }));
+                    })
+                    .catch(err => {
+                        console.error('Error fetching specs template:', err);
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            }
+        }
+    },
     methods: {
         resetBusqueda() {
     this.busquedaParte = '';

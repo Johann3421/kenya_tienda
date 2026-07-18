@@ -179,7 +179,8 @@ Route::group(['middleware' => ['auth', 'can:productos']], function () {
          ->name('productos.especificaciones.import');
     Route::delete('/producto/especificaciones/{especificacion}', [ProductoController::class, 'eliminarEspecificacion'])
          ->name('productos.especificaciones.destroy');
-         Route::put('/producto/especificaciones/{id}/editar', [ProductoController::class, 'actualizarEspecificacion']);
+    Route::put('/producto/especificaciones/{id}/editar', [ProductoController::class, 'actualizarEspecificacion']);
+    Route::get('/producto/modelo/{id}/specs-template', [ProductoController::class, 'getSpecsTemplateByModel']);
 });
 
 
