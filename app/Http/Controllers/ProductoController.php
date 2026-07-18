@@ -681,7 +681,6 @@ public function subirFichaTecnica(Request $request, $producto)
                 Especificacion::where('producto_id', $producto->id)->where('campo', $campo)->delete();
             }
         }
-        }
     }
 
     private function processDynamicSpecs($producto, $request) {
