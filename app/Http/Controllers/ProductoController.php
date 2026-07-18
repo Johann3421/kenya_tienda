@@ -923,7 +923,31 @@ public function importarEspecificaciones(Request $request)
 
         $template = [];
         foreach ($specs as $spec) {
-            $campo = trim($spec->campo);
+            $campoRaw = mb_strtoupper(trim($spec->campo), 'UTF-8');
+            
+            // Normalizar campos comunes para agrupar duplicados sucios de la DB
+            if (strpos($campoRaw, 'RAM') !== false || strpos($campoRaw, 'MEMORIA') !== false) {
+                $campo = 'RAM';
+            } elseif (strpos($campoRaw, 'PROCESADOR') !== false || strpos($campoRaw, 'CPU') !== false) {
+                $campo = 'PROCESADOR';
+            } elseif (strpos($campoRaw, 'DISCO') !== false || strpos($campoRaw, 'ALMACENAMIENTO') !== false) {
+                $campo = 'ALMACENAMIENTO';
+            } elseif (strpos($campoRaw, 'RESOLUCI') !== false) {
+                $campo = 'RESOLUCIÓN';
+            } elseif (strpos($campoRaw, 'PANTALLA') !== false || strpos($campoRaw, 'PULGADAS') !== false || strpos($campoRaw, 'TAMAÑO') !== false) {
+                $campo = 'PANTALLA';
+            } elseif (strpos($campoRaw, 'SISTEMA OPERATIVO') !== false) {
+                $campo = 'SISTEMA OPERATIVO';
+            } elseif (strpos($campoRaw, 'OFIM') !== false) {
+                $campo = 'SUITE OFIMÁTICA';
+            } elseif (strpos($campoRaw, 'VIDEO') !== false || strpos($campoRaw, 'GRÁF') !== false || strpos($campoRaw, 'GRAF') !== false) {
+                $campo = 'TARJETA DE VIDEO';
+            } elseif (strpos($campoRaw, 'TECLADO') !== false || strpos($campoRaw, 'MOUSE') !== false) {
+                $campo = 'TECLADO Y MOUSE';
+            } else {
+                $campo = $campoRaw; // Si no hay regla, usar el nombre en mayúsculas
+            }
+
             $valor = trim($spec->descripcion);
             if (!isset($template[$campo])) {
                 $template[$campo] = [];
@@ -935,6 +959,7 @@ public function importarEspecificaciones(Request $request)
 
         $result = [];
         foreach ($template as $campo => $opciones) {
+            if (empty($campo)) continue;
             sort($opciones);
             $result[] = [
                 'campo' => $campo,
