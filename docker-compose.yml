@@ -52,6 +52,27 @@ services:
       timeout: 5s
       retries: 5
 
+  db_backup:
+    image: prodrigestivill/postgres-backup-local:15
+    container_name: kenya_db_backup
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=${DB_DATABASE:-kenya_tienda}
+      - POSTGRES_USER=${DB_USERNAME:-kenya_app}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-mypassword}
+      - SCHEDULE=@daily
+      - BACKUP_KEEP_DAYS=14
+      - BACKUP_KEEP_WEEKS=0
+      - BACKUP_KEEP_MONTHS=0
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - db_backups:/backups
+
 volumes:
   db_data_v2:
   app_storage:
+  db_backups:
