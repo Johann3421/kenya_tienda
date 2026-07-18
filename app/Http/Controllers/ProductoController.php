@@ -101,8 +101,6 @@ public function store(Request $request)
     $this->validate($request, [
         'nombre'                => 'required',
         'modelo_id'             => 'required',
-        'tipo_afectacion'       => 'required',
-        'nro_parte'             => 'required',
     ]);
 
     try {
@@ -110,42 +108,10 @@ public function store(Request $request)
 
         $producto = new Producto();
         $producto->nombre = $request->nombre;
-        $producto->nombre_secundario = $request->nombre_secundario;
-        $producto->descripcion = $request->descripcion;
+        if ($request->has('descripcion')) $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
-        $producto->resolucion = $request->resolucion;
-        $producto->procesador = $request->procesador;
-        $producto->ram = $request->ram;
-        $producto->almacenamiento = $request->almacenamiento;
-        $producto->conectividad = $request->conectividad;
-        $producto->conectividad_wlan = $request->conectividad_wlan;
-        $producto->conectividad_usb = $request->conectividad_usb;
-        $producto->video_vga = $request->video_vga;
-        $producto->video_hdmi = $request->video_hdmi;
-        $producto->sistema_operativo = $request->sistema_operativo;
-        $producto->unidad_optica = $request->unidad_optica;
-        $producto->teclado = $request->teclado;
-        $producto->tarjetavideo = $request->tarjetavideo;
-        $producto->mouse = $request->mouse;
-        $producto->suite_ofimatica = $request->suite_ofimatica;
-        $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
-        $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
-        $producto->certificacion = $request->certificacion;
-        
-        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
-        $producto->{'Tipo de panel'} = $request->tipo_panel;
-        $producto->{'Color'} = $request->color;
-        $producto->{'Rendimiento'} = $request->rendimiento;
-        $producto->{'Garantia'} = $request->garantia;
-        $producto->{'Sistema RAEE'} = $request->sistema_raee;
-        $producto->{'Empaque'} = $request->empaque;
-        $producto->{'Dimensiones'} = $request->dimensiones;
-
-        $producto->sonido = null;
-        $producto->chipset = $request->chipset;
-        $producto->slot_expansion = null;
-        $producto->fuente_poder = $request->fuente_poder;
-        $producto->accesorios = null;
+        $producto->modelo_id = $request->modelo_id;
+        $producto->categoria_id = $request->categoria;
 
         $producto->save();
 
@@ -190,7 +156,6 @@ public function update(Request $request)
     $this->validate($request, [
         'nombre'                => 'required',
         'modelo_id'             => 'required',
-        'tipo_afectacion'       => 'required',
     ]);
 
     try {
@@ -198,54 +163,10 @@ public function update(Request $request)
 
         $producto = Producto::findOrFail($request->id);
         $producto->nombre = $request->nombre;
-        $producto->nombre_secundario = $request->nombre_secundario;
-        $producto->descripcion = $request->descripcion;
+        if ($request->has('descripcion')) $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
-        $producto->resolucion = $request->resolucion;
-        $producto->procesador = $request->procesador;
-        $producto->ram = $request->ram;
-        $producto->almacenamiento = $request->almacenamiento;
-        $producto->conectividad = $request->conectividad;
-        $producto->conectividad_wlan = $request->conectividad_wlan;
-        $producto->conectividad_usb = $request->conectividad_usb;
-        $producto->video_vga = $request->video_vga;
-        $producto->video_hdmi = $request->video_hdmi;
-        $producto->sistema_operativo = $request->sistema_operativo;
-        $producto->unidad_optica = $request->unidad_optica;
-        $producto->teclado = $request->teclado;
-        $producto->mouse = $request->mouse;
-        $producto->suite_ofimatica = $request->suite_ofimatica;
-        $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
-        $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
-        $producto->certificacion = $request->certificacion;
-        $producto->tarjetavideo = $request->tarjetavideo;
-        
-        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
-        $producto->{'Tipo de panel'} = $request->tipo_panel;
-        $producto->{'Color'} = $request->color;
-        $producto->{'Rendimiento'} = $request->rendimiento;
-        $producto->{'Garantia'} = $request->garantia;
-        $producto->{'Sistema RAEE'} = $request->sistema_raee;
-        $producto->{'Empaque'} = $request->empaque;
-        $producto->{'Dimensiones'} = $request->dimensiones;
-
-        $producto->sonido = null;
-        $producto->chipset = $request->chipset;
-        $producto->slot_expansion = null;
-        $producto->fuente_poder = $request->fuente_poder;
-        $producto->accesorios = null;
-
-        if ($request->especificaciones) {
-            $producto->especificaciones = $request->especificaciones;
-        }
         $producto->modelo_id = $request->modelo_id;
-        $producto->tipo_afectacion = $request->tipo_afectacion;
-        $producto->codigo_barras = Str::upper($request->codigo_barras);
-        $producto->codigo_interno = Str::upper($request->codigo_interno);
-        $producto->codigo_sunat = Str::upper($request->codigo_sunat);
-        $producto->linea_producto = Str::upper($request->linea_producto);
         $producto->categoria_id = $request->categoria;
-        $producto->marca_id = $request->marca;
         $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
         
         $producto->save();
