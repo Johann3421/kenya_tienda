@@ -65,17 +65,7 @@
                         <input type="text" id="nro_parte" v-model="producto.nro_parte" class="form-control fc-new" :readonly="loading">
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group col-lg-6">
-                        <label for="nombre_secundario" class="label-sm text-muted">NOMBRE SECUNDARIO / COMERCIAL</label>
-                        <input type="text" id="nombre_secundario" v-model="producto.nombre_secundario" class="form-control fc-new" :class="[errors.nombre_secundario ? 'is-invalid' : '']" :readonly="loading">
-                        <small class="form-text error-color" v-if="errors.nombre_secundario">@{{ errors.nombre_secundario[0] }}</small>
-                    </div>
-                    <div class="form-group col-lg-6">
-                        <label for="descripcion_2" class="label-sm text-muted">SUB TÍTULO</label>
-                        <input type="text" id="descripcion_2" v-model="producto.descripcion_2" class="form-control fc-new" :readonly="loading">
-                    </div>
-                </div>
+
             </div>
         </div>
 
@@ -120,91 +110,11 @@
                     <small>Haz clic en "Agregar Campo" para definir características técnicas.</small>
                 </div>
 
-                {{-- CAMPO TEXTAREA PARA TODOS --}}
-                <div class="form-row">
-                    <div class="form-group col-lg-12">
-                        <label for="especificaciones" class="label-sm text-muted mt-2">NOTAS / ESPECIFICACIONES ADICIONALES (TEXTO LIBRE)</label>
-                        <textarea id="especificaciones" v-model="producto.especificaciones" class="form-control fc-new" rows="3" :class="[errors.especificaciones ? 'is-invalid' : '']" :readonly="loading" placeholder="Cualquier otra especificación que deba saber el cliente..."></textarea>
-                    </div>
-                </div>
+
             </div>
         </div>
 
-        <!-- CARD 4: VENTAS, CONFIGURACION Y EXTRAS -->
-        <div class="card shadow-sm mb-3 border-0">
-            <div class="card-header bg-white py-2 border-bottom d-flex justify-content-between align-items-center" style="cursor:pointer" @click="mostrar_opciones_comerciales = !mostrar_opciones_comerciales">
-                <h6 class="mb-0 font-weight-bold text-dark"><i class="fa fa-shopping-cart mr-1 text-success"></i> 4. Configuración Comercial y Códigos</h6>
-                <button type="button" class="btn btn-sm btn-light p-1">
-                    <i class="fa" :class="mostrar_opciones_comerciales ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-                </button>
-            </div>
-            <div class="card-body pb-1" v-show="mostrar_opciones_comerciales" style="animation: fadeIn 0.3s ease-out;">
-                <div class="form-row">
-                    <div class="form-group col-lg-3">
-                        <label for="tipo_afectacion" class="label-sm text-muted">TIPO DE AFECTACIÓN TRIBUTARIA <span class="text-danger">*</span></label>
-                        <select id="tipo_afectacion" v-model="producto.tipo_afectacion" class="form-control fc-new font-weight-bold" :class="[errors.tipo_afectacion ? 'is-invalid' : '']" :readonly="loading">
-                            <option value="10">GRAVADA (APLICA IGV)</option>
-                            <option value="20">EXONERADA (NO APLICA IGV)</option>
-                        </select>
-                        <small class="form-text error-color" v-if="errors.tipo_afectacion">@{{ errors.tipo_afectacion[0] }}</small>
-                    </div>
-                    <div class="form-group col-lg-3">
-                        <label for="garantia_de_fabrica" class="label-sm text-muted">TIENE GARANTÍA DE FÁBRICA</label>
-                        <select id="garantia_de_fabrica" v-model="producto.garantia_de_fabrica" class="form-control fc-new" :readonly="loading">
-                            <option value="SI">SÍ</option>
-                            <option value="NO">NO</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-lg-3">
-                        <label for="empaque_de_fabrica" class="label-sm text-muted">TIPO DE EMPAQUE</label>
-                        <select id="empaque_de_fabrica" v-model="producto.empaque_de_fabrica" class="form-control fc-new" :readonly="loading">
-                            <option value="CAJA">CAJA</option>
-                            <option value="OTRO">OTRO</option>
-                        </select>
-                    </div>
-                    <div class="form-group col-lg-3">
-                        <template v-if="!new_ofimatica">
-                            <label for="suite_ofimatica" class="label-sm text-muted">SUITE OFIMÁTICA <a href="#" @click.prevent="new_ofimatica = !new_ofimatica" class="text-info ml-1">[+ Nuevo]</a></label>
-                            <select id="suite_ofimatica" v-model="producto.suite_ofimatica" class="form-control fc-new" :class="[errors.suite_ofimatica ? 'is-invalid' : '']" :readonly="loading">
-                                <option value="">--- Seleccionar ---</option>
-                                <option v-for="ofi in listaOfimatica" :value="ofi.ofimatica">@{{ ofi.ofimatica }}</option>
-                            </select>
-                        </template>
-                        <template v-else>
-                            <label for="txt_ofimatica" class="label-sm text-muted">SUITE OFIMÁTICA
-                                <a href="#" @click.prevent="StoreOfimatica" class="text-success ml-1">[Guardar]</a>
-                                <a href="#" @click.prevent="new_ofimatica = !new_ofimatica" class="text-danger ml-1">[X]</a>
-                            </label>
-                            <input type="text" class="form-control fc-new" id="txt_ofimatica" v-model="txt_ofimatica">
-                        </template>
-                    </div>
-                </div>
-                <div class="form-row border-top pt-2 mt-1">
-                    <div class="form-group col-lg-3">
-                        <label for="codigo_barras" class="label-sm text-muted">CÓDIGO DE BARRAS (EAN/UPC)</label>
-                        <input type="text" id="codigo_barras" v-model="producto.codigo_barras" class="form-control fc-new" :readonly="loading">
-                    </div>
-                    <div class="form-group col-lg-3">
-                        <label for="codigo_interno" class="label-sm text-muted">CÓDIGO INTERNO (SKU)</label>
-                        <input type="text" id="codigo_interno" v-model="producto.codigo_interno" class="form-control fc-new" :readonly="loading">
-                    </div>
-                    <div class="form-group col-lg-3">
-                        <label for="codigo_sunat" class="label-sm text-muted">CÓDIGO SUNAT</label>
-                        <input type="text" id="codigo_sunat" v-model="producto.codigo_sunat" class="form-control fc-new" :readonly="loading">
-                    </div>
-                    <div class="form-group col-lg-3">
-                        <label for="linea_producto" class="label-sm text-muted">LÍNEA PRODUCTO</label>
-                        <input type="text" id="linea_producto" v-model="producto.linea_producto" class="form-control fc-new" :readonly="loading">
-                    </div>
-                </div>
-                <div class="form-row mt-2">
-                    <div class="form-group col-lg-4">
-                        <label for="certificacion" class="label-sm text-muted">CERTIFICACIÓN</label>
-                        <input type="text" id="certificacion" v-model="producto.certificacion" class="form-control fc-new" :readonly="loading">
-                    </div>
-                </div>
-            </div>
-        </div>
+
 
         <!-- CARD 5: IMAGENES Y ARCHIVOS -->
         <div class="card shadow-sm mb-3 border-0">
