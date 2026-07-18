@@ -633,21 +633,12 @@ public function subirFichaTecnica(Request $request, $producto)
             'nombre_secundario' => 'required',
             'descripcion' => 'required',
             'nro_parte' => 'required',
+            'codigo_sunat' => 'required',
+            'linea_producto' => 'required',
             'tipo_afectacion' => 'required',
             'categoria' => 'required',
             'marca' => 'required',
-            'codigo_interno' => 'required',
-            'codigo_sunat' => 'required',
-            'linea_producto' => 'required'
-            //'unidad' => 'required',
-            //'moneda' => 'required',
-            //'precio_unitario' => 'required|numeric',
-            'tipo_afectacion' => 'required',
-            'categoria' => 'required',
-            'marca' => 'required',
-            'codigo_interno' => 'required',
-            'codigo_sunat' => 'required',
-            'linea_producto' => 'required'
+            'codigo_interno' => 'required'
         ]);
 
         if ($validator->fails()) {
