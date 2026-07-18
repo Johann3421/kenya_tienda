@@ -19,6 +19,7 @@ class Producto extends Model
         'descripcion_2',
         'especificaciones',
         'nro_parte',
+        'resolucion',
         'procesador',
         'ram',
         'almacenamiento',

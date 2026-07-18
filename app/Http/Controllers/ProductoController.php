@@ -110,10 +110,10 @@ public function store(Request $request)
 
         $producto = new Producto();
         $producto->nombre = $request->nombre;
-        $producto->nombre = $request->nombre;
         $producto->nombre_secundario = $request->nombre_secundario;
         $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
+        $producto->resolucion = $request->resolucion;
         $producto->procesador = $request->procesador;
         $producto->ram = $request->ram;
         $producto->almacenamiento = $request->almacenamiento;
@@ -240,6 +240,7 @@ public function update(Request $request)
         $producto->nombre_secundario = $request->nombre_secundario;
         $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
+        $producto->resolucion = $request->resolucion;
         $producto->procesador = $request->procesador;
         $producto->ram = $request->ram;
         $producto->almacenamiento = $request->almacenamiento;
@@ -693,6 +694,7 @@ public function subirFichaTecnica(Request $request, $producto)
         $producto->nombre_secundario     = mb_strtoupper($request->nombre_secundario);
         $producto->descripcion           = mb_strtoupper($request->descripcion);
         $producto->nro_parte             = $request->nro_parte;
+        $producto->resolucion            = $request->resolucion;
         $producto->procesador            = $request->procesador;
         $producto->ram                   = $request->ram;
         $producto->almacenamiento        = $request->almacenamiento;
@@ -729,6 +731,7 @@ public function subirFichaTecnica(Request $request, $producto)
 
     private function syncSpecs($producto) {
         $fields = [
+            'Resolución'  => 'resolucion',
             'Procesador' => 'procesador',
             'Memoria Ram' => 'ram',
             'Almacenamiento' => 'almacenamiento',

@@ -130,26 +130,61 @@
                 {{-- SECCION MONITOR --}}
                 <div v-if="esMonitor">
                     <div class="form-row">
-                        <div class="form-group col-lg-4">
+                        <div class="form-group col-lg-3">
+                            <label for="dimensiones" class="label-sm text-muted">TAMAÑO DE PANTALLA</label>
+                            <input type="text" id="dimensiones" v-model="producto.dimensiones" class="form-control fc-new" placeholder="Ej: 23.8 Pulgadas" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="resolucion" class="label-sm text-muted">RESOLUCIÓN</label>
+                            <input type="text" id="resolucion" v-model="producto.resolucion" class="form-control fc-new" placeholder="Ej: 1920 x 1080 Pixeles" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-3">
                             <label for="tipo_panel" class="label-sm text-muted">TIPO DE PANEL</label>
-                            <input type="text" id="tipo_panel" v-model="producto.tipo_panel" class="form-control fc-new" placeholder="Ej: IPS, VA, TN, OLED" :readonly="loading">
+                            <input type="text" id="tipo_panel" v-model="producto.tipo_panel" class="form-control fc-new" placeholder="Ej: IPS, VA, TN" :readonly="loading">
                         </div>
-                        <div class="form-group col-lg-4">
-                            <label for="dimensiones" class="label-sm text-muted">DIMENSIONES (TAMAÑO DE PANTALLA)</label>
-                            <input type="text" id="dimensiones" v-model="producto.dimensiones" class="form-control fc-new" placeholder="Ej: 24 pulgadas, 27''" :readonly="loading">
+                        <div class="form-group col-lg-3">
+                            <label for="garantia_monitor" class="label-sm text-muted">GARANTÍA DE FÁBRICA</label>
+                            <input type="text" id="garantia_monitor" v-model="producto.garantia_de_fabrica" class="form-control fc-new" placeholder="Ej: 36 MESES CARRY-IN" :readonly="loading">
                         </div>
-                        <div class="form-group col-lg-4">
-                            <label class="label-sm text-muted d-block">CONECTORES DE VIDEO</label>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-3">
+                            <label class="label-sm text-muted d-block">CONECTIVIDAD DE VIDEO</label>
                             <div class="d-flex" style="gap: 15px;">
                                 <div class="custom-control custom-checkbox mt-1">
                                     <input type="checkbox" class="custom-control-input" id="chk_hdmi_mon" v-model="producto.video_hdmi" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_hdmi_mon">Tiene HDMI</label>
+                                    <label class="custom-control-label" for="chk_hdmi_mon">HDMI</label>
                                 </div>
                                 <div class="custom-control custom-checkbox mt-1">
                                     <input type="checkbox" class="custom-control-input" id="chk_vga_mon" v-model="producto.video_vga" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_vga_mon">Tiene VGA</label>
+                                    <label class="custom-control-label" for="chk_vga_mon">VGA</label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label class="label-sm text-muted d-block">CONECTIVIDAD RED</label>
+                            <div class="d-flex" style="gap: 15px;">
+                                <div class="custom-control custom-checkbox mt-1">
+                                    <input type="checkbox" class="custom-control-input" id="chk_lan_mon" v-model="producto.conectividad" true-value="SI" false-value="NO">
+                                    <label class="custom-control-label" for="chk_lan_mon">LAN</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mt-1">
+                                    <input type="checkbox" class="custom-control-input" id="chk_wlan_mon" v-model="producto.conectividad_wlan" true-value="SI" false-value="NO">
+                                    <label class="custom-control-label" for="chk_wlan_mon">WiFi</label>
+                                </div>
+                                <div class="custom-control custom-checkbox mt-1">
+                                    <input type="checkbox" class="custom-control-input" id="chk_usb_mon" v-model="producto.conectividad_usb" true-value="SI" false-value="NO">
+                                    <label class="custom-control-label" for="chk_usb_mon">USB</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="sistema_raee_mon" class="label-sm text-muted">SISTEMA RAEE</label>
+                            <input type="text" id="sistema_raee_mon" v-model="producto.sistema_raee" class="form-control fc-new" placeholder="Ej: COLECTIVO" :readonly="loading">
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label for="certificacion_mon" class="label-sm text-muted">CERTIFICACIONES</label>
+                            <input type="text" id="certificacion_mon" v-model="producto.certificacion" class="form-control fc-new" placeholder="Ej: Energy Star" :readonly="loading">
                         </div>
                     </div>
                 </div>
@@ -181,24 +216,6 @@
                     <div class="form-group col-lg-12">
                         <label for="especificaciones" class="label-sm text-muted mt-2">NOTAS / ESPECIFICACIONES ADICIONALES (TEXTO LIBRE)</label>
                         <textarea id="especificaciones" v-model="producto.especificaciones" class="form-control fc-new" rows="3" :class="[errors.especificaciones ? 'is-invalid' : '']" :readonly="loading" placeholder="Cualquier otra especificación que deba saber el cliente..."></textarea>
-                    </div>
-                </div>
-
-                {{-- ESPECIFICACIONES CRUDAS DEL API (SOLO LECTURA) --}}
-                <div class="form-row mt-3" v-if="producto.especificaciones_raw && producto.especificaciones_raw.length > 0">
-                    <div class="col-12">
-                        <label class="label-sm text-info font-weight-bold mb-2"><i class="fa fa-list"></i> DATOS ORIGINALES IMPORTADOS DEL API</label>
-                        <div style="max-height: 200px; overflow-y: auto; border: 1px solid #b8daff; border-radius: 4px; background: #cce5ff1a;">
-                            <table class="table table-sm table-striped mb-0" style="font-size: 11px;">
-                                <tbody>
-                                    <tr v-for="(spec, index) in producto.especificaciones_raw" :key="index">
-                                        <td class="font-weight-bold text-dark w-25 border-right" style="vertical-align: middle;">@{{ spec.campo }}</td>
-                                        <td class="text-secondary">@{{ spec.descripcion }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <small class="text-muted">Estos son los datos exactos recibidos desde Perú Compras. Los campos superiores se autocompletan en base a esto.</small>
                     </div>
                 </div>
             </div>

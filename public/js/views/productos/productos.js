@@ -87,6 +87,7 @@ new Vue({
         
         chipset: '',
         fuente_poder: '',
+        resolucion: '',
 
         buscar_tabla: '',
         },
@@ -383,13 +384,19 @@ eliminarArchivoExcel(index) {
                     // categoria_id puede ser null en productos del API; fallback al categoria_id del modelo
                     let catId = seleccion.categoria_id || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
                     this.producto.categoria = catId ? Number(catId) : '';
-                    this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
+                    this.producto.tipo_panel         = seleccion['Tipo de panel']   || findSpecEdit(['panel', 'tipo de panel']);
+                    this.producto.resolucion         = seleccion.resolucion         || findSpecEdit(['resoluci']);
+                    this.producto.conectividad       = seleccion.conectividad       || findSpecEdit(['lan', 'conectividad lan']);
+                    this.producto.conectividad_wlan  = seleccion.conectividad_wlan  || findSpecEdit(['wlan', 'wifi', 'inalambric']);
+                    this.producto.conectividad_usb   = seleccion.conectividad_usb   || findSpecEdit(['usb', 'puertos']);
+                    this.producto.video_vga          = seleccion.video_vga          || findSpecEdit(['vga', 'salida vga']);
+                    this.producto.video_hdmi         = seleccion.video_hdmi         || findSpecEdit(['hdmi', 'salida hdmi']);
                     this.producto.color              = seleccion.Color              || '';
                     this.producto.rendimiento        = seleccion.Rendimiento        || '';
                     this.producto.garantia           = seleccion.Garantia           || '';
-                    this.producto.sistema_raee       = seleccion['Sistema RAEE']    || '';
+                    this.producto.sistema_raee       = seleccion['Sistema RAEE']    || findSpecEdit(['raee']);
                     this.producto.empaque            = seleccion.Empaque            || '';
-                    this.producto.dimensiones        = seleccion.dimensiones        || '';
+                    this.producto.dimensiones        = seleccion.dimensiones        || findSpecEdit(['tamaño', 'pantalla', 'pulgadas']);
                     this.producto.pdf_ficha          = seleccion.ficha_tecnica      || '';
 
                     if (seleccion.imagen_1) { this.producto.imagen_1 = seleccion.imagen_1; }
@@ -439,13 +446,19 @@ eliminarArchivoExcel(index) {
                     this.producto.linea_producto     = seleccion.linea_producto     || '';
                     let catIdDup = seleccion.categoria_id || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
                     this.producto.categoria = catIdDup ? Number(catIdDup) : '';
-                    this.producto.tipo_panel         = seleccion['Tipo de panel']   || '';
+                    this.producto.tipo_panel         = seleccion['Tipo de panel']   || findSpecDup(['panel', 'tipo de panel']);
+                    this.producto.resolucion         = seleccion.resolucion         || findSpecDup(['resoluci']);
+                    this.producto.conectividad       = seleccion.conectividad       || findSpecDup(['lan', 'conectividad lan']);
+                    this.producto.conectividad_wlan  = seleccion.conectividad_wlan  || findSpecDup(['wlan', 'wifi', 'inalambric']);
+                    this.producto.conectividad_usb   = seleccion.conectividad_usb   || findSpecDup(['usb', 'puertos']);
+                    this.producto.video_vga          = seleccion.video_vga          || findSpecDup(['vga', 'salida vga']);
+                    this.producto.video_hdmi         = seleccion.video_hdmi         || findSpecDup(['hdmi', 'salida hdmi']);
                     this.producto.color              = seleccion.Color              || '';
                     this.producto.rendimiento        = seleccion.Rendimiento        || '';
                     this.producto.garantia           = seleccion.Garantia           || '';
-                    this.producto.sistema_raee       = seleccion['Sistema RAEE']    || '';
+                    this.producto.sistema_raee       = seleccion['Sistema RAEE']    || findSpecDup(['raee']);
                     this.producto.empaque            = seleccion.Empaque            || '';
-                    this.producto.dimensiones        = seleccion.dimensiones        || '';
+                    this.producto.dimensiones        = seleccion.dimensiones        || findSpecDup(['tamaño', 'pantalla', 'pulgadas']);
                     this.producto.pdf_ficha          = seleccion.ficha_tecnica      || '';
 
                     if (seleccion.imagen_1) { this.producto.imagen_1 = seleccion.imagen_1; }
@@ -553,6 +566,7 @@ eliminarArchivoExcel(index) {
 
             formData.append('chipset', this.producto.chipset || '');
             formData.append('fuente_poder', this.producto.fuente_poder || '');
+            formData.append('resolucion', this.producto.resolucion || '');
 
             axios.post('producto/store',
                 formData,
@@ -641,6 +655,7 @@ eliminarArchivoExcel(index) {
 
             formData.append('chipset', this.producto.chipset || '');
             formData.append('fuente_poder', this.producto.fuente_poder || '');
+            formData.append('resolucion', this.producto.resolucion || '');
 
             axios.post('producto/update',
                 formData,
@@ -729,6 +744,7 @@ eliminarArchivoExcel(index) {
 
             formData.append('chipset', this.producto.chipset || '');
             formData.append('fuente_poder', this.producto.fuente_poder || '');
+            formData.append('resolucion', this.producto.resolucion || '');
 
             axios.post('producto/store',
                 formData,
@@ -826,6 +842,7 @@ eliminarArchivoExcel(index) {
                 'dimensiones': '',
                 'chipset': '',
                 'fuente_poder': '',
+                'resolucion': '',
             };
         },
         closeModal() {
