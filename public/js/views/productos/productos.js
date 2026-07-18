@@ -568,6 +568,9 @@ eliminarArchivoExcel(index) {
             formData.append('fuente_poder', this.producto.fuente_poder || '');
             formData.append('resolucion', this.producto.resolucion || '');
 
+            // Especificaciones Dinámicas
+            formData.append('especificaciones_dinamicas', JSON.stringify(this.producto.especificaciones_raw || []));
+
             axios.post('producto/store',
                 formData,
                 {
@@ -657,6 +660,9 @@ eliminarArchivoExcel(index) {
             formData.append('fuente_poder', this.producto.fuente_poder || '');
             formData.append('resolucion', this.producto.resolucion || '');
 
+            // Especificaciones Dinámicas
+            formData.append('especificaciones_dinamicas', JSON.stringify(this.producto.especificaciones_raw || []));
+
             axios.post('producto/update',
                 formData,
                 {
@@ -745,6 +751,9 @@ eliminarArchivoExcel(index) {
             formData.append('chipset', this.producto.chipset || '');
             formData.append('fuente_poder', this.producto.fuente_poder || '');
             formData.append('resolucion', this.producto.resolucion || '');
+
+            // Especificaciones Dinámicas
+            formData.append('especificaciones_dinamicas', JSON.stringify(this.producto.especificaciones_raw || []));
 
             axios.post('producto/store',
                 formData,
@@ -861,6 +870,15 @@ eliminarArchivoExcel(index) {
             this.state = null;
             this.message = null;
             this.errors = [];
+        },
+        agregarEspecificacion() {
+            if (!this.producto.especificaciones_raw) {
+                this.producto.especificaciones_raw = [];
+            }
+            this.producto.especificaciones_raw.push({ campo: '', descripcion: '' });
+        },
+        eliminarEspecificacion(index) {
+            this.producto.especificaciones_raw.splice(index, 1);
         },
         StoreCategoria() {
             if (this.txt_categoria) {

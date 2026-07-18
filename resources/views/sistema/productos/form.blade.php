@@ -84,131 +84,40 @@
             <div class="card-header py-2 border-bottom" :class="(esPC || esMonitor || esToner) ? 'bg-info text-white' : 'bg-white text-dark'">
                 <h6 class="mb-0 font-weight-bold">
                     <i class="fa fa-microchip mr-1" :class="(esPC || esMonitor || esToner) ? '' : 'text-primary'"></i> 3. Especificaciones Técnicas 
-                    <span v-if="esPC" class="badge badge-light text-info ml-2">Computo</span>
-                    <span v-if="esMonitor" class="badge badge-light text-info ml-2">Pantalla</span>
-                    <span v-if="esToner" class="badge badge-light text-info ml-2">Suministro</span>
+                    <span class="badge badge-light text-info ml-2">Campos Dinámicos</span>
                 </h6>
             </div>
-            <div class="card-body pb-1">
-                
-                {{-- SECCION PC/LAPTOP --}}
-                <div v-if="esPC">
-                    <div class="form-row">
-                        <div class="form-group col-lg-4">
-                            <label for="procesador" class="label-sm text-muted">PROCESADOR</label>
-                            <input type="text" id="procesador" v-model="producto.procesador" class="form-control fc-new" placeholder="Ej: INTEL CORE I7-14700" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-2">
-                            <label for="ram" class="label-sm text-muted">MEMORIA RAM</label>
-                            <input type="text" id="ram" v-model="producto.ram" class="form-control fc-new" placeholder="Ej: 32 GB DDR5" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="almacenamiento" class="label-sm text-muted">ALMACENAMIENTO</label>
-                            <input type="text" id="almacenamiento" v-model="producto.almacenamiento" class="form-control fc-new" placeholder="Ej: 1 TB M.2 SSD NVME" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="tarjetavideo" class="label-sm text-muted">GRÁFICOS / VIDEO</label>
-                            <input type="text" id="tarjetavideo" v-model="producto.tarjetavideo" class="form-control fc-new" placeholder="Ej: Dedicado - 12 GB GDDR6" :readonly="loading">
-                        </div>
-                    </div>
-                    <div class="form-row mt-2">
-                        <div class="form-group col-lg-3">
-                            <label for="tipo_suministro_pc" class="label-sm text-muted">FORMATO</label>
-                            <input type="text" id="tipo_suministro_pc" v-model="producto.tipo_suministro" class="form-control fc-new" placeholder="Ej: Mid Tower, SFF" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="chipset" class="label-sm text-muted">CHIPSET</label>
-                            <input type="text" id="chipset" v-model="producto.chipset" class="form-control fc-new" placeholder="Ej: Intel, AMD B550" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="fuente_poder" class="label-sm text-muted">FUENTE DE PODER</label>
-                            <input type="text" id="fuente_poder" v-model="producto.fuente_poder" class="form-control fc-new" placeholder="Ej: 550W 80 Plus" :readonly="loading">
-                        </div>
+            <div class="card-body pb-3">
+                <div class="row mb-2">
+                    <div class="col-12 text-right">
+                        <button type="button" class="btn btn-sm btn-outline-primary" @click="agregarEspecificacion()">
+                            <i class="fa fa-plus"></i> Agregar Campo
+                        </button>
                     </div>
                 </div>
 
-                {{-- SECCION MONITOR --}}
-                <div v-if="esMonitor">
-                    <div class="form-row">
-                        <div class="form-group col-lg-3">
-                            <label for="dimensiones" class="label-sm text-muted">TAMAÑO DE PANTALLA</label>
-                            <input type="text" id="dimensiones" v-model="producto.dimensiones" class="form-control fc-new" placeholder="Ej: 23.8 Pulgadas" :readonly="loading">
+                {{-- LOOP DINÁMICO DE ESPECIFICACIONES --}}
+                <div v-if="producto.especificaciones_raw && producto.especificaciones_raw.length > 0">
+                    <div class="form-row align-items-end mb-2 pb-2 border-bottom" v-for="(spec, index) in producto.especificaciones_raw" :key="index">
+                        <div class="form-group col-lg-4 mb-0">
+                            <label class="label-sm text-muted" v-if="index === 0">NOMBRE DEL CAMPO</label>
+                            <input type="text" v-model="spec.campo" class="form-control fc-new font-weight-bold" placeholder="Ej: Procesador, RAM, Resolución..." :readonly="loading">
                         </div>
-                        <div class="form-group col-lg-3">
-                            <label for="resolucion" class="label-sm text-muted">RESOLUCIÓN</label>
-                            <input type="text" id="resolucion" v-model="producto.resolucion" class="form-control fc-new" placeholder="Ej: 1920 x 1080 Pixeles" :readonly="loading">
+                        <div class="form-group col-lg-7 mb-0">
+                            <label class="label-sm text-muted" v-if="index === 0">VALOR</label>
+                            <input type="text" v-model="spec.descripcion" class="form-control fc-new" placeholder="Valor de la especificación..." :readonly="loading">
                         </div>
-                        <div class="form-group col-lg-3">
-                            <label for="tipo_panel" class="label-sm text-muted">TIPO DE PANEL</label>
-                            <input type="text" id="tipo_panel" v-model="producto.tipo_panel" class="form-control fc-new" placeholder="Ej: IPS, VA, TN" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="garantia_monitor" class="label-sm text-muted">GARANTÍA DE FÁBRICA</label>
-                            <input type="text" id="garantia_monitor" v-model="producto.garantia_de_fabrica" class="form-control fc-new" placeholder="Ej: 36 MESES CARRY-IN" :readonly="loading">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-lg-3">
-                            <label class="label-sm text-muted d-block">CONECTIVIDAD DE VIDEO</label>
-                            <div class="d-flex" style="gap: 15px;">
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_hdmi_mon" v-model="producto.video_hdmi" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_hdmi_mon">HDMI</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_vga_mon" v-model="producto.video_vga" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_vga_mon">VGA</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label class="label-sm text-muted d-block">CONECTIVIDAD RED</label>
-                            <div class="d-flex" style="gap: 15px;">
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_lan_mon" v-model="producto.conectividad" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_lan_mon">LAN</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_wlan_mon" v-model="producto.conectividad_wlan" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_wlan_mon">WiFi</label>
-                                </div>
-                                <div class="custom-control custom-checkbox mt-1">
-                                    <input type="checkbox" class="custom-control-input" id="chk_usb_mon" v-model="producto.conectividad_usb" true-value="SI" false-value="NO">
-                                    <label class="custom-control-label" for="chk_usb_mon">USB</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="sistema_raee_mon" class="label-sm text-muted">SISTEMA RAEE</label>
-                            <input type="text" id="sistema_raee_mon" v-model="producto.sistema_raee" class="form-control fc-new" placeholder="Ej: COLECTIVO" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="certificacion_mon" class="label-sm text-muted">CERTIFICACIONES</label>
-                            <input type="text" id="certificacion_mon" v-model="producto.certificacion" class="form-control fc-new" placeholder="Ej: Energy Star" :readonly="loading">
+                        <div class="form-group col-lg-1 mb-0 text-center">
+                            <button type="button" class="btn btn-sm btn-danger mt-4" @click="eliminarEspecificacion(index)" title="Eliminar campo">
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                {{-- SECCION SUMINISTRO/TONER --}}
-                <div v-if="esToner">
-                    <div class="form-row">
-                        <div class="form-group col-lg-3">
-                            <label for="tipo_suministro" class="label-sm text-muted">TIPO DE SUMINISTRO</label>
-                            <input type="text" id="tipo_suministro" v-model="producto.tipo_suministro" class="form-control fc-new" placeholder="Ej: Tóner, Tinta, Cinta, Tambor" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-2">
-                            <label for="color" class="label-sm text-muted">COLOR</label>
-                            <input type="text" id="color" v-model="producto.color" class="form-control fc-new" placeholder="Ej: Negro, Cian, Magenta, Amarillo" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-3">
-                            <label for="rendimiento" class="label-sm text-muted">RENDIMIENTO</label>
-                            <input type="text" id="rendimiento" v-model="producto.rendimiento" class="form-control fc-new" placeholder="Ej: 5000 páginas" :readonly="loading">
-                        </div>
-                        <div class="form-group col-lg-4">
-                            <label for="sistema_raee" class="label-sm text-muted">SISTEMA RAEE</label>
-                            <input type="text" id="sistema_raee" v-model="producto.sistema_raee" class="form-control fc-new" placeholder="Normativa RAEE" :readonly="loading">
-                        </div>
-                    </div>
+                <div v-else class="text-center py-4 text-muted">
+                    <i class="fa fa-list-alt fa-2x mb-2"></i>
+                    <p class="mb-0">No hay especificaciones agregadas.</p>
+                    <small>Haz clic en "Agregar Campo" para definir características técnicas.</small>
                 </div>
 
                 {{-- CAMPO TEXTAREA PARA TODOS --}}

@@ -149,44 +149,7 @@ public function store(Request $request)
 
         $producto->save();
 
-        // Guardar las especificaciones en la nueva tabla estructurada
-        $specs = [
-            'procesador' => $request->procesador,
-            'ram' => $request->ram,
-            'almacenamiento' => $request->almacenamiento,
-            'tarjetavideo' => $request->tarjetavideo,
-            'chipset' => $request->chipset,
-            'fuente_poder' => $request->fuente_poder,
-            'tipo_suministro' => $request->tipo_suministro,
-            'tipo_panel' => $request->tipo_panel,
-            'color' => $request->color,
-            'rendimiento' => $request->rendimiento,
-            'garantia' => $request->garantia,
-            'sistema_raee' => $request->sistema_raee,
-            'empaque' => $request->empaque,
-            'dimensiones' => $request->dimensiones,
-            'sistema_operativo' => $request->sistema_operativo,
-            'suite_ofimatica' => $request->suite_ofimatica,
-            'garantia_de_fabrica' => $request->garantia_de_fabrica,
-            'empaque_de_fabrica' => $request->empaque_de_fabrica,
-            'conectividad' => $request->conectividad,
-            'conectividad_wlan' => $request->conectividad_wlan,
-            'conectividad_usb' => $request->conectividad_usb,
-            'video_vga' => $request->video_vga,
-            'video_hdmi' => $request->video_hdmi,
-            'unidad_optica' => $request->unidad_optica,
-            'teclado' => $request->teclado,
-            'mouse' => $request->mouse,
-            'certificacion' => $request->certificacion,
-        ];
-        
-        // Remove empty values to keep JSON clean
-        $specs = array_filter($specs, fn($v) => !is_null($v) && $v !== '');
-
-        \App\Models\ProductoFichaApi::updateOrCreate(
-            ['producto_id' => $producto->id],
-            ['datos_crudos' => $specs, 'codigo_pc' => null, 'updated_at' => now()]
-        );
+        $this->processDynamicSpecs($producto, $request);
 
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
@@ -204,8 +167,6 @@ public function store(Request $request)
             }
         }
         $producto->save();
-
-        $this->syncSpecs($producto); // ponytail: drag basic fields to especificaciones like API does
 
         DB::commit();
 
@@ -288,45 +249,7 @@ public function update(Request $request)
         $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
         
         $producto->save();
-
-        // Guardar las especificaciones en la nueva tabla estructurada
-        $specs = [
-            'procesador' => $request->procesador,
-            'ram' => $request->ram,
-            'almacenamiento' => $request->almacenamiento,
-            'tarjetavideo' => $request->tarjetavideo,
-            'chipset' => $request->chipset,
-            'fuente_poder' => $request->fuente_poder,
-            'tipo_suministro' => $request->tipo_suministro,
-            'tipo_panel' => $request->tipo_panel,
-            'color' => $request->color,
-            'rendimiento' => $request->rendimiento,
-            'garantia' => $request->garantia,
-            'sistema_raee' => $request->sistema_raee,
-            'empaque' => $request->empaque,
-            'dimensiones' => $request->dimensiones,
-            'sistema_operativo' => $request->sistema_operativo,
-            'suite_ofimatica' => $request->suite_ofimatica,
-            'garantia_de_fabrica' => $request->garantia_de_fabrica,
-            'empaque_de_fabrica' => $request->empaque_de_fabrica,
-            'conectividad' => $request->conectividad,
-            'conectividad_wlan' => $request->conectividad_wlan,
-            'conectividad_usb' => $request->conectividad_usb,
-            'video_vga' => $request->video_vga,
-            'video_hdmi' => $request->video_hdmi,
-            'unidad_optica' => $request->unidad_optica,
-            'teclado' => $request->teclado,
-            'mouse' => $request->mouse,
-            'certificacion' => $request->certificacion,
-        ];
-        
-        // Remove empty values to keep JSON clean
-        $specs = array_filter($specs, fn($v) => !is_null($v) && $v !== '');
-
-        \App\Models\ProductoFichaApi::updateOrCreate(
-            ['producto_id' => $producto->id],
-            ['datos_crudos' => $specs, 'updated_at' => now()]
-        );
+        $this->processDynamicSpecs($producto, $request);
 
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
@@ -347,8 +270,6 @@ public function update(Request $request)
             }
         }
         $producto->save();
-
-        // $this->syncSpecs($producto); // Ya no es necesario porque specs están en ProductoFichaApi
 
         DB::commit();
 
@@ -760,6 +681,74 @@ public function subirFichaTecnica(Request $request, $producto)
                 Especificacion::where('producto_id', $producto->id)->where('campo', $campo)->delete();
             }
         }
+        }
+    }
+
+    private function processDynamicSpecs($producto, $request) {
+        if (!$request->has('especificaciones_dinamicas')) return;
+
+        $dinamicas = json_decode($request->especificaciones_dinamicas, true);
+        if (!is_array($dinamicas)) return;
+
+        // Limpiar especificaciones anteriores
+        Especificacion::where('producto_id', $producto->id)->delete();
+
+        $legacyMap = [
+            'procesador' => 'procesador',
+            'cpu' => 'procesador',
+            'memoria ram' => 'ram',
+            'ram' => 'ram',
+            'almacenamiento' => 'almacenamiento',
+            'disco' => 'almacenamiento',
+            'video' => 'tarjetavideo',
+            'graficos' => 'tarjetavideo',
+            'gráficos' => 'tarjetavideo',
+            'resolucion' => 'resolucion',
+            'resolución' => 'resolucion',
+            'sistema operativo' => 'sistema_operativo',
+            'garantia' => 'garantia_de_fabrica',
+            'garantía' => 'garantia_de_fabrica',
+            'empaque' => 'empaque_de_fabrica',
+            'certificac' => 'certificacion',
+            'lan' => 'conectividad',
+            'wlan' => 'conectividad_wlan',
+            'wifi' => 'conectividad_wlan',
+            'wi-fi' => 'conectividad_wlan',
+            'usb' => 'conectividad_usb',
+            'puertos' => 'conectividad_usb',
+            'sonido' => 'sonido',
+            'chipset' => 'chipset',
+            'fuente' => 'fuente_poder',
+            'accesorios' => 'accesorios',
+        ];
+
+        foreach($dinamicas as $spec) {
+            if (empty($spec['campo'])) continue;
+            
+            $campo = trim($spec['campo']);
+            $descripcion = trim($spec['descripcion'] ?? '');
+
+            Especificacion::create([
+                'producto_id' => $producto->id,
+                'campo' => $campo,
+                'descripcion' => $descripcion
+            ]);
+
+            $campoLower = strtolower($campo);
+            foreach($legacyMap as $pattern => $legacyAttr) {
+                if (str_contains($campoLower, $pattern)) {
+                    $producto->$legacyAttr = $descripcion;
+                    break;
+                }
+            }
+        }
+
+        \App\Models\ProductoFichaApi::updateOrCreate(
+            ['producto_id' => $producto->id],
+            ['datos_crudos' => $dinamicas, 'codigo_pc' => null, 'updated_at' => now()]
+        );
+
+        $producto->save();
     }
 
     public function mdlEliminarProducto(Request $request)
