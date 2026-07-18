@@ -110,6 +110,7 @@ public function store(Request $request)
 
         $producto = new Producto();
         $producto->nombre = $request->nombre;
+        $producto->nombre = $request->nombre;
         $producto->nombre_secundario = $request->nombre_secundario;
         $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
@@ -130,20 +131,7 @@ public function store(Request $request)
         $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
         $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
         $producto->certificacion = $request->certificacion;
-        if ($request->especificaciones) {
-            $producto->especificaciones = $request->especificaciones;
-        }
-        $producto->modelo_id = $request->modelo_id;
-        $producto->tipo_afectacion = $request->tipo_afectacion;
-        $producto->codigo_barras = Str::upper($request->codigo_barras);
-        $producto->codigo_interno = Str::upper($request->codigo_interno);
-        $producto->codigo_sunat = Str::upper($request->codigo_sunat);
-        $producto->linea_producto = Str::upper($request->linea_producto);
-        $producto->categoria_id = $request->categoria;
-        $producto->marca_id = $request->marca;
-        $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
         
-        // Nuevos campos
         $producto->{'Tipo de suministro'} = $request->tipo_suministro;
         $producto->{'Tipo de panel'} = $request->tipo_panel;
         $producto->{'Color'} = $request->color;
@@ -160,6 +148,45 @@ public function store(Request $request)
         $producto->accesorios = null;
 
         $producto->save();
+
+        // Guardar las especificaciones en la nueva tabla estructurada
+        $specs = [
+            'procesador' => $request->procesador,
+            'ram' => $request->ram,
+            'almacenamiento' => $request->almacenamiento,
+            'tarjetavideo' => $request->tarjetavideo,
+            'chipset' => $request->chipset,
+            'fuente_poder' => $request->fuente_poder,
+            'tipo_suministro' => $request->tipo_suministro,
+            'tipo_panel' => $request->tipo_panel,
+            'color' => $request->color,
+            'rendimiento' => $request->rendimiento,
+            'garantia' => $request->garantia,
+            'sistema_raee' => $request->sistema_raee,
+            'empaque' => $request->empaque,
+            'dimensiones' => $request->dimensiones,
+            'sistema_operativo' => $request->sistema_operativo,
+            'suite_ofimatica' => $request->suite_ofimatica,
+            'garantia_de_fabrica' => $request->garantia_de_fabrica,
+            'empaque_de_fabrica' => $request->empaque_de_fabrica,
+            'conectividad' => $request->conectividad,
+            'conectividad_wlan' => $request->conectividad_wlan,
+            'conectividad_usb' => $request->conectividad_usb,
+            'video_vga' => $request->video_vga,
+            'video_hdmi' => $request->video_hdmi,
+            'unidad_optica' => $request->unidad_optica,
+            'teclado' => $request->teclado,
+            'mouse' => $request->mouse,
+            'certificacion' => $request->certificacion,
+        ];
+        
+        // Remove empty values to keep JSON clean
+        $specs = array_filter($specs, fn($v) => !is_null($v) && $v !== '');
+
+        \App\Models\ProductoFichaApi::updateOrCreate(
+            ['producto_id' => $producto->id],
+            ['datos_crudos' => $specs, 'codigo_pc' => null, 'updated_at' => now()]
+        );
 
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
@@ -229,9 +256,27 @@ public function update(Request $request)
         $producto->garantia_de_fabrica = $request->garantia_de_fabrica;
         $producto->empaque_de_fabrica = $request->empaque_de_fabrica;
         $producto->certificacion = $request->certificacion;
-        $producto->especificaciones = $request->especificaciones;
-        $producto->modelo_id = $request->modelo_id;
         $producto->tarjetavideo = $request->tarjetavideo;
+        
+        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
+        $producto->{'Tipo de panel'} = $request->tipo_panel;
+        $producto->{'Color'} = $request->color;
+        $producto->{'Rendimiento'} = $request->rendimiento;
+        $producto->{'Garantia'} = $request->garantia;
+        $producto->{'Sistema RAEE'} = $request->sistema_raee;
+        $producto->{'Empaque'} = $request->empaque;
+        $producto->{'Dimensiones'} = $request->dimensiones;
+
+        $producto->sonido = null;
+        $producto->chipset = $request->chipset;
+        $producto->slot_expansion = null;
+        $producto->fuente_poder = $request->fuente_poder;
+        $producto->accesorios = null;
+
+        if ($request->especificaciones) {
+            $producto->especificaciones = $request->especificaciones;
+        }
+        $producto->modelo_id = $request->modelo_id;
         $producto->tipo_afectacion = $request->tipo_afectacion;
         $producto->codigo_barras = Str::upper($request->codigo_barras);
         $producto->codigo_interno = Str::upper($request->codigo_interno);
@@ -241,21 +286,46 @@ public function update(Request $request)
         $producto->marca_id = $request->marca;
         $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
         
-        // Nuevos campos
-        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
-        $producto->{'Tipo de panel'} = $request->tipo_panel;
-        $producto->{'Color'} = $request->color;
-        $producto->{'Rendimiento'} = $request->rendimiento;
-        $producto->{'Garantia'} = $request->garantia;
-        $producto->{'Sistema RAEE'} = $request->sistema_raee;
-        $producto->{'Empaque'} = $request->empaque;
-        $producto->{'Dimensiones'} = $request->dimensiones;
+        $producto->save();
+
+        // Guardar las especificaciones en la nueva tabla estructurada
+        $specs = [
+            'procesador' => $request->procesador,
+            'ram' => $request->ram,
+            'almacenamiento' => $request->almacenamiento,
+            'tarjetavideo' => $request->tarjetavideo,
+            'chipset' => $request->chipset,
+            'fuente_poder' => $request->fuente_poder,
+            'tipo_suministro' => $request->tipo_suministro,
+            'tipo_panel' => $request->tipo_panel,
+            'color' => $request->color,
+            'rendimiento' => $request->rendimiento,
+            'garantia' => $request->garantia,
+            'sistema_raee' => $request->sistema_raee,
+            'empaque' => $request->empaque,
+            'dimensiones' => $request->dimensiones,
+            'sistema_operativo' => $request->sistema_operativo,
+            'suite_ofimatica' => $request->suite_ofimatica,
+            'garantia_de_fabrica' => $request->garantia_de_fabrica,
+            'empaque_de_fabrica' => $request->empaque_de_fabrica,
+            'conectividad' => $request->conectividad,
+            'conectividad_wlan' => $request->conectividad_wlan,
+            'conectividad_usb' => $request->conectividad_usb,
+            'video_vga' => $request->video_vga,
+            'video_hdmi' => $request->video_hdmi,
+            'unidad_optica' => $request->unidad_optica,
+            'teclado' => $request->teclado,
+            'mouse' => $request->mouse,
+            'certificacion' => $request->certificacion,
+        ];
         
-        $producto->sonido = null;
-        $producto->chipset = $request->chipset;
-        $producto->slot_expansion = null;
-        $producto->fuente_poder = $request->fuente_poder;
-        $producto->accesorios = null;
+        // Remove empty values to keep JSON clean
+        $specs = array_filter($specs, fn($v) => !is_null($v) && $v !== '');
+
+        \App\Models\ProductoFichaApi::updateOrCreate(
+            ['producto_id' => $producto->id],
+            ['datos_crudos' => $specs, 'updated_at' => now()]
+        );
 
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
@@ -277,7 +347,7 @@ public function update(Request $request)
         }
         $producto->save();
 
-        $this->syncSpecs($producto); // ponytail: drag basic fields to especificaciones like API does
+        // $this->syncSpecs($producto); // Ya no es necesario porque specs están en ProductoFichaApi
 
         DB::commit();
 
@@ -530,7 +600,7 @@ public function subirFichaTecnica(Request $request, $producto)
 
     public function mdlEditarProducto(Request $request)
     {
-        return Producto::select(
+        $producto = Producto::with('fichaApi')->select(
             'productos.*',
             \DB::raw("case
                     when id is not null then ''
@@ -539,8 +609,20 @@ public function subirFichaTecnica(Request $request, $producto)
             'productos.imagen as imagen_actual'
         )
             ->where('id', $request->id)
-            ->first()
-        ;
+            ->first();
+            
+        if ($producto && $producto->fichaApi && is_array($producto->fichaApi->datos_crudos)) {
+            foreach ($producto->fichaApi->datos_crudos as $key => $value) {
+                // Solo inyectar si la clave no existe para no sobreescribir campos base
+                if (!array_key_exists($key, $producto->getAttributes())) {
+                    $producto->setAttribute($key, $value);
+                }
+            }
+            // Agregamos todo como un json_specs por si se necesita
+            $producto->setAttribute('json_specs', $producto->fichaApi->datos_crudos);
+        }
+
+        return $producto;
     }
 
     public function modificar(Request $request)
@@ -551,23 +633,12 @@ public function subirFichaTecnica(Request $request, $producto)
             'nombre_secundario' => 'required',
             'descripcion' => 'required',
             'nro_parte' => 'required',
-            'procesador' => 'required',
-            'ram' => 'required',
-            'almacenamiento' => 'required',
-            'conectividad' => 'required',
-            'conectividad_wlan' => 'required',
-            'conectividad_usb' => 'required',
-            'video_vga' => 'required',
-            'video_hdmi' => 'required',
-            'sistema_operativo' => 'required',
-            'unidad_optica' => 'required',
-            'teclado' => 'required',
-            //'ficha_tecnica' => 'required',
-            'mouse' => 'required',
-            'suite_ofimatica' => 'required',
-            'garantia_de_fabrica' => 'required',
-            'empaque_de_fabrica' => 'required',
-            'certificacion' => 'required',
+            'tipo_afectacion' => 'required',
+            'categoria' => 'required',
+            'marca' => 'required',
+            'codigo_interno' => 'required',
+            'codigo_sunat' => 'required',
+            'linea_producto' => 'required'
             //'unidad' => 'required',
             //'moneda' => 'required',
             //'precio_unitario' => 'required|numeric',
@@ -642,7 +713,6 @@ public function subirFichaTecnica(Request $request, $producto)
         $producto->sistema_operativo     = $request->sistema_operativo;
         $producto->unidad_optica         = $request->unidad_optica;
         $producto->teclado               = $request->teclado;
-        //$producto->ficha_tecnica         = $request->ficha_tecnica;
         $producto->mouse                 = $request->mouse;
         $producto->suite_ofimatica       = $request->suite_ofimatica;
         $producto->garantia_de_fabrica   = $request->garantia_de_fabrica;

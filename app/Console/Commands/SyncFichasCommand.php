@@ -267,7 +267,20 @@ class SyncFichasCommand extends Command
 
             if (!$dryRun) {
                 DB::table('productos')->where('id', $producto->id)->update($data);
+                
                 if (!$soloVig && !empty($specs)) {
+                    // Escribir en la nueva tabla estructurada
+                    DB::table('producto_ficha_apis')->updateOrInsert(
+                        ['producto_id' => $producto->id],
+                        [
+                            'codigo_pc' => $codigo,
+                            'datos_crudos' => json_encode($specs, JSON_UNESCAPED_UNICODE),
+                            'pdf_url' => $pdfUrl,
+                            'imagenes' => json_encode(array_filter([$ficha['imagen'] ?? null]), JSON_UNESCAPED_UNICODE),
+                            'updated_at' => now(),
+                        ]
+                    );
+
                     $this->syncEspecificaciones($producto->id, $specs);
                 }
             }
@@ -398,6 +411,18 @@ class SyncFichasCommand extends Command
 
         if (!$dryRun) {
             $newId = DB::table('productos')->insertGetId($data);
+            
+            // Insertar specs en la nueva tabla
+            DB::table('producto_ficha_apis')->insert([
+                'producto_id' => $newId,
+                'codigo_pc' => $codigo,
+                'datos_crudos' => json_encode($specs, JSON_UNESCAPED_UNICODE),
+                'pdf_url' => $pdfUrl,
+                'imagenes' => json_encode(array_filter([$imgUrl]), JSON_UNESCAPED_UNICODE),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
             $this->syncEspecificaciones($newId, $specs);
         }
 

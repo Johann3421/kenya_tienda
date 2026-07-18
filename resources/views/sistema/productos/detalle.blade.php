@@ -618,37 +618,36 @@
                         @endif
                     </div>
                 </div>
-                @if(!Auth::guard('cliente')->check())
-                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
-                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto: {{ urlencode($producto->display_name) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:38px; padding:6px 14px;">
-                        <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
-                    </a>
-                    <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; border:1px solid #ee7c31; color:#ee7c31; background:transparent; padding:6px 14px; min-height:38px; border-radius:4px; text-decoration:none; transition:all 0.2s; box-sizing:border-box;" onmouseover="this.style.background='#ee7c31'; this.style.color='#fff';" onmouseout="this.style.background='transparent'; this.style.color='#ee7c31';">
-                        <i class="fa-solid fa-tag"></i> Ver precio
-                    </a>
-                </div>
-                @else
                 <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:flex-end; flex-grow:1;">
-                    <div style="display:flex; align-items:center; gap:12px; background:#fff; padding:6px 16px; border:1px solid #e0e0e0; border-radius:8px;">
-                        @if(!empty($producto->precio_especial))
-                            <div style="font-size: 1.4rem; font-weight: 700; color: #ee7c31; line-height: 1;">
-                                $ {{ number_format($producto->precio_especial, 2) }}
-                            </div>
-                            <div style="width:1px; height:24px; background:#ccc;"></div>
-                            <div style="font-size: 1.4rem; font-weight: 600; color: #333; line-height: 1;">
-                                S/ {{ number_format($producto->precio_especial * 3.4, 2) }} <span style="font-size: 0.85rem; font-weight: normal; color: #888;">+ IGV</span>
-                            </div>
-                        @else
+                    @if(empty($producto->precio_especial))
+                        <div style="display:flex; align-items:center; gap:12px; background:#fff; padding:6px 16px; border:1px solid #e0e0e0; border-radius:8px;">
                             <div style="font-size: 1.2rem; font-weight: 600; color: #333;">
                                 (A cotizar)
                             </div>
+                        </div>
+                    @else
+                        @if(Auth::guard('cliente')->check())
+                            <div style="display:flex; align-items:center; gap:12px; background:#fff; padding:6px 16px; border:1px solid #e0e0e0; border-radius:8px;">
+                                <div style="font-size: 1.4rem; font-weight: 700; color: #ee7c31; line-height: 1;">
+                                    $ {{ number_format($producto->precio_especial, 2) }}
+                                </div>
+                                <div style="width:1px; height:24px; background:#ccc;"></div>
+                                <div style="font-size: 1.4rem; font-weight: 600; color: #333; line-height: 1;">
+                                    S/ {{ number_format($producto->precio_especial * 3.4, 2) }} <span style="font-size: 0.85rem; font-weight: normal; color: #888;">+ IGV</span>
+                                </div>
+                            </div>
+                        @else
+                            <div style="display:flex; align-items:center; gap:12px; background:#f8f9fa; padding:8px 16px; border:1px dashed #ee7c31; border-radius:8px;">
+                                <span style="font-size: 0.9rem; color: #ee7c31; font-weight: 500;"><i class="fa fa-lock"></i> Precios exclusivos B2B</span>
+                                <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="color: #0056b3; text-decoration: underline; font-weight: 600; font-size: 0.9rem;">Ingresa aquí</a>
+                            </div>
                         @endif
-                    </div>
-                    <a target="_blank" href="https://wa.me/+51958021778?text=Hola, soy cliente verificado y quiero cotizar el producto: {{ urlencode($producto->display_name) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:45px; padding:8px 18px; border-radius:8px;">
-                        <i class="bx bxl-whatsapp" style="font-size:22px;"></i> Cotizar
+                    @endif
+
+                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto: {{ urlencode($producto->display_name) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:45px; padding:8px 18px; border-radius:8px;">
+                        <i class="bx bxl-whatsapp" style="font-size:22px;"></i> {{ empty($producto->precio_especial) ? 'Contactar' : 'Cotizar' }}
                     </a>
                 </div>
-                @endif
             </div>
         </div>{{-- close #design-v2 --}}
 

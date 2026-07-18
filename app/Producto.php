@@ -13,7 +13,58 @@ class Producto extends Model
 {
 
     protected $fillable = [
-        // otros campos existentes...
+        'nombre',
+        'nombre_secundario',
+        'descripcion',
+        'descripcion_2',
+        'especificaciones',
+        'nro_parte',
+        'procesador',
+        'ram',
+        'almacenamiento',
+        'conectividad',
+        'conectividad_wlan',
+        'conectividad_usb',
+        'video_vga',
+        'video_hdmi',
+        'sistema_operativo',
+        'unidad_optica',
+        'teclado',
+        'mouse',
+        'suite_ofimatica',
+        'garantia_de_fabrica',
+        'empaque_de_fabrica',
+        'certificacion',
+        'tarjetavideo',
+        'unidad',
+        'marca',
+        'moneda',
+        'precio_unitario',
+        'precio_compra',
+        'precio_anterior',
+        'tipo_afectacion',
+        'tipo_afectacion_compra',
+        'stock_inicial',
+        'stock_minimo',
+        'fecha_vencimiento',
+        'codigo_barras',
+        'codigo_interno',
+        'codigo_sunat',
+        'linea_producto',
+        'incluye_igv',
+        'imagen_1',
+        'imagen_2',
+        'imagen_3',
+        'imagen_4',
+        'imagen_5',
+        'categoria_id',
+        'marca_id',
+        'pagina_web',
+        'modelo_id',
+        'ficha_tecnica',
+        'codigo_pc',
+        'vigencia',
+        'ficha_editada_localmente',
         'Tipo de suministro',
         'Modelo',
         'Color',
@@ -87,6 +138,11 @@ public function filtros()
         ->where('asides.id', $asideId)
         ->pluck('opcion')
         ->toArray();
+}
+
+public function fichaApi()
+{
+    return $this->hasOne(\App\Models\ProductoFichaApi::class, 'producto_id', 'id');
 }
 
     public function getDisplayNameAttribute()
