@@ -129,9 +129,9 @@ public function store(Request $request)
         $producto->{'Sistema RAEE'} = $request->sistema_raee;
         $producto->{'Empaque'} = $request->empaque;
         $producto->{'Dimensiones'} = $request->dimensiones;
-        $producto->chipset = $request->chipset;
-        $producto->fuente_poder = $request->fuente_poder;
-        $producto->resolucion = $request->resolucion;
+        $producto->chipset = $request->filled('chipset') ? mb_substr($request->chipset, 0, 255, 'UTF-8') : null;
+        $producto->fuente_poder = $request->filled('fuente_poder') ? mb_substr($request->fuente_poder, 0, 255, 'UTF-8') : null;
+        $producto->resolucion = $request->filled('resolucion') ? mb_substr($request->resolucion, 0, 255, 'UTF-8') : null;
 
         $producto->save();
 
@@ -204,9 +204,9 @@ public function update(Request $request)
         $producto->{'Sistema RAEE'} = $request->sistema_raee;
         $producto->{'Empaque'} = $request->empaque;
         $producto->{'Dimensiones'} = $request->dimensiones;
-        $producto->chipset = $request->chipset;
-        $producto->fuente_poder = $request->fuente_poder;
-        $producto->resolucion = $request->resolucion;
+        $producto->chipset = $request->filled('chipset') ? mb_substr($request->chipset, 0, 255, 'UTF-8') : null;
+        $producto->fuente_poder = $request->filled('fuente_poder') ? mb_substr($request->fuente_poder, 0, 255, 'UTF-8') : null;
+        $producto->resolucion = $request->filled('resolucion') ? mb_substr($request->resolucion, 0, 255, 'UTF-8') : null;
 
         $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
         
@@ -698,7 +698,11 @@ public function subirFichaTecnica(Request $request, $producto)
             $campoLower = strtolower($campo);
             foreach($legacyMap as $pattern => $legacyAttr) {
                 if (str_contains($campoLower, $pattern)) {
-                    $producto->$legacyAttr = $descripcion;
+                    if ($legacyAttr === 'accesorios') {
+                        $producto->$legacyAttr = $descripcion;
+                    } else {
+                        $producto->$legacyAttr = mb_substr($descripcion, 0, 255, 'UTF-8');
+                    }
                     break;
                 }
             }
