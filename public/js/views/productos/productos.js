@@ -8,6 +8,9 @@ new Vue({
         search_por: 'nombre',
         search_categoria: '',
         search_web: '',
+        search_modelo: '',
+        search_origen: '',
+        search_activo: '',
         listaRequest: [],
         active: 0,
 
@@ -352,6 +355,9 @@ eliminarArchivoExcel(index) {
                 search_por: this.search_por,
                 categoria: this.search_categoria,
                 web: this.search_web,
+                modelo: this.search_modelo,
+                origen: this.search_origen,
+                activo: this.search_activo,
             }).then(response => {
                 if (exe == 0) {
                     $('#list-loading').hide();

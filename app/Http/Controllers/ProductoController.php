@@ -74,6 +74,26 @@ class ProductoController extends Controller
             $productos->where('categoria_id', $request->categoria);
         }
 
+        if ($request->modelo) {
+            $productos->where('modelo_id', $request->modelo);
+        }
+
+        if ($request->activo) {
+            $productos->where('activo', $request->activo);
+        }
+
+        if ($request->origen) {
+            if ($request->origen === 'local') {
+                $productos->where(function($q) {
+                    $q->whereNull('codigo_pc')->orWhere('codigo_pc', '');
+                });
+            } elseif ($request->origen === 'api') {
+                $productos->whereNotNull('codigo_pc')->where('codigo_pc', '!=', '')->where('ficha_editada_localmente', 0);
+            } elseif ($request->origen === 'api_editado') {
+                $productos->whereNotNull('codigo_pc')->where('codigo_pc', '!=', '')->where('ficha_editada_localmente', 1);
+            }
+        }
+
         if ($request->web) {
             $productos->where('pagina_web', $request->web);
         }

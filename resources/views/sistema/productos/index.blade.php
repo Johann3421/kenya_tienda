@@ -448,6 +448,38 @@ v-on:click="formularioModal('modal-lg', null, 'import_spec', null)">
                             </div>
                         </div>
                     </div>
+
+                    <!-- Filtros de búsqueda adicionales -->
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <select v-model="search_modelo" class="form-control form-control-sm" @change="Buscar(1)">
+                                <option value="">-- Todos los Modelos --</option>
+                                <option v-for="modelo in listaModelos" :value="modelo.id">@{{ modelo.descripcion }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select v-model="search_origen" class="form-control form-control-sm" @change="Buscar(1)">
+                                <option value="">-- Todos los Orígenes --</option>
+                                <option value="local">Local</option>
+                                <option value="api">API</option>
+                                <option value="api_editado">API (Editado)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select v-model="search_activo" class="form-control form-control-sm" @change="Buscar(1)">
+                                <option value="">-- Todos (Activo) --</option>
+                                <option value="SI">SI</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select v-model="search_web" class="form-control form-control-sm" @change="Buscar(1)">
+                                <option value="">-- Todos (Web) --</option>
+                                <option value="SI">Mostrar en Web</option>
+                                <option value="NO">No Mostrar</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-sm">
                             <thead>
