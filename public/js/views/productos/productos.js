@@ -183,18 +183,41 @@ new Vue({
     },
     watch: {
         'producto.modelo_id': function(newVal) {
-            // Only fetch template if we are creating a new product (no ID) and a model is selected
-            if (!this.producto.id && newVal) {
+            // Siempre cargar el template cuando haya un modelo seleccionado (tanto crear como editar) para tener las opciones
+            if (newVal) {
                 this.loading = true;
                 axios.get('/producto/modelo/' + newVal + '/specs-template')
                     .then(response => {
-                        // response.data is an array of {campo: '...', opciones: [...]}
-                        this.producto.especificaciones_raw = response.data.map(spec => ({
-                            campo: spec.campo,
-                            descripcion: '',
-                            opciones: spec.opciones,
-                            is_template: true
-                        }));
+                        // Guardar las especificaciones que ya tuvieramos (por si estamos en modo editar o duplicar)
+                        let savedSpecs = this.producto.especificaciones_raw || [];
+                        
+                        this.producto.especificaciones_raw = response.data.map(spec => {
+                            let saved = savedSpecs.find(s => s.campo && s.campo.toUpperCase() === spec.campo.toUpperCase());
+                            let desc = saved ? saved.descripcion : '';
+                            let writing = desc && !spec.opciones.includes(desc);
+                            
+                            return {
+                                campo: spec.campo,
+                                descripcion: desc,
+                                opciones: spec.opciones,
+                                is_template: true,
+                                _writing: writing
+                            };
+                        });
+                        
+                        // Agregar especificaciones extras que tenia el producto guardadas pero no estan en el template
+                        savedSpecs.forEach(s => {
+                            let exists = this.producto.especificaciones_raw.find(ts => ts.campo && ts.campo.toUpperCase() === s.campo.toUpperCase());
+                            if (!exists) {
+                                this.producto.especificaciones_raw.push({
+                                    campo: s.campo,
+                                    descripcion: s.descripcion,
+                                    opciones: [],
+                                    is_template: false,
+                                    _writing: false
+                                });
+                            }
+                        });
                     })
                     .catch(err => {
                         console.error('Error fetching specs template:', err);
@@ -203,7 +226,7 @@ new Vue({
                         this.loading = false;
                     });
             }
-        }
+        },
     },
     methods: {
         resetBusqueda() {
@@ -437,11 +460,11 @@ eliminarArchivoExcel(index) {
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
                     this.producto.especificaciones = typeof seleccion.especificaciones === 'string' ? seleccion.especificaciones : '';
-                    this.producto.especificaciones_raw = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
+                    this.producto.especificaciones_raw = Array.isArray(seleccion.specs_api) ? seleccion.specs_api : [];
 
                     // Mismo helper: fallback a especificaciones para productos del API
                     const findSpecDup = (patterns) => {
-                        const specs = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
+                        const specs = Array.isArray(seleccion.specs_api) ? seleccion.specs_api : [];
                         for (let s of specs) {
                             const campo = (s.campo || '').toLowerCase();
                             for (let p of patterns) {
