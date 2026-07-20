@@ -347,6 +347,10 @@ eliminarArchivoExcel(index) {
             });
         },
         Buscar(page) {
+            // Si el método es llamado por un evento (ej. v-on:keyup.enter), 'page' será un Event, no un número.
+            if (typeof page !== 'number') {
+                page = 1;
+            }
             this.page = page;
             this.active = 0;
             urlBuscar = 'producto/buscar?page=' + page;

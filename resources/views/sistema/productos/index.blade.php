@@ -450,33 +450,37 @@ v-on:click="formularioModal('modal-lg', null, 'import_spec', null)">
                     </div>
 
                     <!-- Filtros de búsqueda adicionales -->
-                    <div class="row mb-2">
+                    <div class="row mb-3 pb-3 pt-3 shadow-sm rounded" style="background-color: #f4f7fa; border: 1px solid #e1e5eb; margin-left: 0; margin-right: 0;">
                         <div class="col-md-3">
-                            <select v-model="search_modelo" class="form-control form-control-sm" @change="Buscar(1)">
-                                <option value="">-- Todos los Modelos --</option>
+                            <label class="text-muted mb-1" style="font-size: 11px; font-weight: bold; letter-spacing: 0.5px;"><i class="fas fa-box text-primary"></i> MODELO</label>
+                            <select v-model="search_modelo" class="form-control form-control-sm border-0 shadow-sm" @change="Buscar(1)">
+                                <option value="">Todos los Modelos</option>
                                 <option v-for="modelo in listaModelos" :value="modelo.id">@{{ modelo.descripcion }}</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <select v-model="search_origen" class="form-control form-control-sm" @change="Buscar(1)">
-                                <option value="">-- Todos los Orígenes --</option>
+                            <label class="text-muted mb-1" style="font-size: 11px; font-weight: bold; letter-spacing: 0.5px;"><i class="fas fa-server text-info"></i> ORIGEN</label>
+                            <select v-model="search_origen" class="form-control form-control-sm border-0 shadow-sm" @change="Buscar(1)">
+                                <option value="">Todos los Orígenes</option>
                                 <option value="local">Local</option>
                                 <option value="api">API</option>
                                 <option value="api_editado">API (Editado)</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <select v-model="search_activo" class="form-control form-control-sm" @change="Buscar(1)">
-                                <option value="">-- Todos (Activo) --</option>
-                                <option value="SI">SI</option>
-                                <option value="NO">NO</option>
+                            <label class="text-muted mb-1" style="font-size: 11px; font-weight: bold; letter-spacing: 0.5px;"><i class="fas fa-toggle-on text-success"></i> ESTADO ACTIVO</label>
+                            <select v-model="search_activo" class="form-control form-control-sm border-0 shadow-sm" @change="Buscar(1)">
+                                <option value="">Todos los Estados</option>
+                                <option value="SI">SI (Activo)</option>
+                                <option value="NO">NO (Inactivo)</option>
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <select v-model="search_web" class="form-control form-control-sm" @change="Buscar(1)">
-                                <option value="">-- Todos (Web) --</option>
+                            <label class="text-muted mb-1" style="font-size: 11px; font-weight: bold; letter-spacing: 0.5px;"><i class="fas fa-globe text-warning"></i> VISIBILIDAD WEB</label>
+                            <select v-model="search_web" class="form-control form-control-sm border-0 shadow-sm" @change="Buscar(1)">
+                                <option value="">Ambas Visibilidades</option>
                                 <option value="SI">Mostrar en Web</option>
-                                <option value="NO">No Mostrar</option>
+                                <option value="NO">Ocultar en Web</option>
                             </select>
                         </div>
                     </div>
