@@ -21,6 +21,7 @@ services:
       - APP_KEY=${APP_KEY}
       - APP_DEBUG=${APP_DEBUG:-false}
       - APP_URL=${APP_URL:-http://localhost}
+      - RUN_MIGRATIONS=true
       - LOG_CHANNEL=stderr
       - QUEUE_CONNECTION=sync
       - SESSION_DRIVER=file
