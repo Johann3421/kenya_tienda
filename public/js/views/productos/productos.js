@@ -372,39 +372,41 @@ eliminarArchivoExcel(index) {
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
                     this.producto.especificaciones = typeof seleccion.especificaciones === 'string' ? seleccion.especificaciones : '';
-                    this.producto.especificaciones_raw = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
-
-                    // Helper: lee de la tabla especificaciones por nombre de campo (fallback para productos del API)
-                    const findSpecEdit = (patterns) => {
-                        const specs = Array.isArray(seleccion.especificaciones) ? seleccion.especificaciones : [];
-                        for (let s of specs) {
-                            const campo = (s.campo || '').toLowerCase();
-                            for (let p of patterns) {
-                                if (campo.includes(p)) return s.descripcion || '';
-                            }
-                        }
-                        return '';
-                    };
-
-                    this.producto.nro_parte          = seleccion.nro_parte          || '';
-                    this.producto.procesador         = seleccion.procesador         || findSpecEdit(['procesador', 'cpu']);
-                    this.producto.tarjetavideo       = seleccion.tarjetavideo       || findSpecEdit(['video', 'gráf', 'grafico', 'controlador']);
-                    this.producto.ram                = seleccion.ram                || findSpecEdit(['memoria', 'ram']);
-                    this.producto.almacenamiento     = seleccion.almacenamiento     || findSpecEdit(['almacenamiento', 'disco']);
-                    this.producto.chipset            = seleccion.chipset            || findSpecEdit(['chipset']);
-                    this.producto.fuente_poder       = seleccion.fuente_poder       || findSpecEdit(['fuente']);
-                    this.producto.tipo_suministro    = seleccion['Tipo de suministro'] || findSpecEdit(['formato']);
-                    this.producto.sistema_operativo  = seleccion.sistema_operativo  || findSpecEdit(['sistema operativo']);
-                    this.producto.suite_ofimatica    = seleccion.suite_ofimatica    || findSpecEdit(['ofim']);
-                    this.producto.garantia_de_fabrica = seleccion.garantia_de_fabrica || '';
-                    this.producto.empaque_de_fabrica = seleccion.empaque_de_fabrica || '';
-                    this.producto.certificacion      = seleccion.certificacion      || '';
-                    this.producto.modelo_id          = seleccion.modelo_id;
-                    this.producto.tipo_afectacion    = seleccion.tipo_afectacion    || '';
-                    this.producto.codigo_barras      = seleccion.codigo_barras      || '';
-                    this.producto.codigo_interno     = seleccion.codigo_interno     || '';
-                    this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
-                    this.producto.linea_producto     = seleccion.linea_producto     || '';
+                    this.producto.especificaciones_raw = Array.isArray(seleccion.specs_api) ? seleccion.specs_api : [];
+  
+                      // Helper: lee de la tabla especificaciones por nombre de campo (fallback para productos del API)
+                      const findSpecEdit = (patterns) => {
+                          const specs = Array.isArray(seleccion.specs_api) ? seleccion.specs_api : [];
+                          for (let s of specs) {
+                              const campo = (s.campo || '').toLowerCase();
+                              for (let p of patterns) {
+                                  if (campo.includes(p)) return s.descripcion || '';
+                              }
+                          }
+                          return '';
+                      };
+  
+                      this.producto.nro_parte          = seleccion.nro_parte          || '';
+                      this.producto.procesador         = seleccion.procesador         || findSpecEdit(['procesador', 'cpu']);
+                      this.producto.tarjetavideo       = seleccion.tarjetavideo       || findSpecEdit(['video', 'gráf', 'grafico', 'controlador']);
+                      this.producto.ram                = seleccion.ram                || findSpecEdit(['memoria', 'ram']);
+                      this.producto.almacenamiento     = seleccion.almacenamiento     || findSpecEdit(['almacenamiento', 'disco']);
+                      this.producto.chipset            = seleccion.chipset            || findSpecEdit(['chipset']);
+                      this.producto.fuente_poder       = seleccion.fuente_poder       || findSpecEdit(['fuente']);
+                      this.producto.tipo_suministro    = seleccion['Tipo de suministro'] || findSpecEdit(['formato']);
+                      this.producto.sistema_operativo  = seleccion.sistema_operativo  || findSpecEdit(['sistema operativo']);
+                      this.producto.suite_ofimatica    = seleccion.suite_ofimatica    || findSpecEdit(['ofim']);
+                      this.producto.garantia_de_fabrica = seleccion.garantia_de_fabrica || '';
+                      this.producto.empaque_de_fabrica = seleccion.empaque_de_fabrica || '';
+                      this.producto.certificacion      = seleccion.certificacion      || '';
+                      this.producto.modelo_id          = seleccion.modelo_id;
+                      this.producto.tipo_afectacion    = seleccion.tipo_afectacion    || '';
+                      this.producto.codigo_barras      = seleccion.codigo_barras      || '';
+                      this.producto.codigo_interno     = seleccion.codigo_interno     || '';
+                      this.producto.codigo_sunat       = seleccion.codigo_sunat       || '';
+                      this.producto.linea_producto     = seleccion.linea_producto     || '';
+                      this.producto.marca              = seleccion.marca_id           || '';
+                      this.producto.linea_producto     = seleccion.linea_producto     || '';
                     // categoria_id puede ser null en productos del API; fallback al categoria_id del modelo
                     let catId = seleccion.categoria_id || (seleccion.get_modelo && seleccion.get_modelo.categoria_id) || '';
                     this.producto.categoria = catId ? Number(catId) : '';

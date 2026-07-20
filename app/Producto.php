@@ -84,6 +84,15 @@ class Producto extends Model
         'fuente_poder',
         'accesorios',
     ];
+    protected $appends = ['estado', 'specs_api'];
+
+    public function getSpecsApiAttribute()
+    {
+        if ($this->relationLoaded('especificaciones')) {
+            return $this->getRelation('especificaciones');
+        }
+        return [];
+    }
     protected $table = 'productos';
 
     public function getCategoria()
