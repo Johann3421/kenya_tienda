@@ -113,6 +113,26 @@ public function store(Request $request)
         $producto->modelo_id = $request->modelo_id;
         $producto->categoria_id = $request->categoria;
 
+        $producto->tipo_afectacion = $request->tipo_afectacion;
+        $producto->codigo_barras = \Illuminate\Support\Str::upper($request->codigo_barras);
+        $producto->codigo_interno = \Illuminate\Support\Str::upper($request->codigo_interno);
+        $producto->codigo_sunat = \Illuminate\Support\Str::upper($request->codigo_sunat);
+        $producto->linea_producto = \Illuminate\Support\Str::upper($request->linea_producto);
+        $producto->marca_id = $request->marca;
+
+        // Nuevos campos y campos legacy
+        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
+        $producto->{'Tipo de panel'} = $request->tipo_panel;
+        $producto->{'Color'} = $request->color;
+        $producto->{'Rendimiento'} = $request->rendimiento;
+        $producto->{'Garantia'} = $request->garantia;
+        $producto->{'Sistema RAEE'} = $request->sistema_raee;
+        $producto->{'Empaque'} = $request->empaque;
+        $producto->{'Dimensiones'} = $request->dimensiones;
+        $producto->chipset = $request->chipset;
+        $producto->fuente_poder = $request->fuente_poder;
+        $producto->resolucion = $request->resolucion;
+
         $producto->save();
 
         $this->processDynamicSpecs($producto, $request);
@@ -167,6 +187,27 @@ public function update(Request $request)
         $producto->nro_parte = $request->nro_parte;
         $producto->modelo_id = $request->modelo_id;
         $producto->categoria_id = $request->categoria;
+        
+        $producto->tipo_afectacion = $request->tipo_afectacion;
+        $producto->codigo_barras = \Illuminate\Support\Str::upper($request->codigo_barras);
+        $producto->codigo_interno = \Illuminate\Support\Str::upper($request->codigo_interno);
+        $producto->codigo_sunat = \Illuminate\Support\Str::upper($request->codigo_sunat);
+        $producto->linea_producto = \Illuminate\Support\Str::upper($request->linea_producto);
+        $producto->marca_id = $request->marca;
+
+        // Nuevos campos y campos legacy
+        $producto->{'Tipo de suministro'} = $request->tipo_suministro;
+        $producto->{'Tipo de panel'} = $request->tipo_panel;
+        $producto->{'Color'} = $request->color;
+        $producto->{'Rendimiento'} = $request->rendimiento;
+        $producto->{'Garantia'} = $request->garantia;
+        $producto->{'Sistema RAEE'} = $request->sistema_raee;
+        $producto->{'Empaque'} = $request->empaque;
+        $producto->{'Dimensiones'} = $request->dimensiones;
+        $producto->chipset = $request->chipset;
+        $producto->fuente_poder = $request->fuente_poder;
+        $producto->resolucion = $request->resolucion;
+
         $producto->ficha_editada_localmente = $request->has('ficha_editada_localmente') && $request->ficha_editada_localmente ? true : false;
         
         $producto->save();
