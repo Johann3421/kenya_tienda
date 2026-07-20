@@ -84,7 +84,7 @@ class Producto extends Model
         'fuente_poder',
         'accesorios',
     ];
-    protected $appends = ['estado', 'specs_api'];
+    protected $appends = ['specs_api'];
 
     public function getSpecsApiAttribute()
     {
