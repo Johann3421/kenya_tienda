@@ -992,6 +992,38 @@ public function importarEspecificaciones(Request $request)
 
     public function getSpecsTemplateByModel($id)
     {
+        $modelo = Modelo::find($id);
+        $catId = $modelo ? $modelo->categoria_id : null;
+
+        // Helper de normalización canónica para eliminar duplicados (ej: Lan vs CONECTIVIDAD LAN, Garantia vs GARANTÍA DE FÁBRICA)
+        $normalizeCampo = function($campoRaw) {
+            $c = mb_strtoupper(trim($campoRaw), 'UTF-8');
+            if (str_contains($c, 'PROCESADOR') || str_contains($c, 'CPU')) return 'PROCESADOR';
+            if (str_contains($c, 'RAM') || str_contains($c, 'MEMORIA')) return 'MEMORIA RAM';
+            if (str_contains($c, 'ALMACENAMIENTO') || str_contains($c, 'DISCO') || str_contains($c, 'HDD') || str_contains($c, 'SSD')) return 'ALMACENAMIENTO';
+            if (str_contains($c, 'SISTEMA OPERATIVO') || $c === 'OS') return 'SISTEMA OPERATIVO';
+            if (str_contains($c, 'OFIM') || str_contains($c, 'OFFICE')) return 'SUITE OFIMÁTICA';
+            if (str_contains($c, 'VIDEO') || str_contains($c, 'GRÁF') || str_contains($c, 'GRAF') || str_contains($c, 'GPU')) return 'CONTROLADOR DE VIDEO';
+            if (str_contains($c, 'SONIDO') || str_contains($c, 'AUDIO')) return 'SONIDO';
+            if (str_contains($c, 'CHIPSET')) return 'CHIPSET';
+            if (str_contains($c, 'WLAN') || str_contains($c, 'WIFI') || str_contains($c, 'WIRELESS')) return 'CONECTIVIDAD WLAN';
+            if (str_contains($c, 'LAN') || str_contains($c, 'ETHERNET')) return 'CONECTIVIDAD LAN';
+            if (str_contains($c, 'PUERTO') || str_contains($c, 'USB')) return 'PUERTOS MÍNIMOS';
+            if (str_contains($c, 'SLOT') || str_contains($c, 'EXPANSI') || str_contains($c, 'PCI') || str_contains($c, 'RANURA')) return 'SLOT DE EXPANSIÓN';
+            if (str_contains($c, 'FUENTE') || str_contains($c, 'PSU') || str_contains($c, 'POWER')) return 'FUENTE DE PODER';
+            if (str_contains($c, 'GARANT')) return 'GARANTÍA DE FÁBRICA';
+            if (str_contains($c, 'EMPAQUE')) return 'EMPAQUE';
+            if (str_contains($c, 'CERTIFIC')) return 'CERTIFICACIONES';
+            if (str_contains($c, 'ACCESORIO') || str_contains($c, 'OTROS')) return 'ACCESORIOS Y OTROS';
+            if (str_contains($c, 'RAEE')) return 'SISTEMA RAEE';
+            if (str_contains($c, 'FORMATO') || str_contains($c, 'FACTOR') || str_contains($c, 'CHASIS') || str_contains($c, 'SUMINISTRO')) return 'FORMATO';
+            if (str_contains($c, 'RESOLUCI')) return 'RESOLUCIÓN';
+            if (str_contains($c, 'PANTALLA') || str_contains($c, 'PULGADAS')) return 'PANTALLA';
+            if (str_contains($c, 'TECLADO') || str_contains($c, 'MOUSE') || str_contains($c, 'PERIFÉRIC')) return 'TECLADO Y MOUSE';
+            return $c;
+        };
+
+        // Cargar especificaciones del modelo actual
         $product_ids = Producto::where('modelo_id', $id)->pluck('id');
         $specs = Especificacion::whereIn('producto_id', $product_ids)
             ->whereNotNull('descripcion')
@@ -1000,32 +1032,9 @@ public function importarEspecificaciones(Request $request)
 
         $template = [];
         foreach ($specs as $spec) {
-            $campoRaw = mb_strtoupper(trim($spec->campo), 'UTF-8');
-            
-            // Normalizar campos comunes para agrupar duplicados sucios de la DB
-            if (strpos($campoRaw, 'RAM') !== false || strpos($campoRaw, 'MEMORIA') !== false) {
-                $campo = 'RAM';
-            } elseif (strpos($campoRaw, 'PROCESADOR') !== false || strpos($campoRaw, 'CPU') !== false) {
-                $campo = 'PROCESADOR';
-            } elseif (strpos($campoRaw, 'DISCO') !== false || strpos($campoRaw, 'ALMACENAMIENTO') !== false) {
-                $campo = 'ALMACENAMIENTO';
-            } elseif (strpos($campoRaw, 'RESOLUCI') !== false) {
-                $campo = 'RESOLUCIÓN';
-            } elseif (strpos($campoRaw, 'PANTALLA') !== false || strpos($campoRaw, 'PULGADAS') !== false || strpos($campoRaw, 'TAMAÑO') !== false) {
-                $campo = 'PANTALLA';
-            } elseif (strpos($campoRaw, 'SISTEMA OPERATIVO') !== false) {
-                $campo = 'SISTEMA OPERATIVO';
-            } elseif (strpos($campoRaw, 'OFIM') !== false) {
-                $campo = 'SUITE OFIMÁTICA';
-            } elseif (strpos($campoRaw, 'VIDEO') !== false || strpos($campoRaw, 'GRÁF') !== false || strpos($campoRaw, 'GRAF') !== false) {
-                $campo = 'TARJETA DE VIDEO';
-            } elseif (strpos($campoRaw, 'TECLADO') !== false || strpos($campoRaw, 'MOUSE') !== false) {
-                $campo = 'TECLADO Y MOUSE';
-            } else {
-                $campo = $campoRaw; // Si no hay regla, usar el nombre en mayúsculas
-            }
-
+            $campo = $normalizeCampo($spec->campo);
             $valor = trim($spec->descripcion);
+            if (empty($campo) || empty($valor)) continue;
             if (!isset($template[$campo])) {
                 $template[$campo] = [];
             }
@@ -1034,9 +1043,8 @@ public function importarEspecificaciones(Request $request)
             }
         }
 
-        $modelo = Modelo::find($id);
+        // Para modelos de PC / Desktop / Laptop, asegurar la plantilla canónica ordenada
         $descUpper = mb_strtoupper($modelo ? ($modelo->descripcion ?? $modelo->nombre ?? '') : '', 'UTF-8');
-        $catId = $modelo ? $modelo->categoria_id : null;
         $isPc = in_array($catId, [1, 3])
             || str_contains($descUpper, 'SFF')
             || str_contains($descUpper, 'TOWER')
@@ -1047,44 +1055,64 @@ public function importarEspecificaciones(Request $request)
             || str_contains($descUpper, 'HENKO');
 
         if ($isPc) {
-            $defaultPcCampos = [
-                'Formato',
-                'Procesador',
-                'Memoria Ram',
-                'Almacenamiento',
-                'Sistema Operativo',
-                'Suite Ofimática',
-                'Controlador de Video',
-                'Sonido',
-                'Chipset',
-                'Lan',
-                'Wlan',
-                'Puertos Mínimos',
-                'Slot de Expansión',
-                'Fuente de Poder',
-                'Garantia',
-                'Empaque',
-                'Certificaciones',
-                'Accesorios y Otros'
+            $canonicalPcOrder = [
+                'FORMATO',
+                'PROCESADOR',
+                'MEMORIA RAM',
+                'ALMACENAMIENTO',
+                'SISTEMA OPERATIVO',
+                'SUITE OFIMÁTICA',
+                'CONTROLADOR DE VIDEO',
+                'SONIDO',
+                'CHIPSET',
+                'CONECTIVIDAD LAN',
+                'CONECTIVIDAD WLAN',
+                'PUERTOS MÍNIMOS',
+                'SLOT DE EXPANSIÓN',
+                'FUENTE DE PODER',
+                'GARANTÍA DE FÁBRICA',
+                'EMPAQUE',
+                'CERTIFICACIONES',
+                'ACCESORIOS Y OTROS',
+                'SISTEMA RAEE'
             ];
 
-            foreach ($defaultPcCampos as $defCampo) {
-                $exists = false;
-                foreach ($template as $c => $opcs) {
-                    if (mb_strtoupper($c, 'UTF-8') === mb_strtoupper($defCampo, 'UTF-8')
-                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'RAM') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'RAM'))
-                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'PROCESADOR') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'PROCESADOR'))
-                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'ALMACENAMIENTO') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'ALMACENAMIENTO'))
-                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'VIDEO') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'VIDEO'))
-                    ) {
-                        $exists = true;
-                        break;
+            $globalSpecs = null;
+
+            foreach ($canonicalPcOrder as $canCampo) {
+                if (!isset($template[$canCampo]) || empty($template[$canCampo])) {
+                    if ($globalSpecs === null) {
+                        $globalSpecs = Especificacion::whereNotNull('descripcion')
+                            ->where('descripcion', '!=', '')
+                            ->get();
                     }
-                }
-                if (!$exists) {
-                    $template[$defCampo] = [];
+
+                    $opcsGlobal = [];
+                    foreach ($globalSpecs as $gSpec) {
+                        if ($normalizeCampo($gSpec->campo) === $canCampo) {
+                            $gVal = trim($gSpec->descripcion);
+                            if (!empty($gVal) && !in_array($gVal, $opcsGlobal)) {
+                                $opcsGlobal[] = $gVal;
+                            }
+                        }
+                    }
+
+                    $template[$canCampo] = $opcsGlobal;
                 }
             }
+
+            // Ordenar $template según el orden canónico
+            $orderedTemplate = [];
+            foreach ($canonicalPcOrder as $canCampo) {
+                if (isset($template[$canCampo])) {
+                    $orderedTemplate[$canCampo] = $template[$canCampo];
+                    unset($template[$canCampo]);
+                }
+            }
+            foreach ($template as $c => $opcs) {
+                $orderedTemplate[$c] = $opcs;
+            }
+            $template = $orderedTemplate;
         }
 
         $result = [];
