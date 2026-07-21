@@ -402,6 +402,7 @@ eliminarArchivoExcel(index) {
                     console.log('[EDIT] seleccion:', { id: seleccion.id, categoria_id: seleccion.categoria_id, modelo_id: seleccion.modelo_id, get_modelo: seleccion.get_modelo, specs: seleccion.especificaciones?.length });
                     this.producto.nombre = seleccion.nombre;
                     this.producto.pagina_web = seleccion.pagina_web || 'NO';
+                    this.producto.precio_especial = seleccion.precio_especial || '';
                     this.producto.nombre_secundario = seleccion.nombre_secundario || '';
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
@@ -468,6 +469,7 @@ eliminarArchivoExcel(index) {
                 case 'duplicate':
                     this.producto.nombre = seleccion.nombre;
                     this.producto.pagina_web = seleccion.pagina_web || 'NO';
+                    this.producto.precio_especial = seleccion.precio_especial || '';
                     this.producto.nombre_secundario = seleccion.nombre_secundario || '';
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
@@ -578,6 +580,7 @@ eliminarArchivoExcel(index) {
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
             formData.append('pagina_web', this.producto.pagina_web || 'NO');
+            formData.append('precio_especial', this.producto.precio_especial || '');
             formData.append('nombre_secundario', this.producto.nombre_secundario);
             formData.append('descripcion', this.producto.descripcion);
             formData.append('nro_parte', this.producto.nro_parte);
@@ -670,6 +673,7 @@ eliminarArchivoExcel(index) {
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
             formData.append('pagina_web', this.producto.pagina_web || 'NO');
+            formData.append('precio_especial', this.producto.precio_especial || '');
             formData.append('nombre_secundario', this.producto.nombre_secundario);
             formData.append('descripcion', this.producto.descripcion);
             formData.append('nro_parte', this.producto.nro_parte);
@@ -763,6 +767,7 @@ eliminarArchivoExcel(index) {
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
             formData.append('pagina_web', this.producto.pagina_web || 'NO');
+            formData.append('precio_especial', this.producto.precio_especial || '');
             formData.append('nombre_secundario', this.producto.nombre_secundario);
             formData.append('descripcion', this.producto.descripcion);
             formData.append('nro_parte', this.producto.nro_parte);
@@ -894,6 +899,9 @@ eliminarArchivoExcel(index) {
                 'certificacion':'',
                 'especificaciones': '',
                 'especificaciones_raw': [],
+                'ficha_editada_localmente': false,
+                'pagina_web': 'NO',
+                'precio_especial': '',
                 'modelo_id': '',
                 //'unidad': 'UNIDADES',
                 //'moneda': 'SOLES',

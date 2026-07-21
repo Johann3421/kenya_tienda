@@ -486,13 +486,13 @@
                 } elseif (!$isMonitor) {
                     if ($isDesktopOrWorkstation) {
                         $topOrdered = [
-                            (object) ['campo' => 'Formato', 'descripcion' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Formato', 'descripcion' => $getSpecValue(['/formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'Procesador', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Chipset', 'descripcion' => $getSpecValue(['/chipset/']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Controlador de Video', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Chipset', 'descripcion' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Controlador de Video', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'Memoria Ram', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'Almacenamiento', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Fuente de Poder', 'descripcion' => $getSpecValue(['/fuente|psu|power supply/']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'Fuente de Poder', 'descripcion' => $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder']) ?? 'No especificado', 'descripcion2' => ''],
                         ];
                     } else {
                         $topOrdered = [
@@ -814,24 +814,24 @@
                 $oldPcRows = [
                     ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
                     ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
-                    ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
+                    ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
                     ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
                     ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
                     ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
                     ['label' => 'Sistema Operativo', 'value' => $getSpecValue(['/sistema operativo|\bos\b|windows|linux/']) ?? $getProductValue(['sistema_operativo'])],
                     ['label' => 'Suite Ofimática', 'value' => $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica'])],
-                    ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
-                    ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/'])],
-                    ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/'])],
+                    ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
+                    ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/']) ?? $getProductValue(['sonido'])],
+                    ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset'])],
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
                     ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
                     ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
-                    ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2/'])],
-                    ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/'])],
+                    ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2|ranura/'])],
+                    ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder'])],
                     ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
-                    ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque'])],
-                    ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones'])],
-                    ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/'])],
+                    ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque', 'empaque_de_fabrica'])],
+                    ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones', 'certificacion'])],
+                    ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/']) ?? $getProductValue(['accesorios'])],
                 ];
             @endphp
             @forelse($oldPcRows as $fr)

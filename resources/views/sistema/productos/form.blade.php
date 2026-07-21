@@ -55,7 +55,7 @@
             </div>
             <div class="card-body pb-1">
                 <div class="form-row">
-                    <div class="form-group col-lg-7">
+                    <div class="form-group col-lg-5">
                         <label for="nombre" class="label-sm text-muted">NOMBRE / TÍTULO DEL PRODUCTO <span class="text-danger">*</span></label>
                         <input type="text" id="nombre" v-model="producto.nombre" class="form-control fc-new font-weight-bold" :class="[errors.nombre ? 'is-invalid' : '']" :readonly="loading" placeholder="Ej: Laptop Lenovo ThinkPad E14...">
                         <small class="form-text error-color" v-if="errors.nombre">@{{ errors.nombre[0] }}</small>
@@ -63,6 +63,10 @@
                     <div class="form-group col-lg-3">
                         <label for="nro_parte" class="label-sm text-muted">NRO. PARTE (PN)</label>
                         <input type="text" id="nro_parte" v-model="producto.nro_parte" class="form-control fc-new" :readonly="loading">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="precio_especial" class="label-sm text-muted">PRECIO ($ USD)</label>
+                        <input type="number" step="0.01" min="0" id="precio_especial" v-model="producto.precio_especial" class="form-control fc-new font-weight-bold text-primary" placeholder="Cotizar" :readonly="loading">
                     </div>
                     <div class="form-group col-lg-2">
                         <label for="pagina_web" class="label-sm text-muted">VISIBILIDAD WEB</label>

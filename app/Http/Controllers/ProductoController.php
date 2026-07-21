@@ -129,6 +129,11 @@ public function store(Request $request)
         $producto = new Producto();
         $producto->nombre = $request->nombre;
         if ($request->has('pagina_web')) $producto->pagina_web = $request->pagina_web;
+        if ($request->has('precio_especial')) {
+            $valPrecio = is_numeric($request->precio_especial) ? (float)$request->precio_especial : null;
+            $producto->precio_especial = $valPrecio;
+            $producto->precio_unitario = $valPrecio;
+        }
         if ($request->has('descripcion')) $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
         $producto->modelo_id = $request->modelo_id;
@@ -205,6 +210,11 @@ public function update(Request $request)
         $producto = Producto::findOrFail($request->id);
         $producto->nombre = $request->nombre;
         if ($request->has('pagina_web')) $producto->pagina_web = $request->pagina_web;
+        if ($request->has('precio_especial')) {
+            $valPrecio = is_numeric($request->precio_especial) ? (float)$request->precio_especial : null;
+            $producto->precio_especial = $valPrecio;
+            $producto->precio_unitario = $valPrecio;
+        }
         if ($request->has('descripcion')) $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
         $producto->modelo_id = $request->modelo_id;
@@ -1021,6 +1031,59 @@ public function importarEspecificaciones(Request $request)
             }
             if (!in_array($valor, $template[$campo])) {
                 $template[$campo][] = $valor;
+            }
+        }
+
+        $modelo = Modelo::find($id);
+        $descUpper = mb_strtoupper($modelo ? ($modelo->descripcion ?? $modelo->nombre ?? '') : '', 'UTF-8');
+        $catId = $modelo ? $modelo->categoria_id : null;
+        $isPc = in_array($catId, [1, 3])
+            || str_contains($descUpper, 'SFF')
+            || str_contains($descUpper, 'TOWER')
+            || str_contains($descUpper, 'OFISZU')
+            || str_contains($descUpper, 'EZENT')
+            || str_contains($descUpper, 'PROWORK')
+            || str_contains($descUpper, 'GENWORK')
+            || str_contains($descUpper, 'HENKO');
+
+        if ($isPc) {
+            $defaultPcCampos = [
+                'Formato',
+                'Procesador',
+                'Memoria Ram',
+                'Almacenamiento',
+                'Sistema Operativo',
+                'Suite Ofimática',
+                'Controlador de Video',
+                'Sonido',
+                'Chipset',
+                'Lan',
+                'Wlan',
+                'Puertos Mínimos',
+                'Slot de Expansión',
+                'Fuente de Poder',
+                'Garantia',
+                'Empaque',
+                'Certificaciones',
+                'Accesorios y Otros'
+            ];
+
+            foreach ($defaultPcCampos as $defCampo) {
+                $exists = false;
+                foreach ($template as $c => $opcs) {
+                    if (mb_strtoupper($c, 'UTF-8') === mb_strtoupper($defCampo, 'UTF-8')
+                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'RAM') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'RAM'))
+                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'PROCESADOR') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'PROCESADOR'))
+                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'ALMACENAMIENTO') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'ALMACENAMIENTO'))
+                        || (str_contains(mb_strtoupper($c, 'UTF-8'), 'VIDEO') && str_contains(mb_strtoupper($defCampo, 'UTF-8'), 'VIDEO'))
+                    ) {
+                        $exists = true;
+                        break;
+                    }
+                }
+                if (!$exists) {
+                    $template[$defCampo] = [];
+                }
             }
         }
 
