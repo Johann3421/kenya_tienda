@@ -180,4 +180,19 @@ public function fichaApi()
         })->whereNotNull('nombre')->where('nombre', '!=', '');
     }
 
+    public function precios()
+    {
+        return $this->hasMany(\App\Models\ProductoPrecio::class, 'producto_id');
+    }
+
+    public function imagenes()
+    {
+        return $this->hasMany(\App\Models\ProductoImagen::class, 'producto_id')->orderBy('orden', 'asc');
+    }
+
+    public function especificacionesList()
+    {
+        return $this->hasMany(\App\Models\ProductoEspecificacion::class, 'producto_id')->orderBy('orden', 'asc');
+    }
+
 }
