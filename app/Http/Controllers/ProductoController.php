@@ -128,6 +128,7 @@ public function store(Request $request)
 
         $producto = new Producto();
         $producto->nombre = $request->nombre;
+        if ($request->has('pagina_web')) $producto->pagina_web = $request->pagina_web;
         if ($request->has('descripcion')) $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
         $producto->modelo_id = $request->modelo_id;
@@ -203,6 +204,7 @@ public function update(Request $request)
 
         $producto = Producto::findOrFail($request->id);
         $producto->nombre = $request->nombre;
+        if ($request->has('pagina_web')) $producto->pagina_web = $request->pagina_web;
         if ($request->has('descripcion')) $producto->descripcion = $request->descripcion;
         $producto->nro_parte = $request->nro_parte;
         $producto->modelo_id = $request->modelo_id;

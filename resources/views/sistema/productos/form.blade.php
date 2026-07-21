@@ -55,7 +55,7 @@
             </div>
             <div class="card-body pb-1">
                 <div class="form-row">
-                    <div class="form-group col-lg-9">
+                    <div class="form-group col-lg-7">
                         <label for="nombre" class="label-sm text-muted">NOMBRE / TÍTULO DEL PRODUCTO <span class="text-danger">*</span></label>
                         <input type="text" id="nombre" v-model="producto.nombre" class="form-control fc-new font-weight-bold" :class="[errors.nombre ? 'is-invalid' : '']" :readonly="loading" placeholder="Ej: Laptop Lenovo ThinkPad E14...">
                         <small class="form-text error-color" v-if="errors.nombre">@{{ errors.nombre[0] }}</small>
@@ -63,6 +63,13 @@
                     <div class="form-group col-lg-3">
                         <label for="nro_parte" class="label-sm text-muted">NRO. PARTE (PN)</label>
                         <input type="text" id="nro_parte" v-model="producto.nro_parte" class="form-control fc-new" :readonly="loading">
+                    </div>
+                    <div class="form-group col-lg-2">
+                        <label for="pagina_web" class="label-sm text-muted">VISIBILIDAD WEB</label>
+                        <select id="pagina_web" v-model="producto.pagina_web" class="form-control fc-new font-weight-bold" :class="producto.pagina_web === 'SI' ? 'text-success' : 'text-danger'" :disabled="loading">
+                            <option value="NO">Oculto</option>
+                            <option value="SI">Público</option>
+                        </select>
                     </div>
                 </div>
 

@@ -401,6 +401,7 @@ eliminarArchivoExcel(index) {
                 case 'edit':
                     console.log('[EDIT] seleccion:', { id: seleccion.id, categoria_id: seleccion.categoria_id, modelo_id: seleccion.modelo_id, get_modelo: seleccion.get_modelo, specs: seleccion.especificaciones?.length });
                     this.producto.nombre = seleccion.nombre;
+                    this.producto.pagina_web = seleccion.pagina_web || 'NO';
                     this.producto.nombre_secundario = seleccion.nombre_secundario || '';
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
@@ -466,6 +467,7 @@ eliminarArchivoExcel(index) {
                     break;
                 case 'duplicate':
                     this.producto.nombre = seleccion.nombre;
+                    this.producto.pagina_web = seleccion.pagina_web || 'NO';
                     this.producto.nombre_secundario = seleccion.nombre_secundario || '';
                     this.producto.descripcion = seleccion.descripcion || '';
                     this.producto.descripcion_2 = seleccion.descripcion_2 || '';
@@ -575,6 +577,7 @@ eliminarArchivoExcel(index) {
             var formData  = new FormData();
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
+            formData.append('pagina_web', this.producto.pagina_web || 'NO');
             formData.append('nombre_secundario', this.producto.nombre_secundario);
             formData.append('descripcion', this.producto.descripcion);
             formData.append('nro_parte', this.producto.nro_parte);
@@ -666,6 +669,7 @@ eliminarArchivoExcel(index) {
             formData.append('id', this.id);
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
+            formData.append('pagina_web', this.producto.pagina_web || 'NO');
             formData.append('nombre_secundario', this.producto.nombre_secundario);
             formData.append('descripcion', this.producto.descripcion);
             formData.append('nro_parte', this.producto.nro_parte);
@@ -758,6 +762,7 @@ eliminarArchivoExcel(index) {
             formData.append('id', this.id);
             //formData.append('incluye_igv', this.producto.incluye_igv);
             formData.append('nombre', this.producto.nombre);
+            formData.append('pagina_web', this.producto.pagina_web || 'NO');
             formData.append('nombre_secundario', this.producto.nombre_secundario);
             formData.append('descripcion', this.producto.descripcion);
             formData.append('nro_parte', this.producto.nro_parte);
