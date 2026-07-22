@@ -212,8 +212,8 @@
             flex-grow: 1;
         }        /* Estilos de tarjeta actualizados */
         .product-specs-chips {
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 6px;
             margin-bottom: 12px;
         }
@@ -226,6 +226,9 @@
             padding: 3px 8px;
             border-radius: 4px;
             font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .product-title {
