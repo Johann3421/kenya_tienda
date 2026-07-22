@@ -38,7 +38,11 @@ fi
 service cron start || cron &
 
 # Iniciar microservicio Node.js (Scraper de Nanoreview)
-if [ -d "/var/www/scraper" ]; then
+if [ -d "/var/www/html/scraper" ]; then
+    echo "Iniciando scraper microservice en segundo plano..."
+    cd /var/www/html/scraper && npm start &
+    cd /var/www/html
+elif [ -d "/var/www/scraper" ]; then
     echo "Iniciando scraper microservice en segundo plano..."
     cd /var/www/scraper && npm start &
     cd /var/www/html

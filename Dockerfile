@@ -60,8 +60,8 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --no-scripts --no-autoloader --ignore-platform-reqs
 
 # NPM Cache Layer
-COPY scraper/package*.json /var/www/scraper/
-RUN cd /var/www/scraper && npm install
+COPY scraper/package*.json /var/www/html/scraper/
+RUN cd /var/www/html/scraper && npm install
 
 # Application Code (Everything below this line runs on every file change)
 COPY . .

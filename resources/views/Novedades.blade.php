@@ -213,7 +213,7 @@
         }        /* Estilos de tarjeta actualizados */
         .product-specs-chips {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 6px;
             margin-bottom: 12px;
         }
