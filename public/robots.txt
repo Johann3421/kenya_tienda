@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /admin/
+Disallow: /sistema/
+Disallow: /login
+Disallow: /limpiar-cache
+
+Sitemap: https://www.kenya.com.pe/sitemap.xml

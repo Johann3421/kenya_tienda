@@ -1,4 +1,52 @@
 @extends('layouts.landing')
+
+@php
+    $seoTitle = $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . ' | Ficha Técnica y Cotización B2B';
+    $seoDesc = 'Especificaciones técnicas de ' . $producto->display_name . '. ' . ($producto->procesador ? 'Procesador: ' . $producto->procesador . '. ' : '') . ($producto->ram ? 'RAM: ' . $producto->ram . '. ' : '') . ($producto->almacenamiento ? 'Almacenamiento: ' . $producto->almacenamiento . '. ' : '') . 'Garantía 36 Meses On-Site. Cotizaciones B2B en Perú.';
+    $seoImage = $producto->imagen_1 ? (str_starts_with($producto->imagen_1, 'http') ? $producto->imagen_1 : asset('storage/' . $producto->imagen_1)) : asset('theme/images/kenya.png');
+    $seoUrl = route('cotizar.detalle', $producto->id);
+@endphp
+
+@section('title', $seoTitle)
+@section('meta_description', $seoDesc)
+@section('meta_keywords', 'kenya technology, ' . strtolower($producto->display_name) . ', ' . strtolower($producto->nro_parte ?? '') . ', convenio marco peru compras, computadoras peru')
+@section('canonical', $seoUrl)
+
+@section('og_type', 'product')
+@section('og_title', $seoTitle)
+@section('og_description', $seoDesc)
+@section('og_image', $seoImage)
+@section('og_url', $seoUrl)
+
+@section('schema_org')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ e($producto->display_name) }}",
+  "image": ["{{ e($seoImage) }}"],
+  "description": "{{ e($seoDesc) }}",
+  "sku": "{{ e($producto->nro_parte ?? $producto->id) }}",
+  "mpn": "{{ e($producto->nro_parte ?? $producto->id) }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "KENYA Technology"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ e($seoUrl) }}",
+    "priceCurrency": "USD",
+    "price": "{{ $producto->precio_especial ? number_format($producto->precio_especial, 2, '.', '') : '0.00' }}",
+    "availability": "{{ $producto->pagina_web === 'SI' ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' }}",
+    "seller": {
+      "@type": "Organization",
+      "name": "KENYA Technology"
+    }
+  }
+}
+</script>
+@endsection
+
 @section('css')
 <style>
     .carousel-indicators li {
@@ -644,8 +692,8 @@
                         @endif
                     @endif
 
-                    <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto: {{ urlencode($producto->display_name) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:45px; padding:8px 18px; border-radius:8px;">
-                        <i class="bx bxl-whatsapp" style="font-size:22px;"></i> {{ empty($producto->precio_especial) ? 'Contactar' : 'Cotizar' }}
+                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:45px; padding:8px 18px; border-radius:8px;">
+                        <i class="bx bxl-whatsapp" style="font-size:22px;"></i> {{ empty($producto->precio_especial) ? 'Solicitar Cotización' : 'Cotizar por WhatsApp' }}
                     </a>
                 </div>
             </div>

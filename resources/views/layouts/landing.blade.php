@@ -6,9 +6,46 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>KENYA</title>
-    <meta content="" name="description">
-    <meta content="" name="keywords">
+    <title>@yield('title', 'KENYA Technology | Computadoras, Laptops y Equipos B2B en Perú')</title>
+    <meta name="description" content="@yield('meta_description', 'KENYA Technology - Fabricante y proveedor de computadoras de escritorio, laptops, servidores y soluciones tecnológicas B2B y Convenio Marco en Perú. Garantía 36 meses On-Site.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'computadoras kenya, laps kenya, ofiszu sff, ezent, prowork, equipos b2b peru, convenio marco peru compras, tecnologia peru')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+    <!-- Open Graph / Facebook / WhatsApp Preview -->
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:url" content="@yield('og_url', url()->current())">
+    <meta property="og:title" content="@yield('og_title', 'KENYA Technology | Computadoras y Equipos B2B')">
+    <meta property="og:description" content="@yield('og_description', 'Soluciones tecnológicas B2B y Convenio Marco Perú Compras. Garantía 36 meses On-Site.')">
+    <meta property="og:image" content="@yield('og_image', asset('theme/images/kenya.png'))">
+    <meta property="og:site_name" content="KENYA Technology">
+    <meta property="og:locale" content="es_PE">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="@yield('og_url', url()->current())">
+    <meta name="twitter:title" content="@yield('og_title', 'KENYA Technology | Computadoras y Equipos B2B')">
+    <meta name="twitter:description" content="@yield('og_description', 'Soluciones tecnológicas B2B y Convenio Marco Perú Compras. Garantía 36 meses On-Site.')">
+    <meta name="twitter:image" content="@yield('og_image', asset('theme/images/kenya.png'))">
+
+    <!-- Schema.org Base Organization & WebSite JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "KENYA Technology",
+      "url": "https://www.kenya.com.pe",
+      "logo": "{{ asset('theme/images/kenya.png') }}",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+51-958021778",
+        "contactType": "sales",
+        "areaServed": "PE",
+        "availableLanguage": "Spanish"
+      }
+    }
+    </script>
+    @yield('schema_org')
 
     <!-- Favicons -->
     <link href="{{ asset('landing/img/favicon.png') }}" rel="icon">
@@ -930,6 +967,17 @@ body {
             }
         });
     </script>
+    <!-- Floating CEM WhatsApp Conversion Widget -->
+    <a href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Quisiera solicitar cotización de computadoras y equipos corporativos.') }}" 
+       target="_blank" 
+       rel="noopener" 
+       title="Cotizaciones y Ventas Corporativas por WhatsApp" 
+       style="position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; background-color: #25d366; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(37,211,102,0.45); z-index: 9999; text-decoration: none; transition: transform 0.2s ease;"
+       onmouseover="this.style.transform='scale(1.1)';"
+       onmouseout="this.style.transform='scale(1)';"
+    >
+        <i class="fa-brands fa-whatsapp" style="font-size: 32px;"></i>
+    </a>
 </body>
 
 </html>

@@ -1,6 +1,14 @@
 @extends('layouts.landing')
 
-@section('title', 'CatÃ¡logo')
+@section('title', 'Catálogo de Computadoras, Laptops y Equipos B2B | KENYA Technology')
+@section('meta_description', 'Explora el catálogo oficial de equipos KENYA Technology: computadoras de escritorio (OFISZU, EZENT, PROWORK), laptops corporativas, monitores y tóners. Garantía 36 Meses On-Site.')
+@section('meta_keywords', 'catalogo kenya, computadoras de escritorio kenya, laptops kenya, ofiszu sff, ezent tower, prowork, equipos convenio marco')
+@section('canonical', route('catalogo'))
+
+@section('og_title', 'Catálogo de Computadoras y Equipos Cómputo B2B | KENYA Technology')
+@section('og_description', 'Encuentra las mejores opciones en computadoras de escritorio, laptops y suministros corporativos con garantía de 36 meses On-Site.')
+@section('og_image', asset('theme/images/kenya.png'))
+@section('og_url', route('catalogo'))
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">

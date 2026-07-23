@@ -7,6 +7,7 @@ use App\Http\Controllers\ReclamacionController;
 use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\SerialDrawController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,8 @@ Route::get('/limpiar-cache', function() {
 if (app()->environment('local')) {
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 }
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::get('/health', function () {
     return response('ok', 200);

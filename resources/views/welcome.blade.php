@@ -1,4 +1,15 @@
 @extends('layouts.landing')
+
+@section('title', 'KENYA Technology | Fabricante de Computadoras, Laptops y Equipos B2B en Perú')
+@section('meta_description', 'KENYA Technology - Marca nacional líder en fabricación y distribución de computadoras de escritorio (OFISZU, EZENT, PROWORK), laptops y tóner para empresas, distribuidores y Gobierno en Perú. Garantía 36 meses On-Site.')
+@section('meta_keywords', 'computadoras kenya, laps kenya, ofiszu sff, ezent, prowork, equipos b2b peru, convenio marco peru compras, tecnologia peru, venta de pcs al por mayor')
+@section('canonical', url('/'))
+
+@section('og_title', 'KENYA Technology | Equipos Cómputo B2B y Convenio Marco en Perú')
+@section('og_description', 'Proveedores líderes en computadoras de escritorio, laptops y servidores para empresas y sector público. Garantía 36 meses On-Site.')
+@section('og_image', asset('theme/images/kenya.png'))
+@section('og_url', url('/'))
+
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">
