@@ -1,8 +1,8 @@
 @extends('layouts.landing')
 
-@section('title', 'Catálogo de Computadoras, Laptops y Equipos B2B | KENYA Technology')
-@section('meta_description', 'Explora el catálogo oficial de equipos KENYA Technology: computadoras de escritorio (OFISZU, EZENT, PROWORK), laptops corporativas, monitores y tóners. Garantía 36 Meses On-Site.')
-@section('meta_keywords', 'catalogo kenya, computadoras de escritorio kenya, laptops kenya, ofiszu sff, ezent tower, prowork, equipos convenio marco')
+@section('title', 'Catálogo de Computadoras, PCs de Escritorio y Laptops en Perú | KENYA')
+@section('meta_description', 'Explora nuestro catálogo general de computadoras de escritorio, PCs, laptops, monitores y tóner en Perú. Filtra por modelo, procesador, memoria RAM y almacenamiento. Garantía de 36 meses On-Site.')
+@section('meta_keywords', 'computadoras, pcs, pcs de escritorio, catalogo de computadoras, laptops, equipos de computo, monitores, toner, kenya peru')
 @section('canonical', route('catalogo'))
 
 @section('og_title', 'Catálogo de Computadoras y Equipos Cómputo B2B | KENYA Technology')

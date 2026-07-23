@@ -1,15 +1,20 @@
 @extends('layouts.landing')
 
 @php
-    $seoTitle = $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . ' | Ficha Técnica y Cotización B2B';
-    $seoDesc = 'Especificaciones técnicas de ' . $producto->display_name . '. ' . ($producto->procesador ? 'Procesador: ' . $producto->procesador . '. ' : '') . ($producto->ram ? 'RAM: ' . $producto->ram . '. ' : '') . ($producto->almacenamiento ? 'Almacenamiento: ' . $producto->almacenamiento . '. ' : '') . 'Garantía 36 Meses On-Site. Cotizaciones B2B en Perú.';
+    $catNombre = optional($producto->getCategoria)->nombre ?? 'Computadora';
+    $catPrefix = (stripos($catNombre, 'computadora') !== false || stripos($catNombre, 'pc') !== false)
+        ? 'Computadora de Escritorio PC'
+        : (stripos($catNombre, 'laptop') !== false ? 'Laptop Portátil' : $catNombre);
+
+    $seoTitle = $catPrefix . ' ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . ' | KENYA Perú';
+    $seoDesc = 'Computadora ' . $producto->display_name . ' en Perú. Especificaciones: ' . ($producto->procesador ? 'Procesador: ' . $producto->procesador . ', ' : '') . ($producto->ram ? 'RAM: ' . $producto->ram . ', ' : '') . ($producto->almacenamiento ? 'Almacenamiento: ' . $producto->almacenamiento . '. ' : '') . 'Venta de computadoras, PCs de escritorio y laptops con 36 meses de garantía On-Site.';
     $seoImage = $producto->imagen_1 ? (str_starts_with($producto->imagen_1, 'http') ? $producto->imagen_1 : asset('storage/' . $producto->imagen_1)) : asset('theme/images/kenya.png');
     $seoUrl = route('cotizar.detalle', $producto->id);
 @endphp
 
 @section('title', $seoTitle)
 @section('meta_description', $seoDesc)
-@section('meta_keywords', 'kenya technology, ' . strtolower($producto->display_name) . ', ' . strtolower($producto->nro_parte ?? '') . ', convenio marco peru compras, computadoras peru')
+@section('meta_keywords', 'computadoras, pcs, pcs de escritorio, computadora de escritorio, laptops, equipos de computo, ' . strtolower($producto->display_name) . ', ' . strtolower($producto->nro_parte ?? '') . ', kenya peru')
 @section('canonical', $seoUrl)
 
 @section('og_type', 'product')

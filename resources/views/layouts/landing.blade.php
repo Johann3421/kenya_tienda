@@ -6,9 +6,9 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>@yield('title', 'KENYA Technology | Computadoras, Laptops y Equipos B2B en Perú')</title>
-    <meta name="description" content="@yield('meta_description', 'KENYA Technology - Fabricante y proveedor de computadoras de escritorio, laptops, servidores y soluciones tecnológicas B2B y Convenio Marco en Perú. Garantía 36 meses On-Site.')">
-    <meta name="keywords" content="@yield('meta_keywords', 'computadoras kenya, laps kenya, ofiszu sff, ezent, prowork, equipos b2b peru, convenio marco peru compras, tecnologia peru')">
+    <title>@yield('title', 'Computadoras, PCs de Escritorio y Laptops en Perú | KENYA Technology')</title>
+    <meta name="description" content="@yield('meta_description', 'Venta de computadoras de escritorio, PCs, laptops, monitores y tóner en Perú. KENYA Technology ofrece equipos para oficina, hogar, empresas y Convenio Marco con 36 meses de garantía On-Site.')">
+    <meta name="keywords" content="@yield('meta_keywords', 'computadoras, pcs, pcs de escritorio, computadoras de escritorio, laptops, equipos de computo, venta de computadoras peru, kenya, ofiszu sff, ezent, prowork, convenio marco peru compras')">
     <link rel="canonical" href="@yield('canonical', url()->current())">
     <link rel="alternate" type="text/plain" href="{{ url('/llms.txt') }}" title="AI Agent Specification">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
