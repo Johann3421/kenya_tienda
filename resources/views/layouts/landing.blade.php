@@ -10,7 +10,14 @@
     <meta name="description" content="@yield('meta_description', 'KENYA Technology - Fabricante y proveedor de computadoras de escritorio, laptops, servidores y soluciones tecnológicas B2B y Convenio Marco en Perú. Garantía 36 meses On-Site.')">
     <meta name="keywords" content="@yield('meta_keywords', 'computadoras kenya, laps kenya, ofiszu sff, ezent, prowork, equipos b2b peru, convenio marco peru compras, tecnologia peru')">
     <link rel="canonical" href="@yield('canonical', url()->current())">
+    <link rel="alternate" type="text/plain" href="{{ url('/llms.txt') }}" title="AI Agent Specification">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+
+    <!-- Geo-Positioning SEO for Peru -->
+    <meta name="geo.region" content="PE">
+    <meta name="geo.placename" content="Lima, Perú">
+    <meta name="geo.position" content="-12.046374;-77.042793">
+    <meta name="ICBM" content="-12.046374, -77.042793">
 
     <!-- Open Graph / Facebook / WhatsApp Preview -->
     <meta property="og:type" content="@yield('og_type', 'website')">
@@ -28,21 +35,40 @@
     <meta name="twitter:description" content="@yield('og_description', 'Soluciones tecnológicas B2B y Convenio Marco Perú Compras. Garantía 36 meses On-Site.')">
     <meta name="twitter:image" content="@yield('og_image', asset('theme/images/kenya.png'))">
 
-    <!-- Schema.org Base Organization & WebSite JSON-LD -->
+    <!-- Schema.org Base Organization & Geo JSON-LD for AI Search Agents -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       "name": "KENYA Technology",
+      "legalName": "IMPORTACIONES KENYA",
       "url": "https://www.kenya.com.pe",
       "logo": "{{ asset('theme/images/kenya.png') }}",
+      "description": "Fabricante y distribuidor de computadoras de escritorio, laptops y soluciones tecnológicas B2B en Perú. Garantía de 36 meses On-Site a nivel nacional.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Lima",
+        "addressRegion": "Lima",
+        "addressCountry": "PE"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Perú"
+      },
       "contactPoint": {
         "@type": "ContactPoint",
         "telephone": "+51-958021778",
         "contactType": "sales",
         "areaServed": "PE",
         "availableLanguage": "Spanish"
-      }
+      },
+      "knowsAbout": [
+        "Computadoras de Escritorio Corporativas",
+        "Laptops Corporativas",
+        "Convenio Marco Perú Compras",
+        "Fichas Técnicas KENYA OFISZU, EZENT, PROWORK",
+        "Garantía 36 Meses On-Site Perú"
+      ]
     }
     </script>
     @yield('schema_org')

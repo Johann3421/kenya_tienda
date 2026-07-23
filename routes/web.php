@@ -40,6 +40,8 @@ if (app()->environment('local')) {
 }
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/llms.txt', [LlmsController::class, 'txt'])->name('llms.txt');
+Route::get('/llms-full.txt', [LlmsController::class, 'txt'])->name('llms.full.txt');
 
 Route::get('/health', function () {
     return response('ok', 200);
