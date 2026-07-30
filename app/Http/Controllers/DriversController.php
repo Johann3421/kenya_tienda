@@ -54,10 +54,19 @@ class DriversController extends Controller
 
     public function auto_buscar_producto(Request $request)
     {
+        $term = trim($request->search);
+        if ($term === '') {
+            return ['producto' => []];
+        }
 
-        $producto = Producto::select('id','nombre')
-            ->where('nombre', 'LIKE', '%'.$request->search.'%')
-            ->orWhere('id', 'LIKE', '%'.$request->search.'%')
+        $producto = Producto::select('id', 'nombre', 'nro_parte', 'codigo_pc')
+            ->where(function ($q) use ($term) {
+                $q->where('nombre', 'ILIKE', "%{$term}%")
+                  ->orWhere('nro_parte', 'ILIKE', "%{$term}%")
+                  ->orWhere('codigo_pc', 'ILIKE', "%{$term}%")
+                  ->orWhereRaw("id::text LIKE ?", ["%{$term}%"]);
+            })
+            ->take(30)
             ->get();
 
         return [
