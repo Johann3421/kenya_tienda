@@ -79,16 +79,23 @@ class PrecioSyncController extends Controller
                 if ($cleanColName === 'nro_parte' || $cleanColName === 'nro parte' || $cleanColName === 'numero de parte') {
                     $nroParteIndex = $index;
                 }
-                if ($cleanColName === 'precio' || $cleanColName === 'precio unitario' || $cleanColName === 'precio_unitario' || str_contains($cleanColName, 'valor venta canal')) {
+                // Prioridad a la Columna G (índice 6) o nombres de precio de venta/referencial
+                if (str_contains($cleanColName, 'precio referencial') || str_contains($cleanColName, 'precio venta') || str_contains($cleanColName, 'precio final') || str_contains($cleanColName, 'precio cliente')) {
                     $precioEspecialIndex = $index;
-                }
-                if (str_contains($cleanColName, 'precio referencial')) {
-                    $precioReferencialIndex = $index;
+                } elseif ($precioEspecialIndex === -1 && ($cleanColName === 'precio' || $cleanColName === 'precio unitario' || $cleanColName === 'precio_unitario' || str_contains($cleanColName, 'valor venta canal'))) {
+                    $precioEspecialIndex = $index;
                 }
             }
 
+            // Si existe la columna G (índice 6), usarla como columna de precio si no hay coincidencia exacta previa
+            if ($precioEspecialIndex === -1 && isset($header[6])) {
+                $precioEspecialIndex = 6; // Columna G
+            } elseif ($precioEspecialIndex === -1 && isset($header[5])) {
+                $precioEspecialIndex = 5; // Columna F
+            }
+
             if ($nroParteIndex === -1 || $precioEspecialIndex === -1) {
-                return back()->with('error', 'No se encontraron las columnas necesarias. Asegúrate de que existan cabeceras llamadas "NRO_PARTE" y "VALOR VENTA CANAL". Columnas encontradas: ' . implode(', ', $header));
+                return back()->with('error', 'No se encontraron las columnas necesarias en el Google Sheet.');
             }
 
             $actualizados = 0;

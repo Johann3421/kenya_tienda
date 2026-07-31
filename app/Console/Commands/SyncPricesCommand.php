@@ -81,12 +81,30 @@ class SyncPricesCommand extends Command
             $this->info("Usando Tipo de Cambio del Excel: " . $tc);
         }
 
-        // Identificamos indices
-        $idxNroParte = array_search('NRO_PARTE', $values[0]);
-        $idxPrecio = array_search('PRECIO REFERENCIAL CLIENTE (USD SIN IGV)', $values[0]);
+        // Identificamos indices (Columna G = índice 6)
+        $idxNroParte = false;
+        $idxPrecio = false;
+
+        foreach ($values[0] as $i => $h) {
+            $cleanH = strtoupper(trim((string)$h));
+            if (in_array($cleanH, ['NRO_PARTE', 'NRO PARTE', 'NUMERO DE PARTE', 'NRO. PARTE'])) {
+                $idxNroParte = $i;
+            }
+            // Si coincide con Columna G (índice 6) o cabecera de precio
+            if (str_contains($cleanH, 'PRECIO REFERENCIAL') || str_contains($cleanH, 'PRECIO VENTA') || str_contains($cleanH, 'PRECIO CLIENTE') || str_contains($cleanH, 'PRECIO FINAL')) {
+                $idxPrecio = $i;
+            }
+        }
+
+        // Si no se encontró por cabecera explícita, usar Columna G (índice 6) si existe
+        if ($idxPrecio === false && isset($values[0][6])) {
+            $idxPrecio = 6; // Columna G
+        } elseif ($idxPrecio === false && isset($values[0][5])) {
+            $idxPrecio = 5; // Columna F
+        }
 
         if ($idxNroParte === false || $idxPrecio === false) {
-            $this->error("No se encontraron las columnas necesarias (NRO_PARTE o PRECIO REFERENCIAL CLIENTE (USD SIN IGV)) en la fila de cabeceras.");
+            $this->error("No se encontraron las columnas necesarias (NRO_PARTE o Columna G de precio) en la fila de cabeceras.");
             return 1;
         }
 
