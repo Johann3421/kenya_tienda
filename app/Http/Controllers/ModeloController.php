@@ -254,6 +254,7 @@ class ModeloController extends Controller
         try {
             DB::beginTransaction();
 
+            // Asegurar que la columna stock_vigente existe
             if (!Schema::hasColumn('modelos', 'stock_vigente')) {
                 Schema::table('modelos', function (Blueprint $table) {
                     $table->integer('stock_vigente')->default(20)->nullable();
@@ -263,31 +264,41 @@ class ModeloController extends Controller
             $op = $request->operador;
             $filtro = (int) $request->stock_filtro;
             $nuevo = (int) $request->nuevo_stock;
+            $modeloId = $request->input('modelo_id', 'ALL');
 
-            // 1. Filtrar los modelos que cumplan la condición
-            $modelosQuery = DB::table('modelos');
-            if ($request->filled('modelo_id') && $request->modelo_id !== 'ALL') {
-                $modelosQuery->where('id', $request->modelo_id);
-            }
-
-            if ($op === '>=') {
-                $modelosQuery->where(function($q) use ($filtro) {
-                    $q->where('stock_vigente', '>=', $filtro)
-                      ->orWhereNull('stock_vigente');
-                });
-            } elseif ($op === '<=') {
-                $modelosQuery->where('stock_vigente', '<=', $filtro);
+            // Si es un modelo específico, actualizar directamente sin condición de stock
+            if ($modeloId !== 'ALL' && !empty($modeloId)) {
+                DB::table('modelos')->where('id', $modeloId)->update(['stock_vigente' => $nuevo]);
+                DB::table('productos')->where('modelo_id', $modeloId)->update(['stock_inicial' => $nuevo]);
+                $afectados = 1;
             } else {
-                $modelosQuery->where('stock_vigente', '=', $filtro);
-            }
+                // Para "Todos los modelos", filtrar por operador
+                $modelosQuery = DB::table('modelos');
 
-            $modelosIds = $modelosQuery->pluck('id')->toArray();
+                if ($op === '>=') {
+                    $modelosQuery->where(function($q) use ($filtro) {
+                        $q->where('stock_vigente', '>=', $filtro)
+                          ->orWhereNull('stock_vigente');
+                    });
+                } elseif ($op === '<=') {
+                    $modelosQuery->where(function($q) use ($filtro) {
+                        $q->where('stock_vigente', '<=', $filtro)
+                          ->orWhereNull('stock_vigente');
+                    });
+                } else {
+                    $modelosQuery->where(function($q) use ($filtro) {
+                        $q->where('stock_vigente', '=', $filtro)
+                          ->orWhereNull('stock_vigente');
+                    });
+                }
 
-            if (!empty($modelosIds)) {
-                // Actualizar stock_vigente en modelos
-                DB::table('modelos')->whereIn('id', $modelosIds)->update(['stock_vigente' => $nuevo]);
-                // Actualizar stock_inicial en productos vinculados a esos modelos
-                DB::table('productos')->whereIn('modelo_id', $modelosIds)->update(['stock_inicial' => $nuevo]);
+                $modelosIds = $modelosQuery->pluck('id')->toArray();
+                $afectados = count($modelosIds);
+
+                if (!empty($modelosIds)) {
+                    DB::table('modelos')->whereIn('id', $modelosIds)->update(['stock_vigente' => $nuevo]);
+                    DB::table('productos')->whereIn('modelo_id', $modelosIds)->update(['stock_inicial' => $nuevo]);
+                }
             }
 
             DB::commit();
@@ -295,7 +306,7 @@ class ModeloController extends Controller
             return response()->json([
                 'type'    => 'success',
                 'title'   => 'CORRECTO: ',
-                'message' => "Se actualizó el stock vigente a {$nuevo} en " . count($modelosIds) . " modelo(s)."
+                'message' => "Stock vigente actualizado a {$nuevo} en {$afectados} modelo(s)."
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();
