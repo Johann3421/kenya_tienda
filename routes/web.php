@@ -338,6 +338,7 @@ Route::group(['middleware' => ['can:modelos']], function () {
     Route::post('/modelos/update', 'ModeloController@update');
     Route::post('/modelos/delete', 'ModeloController@delete');
     Route::post('/modelos/buscarCategorias', 'ModeloController@buscar_categorias');
+    Route::post('/modelos/actualizar-stock', 'ModeloController@actualizarStock');
 });
 
 // --------------------- MARCAS --------------------------------

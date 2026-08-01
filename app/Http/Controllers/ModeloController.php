@@ -220,4 +220,52 @@ class ModeloController extends Controller
             ]
         ]);
     }
+
+    public function actualizarStock(Request $request)
+    {
+        $this->validate($request, [
+            'operador'     => 'required|string|in:>=,<=,=',
+            'stock_filtro' => 'required|numeric|min:0',
+            'nuevo_stock'  => 'required|numeric|min:0',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $query = DB::table('productos');
+
+            if ($request->filled('modelo_id') && $request->modelo_id !== 'ALL') {
+                $query->where('modelo_id', $request->modelo_id);
+            }
+
+            $op = $request->operador;
+            $filtro = (int) $request->stock_filtro;
+            $nuevo = (int) $request->nuevo_stock;
+
+            if ($op === '>=') {
+                $query->where('stock_inicial', '>=', $filtro);
+            } elseif ($op === '<=') {
+                $query->where('stock_inicial', '<=', $filtro);
+            } else {
+                $query->where('stock_inicial', '=', $filtro);
+            }
+
+            $afectados = $query->update(['stock_inicial' => $nuevo]);
+
+            DB::commit();
+
+            return response()->json([
+                'type'    => 'success',
+                'title'   => 'CORRECTO: ',
+                'message' => "Se actualizó el stock a {$nuevo} en {$afectados} producto(s)."
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'type'    => 'danger',
+                'title'   => 'ERROR: ',
+                'message' => 'Ocurrió un error al actualizar el stock: ' . $th->getMessage()
+            ]);
+        }
+    }
 }

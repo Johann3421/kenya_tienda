@@ -42,6 +42,13 @@ new Vue({
             estado: null,
             imagen: null,
         },
+
+        stockForm: {
+            modelo_id: 'ALL',
+            operador: '>=',
+            stock_filtro: 0,
+            nuevo_stock: 0,
+        },
     },
     created() {
         this.Buscar();
@@ -420,6 +427,26 @@ new Vue({
             }
 
             this.modelo.imagen = files[0];
+        },
+        abrirStockModal(modeloId = 'ALL') {
+            this.stockForm.modelo_id = modeloId || 'ALL';
+            $('#stockModal').modal('show');
+        },
+        ActualizarStock() {
+            this.loading = true;
+            axios.post('../modelos/actualizar-stock', this.stockForm)
+                .then(response => {
+                    this.loading = false;
+                    this.Alert(response.data.type, response.data.title, response.data.message);
+                    if (response.data.type === 'success') {
+                        $('#stockModal').modal('hide');
+                        this.Buscar(this.page || 1);
+                    }
+                })
+                .catch(error => {
+                    this.loading = false;
+                    this.Alert('danger', 'ERROR', 'Error al procesar la solicitud.');
+                });
         },
     },
 });

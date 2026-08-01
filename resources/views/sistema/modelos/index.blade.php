@@ -429,6 +429,53 @@
                     </div>
                     {{-- MODAL --}}
 
+                    <!-- MODAL STOCK -->
+                    <div class="modal fade" id="stockModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-md" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header" style="padding: 10px 15px">
+                                    <h5 class="mb-0">MODIFICAR STOCK <span style="color: #929292; font-size: 17px; font-weight: 400;">(POR MODELO)</span></h5>
+                                    <button type="button" class="btn btn-danger btn-xs float-right" data-dismiss="modal" style="padding: 0px 7px;">X</button>
+                                </div>
+                                <div class="modal-body" style="padding: 15px 15px;">
+                                    <div class="form-group">
+                                        <label class="label-sm font-weight-bold">MODELO OBJETIVO</label>
+                                        <select class="form-control" v-model="stockForm.modelo_id">
+                                            <option value="ALL">-- Todos los modelos --</option>
+                                            <option v-if="seleccion" :value="seleccion.id">Modelo seleccionado: @{{ seleccion.descripcion }}</option>
+                                            <option v-for="mod in listaRequest" :value="mod.id">@{{ mod.descripcion }}</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label class="label-sm font-weight-bold">CONDICIÓN DE STOCK ACTUAL</label>
+                                            <select class="form-control" v-model="stockForm.operador">
+                                                <option value=">=">Mayor o igual que (&ge;)</option>
+                                                <option value="<=">Menor o igual que (&le;)</option>
+                                                <option value="=">Igual a (=)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label class="label-sm font-weight-bold">STOCK ACTUAL (NÚMERO)</label>
+                                            <input type="number" min="0" class="form-control" v-model="stockForm.stock_filtro">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="label-sm font-weight-bold">NUEVO STOCK A ASIGNAR</label>
+                                        <input type="number" min="0" class="form-control form-control-lg text-success font-weight-bold" v-model="stockForm.nuevo_stock">
+                                    </div>
+                                </div>
+                                <div class="modal-footer" style="padding: 10px 15px;">
+                                    <button class="btn btn-warning btn-block event-btn" v-on:click="ActualizarStock" :disabled="loading">
+                                        <span class="spinner-grow spinner-grow-sm" role="status" v-if="loading"></span>
+                                        <span class="load-text" v-if="loading">Actualizando stock...</span>
+                                        <span class="btn-text" v-if="!loading"><i class="fas fa-boxes"></i> Guardar Nuevo Stock</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="mb-3 mt-3 col-md-9">
                             <button type="button" class="btn btn-icon btn-primary mr-2" style="min-width: 88px;"
@@ -460,6 +507,12 @@
                                 v-else>
                                 <div style="font-size: 30px;"><i class="fas fa-trash-alt"></i></div>
                                 <div>Eliminar</div>
+                            </button>
+
+                            <button type="button" class="btn btn-icon btn-warning mr-2" style="min-width: 88px;"
+                                v-on:click="abrirStockModal(active != 0 ? active : 'ALL')">
+                                <div style="font-size: 30px;"><i class="fas fa-boxes"></i></div>
+                                <div>Stock</div>
                             </button>
                         </div>
                         <div class="mb-3 mt-3 col-md-3">
