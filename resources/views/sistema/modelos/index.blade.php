@@ -435,7 +435,7 @@
                             <div class="modal-content">
                                 <div class="modal-header" style="padding: 10px 15px">
                                     <h5 class="mb-0">MODIFICAR STOCK <span style="color: #929292; font-size: 17px; font-weight: 400;">(POR MODELO)</span></h5>
-                                    <button type="button" class="btn btn-danger btn-xs float-right" data-dismiss="modal" style="padding: 0px 7px;">X</button>
+                                    <button type="button" class="btn btn-danger btn-xs float-right" data-dismiss="modal" data-bs-dismiss="modal" v-on:click="closeStockModal" style="padding: 0px 7px;">X</button>
                                 </div>
                                 <div class="modal-body" style="padding: 15px 15px;">
                                     <div class="form-group">
@@ -532,6 +532,7 @@
                                     <th class="cell-2 ">Modelo</th>
                                     <th class="cell-3 text-center">Categoria</th>
                                     <th class="cell-3 text-center">Estado</th>
+                                    <th class="cell-3 text-center">Stock Total</th>
                                     <th class="cell-4">Ruta de la imagen</th>
                                 </tr>
                             </thead>
@@ -563,6 +564,12 @@
                                             </td>
                                             <td class="text-center">
                                                 @{{ modelo.activo }}
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge badge-success" style="font-size: 13px; font-weight: 600;">
+                                                    @{{ modelo.stock_total || 0 }} u.
+                                                </span>
+                                                <small class="d-block text-muted">(@{{ modelo.total_productos || 0 }} prods)</small>
                                             </td>
                                             <td class="text-center">
                                                 @{{ modelo.img_mod }}

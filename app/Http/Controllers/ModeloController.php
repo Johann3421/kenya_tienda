@@ -23,13 +23,27 @@ class ModeloController extends Controller
 
     public function buscar(Request $request)
     {
+        $term = trim($request->search);
 
         $modelos = Modelo::join('categorias AS cat', 'modelos.categoria_id', '=', 'cat.id')
-            ->select('modelos.id', 'modelos.descripcion', 'cat.nombre AS categoria_descripcion', 'modelos.activo', 'cat.id AS categoria_id', 'modelos.img_mod')
-            ->where('modelos.descripcion', 'LIKE', "%{$request->search}%")
-            ->orWhereRaw("modelos.id::text LIKE ?", ["%{$request->search}%"]);
-
-        $modelos = $modelos->paginate(10);
+            ->select(
+                'modelos.id',
+                'modelos.descripcion',
+                'cat.nombre AS categoria_descripcion',
+                'modelos.activo',
+                'cat.id AS categoria_id',
+                'modelos.img_mod',
+                DB::raw("(SELECT COALESCE(SUM(p.stock_inicial), 0) FROM productos p WHERE p.modelo_id = modelos.id) AS stock_total"),
+                DB::raw("(SELECT COUNT(p.id) FROM productos p WHERE p.modelo_id = modelos.id) AS total_productos")
+            )
+            ->where(function ($q) use ($term) {
+                if (!empty($term)) {
+                    $q->where('modelos.descripcion', 'ILIKE', "%{$term}%")
+                      ->orWhereRaw("modelos.id::text LIKE ?", ["%{$term}%"]);
+                }
+            })
+            ->orderBy('modelos.id', 'DESC')
+            ->paginate(10);
 
         return [
             'pagination' => [

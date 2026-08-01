@@ -439,7 +439,15 @@ new Vue({
         },
         abrirStockModal(modeloId = 'ALL') {
             this.stockForm.modelo_id = modeloId || 'ALL';
+            if (this.seleccion && (modeloId === this.seleccion.id)) {
+                this.stockForm.stock_filtro = parseInt(this.seleccion.stock_total) || 0;
+            } else {
+                this.stockForm.stock_filtro = 0;
+            }
             $('#stockModal').modal('show');
+        },
+        closeStockModal() {
+            $('#stockModal').modal('hide');
         },
         ActualizarStock() {
             this.loading = true;
