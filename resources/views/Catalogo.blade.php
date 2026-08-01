@@ -16,9 +16,8 @@
             <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
             <li class="kenya-active"><a href="{{ route('catalogo') }}" class="kenya-nav-link">Cat&aacute;logo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
-            <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            {{-- Sorteo temporalmente oculto en producciÃ³n --}}
-            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">ðŸŽ Sorteo</a></li> --}}
+            <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</            {{-- Sorteo temporalmente oculto en producción --}}
+            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁  Sorteo</a></li> --}}
             <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Cont&aacute;ctenos</a></li>
         </ul>
     </nav>
@@ -26,17 +25,17 @@
 
 @section('content')
     <?php
-    // ConfiguraciÃ³n inicial
+    // Configuración inicial
     use App\Producto;
     use App\Modelo;
     use Illuminate\Support\Facades\DB;
 
-    // Obtener parÃ¡metros de filtro
+    // Obtener parámetros de filtro
     $busqueda = request('busqueda');
     $modeloId = request('modelo');
     $orden = request('orden', 'newest');
 
-    // Nuevos filtros por especificaciones tÃ©cnicas
+    // Nuevos filtros por especificaciones técnicas
     $procesador = request('procesador');
     $memoria_ram = request('memoria_ram');
     $almacenamiento = request('almacenamiento');
@@ -56,7 +55,7 @@
         ->where('pagina_web', 'SI')
         ->noSuspendido();
 
-    // Aplicar filtro de bÃºsqueda
+    // Aplicar filtro de búsqueda
     if ($busqueda) {
         $productosQuery->where('descripcion', 'LIKE', "%{$busqueda}%")->orWhere('nro_parte', 'LIKE', "%{$busqueda}%");
     }
@@ -66,7 +65,7 @@
         $productosQuery->where('modelo_id', $modeloId);
     }
 
-    // Aplicar filtros por especificaciones tÃ©cnicas usando la tabla especificaciones
+    // Aplicar filtros por especificaciones técnicas usando la tabla especificaciones
     if ($procesador) {
         $productosQuery->whereHas('especificaciones', function($q) use ($procesador) {
             $q->where('campo', 'Procesador')->where('descripcion', $procesador);
@@ -89,7 +88,7 @@
     }
     if ($unidad_optica) {
         $productosQuery->whereHas('especificaciones', function($q) use ($unidad_optica) {
-            $q->where('campo', 'Unidad Ã“ptica')->where('descripcion', $unidad_optica);
+            $q->whereIn('campo', ['Unidad Óptica', 'Unidad Ã“ptica'])->where('descripcion', $unidad_optica);
         });
     }
     if ($conectividad_lan) {
@@ -119,20 +118,20 @@
     }
     if ($ofimatica) {
         $productosQuery->whereHas('especificaciones', function($q) use ($ofimatica) {
-            $q->where('campo', 'OfimÃ¡tica')->where('descripcion', $ofimatica);
+            $q->whereIn('campo', ['Ofimática', 'OfimÃ¡tica'])->where('descripcion', $ofimatica);
         });
     }
     if ($perifericos) {
         $productosQuery->whereHas('especificaciones', function($q) use ($perifericos) {
-            $q->where('campo', 'PerifÃ©ricos')->where('descripcion', $perifericos);
+            $q->whereIn('campo', ['Periféricos', 'PerifÃ©ricos'])->where('descripcion', $perifericos);
         });
     }
     if ($tarjeta_video) {
         $productosQuery->where(function ($query) use ($tarjeta_video) {
             $query->whereHas('especificaciones', function ($q) use ($tarjeta_video) {
                 $q->where(function ($specQ) {
-                    $specQ->whereRaw("LOWER(TRIM(campo)) IN ('grÃ¡ficos', 'graficos', 'tarjeta de video')")
-                          ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%grÃ¡f%'")
+                    $specQ->whereRaw("LOWER(TRIM(campo)) IN ('gráficos', 'graficos', 'tarjeta de video')")
+                          ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%gráf%'")
                           ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%graf%'")
                           ->orWhereRaw("LOWER(TRIM(campo)) LIKE '%tarjeta%video%'");
                 })->where('descripcion', $tarjeta_video);
@@ -140,7 +139,7 @@
         });
     }
 
-    // Aplicar ordenaciÃ³n
+    // Aplicar ordenación
     switch ($orden) {
         case 'nombre_asc':
             $productosQuery->orderBy('descripcion', 'asc');
@@ -169,12 +168,12 @@
     $memorias_ram = DB::table('especificaciones')->where('campo', 'Memoria Ram')->distinct()->pluck('descripcion')->sort();
     $almacenamientos = DB::table('especificaciones')->where('campo', 'Almacenamiento')->distinct()->pluck('descripcion')->sort();
     $sistemas_operativos = DB::table('especificaciones')->where('campo', 'Sistema Operativo')->distinct()->pluck('descripcion')->sort();
-    $unidades_opticas = DB::table('especificaciones')->where('campo', 'Unidad Ã“ptica')->distinct()->pluck('descripcion')->sort();
+    $unidades_opticas = DB::table('especificaciones')->whereIn('campo', ['Unidad Óptica', 'Unidad Ã“ptica'])->distinct()->pluck('descripcion')->sort();
     $conectividades_wlan = DB::table('especificaciones')->where('campo', 'Conectividad WLAN')->distinct()->pluck('descripcion')->sort();
     $conectividades_vga = DB::table('especificaciones')->where('campo', 'Conectividad VGA')->distinct()->pluck('descripcion')->sort();
     $conectividades_hdmi = DB::table('especificaciones')->where('campo', 'Conectividad HDMI')->distinct()->pluck('descripcion')->sort();
-    $ofimaticas = DB::table('especificaciones')->where('campo', 'OfimÃ¡tica')->distinct()->pluck('descripcion')->sort();
-    $perifericos_list = DB::table('especificaciones')->where('campo', 'PerifÃ©ricos')->distinct()->pluck('descripcion')->sort();
+    $ofimaticas = DB::table('especificaciones')->whereIn('campo', ['Ofimática', 'OfimÃ¡tica'])->distinct()->pluck('descripcion')->sort();
+    $perifericos_list = DB::table('especificaciones')->whereIn('campo', ['Periféricos', 'PerifÃ©ricos'])->distinct()->pluck('descripcion')->sort();
     $tarjetas_video_specs = DB::table('especificaciones')
         ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
         ->whereRaw("UPPER(productos.pagina_web) = 'SI'")
@@ -183,10 +182,11 @@
               ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
         })
         ->where(function ($q) {
-            $q->whereRaw("LOWER(TRIM(especificaciones.campo)) IN ('grÃ¡ficos', 'graficos', 'tarjeta de video')")
-              ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%grÃ¡f%'")
+            $q->whereRaw("LOWER(TRIM(especificaciones.campo)) IN ('gráficos', 'graficos', 'tarjeta de video')")
+              ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%gráf%'")
               ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%graf%'")
               ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%tarjeta%video%'");
+        })nes.campo)) LIKE '%tarjeta%video%'");
         })
         ->whereNotNull('especificaciones.descripcion')
         ->whereRaw("TRIM(especificaciones.descripcion) != ''")
@@ -603,7 +603,7 @@
         </aside>
 
         <div class="catalog-main">
-            <!-- Barra Superior de CatÃ¡logo -->
+            <!-- Barra Superior de Catálogo -->
             <form method="GET" action="" id="catalog-form">
                 <div class="catalog-top-bar">
                     <div class="catalog-main-search">
@@ -615,8 +615,8 @@
                     
                     <div class="catalog-sort">
                         <select name="orden" class="custom-sort-select" onchange="document.getElementById('catalog-form').submit()">
-                            <option value="newest" {{ $orden == 'newest' ? 'selected' : '' }}>MÃ¡s recientes</option>
-                            <option value="oldest" {{ $orden == 'oldest' ? 'selected' : '' }}>MÃ¡s antiguos</option>
+                            <option value="newest" {{ $orden == 'newest' ? 'selected' : '' }}>Más recientes</option>
+                            <option value="oldest" {{ $orden == 'oldest' ? 'selected' : '' }}>Más antiguos</option>
                             <option value="nombre_asc" {{ $orden == 'nombre_asc' ? 'selected' : '' }}>Nombre (A-Z)</option>
                             <option value="nombre_desc" {{ $orden == 'nombre_desc' ? 'selected' : '' }}>Nombre (Z-A)</option>
                         </select>
@@ -653,7 +653,7 @@
             }
 
             function filterProducts() {
-                // AquÃ­ irÃ­a la lÃ³gica para filtrar/ordenar los productos
+                // Aquí iría la lógica para filtrar/ordenar los productos
                 console.log('Filtrando productos...');
             }
 
@@ -661,8 +661,8 @@
             const quickViewButtons = document.querySelectorAll('.quick-view');
             quickViewButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // LÃ³gica para mostrar vista rÃ¡pida del producto
-                    console.log('Mostrando vista rÃ¡pida');
+                    // Lógica para mostrar vista rápida del producto
+                    console.log('Mostrando vista rápida');
                 });
             });
 
@@ -670,8 +670,8 @@
             const wishlistButtons = document.querySelectorAll('.add-wishlist');
             wishlistButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // LÃ³gica para aÃ±adir a wishlist
-                    console.log('AÃ±adiendo a wishlist');
+                    // Lógica para añadir a wishlist
+                    console.log('Añadiendo a wishlist');
                 });
             });
         });

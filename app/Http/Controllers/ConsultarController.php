@@ -104,7 +104,7 @@ class ConsultarController extends Controller {
                     'Conectividad HDMI' => 'conectividad_hdmi',
                     'Sistema Operativo' => 'sistema_operativo',
                     'Ofimatica' => 'suite_ofimatica',
-                    'OfimÃ¡tica' => 'suite_ofimatica',
+                    'Ofimática' => 'suite_ofimatica',
                     'Periféricos' => 'perifericos',
                 ];
 
@@ -204,7 +204,7 @@ class ConsultarController extends Controller {
                 'Conectividad HDMI' => 'conectividad_hdmi',
                 'Sistema Operativo' => 'sistema_operativo',
                 'Ofimatica' => 'suite_ofimatica',
-                'OfimÃ¡tica' => 'suite_ofimatica',
+                'Ofimática' => 'suite_ofimatica',
                 'Periféricos' => 'perifericos',
             ];
 

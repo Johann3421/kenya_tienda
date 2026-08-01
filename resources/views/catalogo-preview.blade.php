@@ -1,6 +1,6 @@
 @extends('layouts.landing')
 
-@section('title', 'CatÃ¡logo Preview')
+@section('title', 'Catálogo Preview')
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/detallemod.css') }}">
@@ -78,7 +78,7 @@
         }
 
         /* ==========================================
-           SECCIÃ“N DE CATÃLOGO
+           SECCIÓN DE CATÁLOGO
            ========================================== */
         .catalog-section {
             display: grid;
