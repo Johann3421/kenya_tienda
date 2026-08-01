@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use App\Modelo;
 use App\Models\Categoria;
 
@@ -25,6 +27,12 @@ class ModeloController extends Controller
     {
         $term = trim($request->search);
 
+        if (!Schema::hasColumn('modelos', 'stock_vigente')) {
+            Schema::table('modelos', function (Blueprint $table) {
+                $table->integer('stock_vigente')->default(20)->nullable();
+            });
+        }
+
         $modelos = Modelo::join('categorias AS cat', 'modelos.categoria_id', '=', 'cat.id')
             ->select(
                 'modelos.id',
@@ -33,7 +41,7 @@ class ModeloController extends Controller
                 'modelos.activo',
                 'cat.id AS categoria_id',
                 'modelos.img_mod',
-                DB::raw("(SELECT COALESCE(MAX(p.stock_inicial), 20) FROM productos p WHERE p.modelo_id = modelos.id) AS stock_vigente"),
+                DB::raw("COALESCE(modelos.stock_vigente, 20) AS stock_vigente"),
                 DB::raw("(SELECT COUNT(p.id) FROM productos p WHERE p.modelo_id = modelos.id) AS total_productos")
             )
             ->where(function ($q) use ($term) {
@@ -246,32 +254,48 @@ class ModeloController extends Controller
         try {
             DB::beginTransaction();
 
-            $query = DB::table('productos');
-
-            if ($request->filled('modelo_id') && $request->modelo_id !== 'ALL') {
-                $query->where('modelo_id', $request->modelo_id);
+            if (!Schema::hasColumn('modelos', 'stock_vigente')) {
+                Schema::table('modelos', function (Blueprint $table) {
+                    $table->integer('stock_vigente')->default(20)->nullable();
+                });
             }
 
             $op = $request->operador;
             $filtro = (int) $request->stock_filtro;
             $nuevo = (int) $request->nuevo_stock;
 
-            if ($op === '>=') {
-                $query->where('stock_inicial', '>=', $filtro);
-            } elseif ($op === '<=') {
-                $query->where('stock_inicial', '<=', $filtro);
-            } else {
-                $query->where('stock_inicial', '=', $filtro);
+            // 1. Filtrar los modelos que cumplan la condición
+            $modelosQuery = DB::table('modelos');
+            if ($request->filled('modelo_id') && $request->modelo_id !== 'ALL') {
+                $modelosQuery->where('id', $request->modelo_id);
             }
 
-            $afectados = $query->update(['stock_inicial' => $nuevo]);
+            if ($op === '>=') {
+                $modelosQuery->where(function($q) use ($filtro) {
+                    $q->where('stock_vigente', '>=', $filtro)
+                      ->orWhereNull('stock_vigente');
+                });
+            } elseif ($op === '<=') {
+                $modelosQuery->where('stock_vigente', '<=', $filtro);
+            } else {
+                $modelosQuery->where('stock_vigente', '=', $filtro);
+            }
+
+            $modelosIds = $modelosQuery->pluck('id')->toArray();
+
+            if (!empty($modelosIds)) {
+                // Actualizar stock_vigente en modelos
+                DB::table('modelos')->whereIn('id', $modelosIds)->update(['stock_vigente' => $nuevo]);
+                // Actualizar stock_inicial en productos vinculados a esos modelos
+                DB::table('productos')->whereIn('modelo_id', $modelosIds)->update(['stock_inicial' => $nuevo]);
+            }
 
             DB::commit();
 
             return response()->json([
                 'type'    => 'success',
                 'title'   => 'CORRECTO: ',
-                'message' => "Se actualizó el stock a {$nuevo} en {$afectados} producto(s)."
+                'message' => "Se actualizó el stock vigente a {$nuevo} en " . count($modelosIds) . " modelo(s)."
             ]);
         } catch (\Throwable $th) {
             DB::rollBack();

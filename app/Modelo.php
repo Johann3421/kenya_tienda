@@ -12,6 +12,7 @@ class Modelo extends Model
 {
     protected $table = 'modelos';
     public $timestamps = false;
+    protected $fillable = ['descripcion', 'categoria_id', 'activo', 'img_mod', 'stock_vigente'];
 
     public function Productos()
     {
