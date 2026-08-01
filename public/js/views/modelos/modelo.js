@@ -440,10 +440,11 @@ new Vue({
         abrirStockModal(modeloId = 'ALL') {
             this.stockForm.modelo_id = modeloId || 'ALL';
             if (this.seleccion && (modeloId === this.seleccion.id)) {
-                this.stockForm.stock_filtro = parseInt(this.seleccion.stock_total) || 0;
+                this.stockForm.stock_filtro = parseInt(this.seleccion.stock_vigente) || 20;
             } else {
-                this.stockForm.stock_filtro = 0;
+                this.stockForm.stock_filtro = 20;
             }
+            this.stockForm.nuevo_stock = this.stockForm.stock_filtro;
             $('#stockModal').modal('show');
         },
         closeStockModal() {

@@ -6,14 +6,7 @@
     @forelse($productos as $producto)
         <div class="product-card">
             @php
-                $stock = 20;
-                if(isset($producto->procesador)) {
-                    $proc = strtolower($producto->procesador);
-                    if(str_contains($proc, 'ultra')) $stock = 20;
-                    elseif(str_contains($proc, '14') || str_contains($proc, '14th')) $stock = 20;
-                    elseif(str_contains($proc, '13') || str_contains($proc, '13th')) $stock = 3;
-                    elseif(str_contains($proc, '12') || str_contains($proc, '12th')) $stock = 10;
-                }
+                $stock = (isset($producto->stock_inicial) && $producto->stock_inicial !== null) ? (int)$producto->stock_inicial : 20;
             @endphp
             @if(isset($producto->created_at) && \Carbon\Carbon::parse($producto->created_at)->diffInDays(now()) <= 30)
                 <div class="badge-nuevo">Nuevo</div>

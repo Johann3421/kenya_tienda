@@ -456,12 +456,12 @@
                                             </select>
                                         </div>
                                         <div class="form-group col-md-6">
-                                            <label class="label-sm font-weight-bold">STOCK ACTUAL (NÚMERO)</label>
+                                            <label class="label-sm font-weight-bold">STOCK VIGENTE ACTUAL (&ge; N)</label>
                                             <input type="number" min="0" class="form-control" v-model="stockForm.stock_filtro">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label class="label-sm font-weight-bold">NUEVO STOCK A ASIGNAR</label>
+                                        <label class="label-sm font-weight-bold">NUEVO STOCK VIGENTE A ASIGNAR</label>
                                         <input type="number" min="0" class="form-control form-control-lg text-success font-weight-bold" v-model="stockForm.nuevo_stock">
                                     </div>
                                 </div>
@@ -532,7 +532,7 @@
                                     <th class="cell-2 ">Modelo</th>
                                     <th class="cell-3 text-center">Categoria</th>
                                     <th class="cell-3 text-center">Estado</th>
-                                    <th class="cell-3 text-center">Stock Total</th>
+                                    <th class="cell-3 text-center">Stock Vigente</th>
                                     <th class="cell-4">Ruta de la imagen</th>
                                 </tr>
                             </thead>
@@ -567,7 +567,7 @@
                                             </td>
                                             <td class="text-center">
                                                 <span class="badge badge-success" style="font-size: 13px; font-weight: 600;">
-                                                    @{{ modelo.stock_total || 0 }} u.
+                                                    Disponible (&ge; @{{ modelo.stock_vigente || 20 }})
                                                 </span>
                                                 <small class="d-block text-muted">(@{{ modelo.total_productos || 0 }} prods)</small>
                                             </td>

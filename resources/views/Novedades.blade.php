@@ -524,7 +524,7 @@
                     }
                     $imgFb  = $modelImg;
                     $imgFb2 = asset('producto.jpg');
-                    $stock = $producto->stock ?? 100;
+                    $stock = (isset($producto->stock_inicial) && $producto->stock_inicial !== null) ? (int)$producto->stock_inicial : 20;
                 @endphp
                 <div class="product-card">
                     <div class="product-image">

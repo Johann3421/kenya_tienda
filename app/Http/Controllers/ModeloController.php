@@ -33,7 +33,7 @@ class ModeloController extends Controller
                 'modelos.activo',
                 'cat.id AS categoria_id',
                 'modelos.img_mod',
-                DB::raw("(SELECT COALESCE(SUM(p.stock_inicial), 0) FROM productos p WHERE p.modelo_id = modelos.id) AS stock_total"),
+                DB::raw("(SELECT COALESCE(MAX(p.stock_inicial), 20) FROM productos p WHERE p.modelo_id = modelos.id) AS stock_vigente"),
                 DB::raw("(SELECT COUNT(p.id) FROM productos p WHERE p.modelo_id = modelos.id) AS total_productos")
             )
             ->where(function ($q) use ($term) {
