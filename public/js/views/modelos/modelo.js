@@ -358,13 +358,22 @@ new Vue({
             });
         },
         resetDatos() {
-            this.search_categoria    = " ",
-            this.modelo.descripcion  = null,
-            this.modelo.estado       = null,
+            this.search_categoria = "";
             this.modelo = {
+                categoria_id: null,
+                categoria_descripcion: null,
+                categoria_id_actualizar: null,
+                descripcion: null,
+                estado: null,
                 imagen: null,
                 imagen_url: null
-            }
+            };
+            this.stockForm = {
+                modelo_id: 'ALL',
+                operador: '>=',
+                stock_filtro: 0,
+                nuevo_stock: 0,
+            };
         },
         closeModal() {
             this.modal = false;

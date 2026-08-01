@@ -641,5 +641,5 @@
 
 @section('js')
     <script src="{{ asset('moment.min.js') }}"></script>
-    <script src="{{ asset('js/views/modelos/modelo.js') }}"></script>
+    <script src="{{ asset('js/views/modelos/modelo.js') }}?v={{ time() }}"></script>
 @endsection
