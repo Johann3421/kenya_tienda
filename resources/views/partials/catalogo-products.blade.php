@@ -6,7 +6,7 @@
     @forelse($productos as $producto)
         <div class="product-card">
             @php
-                $stock = (isset($producto->stock_inicial) && $producto->stock_inicial !== null) ? (int)$producto->stock_inicial : 20;
+                $stock = $producto->modelo->stock_vigente ?? $producto->stock_inicial ?? 20;
             @endphp
             @if(isset($producto->created_at) && \Carbon\Carbon::parse($producto->created_at)->diffInDays(now()) <= 30)
                 <div class="badge-nuevo">Nuevo</div>

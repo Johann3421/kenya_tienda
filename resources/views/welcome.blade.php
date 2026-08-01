@@ -1362,14 +1362,7 @@
                                     $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
                                     $novedadPartNumber = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
                                     
-                                    $novedadStock = 20;
-                                    if(isset($novedad->procesador)) {
-                                        $proc = strtolower($novedad->procesador);
-                                        if(str_contains($proc, 'ultra')) $novedadStock = 20;
-                                        elseif(str_contains($proc, '14') || str_contains($proc, '14th')) $novedadStock = 20;
-                                        elseif(str_contains($proc, '13') || str_contains($proc, '13th')) $novedadStock = 3;
-                                        elseif(str_contains($proc, '12') || str_contains($proc, '12th')) $novedadStock = 10;
-                                    }
+                                    $novedadStock = $novedad->modelo->stock_vigente ?? $novedad->stock_inicial ?? 20;
                                 @endphp
                                 <div class="novedad-card">
                                     <span class="novedad-badge">Nuevo</span>
