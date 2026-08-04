@@ -155,8 +155,8 @@
                             <span class="stock-text">Disponible (≥ {{ $stock }})</span>
                         @endif
                     @else
-                        <span class="stock-status-dot out-of-stock"></span>
-                        <span class="stock-text" style="color:#dc3545;">Agotado</span>
+                        <span class="stock-status-dot available"></span>
+                        <span class="stock-text" style="color:#2ecc71; font-weight:600;">A cotizar</span>
                     @endif
                 </div>
 
