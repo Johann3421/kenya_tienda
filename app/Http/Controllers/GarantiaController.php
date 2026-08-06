@@ -139,7 +139,7 @@ class GarantiaController extends Controller
                 'per_page' => $garantias->perPage(),
                 'last_page' => $garantias->lastPage(),
                 'from' => $garantias->firstItem(),
-                'to' => $garantias->lastPage(),
+                'to' => $garantias->lastPage(), // usado para paginación en vista
                 'index' => ($garantias->currentPage() - 1) * $garantias->perPage(),
             ],
             'garantias' => $garantias
@@ -153,12 +153,19 @@ class GarantiaController extends Controller
             return ['producto' => []];
         }
 
+        $isPostgres = DB::getDriverName() === 'pgsql';
+        $likeOp = $isPostgres ? 'ILIKE' : 'LIKE';
+
         $producto = Producto::select('id', 'nombre', 'nro_parte', 'codigo_pc')
-            ->where(function ($q) use ($term) {
-                $q->where('nombre', 'ILIKE', "%{$term}%")
-                  ->orWhere('nro_parte', 'ILIKE', "%{$term}%")
-                  ->orWhere('codigo_pc', 'ILIKE', "%{$term}%")
-                  ->orWhereRaw("id::text LIKE ?", ["%{$term}%"]);
+            ->where(function ($q) use ($term, $likeOp, $isPostgres) {
+                $q->where('nombre', $likeOp, "%{$term}%")
+                  ->orWhere('nro_parte', $likeOp, "%{$term}%")
+                  ->orWhere('codigo_pc', $likeOp, "%{$term}%");
+                if ($isPostgres) {
+                    $q->orWhereRaw("id::text LIKE ?", ["%{$term}%"]);
+                } else {
+                    $q->orWhereRaw("CAST(id AS CHAR) LIKE ?", ["%{$term}%"]);
+                }
             })
             ->take(30)
             ->get();
@@ -190,7 +197,7 @@ class GarantiaController extends Controller
             'garantia'             => 'required|string',
             'fecha_venta'          => 'required',
             'fecha_Vencimiento'    => 'required',
-            'serie'                => 'required|size:14',
+            'serie'                => 'required|min:4|max:30',
             'estado'               => 'required|string'
         ]);
 
@@ -262,7 +269,7 @@ class GarantiaController extends Controller
             'garantia'             => 'required|string',
             'fecha_venta'          => 'required',
             'fecha_Vencimiento'    => 'required',
-            'serie'                => 'required|size:14',
+            'serie'                => 'required|min:4|max:30',
             'estado'               => 'required|string'
         ]);
 

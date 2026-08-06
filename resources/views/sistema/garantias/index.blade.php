@@ -111,13 +111,13 @@
             <div class="row align-items-center">
                 <div class="col-md-12">
                     <div class="page-header-title">
-                        <h5 class="m-b-10" style="color: #6b6b6b;"><i class="fas fa-truck-loading"></i>Soporte</h5>
+                        <h5 class="m-b-10" style="color: #6b6b6b;"><i class="fas fa-receipt"></i>Fichas Vendidas</h5>
 
                     </div>
                     <ul class="breadcrumb" style="font-size: 15px;">
                         <li class="breadcrumb-item" style="margin-top: -3px;"><a href="../"><i class="fas fa-home"
                                     style="font-size: 20px;"></i></a></li>
-                        <li class="breadcrumb-item"><a href="../">Soporte</a></li>
+                        <li class="breadcrumb-item"><a href="../">Fichas Vendidas</a></li>
                     </ul>
                 </div>
             </div>
@@ -228,7 +228,7 @@
                             <div class="modal-content" v-if="methods == 'edit'">
                                 <div class="modal-header" style="padding: 10px 15px">
                                     <h5 class="mb-0">EDITAR <span
-                                            style="color: #929292; font-size: 17px; font-weight: 400;">(CLIENTE)</span>
+                                            style="color: #929292; font-size: 17px; font-weight: 400;">(GARANTÍA)</span>
                                     </h5>
                                     <button type="button" title="Cerrar" data-dismiss="modal" aria-label="Close"
                                         v-on:click="closeModal(methods)" class="btn btn-danger btn-xs float-right"
@@ -321,14 +321,14 @@
                             <div class="modal-content" v-if="methods == 'delete'">
                                 <div class="modal-header" style="padding: 10px 15px">
                                     <h5 class="mb-0">ELIMINAR <span
-                                            style="color: #929292; font-size: 17px; font-weight: 400;">(DRIVER)</span></h5>
+                                            style="color: #929292; font-size: 17px; font-weight: 400;">(GARANTÍA)</span></h5>
                                     <button type="button" title="Cerrar" data-dismiss="modal" aria-label="Close"
                                         v-on:click="closeModal(methods)" class="btn btn-danger btn-xs float-right"
                                         style="padding: 0px 7px;">X</button>
                                 </div>
                                 <div class="modal-body" style="padding: 15px 15px;">
                                     <p class="text-center">
-                                        Realmente desea eliminar el Driver <strong>"@{{ seleccion.garantia }}"</strong>
+                                        ¿Realmente desea eliminar la Garantía <strong>"@{{ seleccion.garantia }}"</strong>?
                                     </p>
                                 </div>
                                 <div class="modal-footer" style="padding: 10px 15px;">

@@ -50,10 +50,9 @@ new Vue({
         this.Buscar();
     },
     computed: {
-
         listaRequestFiltrada() {
-        return this.listaRequest;
-    },
+            return this.listaRequest;
+        },
         isActive: function () {
             return this.pagination.current_page;
         },
@@ -81,43 +80,52 @@ new Vue({
         },
     },
     watch: {
-    filtroEstado() {
-        this.Buscar(1); // Siempre vuelve a la p�gina 1 al cambiar filtro
-    }
-},
+        filtroEstado() {
+            this.Buscar(1);
+        },
+        fecha_venta() {
+            if (this.garantia && this.fecha_venta) this.ValidarCampos('garantia');
+        },
+        garantia() {
+            if (this.garantia && this.fecha_venta) this.ValidarCampos('garantia');
+        },
+    },
     methods: {
         getBarPercent(fechaInicio, fechaFin) {
-        if (!fechaInicio || !fechaFin) return 0;
-        const start = moment(fechaInicio);
-        const end = moment(fechaFin);
-        const now = moment();
-        const total = end.diff(start, 'days');
-        const transcurrido = now.diff(start, 'days');
-        if (now.isBefore(start)) return 100;
-        if (now.isAfter(end)) return 0;
-        return Math.max(0, Math.min(100, 100 - (transcurrido / total) * 100));
-    },
-    getBarColor(fechaInicio, fechaFin) {
-        const percent = this.getBarPercent(fechaInicio, fechaFin);
-        const now = moment();
-        const end = moment(fechaFin);
-        if (end.diff(now, 'months', true) <= 3) {
-            return 'bg-danger'; // rojo �ltimos 3 meses
-        }
-        if (percent > 66) {
-            return 'bg-success'; // verde
-        } else if (percent > 33) {
-            return 'bg-warning'; // naranja
-        } else {
-            return 'bg-danger'; // rojo
-        }
-    },
-    getBarLabel(fechaInicio, fechaFin) {
-        const percent = this.getBarPercent(fechaInicio, fechaFin);
-        if (percent > 66) return 'Nueva';
-        if (percent > 33) return 'Media';
-        return 'Por vencer';
-    },
+            if (!fechaInicio || !fechaFin) return 0;
+            const start = moment(fechaInicio);
+            const end = moment(fechaFin);
+            const now = moment();
+            const total = end.diff(start, 'days');
+            const transcurrido = now.diff(start, 'days');
+            if (now.isBefore(start)) return 100;
+            if (now.isAfter(end)) return 0;
+            return Math.max(0, Math.min(100, 100 - (transcurrido / total) * 100));
+        },
+        getBarColor(fechaInicio, fechaFin) {
+            const percent = this.getBarPercent(fechaInicio, fechaFin);
+            const now = moment();
+            const end = moment(fechaFin);
+            if (end.diff(now, 'months', true) <= 3) {
+                return 'bg-danger';
+            }
+            if (percent > 66) {
+                return 'bg-success';
+            } else if (percent > 33) {
+                return 'bg-warning';
+            } else {
+                return 'bg-danger';
+            }
+        },
+        getBarLabel(fechaInicio, fechaFin) {
+            const percent = this.getBarPercent(fechaInicio, fechaFin);
+            const now = moment();
+            const end = moment(fechaFin);
+            if (end.isBefore(now)) return 'Vencida';
+            if (percent > 66) return 'Nueva';
+            if (percent > 33) return 'Media';
+            return 'Por vencer';
+        },
         changePage(page) {
             this.page = page;
             this.pagination.current_page = page;
@@ -136,32 +144,32 @@ new Vue({
             );
         },
         Buscar(page) {
-    this.page = page;
-    this.active = 0;
-    urlBuscar = "../garantias/buscar?page=" + page;
-    axios
-        .post(urlBuscar, {
-            search: this.search,
-            filtroEstado: this.filtroEstado
-        })
-        .then((response) => {
-            if (exe == 0) {
-                $("#list-loading").hide();
-                this.listTable = true;
-                $("#list-paginator").show();
-                exe++;
-            }
-            this.listaRequest = response.data.garantias.data;
-            this.to_pagination = response.data.garantias.to;
-            this.pagination = response.data.pagination;
-        })
-        .catch((error) => {
-            alert(
-                error +
-                    ". Por favor contacte al Administrador del Sistema."
-            );
-        });
-},
+            this.page = page;
+            this.active = 0;
+            urlBuscar = "../garantias/buscar?page=" + page;
+            axios
+                .post(urlBuscar, {
+                    search: this.search,
+                    filtroEstado: this.filtroEstado
+                })
+                .then((response) => {
+                    if (exe == 0) {
+                        $("#list-loading").hide();
+                        this.listTable = true;
+                        $("#list-paginator").show();
+                        exe++;
+                    }
+                    this.listaRequest = response.data.garantias.data;
+                    this.to_pagination = response.data.garantias.to;
+                    this.pagination = response.data.pagination;
+                })
+                .catch((error) => {
+                    alert(
+                        error +
+                            ". Por favor contacte al Administrador del Sistema."
+                    );
+                });
+        },
         AutoBuscar() {
             this.active = 0;
             this.mostrar = true;
@@ -171,7 +179,6 @@ new Vue({
                     search: this.search_producto,
                 })
                 .then((response) => {
-                    // console.log(response)
                     this.productos = response.data.producto;
                 })
                 .catch((error) => {
@@ -189,7 +196,6 @@ new Vue({
                 this.active = id_garantia;
                 this.seleccion = garantia;
             }
-            // console.info({ id_garantia, garantia: garantia});
         },
         Fila_producto(id_producto, producto, metodo) {
             if (this.active == id_producto) {
@@ -207,7 +213,6 @@ new Vue({
             if (metodo === "edit") {
                 this.producto_id_actualizar = id_producto;
             }
-            // console.log({id_producto, producto, metodo, producto_id_actualizar: this.producto_id_actualizar})
         },
         formularioModal(size, id, metodo, seleccion) {
             this.modal_size = size;
@@ -248,10 +253,6 @@ new Vue({
             this.loading = true;
             this.ValidarCampos("garantia");
 
-                    // this.garantia === "1"
-                    //     ? (this.garantia = this.garantia.concat(" ", "Mes"))
-                    //     : (this.garantia = this.garantia.concat(" ", "Meses"));
-
             if (Object.keys(this.errors).length === 0) {
                 axios
                     .post("../garantias/store", {
@@ -263,7 +264,6 @@ new Vue({
                         estado: this.estado,
                     })
                     .then((response) => {
-                        console.log(response)
                         this.loading = false;
                         this.state = response.data.type;
                         this.Alert(
@@ -281,12 +281,9 @@ new Vue({
                     })
                     .catch((error) => {
                         this.loading = false;
-                        console.log(error);
                         if (error.response.status == 422) {
                             this.errors = error.response.data.errors || {};
                         } else {
-                            // console.log(error.response)
-                            // console.log([this.descripcion, this.estado, this.categoria])
                             alert(
                                 "Algo salio mal, por favor intente nuevamente."
                             );
@@ -324,7 +321,6 @@ new Vue({
                         if (response.data.type == "success") {
                             this.resetDatos();
                             this.Buscar(this.page);
-                            // Cerrar modal con Bootstrap 5
                             const modalElement = document.getElementById('formularioModal');
                             const modalInstance = bootstrap.Modal.getInstance(modalElement);
                             if (modalInstance) {
@@ -345,7 +341,7 @@ new Vue({
                             );
                         }
                     });
-            }else {
+            } else {
                 this.loading = false;
             }
         },
@@ -367,7 +363,6 @@ new Vue({
 
                     if (response.data.type == "success") {
                         this.Buscar(this.page);
-                        // Cerrar modal con Bootstrap 5
                         const modalElement = document.getElementById('formularioModal');
                         const modalInstance = bootstrap.Modal.getInstance(modalElement);
                         if (modalInstance) {
@@ -401,7 +396,6 @@ new Vue({
             this.message = null;
             this.errors = {};
 
-            // Limpiar backdrop de Bootstrap 5
             const modalElement = document.getElementById('formularioModal');
             if (modalElement) {
                 const modalInstance = bootstrap.Modal.getInstance(modalElement);
@@ -409,7 +403,6 @@ new Vue({
                     modalInstance.hide();
                 }
             }
-            // Asegurar que se eliminen los backdrops
             document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
             document.body.classList.remove('modal-open');
             document.body.style.overflow = '';
@@ -460,12 +453,6 @@ new Vue({
                     this.fecha_Vencimiento = this.fecha_Vencimiento
                         .map((e) => e)
                         .join("-");
-
-                    console.log({
-                        garantia: this.garantia,
-                        fecha_venta: this.fecha_venta,
-                        fecha_Vencimiento: this.fecha_Vencimiento,
-                    });
 
                     break;
 
