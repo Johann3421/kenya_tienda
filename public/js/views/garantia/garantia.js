@@ -77,9 +77,16 @@ new Vue({
             });
             if (this.sortKey) {
                 const dir = this.sortDir === 'asc' ? 1 : -1;
+                const key = this.sortKey;
                 list = list.slice().sort((a, b) => {
-                    const va = a[this.sortKey] ?? '';
-                    const vb = b[this.sortKey] ?? '';
+                    let va, vb;
+                    if (key === 'serie') {
+                        va = parseInt((a.serie || '').slice(-4)) || 0;
+                        vb = parseInt((b.serie || '').slice(-4)) || 0;
+                    } else {
+                        va = a[key] ?? '';
+                        vb = b[key] ?? '';
+                    }
                     return va < vb ? -dir : va > vb ? dir : 0;
                 });
             }

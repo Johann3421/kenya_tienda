@@ -103,12 +103,6 @@
         th.sortable.sort-desc .sort-icon::after { content: '\25BC'; color: #1c82e1; }
         th.sortable:not(.sort-asc):not(.sort-desc) .sort-icon::after { content: '\21C5'; }
 
-        .filter-row th { padding: 4px; background: #f0f4f8; }
-        .filter-row input, .filter-row select {
-            width: 100%; font-size: 11px; padding: 2px 5px;
-            border: 1px solid #ccc; border-radius: 3px; height: 26px;
-        }
-        .filter-row input:focus, .filter-row select:focus { border-color: #1c82e1; outline: none; }
     </style>
 @endsection
 @section('content')
@@ -484,27 +478,6 @@
                                     <th class="cell-5 text-center sortable" :class="sortClass('fecha_Vencimiento')" v-on:click="toggleSort('fecha_Vencimiento')">Fecha de Vencimiento<span class="sort-icon"></span></th>
                                     <th class="cell-6 sortable" :class="sortClass('serie')" v-on:click="toggleSort('serie')">Serie<span class="sort-icon"></span></th>
                                     <th class="cell-7 text-center sortable" :class="sortClass('activo')" v-on:click="toggleSort('activo')">Estado<span class="sort-icon"></span></th>
-                                </tr>
-                                <tr class="filter-row">
-                                    <th></th>
-                                    <th><input type="text" v-model="colFilters.producto_descripcion" placeholder="Filtrar producto..."></th>
-                                    <th><input type="number" v-model="colFilters.garantia" placeholder="Meses..." min="1"></th>
-                                    <th>
-                                        <input type="date" v-model="colFilters.fecha_venta_desde" title="Desde">
-                                        <input type="date" v-model="colFilters.fecha_venta_hasta" title="Hasta" style="margin-top:2px;">
-                                    </th>
-                                    <th>
-                                        <input type="date" v-model="colFilters.fecha_venc_desde" title="Desde">
-                                        <input type="date" v-model="colFilters.fecha_venc_hasta" title="Hasta" style="margin-top:2px;">
-                                    </th>
-                                    <th><input type="text" v-model="colFilters.serie" placeholder="Filtrar serie..."></th>
-                                    <th>
-                                        <select v-model="colFilters.activo">
-                                            <option value="">Todos</option>
-                                            <option value="Si">Si</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
