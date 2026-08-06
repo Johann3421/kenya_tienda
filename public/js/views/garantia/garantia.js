@@ -45,13 +45,45 @@ new Vue({
         producto_id_actualizar: null,
         filtroEstado: '',
         mostrarLeyenda: false,
+        sortKey: 'fecha_venta',
+        sortDir: 'desc',
+        colFilters: {
+            producto_descripcion: '',
+            garantia: '',
+            fecha_venta_desde: '',
+            fecha_venta_hasta: '',
+            fecha_venc_desde: '',
+            fecha_venc_hasta: '',
+            serie: '',
+            activo: '',
+        },
     },
     created() {
         this.Buscar();
     },
     computed: {
         listaRequestFiltrada() {
-            return this.listaRequest;
+            const f = this.colFilters;
+            let list = this.listaRequest.filter(g => {
+                if (f.producto_descripcion && !g.producto_descripcion.toLowerCase().includes(f.producto_descripcion.toLowerCase())) return false;
+                if (f.garantia && parseInt(g.garantia) !== parseInt(f.garantia)) return false;
+                if (f.fecha_venta_desde && g.fecha_venta < f.fecha_venta_desde) return false;
+                if (f.fecha_venta_hasta && g.fecha_venta > f.fecha_venta_hasta) return false;
+                if (f.fecha_venc_desde && g.fecha_Vencimiento < f.fecha_venc_desde) return false;
+                if (f.fecha_venc_hasta && g.fecha_Vencimiento > f.fecha_venc_hasta) return false;
+                if (f.serie && !g.serie.toLowerCase().includes(f.serie.toLowerCase())) return false;
+                if (f.activo && g.activo !== f.activo) return false;
+                return true;
+            });
+            if (this.sortKey) {
+                const dir = this.sortDir === 'asc' ? 1 : -1;
+                list = list.slice().sort((a, b) => {
+                    const va = a[this.sortKey] ?? '';
+                    const vb = b[this.sortKey] ?? '';
+                    return va < vb ? -dir : va > vb ? dir : 0;
+                });
+            }
+            return list;
         },
         isActive: function () {
             return this.pagination.current_page;
@@ -91,6 +123,18 @@ new Vue({
         },
     },
     methods: {
+        toggleSort(key) {
+            if (this.sortKey === key) {
+                this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc';
+            } else {
+                this.sortKey = key;
+                this.sortDir = 'asc';
+            }
+        },
+        sortClass(key) {
+            if (this.sortKey !== key) return '';
+            return this.sortDir === 'asc' ? 'sort-asc' : 'sort-desc';
+        },
         getBarPercent(fechaInicio, fechaFin) {
             if (!fechaInicio || !fechaFin) return 0;
             const start = moment(fechaInicio);
