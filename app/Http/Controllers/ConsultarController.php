@@ -129,7 +129,9 @@ class ConsultarController extends Controller {
 
                         // Cargar modelo
                         if ($producto->modelo) {
-                            $productoArray['modelo'] = $producto->modelo->toArray();
+                            $modeloArr = $producto->modelo->toArray();
+                            $modeloArr['img_url'] = $producto->modelo->img_url;
+                            $productoArray['modelo'] = $modeloArr;
                         }
 
                         // Cargar especificaciones directamente de la tabla
@@ -235,7 +237,9 @@ class ConsultarController extends Controller {
 
                         // Cargar modelo
                         if ($producto->modelo) {
-                            $productoArray['modelo'] = $producto->modelo->toArray();
+                            $modeloArr = $producto->modelo->toArray();
+                            $modeloArr['img_url'] = $producto->modelo->img_url;
+                            $productoArray['modelo'] = $modeloArr;
                         }
 
                         // Cargar especificaciones directamente de la tabla

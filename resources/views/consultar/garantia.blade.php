@@ -256,7 +256,7 @@
         <div v-if="state == 'success' && !loading">
             <article class="result-card" id="tab-garantia-content">
                 <div class="result-image">
-                    <img src="{{ asset('producto.jpg') }}" alt="Producto">
+                    <img :src="garantia.get_productos && garantia.get_productos[0] && garantia.get_productos[0].modelo && garantia.get_productos[0].modelo.img_url ? garantia.get_productos[0].modelo.img_url : '{{ asset('producto.jpg') }}'" alt="Producto">
                 </div>
                 <div class="result-details">
                     <h3 class="result-title">Estado del Producto</h3>
