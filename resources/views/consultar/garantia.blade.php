@@ -386,7 +386,7 @@
         <div class="video-grid">
             <div class="video-card">
                 <div class="video-thumbnail">
-                    <iframe src="https://www.youtube.com/embed/mFswNoideic" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div class="video-details">
                     <h4 class="video-title">Embalaje de piezas de servicio de unidades reemplazables Kenya</h4>
@@ -394,7 +394,7 @@
             </div>
             <div class="video-card">
                 <div class="video-thumbnail">
-                    <iframe src="https://www.youtube.com/embed/mFswNoideic" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div class="video-details">
                     <h4 class="video-title">Cómo encontrar la información de su garantía Kenya</h4>
@@ -402,7 +402,7 @@
             </div>
             <div class="video-card">
                 <div class="video-thumbnail">
-                    <iframe src="https://www.youtube.com/embed/mFswNoideic" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div class="video-details">
                     <h4 class="video-title">Cómo localizar un centro de reparación Kenya</h4>
@@ -410,7 +410,7 @@
             </div>
             <div class="video-card">
                 <div class="video-thumbnail">
-                    <iframe src="https://www.youtube.com/embed/mFswNoideic" title="YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
                 <div class="video-details">
                     <h4 class="video-title">Recorriendo la BIOS UEFI Kenya</h4>
@@ -500,6 +500,12 @@
                         document.getElementById('main-results-container').style.display = 'none';
                         document.getElementById('tab-galeria-content').style.display = 'block';
                         document.getElementById('tab-terminos-content').style.display = 'none';
+                        // Cargar iframes de YouTube de forma diferida
+                        document.querySelectorAll('#tab-galeria-content iframe[data-src]').forEach(function(iframe) {
+                            if (iframe.getAttribute('src') === 'about:blank') {
+                                iframe.setAttribute('src', iframe.getAttribute('data-src'));
+                            }
+                        });
                     } else if (target === 'tab-terminos') {
                         document.getElementById('main-results-container').style.display = 'none';
                         document.getElementById('tab-galeria-content').style.display = 'none';
