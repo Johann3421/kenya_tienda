@@ -559,12 +559,12 @@
                             <div class="product-price-placeholder" style="display:none;"></div>
                             
                             <div class="product-stock-wrapper">
-                                @if($stock > 0)
+                                @if($stock !== 0 && $stock !== '0')
                                     <span class="stock-status-dot available"></span>
                                     <span class="stock-text">Disponible (≥ {{ $stock }})</span>
                                 @else
-                                    <span class="stock-status-dot out-of-stock"></span>
-                                    <span class="stock-text" style="color: #dc3545;">Agotado</span>
+                                    <span class="stock-status-dot available"></span>
+                                    <span class="stock-text" style="color:#2ecc71; font-weight:600;">A cotizar</span>
                                 @endif
                             </div>
                             <button class="btn-details pill" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">Más información</button>
