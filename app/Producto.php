@@ -252,8 +252,7 @@ public function fichaApi()
 
                     // 2. Modelo relacionado
                     $termQuery->orWhereHas('getModelo', function ($modQuery) use ($term, $likeOp) {
-                        $modQuery->where('descripcion', $likeOp, "%{$term}%")
-                                 ->orWhere('prefix', $likeOp, "%{$term}%");
+                        $modQuery->where('descripcion', $likeOp, "%{$term}%");
                     });
 
                     // 3. Categoría relacionada
