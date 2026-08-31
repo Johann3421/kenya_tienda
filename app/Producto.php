@@ -4,6 +4,7 @@ namespace App;
 
 use App\Models\Aside;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use App\Models\Categoria;
 use App\Models\Especificacion;
 use App\Models\Marca;
@@ -178,6 +179,117 @@ public function fichaApi()
         return $query->where(function ($q) {
             $q->whereNull('vigencia')->orWhereNotIn('vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
         })->whereNotNull('nombre')->where('nombre', '!=', '');
+    }
+
+    /**
+     * Scope: Buscador inteligente de productos.
+     * Busca por múltiples términos, modelos, categorías, sinónimos, specs y campos clave.
+     */
+    public function scopeIntelligentSearch($query, $searchTerm)
+    {
+        $raw = trim((string) $searchTerm);
+        if ($raw === '') {
+            return $query;
+        }
+
+        // Quitar caracteres especiales molestos pero conservar letras, números y espacios
+        $cleaned = preg_replace('/[^\p{L}\p{N}\s\.\-\_]/u', ' ', $raw);
+        $terms = array_filter(explode(' ', $cleaned), fn($t) => mb_strlen(trim($t)) >= 1);
+
+        if (empty($terms)) {
+            return $query;
+        }
+
+        $isPgsql = DB::connection()->getDriverName() === 'pgsql';
+        $likeOp = $isPgsql ? 'ILIKE' : 'LIKE';
+
+        // Mapeo semántico de sinónimos y conceptos a modelos/categorías
+        $synonymCategoryModelMap = [
+            // Computadoras / PCs
+            'computadora' => ['categories' => ['COMPUTADORA', 'COMPUTADORAS', 'PC', 'ALL IN ONE'], 'models' => ['OFISZU', 'GENWORK', 'EZENT', 'PROWORK', 'HENKO']],
+            'computadoras' => ['categories' => ['COMPUTADORA', 'COMPUTADORAS', 'PC', 'ALL IN ONE'], 'models' => ['OFISZU', 'GENWORK', 'EZENT', 'PROWORK', 'HENKO']],
+            'pc' => ['categories' => ['COMPUTADORA', 'COMPUTADORAS', 'PC', 'ALL IN ONE'], 'models' => ['OFISZU', 'GENWORK', 'EZENT', 'PROWORK', 'HENKO']],
+            'pcs' => ['categories' => ['COMPUTADORA', 'COMPUTADORAS', 'PC', 'ALL IN ONE'], 'models' => ['OFISZU', 'GENWORK', 'EZENT', 'PROWORK', 'HENKO']],
+            'escritorio' => ['categories' => ['COMPUTADORA', 'COMPUTADORAS', 'PC'], 'models' => ['OFISZU', 'GENWORK', 'EZENT', 'PROWORK', 'HENKO']],
+            'desktop' => ['categories' => ['COMPUTADORA', 'COMPUTADORAS', 'PC'], 'models' => ['OFISZU', 'GENWORK', 'EZENT', 'PROWORK', 'HENKO']],
+            'ordenador' => ['categories' => ['COMPUTADORA', 'COMPUTADORAS', 'PC'], 'models' => ['OFISZU', 'GENWORK', 'EZENT', 'PROWORK', 'HENKO']],
+
+            // Monitores
+            'monitor' => ['categories' => ['MONITOR', 'MONITORES', 'PANTALLA', 'PANTALLAS'], 'models' => ['RAITO']],
+            'monitores' => ['categories' => ['MONITOR', 'MONITORES', 'PANTALLA', 'PANTALLAS'], 'models' => ['RAITO']],
+            'pantalla' => ['categories' => ['MONITOR', 'MONITORES', 'PANTALLA', 'PANTALLAS'], 'models' => ['RAITO']],
+            'pantallas' => ['categories' => ['MONITOR', 'MONITORES', 'PANTALLA', 'PANTALLAS'], 'models' => ['RAITO']],
+
+            // Laptops
+            'laptop' => ['categories' => ['LAPTOP', 'LAPTOPS', 'NOTEBOOK', 'NOTEBOOKS', 'PORTATIL', 'PORTATILES'], 'models' => []],
+            'laptops' => ['categories' => ['LAPTOP', 'LAPTOPS', 'NOTEBOOK', 'NOTEBOOKS', 'PORTATIL', 'PORTATILES'], 'models' => []],
+            'notebook' => ['categories' => ['LAPTOP', 'LAPTOPS', 'NOTEBOOK', 'NOTEBOOKS'], 'models' => []],
+            'portatil' => ['categories' => ['LAPTOP', 'LAPTOPS', 'NOTEBOOK', 'NOTEBOOKS', 'PORTATIL'], 'models' => []],
+            'portatiles' => ['categories' => ['LAPTOP', 'LAPTOPS', 'NOTEBOOK', 'NOTEBOOKS', 'PORTATIL'], 'models' => []],
+
+            // Tóner / Suministros
+            'toner' => ['categories' => ['TONER', 'TÓNER', 'SUMINISTRO', 'SUMINISTROS', 'TINTA'], 'models' => []],
+            'tóner' => ['categories' => ['TONER', 'TÓNER', 'SUMINISTRO', 'SUMINISTROS', 'TINTA'], 'models' => []],
+            'suministro' => ['categories' => ['TONER', 'TÓNER', 'SUMINISTRO', 'SUMINISTROS'], 'models' => []],
+            'suministros' => ['categories' => ['TONER', 'TÓNER', 'SUMINISTRO', 'SUMINISTROS'], 'models' => []],
+        ];
+
+        return $query->where(function ($subQuery) use ($terms, $likeOp, $synonymCategoryModelMap) {
+            foreach ($terms as $term) {
+                $termLower = mb_strtolower(trim($term));
+
+                $subQuery->where(function ($termQuery) use ($term, $termLower, $likeOp, $synonymCategoryModelMap) {
+                    // 1. Campos directos en tabla productos
+                    $termQuery->where('productos.nombre', $likeOp, "%{$term}%")
+                        ->orWhere('productos.descripcion', $likeOp, "%{$term}%")
+                        ->orWhere('productos.nro_parte', $likeOp, "%{$term}%")
+                        ->orWhere('productos.codigo_pc', $likeOp, "%{$term}%")
+                        ->orWhere('productos.procesador', $likeOp, "%{$term}%")
+                        ->orWhere('productos.ram', $likeOp, "%{$term}%")
+                        ->orWhere('productos.almacenamiento', $likeOp, "%{$term}%")
+                        ->orWhere('productos.tarjetavideo', $likeOp, "%{$term}%")
+                        ->orWhere('productos.sistema_operativo', $likeOp, "%{$term}%");
+
+                    // 2. Modelo relacionado
+                    $termQuery->orWhereHas('getModelo', function ($modQuery) use ($term, $likeOp) {
+                        $modQuery->where('descripcion', $likeOp, "%{$term}%")
+                                 ->orWhere('prefix', $likeOp, "%{$term}%");
+                    });
+
+                    // 3. Categoría relacionada
+                    $termQuery->orWhereHas('getCategoria', function ($catQuery) use ($term, $likeOp) {
+                        $catQuery->where('nombre', $likeOp, "%{$term}%");
+                    });
+
+                    // 4. Expansión semántica si el término coincide con un concepto o sinónimo
+                    if (isset($synonymCategoryModelMap[$termLower])) {
+                        $map = $synonymCategoryModelMap[$termLower];
+
+                        // Coincidencia con categorías asociadas
+                        if (!empty($map['categories'])) {
+                            $termQuery->orWhereHas('getCategoria', function ($catQuery) use ($map, $likeOp) {
+                                $catQuery->where(function ($cQ) use ($map, $likeOp) {
+                                    foreach ($map['categories'] as $catName) {
+                                        $cQ->orWhere('nombre', $likeOp, "%{$catName}%");
+                                    }
+                                });
+                            });
+                        }
+
+                        // Coincidencia con modelos asociados
+                        if (!empty($map['models'])) {
+                            $termQuery->orWhereHas('getModelo', function ($modQuery) use ($map, $likeOp) {
+                                $modQuery->where(function ($mQ) use ($map, $likeOp) {
+                                    foreach ($map['models'] as $modName) {
+                                        $mQ->orWhere('descripcion', $likeOp, "%{$modName}%");
+                                    }
+                                });
+                            });
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public function precios()

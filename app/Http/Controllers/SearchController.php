@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Log;
 use App\Producto;
 
 class SearchController extends Controller
@@ -13,57 +11,47 @@ class SearchController extends Controller
     {
         $q = trim($request->get('q', ''));
 
-        Log::info('SearchController.products called', ['q' => $q, 'ip' => $request->ip()]);
-
         if ($q === '') {
             return response()->json(['data' => []]);
         }
 
-        $query = Producto::query();
-
-        // Build conditional where clauses only for columns that exist to avoid SQL errors
-        $columnsToCheck = ['nombre', 'descripcion', 'ficha_tecnica', 'especificaciones_json'];
-        $first = true;
-
-        foreach ($columnsToCheck as $col) {
-            if (Schema::hasColumn('productos', $col)) {
-                if ($first) {
-                    $query->where($col, 'like', "%{$q}%");
-                    $first = false;
-                } else {
-                    $query->orWhere($col, 'like', "%{$q}%");
+        $results = Producto::query()
+            ->where('pagina_web', 'SI')
+            ->noSuspendido()
+            ->intelligentSearch($q)
+            ->with(['getModelo', 'getCategoria', 'modelo'])
+            ->limit(15)
+            ->get()
+            ->map(function ($prod) {
+                // Determine image with fallbacks
+                $img = asset('producto.jpg');
+                if (!empty($prod->imagen_1)) {
+                    $img = asset('storage/' . $prod->imagen_1);
+                } elseif (!empty($prod->imagen)) {
+                    $img = asset('storage/' . $prod->imagen);
+                } elseif ($prod->modelo && !empty($prod->modelo->img_mod)) {
+                    $img = asset('storage/' . $prod->modelo->img_mod);
+                } elseif ($prod->getCategoria && !empty($prod->getCategoria->img_url)) {
+                    $img = $prod->getCategoria->img_url;
                 }
-            }
-        }
 
-        // also search in the related modelo.descripcion if available
-        if (Schema::hasTable('modelos') && Schema::hasColumn('modelos', 'descripcion')) {
-            $query->orWhereHas('getModelo', function ($sub) use ($q) {
-                $sub->where('descripcion', 'like', "%{$q}%");
+                $catName = $prod->getCategoria->nombre ?? ($prod->modelo->descripcion ?? '');
+                $rawName = $prod->display_name ?: ($prod->nombre ?: $prod->descripcion);
+                $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $rawName);
+
+                return [
+                    'id' => $prod->id,
+                    'nombre' => trim($cleanName),
+                    'nro_parte' => (string) ($prod->nro_parte ?: ($prod->codigo_pc ?: '')),
+                    'categoria' => (string) $catName,
+                    'modelo' => (string) ($prod->modelo->descripcion ?? ''),
+                    'procesador' => (string) ($prod->procesador ?? ''),
+                    'img' => $img,
+                    'url' => url('producto/' . $prod->id . '/detalle'),
+                ];
             });
-        }
-
-        $results = $query->with('getModelo')->limit(30)->get()->map(function ($prod) {
-            // determine image
-            $img = 'producto.jpg';
-            if (isset($prod->imagen) && $prod->imagen) {
-                $img = 'storage/' . $prod->imagen;
-            } elseif ($prod->getModelo && isset($prod->getModelo->img_mod) && $prod->getModelo->img_mod) {
-                $img = 'storage/' . $prod->getModelo->img_mod;
-            } elseif (isset($prod->imagen_1) && $prod->imagen_1) {
-                $img = 'storage/' . $prod->imagen_1;
-            }
-
-            return [
-                'id' => $prod->id,
-                'nombre' => (string) $prod->display_name,
-                'descripcion' =>
-                    (isset($prod->descripcion) && $prod->descripcion) ? $prod->descripcion : ($prod->getModelo->descripcion ?? ''),
-                'img' => asset($img),
-                'url' => route('producto_detalle', $prod->id),
-            ];
-        });
 
         return response()->json(['data' => $results]);
     }
 }
+

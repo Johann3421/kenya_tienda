@@ -25,11 +25,8 @@ class CatalogoController extends Controller
             ->where('pagina_web', 'SI')
             ->noSuspendido();
 
-        if ($request->busqueda) {
-            $productosQuery->where(function($q) use ($request) {
-                $q->where('descripcion', 'LIKE', "%{$request->busqueda}%")
-                  ->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
-            });
+        if ($request->filled('busqueda')) {
+            $productosQuery->intelligentSearch($request->busqueda);
         }
         if ($request->modelo) {
             $productosQuery->where('modelo_id', $request->modelo);
@@ -247,11 +244,8 @@ class CatalogoController extends Controller
             ->where('pagina_web', 'SI')
             ->noSuspendido();
 
-        if ($request->busqueda) {
-            $productosQuery->where(function($q) use ($request) {
-                $q->where('descripcion', 'LIKE', "%{$request->busqueda}%")
-                  ->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
-            });
+        if ($request->filled('busqueda')) {
+            $productosQuery->intelligentSearch($request->busqueda);
         }
 
         $this->applySpecFilters($productosQuery, $request);
@@ -286,11 +280,8 @@ class CatalogoController extends Controller
             ->where('pagina_web', 'SI')
             ->noSuspendido();
 
-        if ($request->busqueda) {
-            $productosQuery->where(function($q) use ($request) {
-                $q->where('descripcion', 'LIKE', "%{$request->busqueda}%")
-                  ->orWhere('nro_parte', 'LIKE', "%{$request->busqueda}%");
-            });
+        if ($request->filled('busqueda')) {
+            $productosQuery->intelligentSearch($request->busqueda);
         }
 
         if ($request->modelo) {
@@ -325,15 +316,10 @@ class CatalogoController extends Controller
         }
 
         $query = \App\Producto::query()
-            ->select(['id', 'nombre', 'imagen_1', 'imagen', 'nro_parte'])
+            ->select(['id', 'nombre', 'imagen_1', 'imagen', 'nro_parte', 'modelo_id', 'categoria_id', 'descripcion'])
             ->where('pagina_web', 'SI')
             ->noSuspendido()
-            ->where(function ($s) use ($q) {
-                $s->where('nombre', 'LIKE', "%{$q}%")
-                  ->orWhere('descripcion', 'LIKE', "%{$q}%")
-                  ->orWhere('nro_parte', 'LIKE', "%{$q}%");
-            })
-            ->orderByRaw("CASE WHEN nombre LIKE ? THEN 0 ELSE 1 END", ["{$q}%"])
+            ->intelligentSearch($q)
             ->limit(8);
 
         if ($modelo) {

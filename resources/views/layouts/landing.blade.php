@@ -270,12 +270,13 @@ body {
     top: calc(100% + 8px);
     left: 0;
     width: 100%;
+    max-height: 420px;
+    overflow-y: auto;
     background: #fff;
     border: 1px solid #eaeaea;
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     z-index: 9999;
-    overflow: hidden;
     display: none;
 }
 
@@ -816,69 +817,92 @@ body {
         (function(){
             const input = document.getElementById('productSearch');
             const resultsBox = document.getElementById('searchResults');
+            const searchIcon = document.getElementById('searchIcon');
             let timer = null;
 
-            function renderResults(items) {
+            function renderResults(items, q) {
                 if (!resultsBox) return;
                 if (!items || items.length === 0) {
-                    resultsBox.style.display = 'none';
-                    resultsBox.innerHTML = '';
+                    if (q && q.trim().length >= 2) {
+                        resultsBox.style.display = 'block';
+                        resultsBox.innerHTML = `
+                            <div style="padding:16px; text-align:center; color:#777; font-size:0.88rem;">
+                                <i class="fa-solid fa-circle-question" style="font-size:1.5rem; color:#f26522; margin-bottom:6px; display:block;"></i>
+                                No se encontraron productos para "<strong>${q}</strong>"
+                            </div>
+                            <a href="{{ route('catalogo') }}?busqueda=${encodeURIComponent(q)}" style="display:block; padding:10px 14px; background:#fff8f4; color:#ee7c31; text-align:center; font-weight:600; font-size:0.85rem; text-decoration:none; border-top:1px solid #ffe3d1;">
+                                <i class="fa-solid fa-magnifying-glass"></i> Buscar en Catálogo General &rarr;
+                            </a>`;
+                    } else {
+                        resultsBox.style.display = 'none';
+                        resultsBox.innerHTML = '';
+                    }
                     return;
                 }
+
                 resultsBox.style.display = 'block';
-                resultsBox.innerHTML = items.map(i => `
-                    <a href="${i.url}" class="search-item" style="display:flex; gap:12px; padding:10px; border-bottom:1px solid #f2f2f2; align-items:center; text-decoration:none; color:#333;">
-                        <img src="${i.img}" style="width:56px; height:56px; object-fit:cover; border-radius:6px;" alt="${i.nombre}">
-                        <div style="flex:1">
-                            <div style="font-weight:600;">${i.nombre}</div>
-                            <div style="font-size:12px; color:#666;">${(i.descripcion || '').substring(0,120)}</div>
+                const itemsHtml = items.map(i => `
+                    <a href="${i.url}" class="search-item" style="display:flex; gap:12px; padding:10px 14px; border-bottom:1px solid #f2f2f2; align-items:center; text-decoration:none; color:#333; transition:background 0.15s;">
+                        <img src="${i.img}" style="width:48px; height:48px; object-fit:contain; border-radius:6px; background:#f8f9fa; padding:2px; flex-shrink:0;" alt="${i.nombre}" onerror="this.src='{{ asset('producto.jpg') }}'">
+                        <div style="flex:1; min-width:0;">
+                            <div style="font-weight:600; font-size:0.88rem; color:#222; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${i.nombre}</div>
+                            <div style="font-size:0.75rem; color:#777; display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:2px;">
+                                ${i.nro_parte ? `<span style="background:#eef2f6; color:#0056b3; padding:1px 5px; border-radius:3px; font-weight:600; font-size:0.72rem;">PN: ${i.nro_parte}</span>` : ''}
+                                ${i.modelo ? `<span style="background:#fff3e0; color:#e65100; padding:1px 5px; border-radius:3px; font-weight:600; font-size:0.72rem;">${i.modelo}</span>` : ''}
+                                ${i.categoria && i.categoria !== i.modelo ? `<span>${i.categoria}</span>` : ''}
+                            </div>
                         </div>
+                        <i class="fa-solid fa-chevron-right" style="color:#bbb; font-size:0.72rem; flex-shrink:0;"></i>
                     </a>`).join('');
+
+                resultsBox.innerHTML = itemsHtml + `
+                    <a href="{{ route('catalogo') }}?busqueda=${encodeURIComponent(q)}" style="display:block; padding:10px 14px; background:#fff8f4; color:#ee7c31; text-align:center; font-weight:600; font-size:0.85rem; text-decoration:none; border-top:1px solid #ffe3d1;">
+                        <i class="fa-solid fa-magnifying-glass"></i> Ver todos los resultados en Catálogo &rarr;
+                    </a>`;
             }
 
             async function doSearch(q){
                 if (!q || q.trim().length < 2) {
-                    renderResults([]);
+                    renderResults([], '');
                     return;
                 }
                 try {
-                    const res = await fetch(`{{ route('search.products') }}?q=` + encodeURIComponent(q), { headers: { 'Accept': 'application/json' } });
+                    const res = await fetch(`{{ route('search.products') }}?q=` + encodeURIComponent(q.trim()), { headers: { 'Accept': 'application/json' } });
                     const json = await res.json();
-                    renderResults(json.data || []);
+                    renderResults(json.data || [], q.trim());
                 } catch (err) {
                     console.error('Search error', err);
-                    renderResults([]);
+                    renderResults([], q.trim());
                 }
             }
 
-            const searchIcon = document.getElementById('searchIcon');
+            function submitSearch() {
+                if (input && input.value.trim().length > 0) {
+                    window.location.href = `{{ route('catalogo') }}?busqueda=` + encodeURIComponent(input.value.trim());
+                }
+            }
 
             if (input && searchIcon) {
                 input.addEventListener('input', function(e){
                     clearTimeout(timer);
                     const q = e.target.value;
-                    timer = setTimeout(() => doSearch(q), 300);
+                    timer = setTimeout(() => doSearch(q), 250);
                 });
 
-                input.addEventListener('focus', function() {
-                    searchIcon.className = 'fa-solid fa-xmark';
-                    searchIcon.classList.add('search-clear');
-                });
-
-                input.addEventListener('blur', function() {
-                    searchIcon.className = 'fa-solid fa-magnifying-glass';
-                    searchIcon.classList.remove('search-clear');
+                input.addEventListener('keydown', function(e){
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        submitSearch();
+                    }
                 });
 
                 searchIcon.addEventListener('click', function() {
-                    if (input === document.activeElement && input.value) {
-                        input.value = '';
-                        input.blur();
-                        renderResults([]);
-                        searchIcon.className = 'fa-solid fa-magnifying-glass';
-                        searchIcon.classList.remove('search-clear');
-                    } else {
-                        input.focus();
+                    submitSearch();
+                });
+
+                input.addEventListener('focus', function() {
+                    if (input.value.trim().length >= 2) {
+                        doSearch(input.value.trim());
                     }
                 });
             }
@@ -895,34 +919,24 @@ body {
                         input?.blur();
                     }
                 });
-                // Close search when clicking outside header
-                document.addEventListener('click', function(e) {
-                    if (headerSearch.classList.contains('active') && !e.target.closest('.site-header')) {
-                        headerSearch.classList.remove('active');
-                    }
-                });
             }
 
-            // Ensure dropdown width and positioning follow the input
             function syncSearchDropdown() {
                 if (!input || !resultsBox) return;
-                // make parent of input a positioned container (in case inline styles change)
                 const parent = input.parentElement;
                 if (parent) parent.style.position = parent.style.position || 'relative';
-                // ensure results box fills the parent width
                 resultsBox.style.width = '100%';
                 resultsBox.style.left = '0';
                 resultsBox.style.transform = 'none';
             }
 
-            // initial sync and on resize
             syncSearchDropdown();
             window.addEventListener('resize', syncSearchDropdown);
 
             // close on outside click
             document.addEventListener('click', function(ev){
                 if (!resultsBox) return;
-                if (!resultsBox.contains(ev.target) && ev.target !== input) {
+                if (!resultsBox.contains(ev.target) && ev.target !== input && ev.target !== searchIcon) {
                     resultsBox.style.display = 'none';
                 }
             });
