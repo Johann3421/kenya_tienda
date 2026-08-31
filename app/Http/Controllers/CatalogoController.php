@@ -326,13 +326,34 @@ class CatalogoController extends Controller
             $query->where('modelo_id', $modelo);
         }
 
-        $results = $query->with('modelo')->get()->map(function ($p) {
-            $img = $p->imagen_1 ? asset('storage/' . $p->imagen_1) : ($p->imagen ? asset('storage/' . $p->imagen) : asset('producto.jpg'));
+        $results = $query->with(['modelo', 'getModelo', 'getCategoria'])->get()->map(function ($p) {
+            $mod = $p->modelo ?: ($p->getModelo ?: ($p->modelo_id ? \App\Modelo::find($p->modelo_id) : null));
+            $img = asset('producto.jpg');
+
+            if ($mod && !empty($mod->img_mod)) {
+                $imgMod = ltrim($mod->img_mod, '/');
+                if (str_starts_with($imgMod, 'http://') || str_starts_with($imgMod, 'https://')) {
+                    $img = $imgMod;
+                } elseif (str_starts_with($imgMod, 'storage/')) {
+                    $img = asset($imgMod);
+                } else {
+                    $img = asset('storage/' . $imgMod);
+                }
+            } elseif (!empty($p->imagen_1)) {
+                $img1 = ltrim($p->imagen_1, '/');
+                $img = str_starts_with($img1, 'storage/') ? asset($img1) : asset('storage/' . $img1);
+            } elseif (!empty($p->imagen)) {
+                $img0 = ltrim($p->imagen, '/');
+                $img = str_starts_with($img0, 'storage/') ? asset($img0) : asset('storage/' . $img0);
+            } elseif ($p->getCategoria && !empty($p->getCategoria->img_url)) {
+                $img = $p->getCategoria->img_url;
+            }
+
             return [
                 'id' => $p->id,
                 'nombre' => (string) ($p->display_name ?: $p->nombre),
                 'nro_parte' => (string) $p->nro_parte,
-                'modelo' => $p->modelo ? ($p->modelo->descripcion ?? $p->modelo->nombre ?? '') : '',
+                'modelo' => $mod ? ($mod->descripcion ?? $mod->nombre ?? '') : '',
                 'img' => $img,
                 'url' => url('producto/' . $p->id . '/detalle'),
             ];
