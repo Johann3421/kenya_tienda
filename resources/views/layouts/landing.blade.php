@@ -745,7 +745,7 @@ body {
                     <ul class="kenya-footer-list kenya-contact-list">
                         <li>
                             <i class="kenya-icon fas fa-map-marker-alt"></i>
-                            <span><strong>Principal:</strong> Jr Huallayco N° 135 - Huánuco</span>
+                            <span><strong>Principal:</strong> Jr Huallayco N° 1135 - Huánuco</span>
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-map-marker-alt"></i>

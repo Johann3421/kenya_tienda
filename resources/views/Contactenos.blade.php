@@ -297,7 +297,7 @@
                 </div>
                 <div class="info-item">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span><strong>Principal:</strong> Jr Huallayco N° 135 - Huánuco</span>
+                    <span><strong>Principal:</strong> Jr Huallayco N° 1135 - Huánuco</span>
                 </div>
                 <div class="info-item">
                     <i class="fa-solid fa-location-dot"></i>
@@ -326,7 +326,7 @@
                     </div>
                     <div class="contact-map">
                         <iframe id="mapOficina" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1950.6172522719596!2d-77.01817840277106!3d-12.096092161538214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c8709d895a81%3A0x3ba45384561942b!2sOficina%2003%2C%20Av%20Pablo%20Carriquiry%20455%2C%20San%20Isidro%2015036!5e0!3m2!1ses!2spe!4v1762792365755!5m2!1ses!2spe" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
-                        <iframe id="mapPrincipal" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.9701847870056!2d-76.2504416240538!3d-9.93643870620815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c2e77ffd63b3%3A0x64a120db4e5c4fc3!2sJir%C3%B3n%20Huallayco%20135%2C%20Hu%C3%A1nuco%2010003!5e0!3m2!1ses!2spe!4v1784158167240!5m2!1ses!2spe" width="100%" height="100%" style="border:0; display:none;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+                        <iframe id="mapPrincipal" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3929.9701847870056!2d-76.2504416240538!3d-9.93643870620815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a7c2e77ffd63b3%3A0x64a120db4e5c4fc3!2sJir%C3%B3n%20Huallayco%201135%2C%20Hu%C3%A1nuco%2010003!5e0!3m2!1ses!2spe!4v1784158167240!5m2!1ses!2spe" width="100%" height="100%" style="border:0; display:none;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
                     </div>
                 </div>
 
@@ -389,7 +389,7 @@
                     (function(){
                         const addresses = {
                             oficina: 'Av. Pablo Carriquiry N° 455 - Oficina 03 - Corpac - San Isidro - Lima',
-                            principal: 'Jr Huallayco N° 135 - Huánuco'
+                            principal: 'Jr Huallayco N° 1135 - Huánuco'
                         };
                         document.querySelectorAll('.map-tab').forEach(function(btn) {
                             btn.addEventListener('click', function() {

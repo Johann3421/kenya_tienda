@@ -1160,13 +1160,45 @@
                     elseif (str_contains($bannerTitulo, 'HENKO'))    $brandClass = 'brand-henko';
                     elseif (str_contains($bannerTitulo, 'PROWORK'))  $brandClass = 'brand-prowork';
                     elseif (str_contains($bannerTitulo, 'RAITO'))    $brandClass = 'brand-raito';
+
+                    $bannerUrl = $banner->link;
+                    if (empty($bannerUrl) || in_array(trim($bannerUrl), ['/catalogo', 'catalogo', url('/catalogo'), route('catalogo')])) {
+                        $matchedMod = null;
+                        if (isset($modelo) && count($modelo) > 0) {
+                            $matchedMod = $modelo->first(function($m) use ($bannerTitulo) {
+                                $desc = strtoupper($m->descripcion ?? '');
+                                $keywords = ['OFISZU', 'GENWORK', 'PROWORK', 'EZENT', 'HENKO', 'RAITO'];
+                                foreach ($keywords as $kw) {
+                                    if (str_contains($bannerTitulo, $kw) && str_contains($desc, $kw)) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            });
+                        }
+                        if (!$matchedMod) {
+                            $keywords = ['OFISZU', 'GENWORK', 'PROWORK', 'EZENT', 'HENKO', 'RAITO'];
+                            foreach ($keywords as $kw) {
+                                if (str_contains($bannerTitulo, $kw)) {
+                                    $matchedMod = \App\Modelo::whereRaw("UPPER(descripcion) LIKE ?", ["%{$kw}%"])->whereIn('activo', ['SI', 'Si'])->first();
+                                    if ($matchedMod) break;
+                                }
+                            }
+                        }
+
+                        if ($matchedMod) {
+                            $bannerUrl = route('detallemod', $matchedMod->id);
+                        } else {
+                            $bannerUrl = route('catalogo');
+                        }
+                    }
                 @endphp
                 <div class="hero-slide {{ $brandClass }} @if($index == 0) active @endif" style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover;">
                     <div class="hero-slide-content">
                         <h1>{{ $banner->titulo }}</h1>
                         <h2>{{ $banner->descripcion }}</h2>
                         <p>{{ $banner->contenido }}</p>
-                        <a class="hero-btn" href="{{ $banner->link }}">{{ $banner->link_nombre }}</a>
+                        <a class="hero-btn" href="{{ $bannerUrl }}">{{ $banner->link_nombre }}</a>
                     </div>
                 </div>
             @endforeach
