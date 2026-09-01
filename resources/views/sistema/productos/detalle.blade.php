@@ -87,6 +87,31 @@
         border-color: #ddd;
     }
 
+    .spec-row-item {
+        transition: background-color 0.15s ease;
+    }
+    .spec-row-item:hover {
+        background-color: #fafbfc;
+    }
+    .spec-icon {
+        color: #b87333;
+        font-size: 16px;
+        width: 24px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    @media (max-width: 576px) {
+        .spec-row-item {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 4px !important;
+            padding: 10px 0 !important;
+        }
+        .spec-row-item > div:first-child {
+            width: 100% !important;
+        }
+    }
+
     .p-precio-old {
         font-size: 20px;
         color: red;
@@ -507,30 +532,50 @@
                     return null;
                 };
 
+                $getIconForField = function($fieldName) {
+                    $name = strtolower((string)$fieldName);
+                    if (str_contains($name, 'formato') || str_contains($name, 'chasis') || str_contains($name, 'factor')) return 'fa-solid fa-desktop';
+                    if (str_contains($name, 'procesador') || str_contains($name, 'cpu')) return 'fa-solid fa-microchip';
+                    if (str_contains($name, 'chipset')) return 'fa-solid fa-layer-group';
+                    if (str_contains($name, 'video') || str_contains($name, 'gráfico') || str_contains($name, 'grafico') || str_contains($name, 'gpu') || str_contains($name, 'controlador')) return 'fa-solid fa-gamepad';
+                    if (str_contains($name, 'memoria') || str_contains($name, 'ram')) return 'fa-solid fa-memory';
+                    if (str_contains($name, 'almacenamiento') || str_contains($name, 'disco') || str_contains($name, 'ssd') || str_contains($name, 'nvme') || str_contains($name, 'hdd') || str_contains($name, 'storage')) return 'fa-solid fa-hard-drive';
+                    if (str_contains($name, 'fuente') || str_contains($name, 'poder') || str_contains($name, 'psu')) return 'fa-solid fa-plug';
+                    if (str_contains($name, 'pantalla') || str_contains($name, 'tamaño') || str_contains($name, 'panel') || str_contains($name, 'monitor')) return 'fa-solid fa-display';
+                    if (str_contains($name, 'hdmi') || str_contains($name, 'displayport') || str_contains($name, 'vga') || str_contains($name, 'video_hdmi')) return 'fa-solid fa-tv';
+                    if (str_contains($name, 'garant') || str_contains($name, 'tiempo')) return 'fa-solid fa-shield-halved';
+                    if (str_contains($name, 'suministro') || str_contains($name, 'tipo')) return 'fa-solid fa-box-archive';
+                    if (str_contains($name, 'color')) return 'fa-solid fa-palette';
+                    if (str_contains($name, 'rendimiento') || str_contains($name, 'paginas')) return 'fa-solid fa-gauge-high';
+                    if (str_contains($name, 'sistema') || str_contains($name, 'operativo') || str_contains($name, 'so')) return 'fa-solid fa-laptop-code';
+                    if (str_contains($name, 'conectividad') || str_contains($name, 'red') || str_contains($name, 'wlan') || str_contains($name, 'wifi')) return 'fa-solid fa-wifi';
+                    return 'fa-solid fa-microchip';
+                };
+
                 // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
                 $topOrdered = [];
                 if ($isToner) {
                     $topOrdered = [
                         (object) [
-                            'campo' => 'Tipo de suministro',
+                            'campo' => 'TIPO DE SUMINISTRO',
                             'descripcion' => $getSpecValue(['/tipo de suministro|suministro|formato/'])
                                 ?? $getProductValue(['Tipo de suministro'])
                                 ?? 'No especificado',
                         ],
                         (object) [
-                            'campo' => 'Color',
+                            'campo' => 'COLOR',
                             'descripcion' => $getSpecValue(['/^color$/', '/color/'])
                                 ?? $getProductValue(['Color'])
                                 ?? 'No especificado',
                         ],
                         (object) [
-                            'campo' => 'Rendimiento',
+                            'campo' => 'RENDIMIENTO',
                             'descripcion' => $getSpecValue(['/rendimiento|p[aá]ginas|paginas/'])
                                 ?? $getProductValue(['Rendimiento'])
                                 ?? 'No especificado',
                         ],
                         (object) [
-                            'campo' => 'Garantia',
+                            'campo' => 'GARANTÍA',
                             'descripcion' => $getSpecValue(['/garant[ií]a|g\.\s*f/'])
                                 ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])
                                 ?? 'No especificado',
@@ -539,43 +584,43 @@
                 } elseif (!$isMonitor) {
                     if ($isDesktopOrWorkstation) {
                         $topOrdered = [
-                            (object) ['campo' => 'Formato', 'descripcion' => $getSpecValue(['/formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Procesador', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Chipset', 'descripcion' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Controlador de Video', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Memoria Ram', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Almacenamiento', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Fuente de Poder', 'descripcion' => $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'FORMATO', 'descripcion' => $getSpecValue(['/formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'PROCESADOR', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'CHIPSET', 'descripcion' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'VIDEO', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'MEMORIA RAM', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'ALMACENAMIENTO', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'FUENTE PODER', 'descripcion' => $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder']) ?? 'No especificado', 'descripcion2' => ''],
                         ];
                     } else {
                         $topOrdered = [
-                            (object) ['campo' => 'Procesador', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Memoria Ram', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Almacenamiento', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'Gráficos', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'PROCESADOR', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'MEMORIA RAM', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'ALMACENAMIENTO', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'VIDEO', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
                         ];
                     }
                 }
             @endphp
 
-            <div style="margin-bottom:24px;">
-                <h2 style="font-weight:800; font-size:32px; color:#1a1a1a; margin-bottom:6px; line-height:1.2;">
+            <div style="margin-bottom:20px;">
+                <h2 style="font-weight:800; font-size:28px; color:#1a1a1a; margin-bottom:10px; line-height:1.2;">
                     {{ $producto->display_name }}
                 </h2>
-                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:13px; color:#777;">
+                <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:13px;">
                     @if($producto->modelo)
-                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f3f3f3; padding:3px 10px; border-radius:20px;">
-                            <i class="fa-solid fa-cube" style="font-size:10px;"></i> {{ $producto->modelo->descripcion ?? $producto->modelo->nombre }}
-                        </span>
-                    @endif
-                    @if($producto->getCategoria)
-                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f3f3f3; padding:3px 10px; border-radius:20px;">
-                            <i class="fa-solid fa-tag" style="font-size:10px;"></i> {{ $producto->getCategoria->nombre }}
+                        <span style="display:inline-flex; align-items:center; gap:6px; background:#f0f2f5; color:#495057; font-size:12px; font-weight:700; padding:4px 12px; border-radius:4px; text-transform:uppercase;">
+                            <i class="fa-solid fa-cube" style="font-size:11px; color:#6c757d;"></i> {{ $producto->modelo->descripcion ?? $producto->modelo->nombre }}
                         </span>
                     @endif
                     @if($producto->nro_parte)
-                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f3f3f3; padding:3px 10px; border-radius:20px;">
-                            <i class="fa-solid fa-hashtag" style="font-size:10px;"></i> {{ $producto->nro_parte }}
+                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f0f2f5; color:#495057; font-size:12px; font-weight:700; padding:4px 12px; border-radius:4px; text-transform:uppercase;">
+                            <span style="color:#6c757d; font-weight:800;">#</span> {{ $producto->nro_parte }}
+                        </span>
+                    @endif
+                    @if($producto->getCategoria)
+                        <span style="display:inline-flex; align-items:center; gap:5px; background:#f0f2f5; color:#495057; font-size:12px; font-weight:700; padding:4px 12px; border-radius:4px; text-transform:uppercase;">
+                            <i class="fa-solid fa-tag" style="font-size:10px; color:#6c757d;"></i> {{ $producto->getCategoria->nombre }}
                         </span>
                     @endif
                 </div>
@@ -589,120 +634,100 @@
 
             <div id="design-v2">
 
-            <div class="carousel-descripcion mb-4" style="padding:0;">
-                <div class="row g-4">
-                    @if($isMonitor)
-                        @forelse($especificacionesResumen as $espec)
-                        <div class="col-6 col-md-4">
-                            <div class="spec-card" style="background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; height:100%;">
-                                <div style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">{{ $espec->campo }}</div>
-                                <div style="font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.3;">{{ $espec->descripcion }}</div>
-                            </div>
-                        </div>
-                        @empty
-                        <div class="col-12"><p class="text-center text-muted py-3">Aún no tiene especificaciones</p></div>
-                        @endforelse
-                    @elseif($isToner)
-                        @foreach($topOrdered as $espec)
-                        <div class="col-6 col-md-3">
-                            <div class="spec-card" style="background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; height:100%;">
-                                <div style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">{{ $espec->campo }}</div>
-                                <div style="font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.3;">{{ $espec->descripcion }}</div>
-                            </div>
-                        </div>
-                        @endforeach
-                    @else
-                        @php $specCount = count($topOrdered); @endphp
-                        @foreach($topOrdered as $espec)
-                            @php
-                                $colClass = $specCount <= 4 ? 'col-6 col-md-3' : 'col-6 col-md-4 col-lg-3';
-                                $value = $espec->descripcion;
-                                $icon = '';
-                                $campoLower = strtolower($espec->campo);
-                                if (str_contains($campoLower, 'procesador')) $icon = '🖥️';
-                                elseif (str_contains($campoLower, 'memoria') || str_contains($campoLower, 'ram')) $icon = '🧠';
-                                elseif (str_contains($campoLower, 'almacenamiento')) $icon = '💾';
-                                elseif (str_contains($campoLower, 'gráfico') || str_contains($campoLower, 'video') || str_contains($campoLower, 'grafico')) $icon = '🎮';
-                                elseif (str_contains($campoLower, 'chipset')) $icon = '⚡';
-                                elseif (str_contains($campoLower, 'fuente')) $icon = '🔌';
-                                elseif (str_contains($campoLower, 'formato')) $icon = '📦';
-                                if ($isDesktopOrWorkstation && $campoLower === 'procesador' && !empty($producto->descripcion_2)) {
-                                    $value = $espec->descripcion . ' · ' . $producto->descripcion_2;
-                                }
-                            @endphp
-                            <div class="{{ $colClass }}">
-                                <div class="spec-card" style="background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; height:100%;">
-                                    <div style="font-size:11px; color:#aaa; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px;">
-                                        @if($icon)<span style="margin-right:4px;">{{ $icon }}</span>@endif{{ $espec->campo }}
-                                    </div>
-                                    <div style="font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.3;">
-                                        {{ $value }}
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                </div>
-                <div class="mt-3" style="font-size:11px; color:#bbb; padding-left:2px;">* Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.</div>
-            </div>
-            
-            {{-- BLOQUE DE PRECIO ELIMINADO: Se unificó en la barra inferior para simplificar UX --}}
+                <div class="specs-table-container mb-3" style="background:#fff; border-top:1px solid #f0f0f0;">
+                    @php
+                        $specsToRender = [];
+                        if ($isMonitor) {
+                            $specsToRender = $especificacionesResumen ?? [];
+                        } elseif ($isToner || !$isDesktopOrWorkstation) {
+                            $specsToRender = $topOrdered ?? [];
+                        } else {
+                            $specsToRender = $topOrdered ?? [];
+                        }
+                    @endphp
 
-            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin:20px 0 24px; padding:16px 20px; background:#fafafa; border:1px solid #eee; border-radius:12px;">
-                <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
-                    @foreach($producto->getGarantia->skip(0)->take(1) as $gar)
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <img alt="Garantía" src="https://img.icons8.com/fluency/2x/guarantee.png" style="width:28px; height:28px;">
-                        <span style="font-size:14px; font-weight:600; color:#222;">Garantía {{ $gar->garantia }} meses</span>
-                    </div>
-                    @endforeach
-                    <span style="color:#ddd;">|</span>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <img alt="Ficha técnica" src="https://img.icons8.com/ios-filled/2x/wordbook.png" style="width:22px; height:22px; filter:invert(0%) sepia(0%) saturate(7469%) hue-rotate(214deg) brightness(91%) contrast(107%);">
+                    @forelse($specsToRender as $espec)
+                        @php
+                            $iconClass = $getIconForField($espec->campo ?? '');
+                            $val = $espec->descripcion ?? '';
+                            if ($isDesktopOrWorkstation && in_array(strtolower($espec->campo ?? ''), ['procesador', 'cpu']) && !empty($producto->descripcion_2)) {
+                                $val = $espec->descripcion . ' · ' . $producto->descripcion_2;
+                            }
+                        @endphp
+                        <div class="spec-row-item" style="display:flex; align-items:center; padding:14px 0; border-bottom:1px solid #f0f0f0; gap:20px;">
+                            <div style="display:flex; align-items:center; min-width:170px; width:210px; flex-shrink:0;">
+                                <i class="{{ $iconClass }} spec-icon" style="font-size:16px; width:24px; text-align:center; margin-right:12px; flex-shrink:0;"></i>
+                                <span style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:#888;">
+                                    {{ $espec->campo }}
+                                </span>
+                            </div>
+                            <div style="flex:1; font-size:14.5px; font-weight:700; color:#1a1a1a; line-height:1.35;">
+                                {{ $val }}
+                            </div>
+                        </div>
+                    @empty
+                        <div class="py-4 text-center text-muted">Aún no tiene especificaciones</div>
+                    @endforelse
+                </div>
+
+                <div class="mb-4" style="font-size:11.5px; color:#888; font-style:italic; padding-left:2px;">
+                    * Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.
+                </div>
+
+                {{-- Action Box inferior según diseño de referencia --}}
+                <div style="background:#fff; border:1px solid #f3e6dc; border-radius:12px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+                    {{-- Ficha técnica --}}
+                    <div style="display:flex; align-items:center; gap:8px;">
                         @if($producto->ficha_tecnica)
                             @php
                                 $fichaUrl = str_starts_with($producto->ficha_tecnica, 'http')
                                     ? $producto->ficha_tecnica
                                     : asset('/storage/' . $producto->ficha_tecnica);
                             @endphp
-                            <a href="{{ $fichaUrl }}" target="_blank" style="font-size:14px; font-weight:600;">Ficha técnica <iconify-icon icon="bx:download"></iconify-icon></a>
+                            <a href="{{ $fichaUrl }}" target="_blank" style="display:inline-flex; align-items:center; gap:8px; text-decoration:none; color:#7a583a; font-weight:700; font-size:13.5px; line-height:1.2;">
+                                <i class="fa-regular fa-file-lines" style="font-size:22px; color:#b87333;"></i>
+                                <div>
+                                    <div>Ficha</div>
+                                    <div>técnica</div>
+                                </div>
+                                <i class="fa-solid fa-download" style="font-size:11px; color:#888; margin-left:6px;"></i>
+                            </a>
                         @else
-                            <span style="font-size:14px; color:#999;">Ficha técnica no disponible</span>
+                            <div style="display:inline-flex; align-items:center; gap:8px; color:#aaa; font-weight:600; font-size:13px; line-height:1.2;">
+                                <i class="fa-regular fa-file-lines" style="font-size:22px; color:#ccc;"></i>
+                                <div>
+                                    <div>Ficha</div>
+                                    <div>técnica</div>
+                                </div>
+                            </div>
                         @endif
                     </div>
-                </div>
-                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:flex-end; flex-grow:1;">
-                    @if(empty($producto->precio_especial))
-                        <div style="display:flex; align-items:center; gap:12px; background:#fff; padding:6px 16px; border:1px solid #e0e0e0; border-radius:8px;">
-                            <div style="font-size: 1.2rem; font-weight: 600; color: #333;">
-                                (A cotizar)
-                            </div>
+
+                    {{-- Precios exclusivos B2B --}}
+                    <div style="border:1.5px solid #ee7c31; border-radius:8px; padding:8px 18px; display:inline-flex; align-items:center; gap:12px; background:#fff;">
+                        <i class="fa-solid fa-lock" style="font-size:14px; color:#b87333;"></i>
+                        <div style="font-size:13px; font-weight:700; color:#222; line-height:1.2;">
+                            <div>Precios exclusivos</div>
+                            <div style="text-align:center;">B2B</div>
                         </div>
-                    @else
                         @if(Auth::guard('cliente')->check())
-                            <div style="display:flex; align-items:center; gap:12px; background:#fff; padding:6px 16px; border:1px solid #e0e0e0; border-radius:8px;">
-                                <div style="font-size: 1.4rem; font-weight: 700; color: #ee7c31; line-height: 1;">
-                                    $ {{ number_format($producto->precio_especial, 2) }}
-                                </div>
-                                <div style="width:1px; height:24px; background:#ccc;"></div>
-                                <div style="font-size: 1.4rem; font-weight: 600; color: #333; line-height: 1;">
-                                    S/ {{ number_format($producto->precio_especial * 3.4, 2) }} <span style="font-size: 0.85rem; font-weight: normal; color: #888;">+ IGV</span>
-                                </div>
+                            <div style="border-left:1px solid #f0f0f0; padding-left:10px; font-weight:800; color:#ee7c31; font-size:14px;">
+                                $ {{ number_format($producto->precio_especial, 2) }}
                             </div>
                         @else
-                            <div style="display:flex; align-items:center; gap:12px; background:#f8f9fa; padding:8px 16px; border:1px dashed #ee7c31; border-radius:8px;">
-                                <span style="font-size: 0.9rem; color: #ee7c31; font-weight: 500;"><i class="fa fa-lock"></i> Precios exclusivos B2B</span>
-                                <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="color: #0056b3; text-decoration: underline; font-weight: 600; font-size: 0.9rem;">Ingresa aquí</a>
-                            </div>
+                            <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="color:#a06635; text-decoration:underline; font-weight:700; font-size:13px; line-height:1.2;">
+                                <div>Ingresa</div>
+                                <div>aquí</div>
+                            </a>
                         @endif
-                    @endif
+                    </div>
 
-                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="btn btn-success" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; font-weight:600; white-space:nowrap; min-height:45px; padding:8px 18px; border-radius:8px;">
+                    {{-- Botón Cotizar por WhatsApp --}}
+                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" style="background:#20c966; color:#fff; font-weight:700; font-size:14px; padding:10px 22px; border-radius:8px; display:inline-flex; align-items:center; gap:8px; text-decoration:none; box-shadow:0 4px 14px rgba(32,201,102,0.25); transition:all 0.15s ease; border:none;">
                         <i class="bx bxl-whatsapp" style="font-size:22px;"></i> {{ empty($producto->precio_especial) ? 'Solicitar Cotización' : 'Cotizar por WhatsApp' }}
                     </a>
                 </div>
-            </div>
-        </div>{{-- close #design-v2 --}}
+            </div>{{-- close #design-v2 --}}
 
         {{-- ===== DISEÑO ANTERIOR ===== --}}
         <div id="design-v1" style="display:none;">
