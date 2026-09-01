@@ -88,27 +88,108 @@
     }
 
     .spec-row-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 13px 0;
+        border-bottom: 1px solid #f0f0f0;
+        gap: 12px;
         transition: background-color 0.15s ease;
     }
     .spec-row-item:hover {
         background-color: #fafbfc;
     }
+    .spec-row-label {
+        display: flex;
+        align-items: center;
+        min-width: 140px;
+        flex-shrink: 0;
+    }
+    .spec-row-value {
+        flex: 1;
+        text-align: right;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: #1a1a1a;
+        line-height: 1.35;
+    }
     .spec-icon {
         color: #b87333;
         font-size: 16px;
-        width: 24px;
+        width: 22px;
         text-align: center;
+        margin-right: 10px;
         flex-shrink: 0;
     }
-    @media (max-width: 576px) {
+
+    @media (min-width: 768px) {
         .spec-row-item {
-            flex-direction: column;
-            align-items: flex-start !important;
-            gap: 4px !important;
-            padding: 10px 0 !important;
+            justify-content: flex-start;
+            gap: 20px;
+            padding: 14px 0;
         }
-        .spec-row-item > div:first-child {
-            width: 100% !important;
+        .spec-row-label {
+            min-width: 170px;
+            width: 210px;
+        }
+        .spec-row-value {
+            text-align: left;
+            font-size: 14.5px;
+        }
+    }
+
+    /* Mobile Buttons Stack */
+    .btn-mobile-action {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none !important;
+        transition: all 0.15s ease;
+        box-sizing: border-box;
+    }
+    .btn-mobile-white {
+        background: #fff;
+        color: #1a1a1a;
+        border: 1px solid #e0d7cf;
+    }
+    .btn-mobile-white:hover {
+        background: #f8f9fa;
+        color: #000;
+        border-color: #ccc;
+    }
+    .btn-mobile-whatsapp {
+        background: #20c966;
+        color: #fff !important;
+        border: none;
+        box-shadow: 0 4px 12px rgba(32, 201, 102, 0.25);
+    }
+    .btn-mobile-whatsapp:hover {
+        background: #1cb35a;
+        color: #fff !important;
+    }
+
+    .desktop-action-card {
+        display: none;
+    }
+    .mobile-actions-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+    }
+
+    @media (min-width: 768px) {
+        .desktop-action-card {
+            display: flex !important;
+        }
+        .mobile-actions-stack {
+            display: none !important;
         }
     }
 
@@ -654,14 +735,14 @@
                                 $val = $espec->descripcion . ' · ' . $producto->descripcion_2;
                             }
                         @endphp
-                        <div class="spec-row-item" style="display:flex; align-items:center; padding:14px 0; border-bottom:1px solid #f0f0f0; gap:20px;">
-                            <div style="display:flex; align-items:center; min-width:170px; width:210px; flex-shrink:0;">
-                                <i class="{{ $iconClass }} spec-icon" style="font-size:16px; width:24px; text-align:center; margin-right:12px; flex-shrink:0;"></i>
+                        <div class="spec-row-item">
+                            <div class="spec-row-label">
+                                <i class="{{ $iconClass }} spec-icon"></i>
                                 <span style="font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; color:#888;">
                                     {{ $espec->campo }}
                                 </span>
                             </div>
-                            <div style="flex:1; font-size:14.5px; font-weight:700; color:#1a1a1a; line-height:1.35;">
+                            <div class="spec-row-value">
                                 {{ $val }}
                             </div>
                         </div>
@@ -674,8 +755,8 @@
                     * Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.
                 </div>
 
-                {{-- Action Box inferior según diseño de referencia --}}
-                <div style="background:#fff; border:1px solid #f3e6dc; border-radius:12px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+                {{-- Action Box Escritorio (>= 768px) --}}
+                <div class="desktop-action-card" style="background:#fff; border:1px solid #f3e6dc; border-radius:12px; padding:14px 20px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
                     {{-- Ficha técnica --}}
                     <div style="display:flex; align-items:center; gap:8px;">
                         @if($producto->ficha_tecnica)
@@ -722,8 +803,46 @@
                         @endif
                     </div>
 
-                    {{-- Botón Cotizar por WhatsApp --}}
+                    {{-- Botón Cotizar por WhatsApp (Verde) --}}
                     <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" style="background:#20c966; color:#fff; font-weight:700; font-size:14px; padding:10px 22px; border-radius:8px; display:inline-flex; align-items:center; gap:8px; text-decoration:none; box-shadow:0 4px 14px rgba(32,201,102,0.25); transition:all 0.15s ease; border:none;">
+                        <i class="bx bxl-whatsapp" style="font-size:22px;"></i> {{ empty($producto->precio_especial) ? 'Solicitar Cotización' : 'Cotizar por WhatsApp' }}
+                    </a>
+                </div>
+
+                {{-- Action Box Móvil (< 768px, idéntico a referencia) --}}
+                <div class="mobile-actions-stack">
+                    {{-- 1. Ficha técnica --}}
+                    @if($producto->ficha_tecnica)
+                        @php
+                            $fichaUrl = str_starts_with($producto->ficha_tecnica, 'http')
+                                ? $producto->ficha_tecnica
+                                : asset('/storage/' . $producto->ficha_tecnica);
+                        @endphp
+                        <a href="{{ $fichaUrl }}" target="_blank" class="btn-mobile-action btn-mobile-white">
+                            <i class="fa-regular fa-file-lines" style="font-size:16px;"></i> Ficha técnica
+                        </a>
+                    @else
+                        <button type="button" disabled class="btn-mobile-action btn-mobile-white" style="opacity:0.6; cursor:not-allowed;">
+                            <i class="fa-regular fa-file-lines" style="font-size:16px;"></i> Ficha técnica
+                        </button>
+                    @endif
+
+                    {{-- 2. Precios B2B --}}
+                    @if(Auth::guard('cliente')->check())
+                        <div class="btn-mobile-action btn-mobile-white" style="cursor:default; justify-content:space-between; padding:12px 18px;">
+                            <span style="display:inline-flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-lock" style="font-size:14px; color:#ee7c31;"></i> Precios B2B
+                            </span>
+                            <strong style="color:#ee7c31; font-size:15px;">$ {{ number_format($producto->precio_especial, 2) }}</strong>
+                        </div>
+                    @else
+                        <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" class="btn-mobile-action btn-mobile-white">
+                            <i class="fa-solid fa-lock" style="font-size:14px;"></i> Precios B2B
+                        </a>
+                    @endif
+
+                    {{-- 3. Cotizar por WhatsApp (Verde) --}}
+                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="btn-mobile-action btn-mobile-whatsapp">
                         <i class="bx bxl-whatsapp" style="font-size:22px;"></i> {{ empty($producto->precio_especial) ? 'Solicitar Cotización' : 'Cotizar por WhatsApp' }}
                     </a>
                 </div>
