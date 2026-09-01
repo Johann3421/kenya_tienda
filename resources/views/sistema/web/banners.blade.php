@@ -318,5 +318,5 @@
 @endsection
 
 @section('js')
-    <script src="{{asset('js/views/web/banners.js')}}"></script>
+    <script src="{{asset('js/views/web/banners.js')}}?v={{ time() }}"></script>
 @endsection
