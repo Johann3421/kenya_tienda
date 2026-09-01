@@ -261,9 +261,9 @@
                                             <td>@{{banner.titulo}}</td>
                                             <td>@{{banner.descripcion}}</td>
                                             <td>@{{banner.imagen}}</td>
-                                            <td class="text-center">
-                                                <i class="fas fa-check-circle font-green" style="font-size: 15px;" v-if="banner.activo == 'SI'"></i>
-                                                <i class="fas fa-times-circle font-red" style="font-size: 15px;" v-else></i>
+                                            <td class="text-center" v-on:click.stop="toggleActivo(banner)" title="Haga clic para cambiar estado (Visible / Oculto)">
+                                                <i class="fas fa-check-circle font-green" style="font-size: 18px; cursor: pointer; transition: transform 0.15s ease;" v-if="banner.activo == 'SI'" title="Visible al público (Clic para ocultar)"></i>
+                                                <i class="fas fa-times-circle font-red" style="font-size: 18px; cursor: pointer; transition: transform 0.15s ease;" v-else title="Oculto al público (Clic para mostrar)"></i>
                                             </td>
                                         </tr>
                                     </template>

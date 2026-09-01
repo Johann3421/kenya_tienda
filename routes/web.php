@@ -425,6 +425,7 @@ Route::group(['middleware' => ['can:pagina_web']], function () {
     Route::post('/web/banners/store', 'BannerController@store');
     Route::post('/web/banners/update', 'BannerController@update');
     Route::post('/web/banners/delete', 'BannerController@delete');
+    Route::post('/web/banners/toggle-activo', 'BannerController@toggleActivo');
 
     Route::get('/web/ofertas', 'OfertasWebController@index')->name('ofertas');
     Route::post('/web/ofertas/buscar', 'OfertasWebController@buscar');

@@ -159,4 +159,34 @@ class BannerController extends Controller
             ];
         }
     }
+
+    public function toggleActivo(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $banner = Banner::findOrFail($request->id);
+            $banner->activo = ($banner->activo === 'SI') ? 'NO' : 'SI';
+            $banner->save();
+
+            DB::commit();
+
+            $estadoTexto = ($banner->activo === 'SI') ? 'activado (visible)' : 'ocultado al público';
+
+            return [
+                'type'     => 'success',
+                'title'    => 'CORRECTO: ',
+                'message'  => "El Banner ha sido {$estadoTexto}.",
+                'activo'   => $banner->activo
+            ];
+        } catch (\Throwable $th) {
+            DB::rollBack();
+
+            return [
+                'type'     => 'danger',
+                'title'    => 'ERROR: ',
+                'message'  => 'Ocurrió un error al cambiar el estado del Banner: ' . $th->getMessage()
+            ];
+        }
+    }
 }

@@ -251,6 +251,26 @@ new Vue({
                 alert('Algo salio mal, por favor intente nuevamente.');
             });
         },
+        toggleActivo(banner) {
+            let prevEstado = banner.activo;
+            // Actualización optimista inmediata
+            banner.activo = (prevEstado === 'SI') ? 'NO' : 'SI';
+
+            axios.post('banners/toggle-activo', {
+                id: banner.id
+            }).then(response => {
+                if (response.data.type === 'success') {
+                    banner.activo = response.data.activo;
+                    this.Alert(response.data.type, response.data.title, response.data.message);
+                } else {
+                    banner.activo = prevEstado;
+                    this.Alert(response.data.type, response.data.title, response.data.message);
+                }
+            }).catch(error => {
+                banner.activo = prevEstado;
+                this.Alert('danger', 'ERROR: ', 'No se pudo cambiar el estado del Banner.');
+            });
+        },
         closeModal() {
             this.titulo = null;
             this.titulo_color = null;
