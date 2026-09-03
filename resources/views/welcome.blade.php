@@ -436,6 +436,11 @@
             scroll-snap-type: x mandatory !important;
             padding: 20px 0 !important;
             scroll-padding: 0 !important;
+            justify-content: safe center !important;
+        }
+
+        #main-welcome-container .carousel-track.is-centered {
+            justify-content: center !important;
         }
 
         #main-welcome-container .carousel-track::-webkit-scrollbar {
@@ -1526,10 +1531,32 @@
             }
 
             // ==================================================
-            // 2. FILTRADO DE CATEGORÍAS
+            // 2. FILTRADO Y CARRUSEL DE PRODUCTOS
             // ==================================================
             const categoryButtons = container.querySelectorAll('.categoria-btn');
             const productCards = container.querySelectorAll('.producto-card');
+            const carousel = container.querySelector('#carousel-track');
+            const carouselPrev = container.querySelector('.carousel-prev');
+            const carouselNext = container.querySelector('.carousel-next');
+
+            const updateCarouselAlignment = () => {
+                if (!carousel) return;
+                carousel.scrollLeft = 0;
+                carousel.classList.remove('is-centered');
+
+                requestAnimationFrame(() => {
+                    const hasOverflow = carousel.scrollWidth > (carousel.clientWidth + 5);
+                    if (!hasOverflow) {
+                        carousel.classList.add('is-centered');
+                        if (carouselPrev) carouselPrev.style.setProperty('display', 'none', 'important');
+                        if (carouselNext) carouselNext.style.setProperty('display', 'none', 'important');
+                    } else {
+                        carousel.classList.remove('is-centered');
+                        if (carouselPrev) carouselPrev.style.removeProperty('display');
+                        if (carouselNext) carouselNext.style.removeProperty('display');
+                    }
+                });
+            };
 
             categoryButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -1545,22 +1572,20 @@
                             card.style.display = card.classList.contains(cardClass) ? 'flex' : 'none';
                         }
                     });
+
+                    updateCarouselAlignment();
                 });
             });
 
-            // ==================================================
-            // 3. CARRUSEL DE PRODUCTOS
-            // ==================================================
-            const carousel = container.querySelector('#carousel-track');
-            const carouselPrev = container.querySelector('.carousel-prev');
-            const carouselNext = container.querySelector('.carousel-next');
+            window.addEventListener('resize', updateCarouselAlignment);
+            window.addEventListener('load', updateCarouselAlignment);
+            updateCarouselAlignment();
+
             const scrollCard = () => {
-                const card = carousel?.querySelector('.producto-card');
+                const card = Array.from(productCards).find(c => c.style.display !== 'none') || carousel?.querySelector('.producto-card');
                 if (!card) return 330;
-                const style = getComputedStyle(card);
                 const cardWidth = card.offsetWidth;
-                const gap = parseFloat(style.marginRight) || 20;
-                return cardWidth + gap;
+                return cardWidth + 20;
             };
 
             carouselPrev?.addEventListener('click', () => {
