@@ -91,7 +91,7 @@
     .specs-table-container {
         background: #fff;
         border-top: 1px solid #EAEAEA;
-        padding: 12px 0;
+        padding: 0;
         margin-bottom: 0;
     }
 
@@ -102,7 +102,7 @@
         grid-template-rows: auto auto;
         column-gap: 8px;
         row-gap: 4px;
-        padding: 10px 0;
+        padding: 12px 0;
         border-bottom: 1px solid #EAEAEA;
         box-sizing: border-box;
         transition: background-color 0.15s ease;
@@ -121,7 +121,7 @@
         flex-shrink: 0;
     }
     .spec-icon {
-        color: #b87333;
+        color: #b97737;
         font-size: 15px;
         line-height: 1;
         text-align: center;
@@ -131,148 +131,73 @@
         grid-row: 1;
         display: flex;
         align-items: center;
-        font-size: 11.5px;
-        font-weight: 700;
+        font-size: 11px;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.6px;
-        color: #888888;
+        letter-spacing: 0.8px;
+        color: #9c9c9c;
         line-height: 1.2;
     }
     .spec-col-value {
         grid-column: 2;
         grid-row: 2;
-        font-size: 13.5px;
-        font-weight: 700;
-        color: #1a1a1a;
+        font-size: 14px;
+        font-weight: 800;
+        color: #111111;
         line-height: 1.35;
         margin-top: 2px;
     }
 
     /* Desktop (>= 768px): Layout horizontal 3 columnas fijas (ícono | label | valor) */
     @media (min-width: 768px) {
-        .specs-table-container {
-            padding: 16px 0;
-        }
         .spec-row-item {
-            grid-template-columns: 20px 180px 1fr;
+            grid-template-columns: 24px 160px 1fr;
             grid-template-rows: auto;
             column-gap: 16px;
             row-gap: 0;
             align-items: center;
-            padding: 12px 0;
+            padding: 18px 0;
         }
         .spec-col-icon {
             grid-column: 1;
             grid-row: 1;
+            width: 24px;
+            height: 24px;
+        }
+        .spec-icon {
+            font-size: 16px;
         }
         .spec-col-label {
             grid-column: 2;
             grid-row: 1;
+            font-size: 11px;
+            letter-spacing: 0.8px;
+            color: #9c9c9c;
         }
         .spec-col-value {
             grid-column: 3;
             grid-row: 1;
-            font-size: 14.5px;
+            font-size: 15px;
+            font-weight: 800;
+            color: #111111;
             margin-top: 0;
         }
     }
 
     /* Disclaimer */
     .specs-disclaimer {
-        margin-top: 18px;
-        margin-bottom: 22px;
+        margin-top: 22px;
+        margin-bottom: 26px;
         font-size: 11px;
-        color: #888888;
+        color: #999999;
         line-height: 1.5;
         font-style: italic;
         padding-left: 2px;
     }
 
-    /* Action Buttons (Mismo alto, mismo padding interno, gap consistente) */
-    .action-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        height: 48px;
-        min-height: 48px;
-        padding: 0 18px;
-        border-radius: 8px;
-        font-size: 13.5px;
-        font-weight: 700;
-        text-decoration: none !important;
-        box-sizing: border-box;
-        transition: all 0.15s ease;
-        line-height: 1;
-        white-space: nowrap;
-    }
-
-    .action-btn-ficha {
-        background: #ffffff;
-        color: #1a1a1a;
-        border: 1px solid #EAEAEA;
-    }
-    .action-btn-ficha:hover {
-        background: #f8f9fa;
-        border-color: #d0d0d0;
-        color: #000;
-    }
-    .action-btn-ficha.disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
-
-    .action-btn-b2b {
-        background: #ffffff;
-        color: #1a1a1a;
-        border: 1px solid #EAEAEA;
-    }
-    .action-btn-b2b:hover {
-        background: #fff9f5;
-        border-color: #ee7c31;
-    }
-    .action-btn-b2b .b2b-link {
-        color: #a06635;
-        text-decoration: underline;
-        font-weight: 700;
-        margin-left: 4px;
-    }
-    .action-btn-b2b .b2b-price {
-        color: #ee7c31;
-        font-weight: 800;
-        font-size: 14.5px;
-        margin-left: 6px;
-    }
-
-    /* WhatsApp Button - Verde #25D366 en Desktop y Mobile */
-    .action-btn-whatsapp {
-        background: #25D366 !important;
-        color: #ffffff !important;
-        border: none !important;
-        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
-    }
-    .action-btn-whatsapp:hover {
-        background: #20ba59 !important;
-        color: #ffffff !important;
-        box-shadow: 0 6px 16px rgba(37, 211, 102, 0.35);
-    }
-    .action-btn-whatsapp-icon {
-        font-size: 22px;
-        line-height: 1;
-    }
-
-    /* Contenedor de acciones: Mobile (stack vertical con gap 12px) vs Desktop (fila con gap 14px) */
+    /* Desktop Action Card (Matching Image 2 exactly) */
     .desktop-action-card {
         display: none;
-    }
-    .mobile-actions-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-bottom: 24px;
-    }
-    .mobile-actions-stack .action-btn {
-        width: 100%;
     }
 
     @media (min-width: 768px) {
@@ -280,16 +205,102 @@
             display: flex !important;
             align-items: center;
             justify-content: space-between;
-            gap: 14px;
+            gap: 16px;
             background: #ffffff;
-            border: 1px solid #f3e6dc;
-            border-radius: 12px;
-            padding: 14px 20px;
-            margin-bottom: 24px;
+            border: 1px solid #f3e5d8;
+            border-radius: 14px;
+            padding: 16px 24px;
+            margin-bottom: 28px;
         }
-        .desktop-action-card .action-btn-b2b {
-            border: 1.5px solid #ee7c31;
+
+        .desktop-ficha-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none !important;
+            color: #8e623a !important;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
         }
+        .desktop-ficha-btn:hover {
+            opacity: 0.85;
+        }
+
+        .desktop-b2b-box {
+            border: 2px solid #ee7c31;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 9px 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .desktop-wsp-btn {
+            background: #1ebd5b !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 8px;
+            padding: 10px 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(30, 189, 91, 0.25);
+            text-decoration: none !important;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .desktop-wsp-btn:hover {
+            background: #18a850 !important;
+            color: #ffffff !important;
+            box-shadow: 0 6px 16px rgba(30, 189, 91, 0.35);
+        }
+    }
+
+    /* Mobile Buttons Stack */
+    .mobile-actions-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 26px;
+    }
+    .mobile-action-btn {
+        width: 100%;
+        height: 48px;
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        text-decoration: none !important;
+        box-sizing: border-box;
+        transition: all 0.15s ease;
+    }
+    .mobile-action-white {
+        background: #ffffff;
+        color: #1a1a1a;
+        border: 1px solid #e0d7cf;
+    }
+    .mobile-action-white:hover {
+        background: #f8f9fa;
+        color: #000;
+        border-color: #ccc;
+    }
+    .mobile-action-wsp {
+        background: #25D366 !important;
+        color: #ffffff !important;
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+    }
+    .mobile-action-wsp:hover {
+        background: #20ba59 !important;
+        color: #ffffff !important;
+    }
+
+    @media (min-width: 768px) {
         .mobile-actions-stack {
             display: none !important;
         }
@@ -715,6 +726,27 @@
                     return null;
                 };
 
+                $cleanSpecText = function($text) {
+                    if ($text === null) return 'No especificado';
+                    $str = trim((string)$text);
+                    if ($str === '' || in_array(strtoupper($str), ['NULL', 'N/A', '-', 'NO ESPECIFICADO', 'NO APLICA'], true)) {
+                        return 'No especificado';
+                    }
+                    // Clean SmallForm Factor -> Small Form Factor
+                    $str = preg_replace('/SmallForm\s*Factor/i', 'Small Form Factor', $str);
+                    // Clean trailing dashes, colons, dots, or degree symbols
+                    $str = preg_replace('/[\s\-\:\.\º\–\—]+$/u', '', $str);
+                    // Clean 'Intel ®' -> 'Intel'
+                    if (preg_match('/^intel\s*®?$/i', $str)) {
+                        return 'Intel';
+                    }
+                    // Clean video trailing 'Conectividad.*'
+                    $str = preg_replace('/\s*Conectividad.*$/i', '', $str);
+                    // Clean multiple spaces
+                    $str = preg_replace('/\s+/', ' ', $str);
+                    return trim($str);
+                };
+
                 $getIconForField = function($fieldName) {
                     $name = strtolower((string)$fieldName);
                     if (str_contains($name, 'formato') || str_contains($name, 'chasis') || str_contains($name, 'factor')) return 'fa-solid fa-desktop';
@@ -786,33 +818,27 @@
                 }
             @endphp
 
-            <div style="margin-bottom:20px;">
-                <h2 style="font-weight:800; font-size:28px; color:#1a1a1a; margin-bottom:10px; line-height:1.2;">
+            <div style="margin-bottom:24px;">
+                <h2 style="font-weight:800; font-size:28px; color:#1a1a1a; margin-bottom:12px; line-height:1.2;">
                     {{ $producto->display_name }}
                 </h2>
                 <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:13px;">
                     @if($producto->modelo)
-                        <span style="display:inline-flex; align-items:center; gap:6px; background:#f0f2f5; color:#495057; font-size:12px; font-weight:700; padding:4px 12px; border-radius:4px; text-transform:uppercase;">
+                        <span style="display:inline-flex; align-items:center; gap:6px; background:#eaedf0; color:#495057; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:3px; text-transform:uppercase;">
                             <i class="fa-solid fa-cube" style="font-size:11px; color:#6c757d;"></i> {{ $producto->modelo->descripcion ?? $producto->modelo->nombre }}
                         </span>
                     @endif
                     @if($producto->nro_parte)
-                        <span style="display:inline-flex; align-items:center; gap:4px; background:#f0f2f5; color:#495057; font-size:12px; font-weight:700; padding:4px 12px; border-radius:4px; text-transform:uppercase;">
+                        <span style="display:inline-flex; align-items:center; gap:4px; background:#eaedf0; color:#495057; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:3px; text-transform:uppercase;">
                             <span style="color:#6c757d; font-weight:800;">#</span> {{ $producto->nro_parte }}
                         </span>
                     @endif
                     @if($producto->getCategoria)
-                        <span style="display:inline-flex; align-items:center; gap:5px; background:#f0f2f5; color:#495057; font-size:12px; font-weight:700; padding:4px 12px; border-radius:4px; text-transform:uppercase;">
+                        <span style="display:inline-flex; align-items:center; gap:5px; background:#eaedf0; color:#495057; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:3px; text-transform:uppercase;">
                             <i class="fa-solid fa-tag" style="font-size:10px; color:#6c757d;"></i> {{ $producto->getCategoria->nombre }}
                         </span>
                     @endif
                 </div>
-            </div>
-
-            <div style="text-align:right; margin-bottom:10px;">
-                <button id="design-toggle" type="button" style="background:none; border:1px solid #ccc; border-radius:20px; padding:4px 14px; font-size:12px; color:#666; cursor:pointer; transition:all 0.15s;">
-                    <i class="fa-solid fa-rotate" style="margin-right:4px;"></i> Ver diseño anterior
-                </button>
             </div>
 
             <div id="design-v2">
@@ -832,9 +858,9 @@
                     @forelse($specsToRender as $espec)
                         @php
                             $iconClass = $getIconForField($espec->campo ?? '');
-                            $val = $espec->descripcion ?? '';
+                            $val = $cleanSpecText($espec->descripcion ?? '');
                             if ($isDesktopOrWorkstation && in_array(strtolower($espec->campo ?? ''), ['procesador', 'cpu']) && !empty($producto->descripcion_2)) {
-                                $val = $espec->descripcion . ' · ' . $producto->descripcion_2;
+                                $val = $val . ' · ' . $producto->descripcion_2;
                             }
                         @endphp
                         <div class="spec-row-item">
@@ -857,46 +883,59 @@
                     * Las imágenes e información incluidas son referenciales; pueden variar por versiones, por favor consultar a su vendedor.
                 </div>
 
-                {{-- Action Box Escritorio (>= 768px) --}}
+                {{-- Action Box Escritorio (>= 768px, idéntico a Imagen 2) --}}
                 <div class="desktop-action-card">
-                    {{-- 1. Ficha técnica --}}
+                    {{-- 1. Ficha técnica (plana, sin caja de botón) --}}
                     @if($producto->ficha_tecnica)
                         @php
                             $fichaUrl = str_starts_with($producto->ficha_tecnica, 'http')
                                 ? $producto->ficha_tecnica
                                 : asset('/storage/' . $producto->ficha_tecnica);
                         @endphp
-                        <a href="{{ $fichaUrl }}" target="_blank" class="action-btn action-btn-ficha">
-                            <i class="fa-regular fa-file-lines" style="font-size:18px; color:#b87333;"></i>
-                            <span>Ficha técnica</span>
-                            <i class="fa-solid fa-download" style="font-size:11px; color:#888; margin-left:4px;"></i>
+                        <a href="{{ $fichaUrl }}" target="_blank" class="desktop-ficha-btn">
+                            <i class="fa-regular fa-file-lines" style="font-size:24px; color:#b97737;"></i>
+                            <div style="font-size:14px; font-weight:700; color:#8e623a; line-height:1.15; text-align:left;">
+                                <div>Ficha</div>
+                                <div>técnica</div>
+                            </div>
+                            <i class="fa-solid fa-download" style="font-size:11px; color:#b97737; margin-left:4px;"></i>
                         </a>
                     @else
-                        <div class="action-btn action-btn-ficha disabled">
-                            <i class="fa-regular fa-file-lines" style="font-size:18px; color:#ccc;"></i>
-                            <span>Ficha técnica</span>
+                        <div class="desktop-ficha-btn" style="opacity:0.6; cursor:not-allowed;">
+                            <i class="fa-regular fa-file-lines" style="font-size:24px; color:#bbb;"></i>
+                            <div style="font-size:14px; font-weight:700; color:#888; line-height:1.15; text-align:left;">
+                                <div>Ficha</div>
+                                <div>técnica</div>
+                            </div>
                         </div>
                     @endif
 
-                    {{-- 2. Precios B2B --}}
-                    @if(Auth::guard('cliente')->check())
-                        <div class="action-btn action-btn-b2b">
-                            <i class="fa-solid fa-lock" style="font-size:14px; color:#b87333;"></i>
-                            <span>Precios B2B:</span>
-                            <span class="b2b-price">$ {{ number_format($producto->precio_especial, 2) }}</span>
+                    {{-- 2. Precios B2B (caja con borde naranja sólido de 2px) --}}
+                    <div class="desktop-b2b-box">
+                        <i class="fa-solid fa-lock" style="font-size:14px; color:#b97737;"></i>
+                        <div style="font-size:13.5px; font-weight:600; color:#222; line-height:1.2; text-align:left;">
+                            <div>Precios exclusivos</div>
+                            <div style="text-align:center;">B2B</div>
                         </div>
-                    @else
-                        <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" class="action-btn action-btn-b2b">
-                            <i class="fa-solid fa-lock" style="font-size:14px; color:#b87333;"></i>
-                            <span>Precios exclusivos B2B</span>
-                            <span class="b2b-link">Ingresa aquí</span>
-                        </a>
-                    @endif
+                        @if(Auth::guard('cliente')->check())
+                            <div style="border-left:1px solid #f0f0f0; padding-left:12px; font-weight:800; color:#ee7c31; font-size:15px;">
+                                $ {{ number_format($producto->precio_especial, 2) }}
+                            </div>
+                        @else
+                            <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" style="color:#8e623a; text-decoration:underline; font-weight:700; font-size:13px; line-height:1.2; text-align:center;">
+                                <div>Ingresa</div>
+                                <div>aquí</div>
+                            </a>
+                        @endif
+                    </div>
 
-                    {{-- 3. Cotizar por WhatsApp (Verde #25D366) --}}
-                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="action-btn action-btn-whatsapp">
-                        <i class="bx bxl-whatsapp action-btn-whatsapp-icon"></i>
-                        <span>{{ empty($producto->precio_especial) ? 'Solicitar Cotización' : 'Cotizar por WhatsApp' }}</span>
+                    {{-- 3. Cotizar por WhatsApp (verde #1ebd5b con texto apilado en 2 líneas) --}}
+                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="desktop-wsp-btn">
+                        <i class="bx bxl-whatsapp" style="font-size:26px; line-height:1;"></i>
+                        <div style="font-size:15px; font-weight:800; color:#ffffff; line-height:1.15; text-align:left;">
+                            <div>Cotizar por</div>
+                            <div>WhatsApp</div>
+                        </div>
                     </a>
                 </div>
 
@@ -909,12 +948,12 @@
                                 ? $producto->ficha_tecnica
                                 : asset('/storage/' . $producto->ficha_tecnica);
                         @endphp
-                        <a href="{{ $fichaUrl }}" target="_blank" class="action-btn action-btn-ficha">
+                        <a href="{{ $fichaUrl }}" target="_blank" class="mobile-action-btn mobile-action-white">
                             <i class="fa-regular fa-file-lines" style="font-size:16px;"></i>
                             <span>Ficha técnica</span>
                         </a>
                     @else
-                        <button type="button" disabled class="action-btn action-btn-ficha disabled">
+                        <button type="button" disabled class="mobile-action-btn mobile-action-white" style="opacity:0.6; cursor:not-allowed;">
                             <i class="fa-regular fa-file-lines" style="font-size:16px;"></i>
                             <span>Ficha técnica</span>
                         </button>
@@ -922,23 +961,23 @@
 
                     {{-- 2. Precios B2B --}}
                     @if(Auth::guard('cliente')->check())
-                        <div class="action-btn action-btn-b2b" style="justify-content:space-between;">
+                        <div class="mobile-action-btn mobile-action-white" style="cursor:default; justify-content:space-between; padding:0 18px;">
                             <span style="display:inline-flex; align-items:center; gap:8px;">
                                 <i class="fa-solid fa-lock" style="font-size:14px; color:#ee7c31;"></i> Precios B2B
                             </span>
-                            <span class="b2b-price">$ {{ number_format($producto->precio_especial, 2) }}</span>
+                            <span style="color:#ee7c31; font-weight:800; font-size:15px;">$ {{ number_format($producto->precio_especial, 2) }}</span>
                         </div>
                     @else
-                        <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" class="action-btn action-btn-b2b">
+                        <a href="{{ route('login-cliente.show', ['redirect' => route('cotizar.detalle', $producto->id, false)]) }}" class="mobile-action-btn mobile-action-white">
                             <i class="fa-solid fa-lock" style="font-size:14px;"></i>
                             <span>Precios B2B</span>
                         </a>
                     @endif
 
                     {{-- 3. Cotizar por WhatsApp (Verde #25D366) --}}
-                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="action-btn action-btn-whatsapp">
-                        <i class="bx bxl-whatsapp action-btn-whatsapp-icon"></i>
-                        <span>{{ empty($producto->precio_especial) ? 'Solicitar Cotización' : 'Cotizar por WhatsApp' }}</span>
+                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="mobile-action-btn mobile-action-wsp">
+                        <i class="bx bxl-whatsapp" style="font-size:22px;"></i>
+                        <span>Cotizar por WhatsApp</span>
                     </a>
                 </div>
             </div>{{-- close #design-v2 --}}
