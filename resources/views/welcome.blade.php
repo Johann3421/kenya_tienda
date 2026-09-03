@@ -1025,21 +1025,27 @@
         }
 
         #main-welcome-container .oferta-card {
+            text-decoration: none !important;
+            color: inherit !important;
             background: #fff !important;
             border-radius: 12px !important;
             overflow: hidden !important;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
             display: flex !important;
             flex-direction: column !important;
-            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
             border: 1px solid #eaeaea !important;
             cursor: pointer !important;
             height: 100% !important;
         }
 
-        #main-welcome-container .oferta-card:hover {
+        #main-welcome-container .oferta-card:hover,
+        #main-welcome-container .oferta-card:focus {
+            text-decoration: none !important;
+            color: inherit !important;
             transform: translateY(-5px) !important;
             box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+            border-color: #f26522 !important;
         }
 
         #main-welcome-container .oferta-content {
@@ -1052,6 +1058,11 @@
             color: #111 !important;
             margin-bottom: 10px !important;
             font-weight: 700 !important;
+            transition: color 0.2s ease !important;
+        }
+
+        #main-welcome-container .oferta-card:hover .oferta-content h3 {
+            color: #f26522 !important;
         }
 
         #main-welcome-container .oferta-content p {
@@ -1340,8 +1351,80 @@
                         $imgSrc = str_contains($oferta->imagen, '/')
                             ? asset('storage/' . $oferta->imagen)
                             : asset($oferta->imagen);
+
+                        $rawLink = trim($oferta->link ?? '');
+                        $ofertaUrl = null;
+
+                        // 1. Si la oferta tiene link personalizado configurado en BD
+                        if (!empty($rawLink) && $rawLink !== '#' && !in_array($rawLink, ['/catalogo', 'catalogo', url('/catalogo'), route('catalogo')])) {
+                            if (str_starts_with($rawLink, 'http://') || str_starts_with($rawLink, 'https://') || str_starts_with($rawLink, '/')) {
+                                $ofertaUrl = $rawLink;
+                            } else {
+                                $ofertaUrl = url($rawLink);
+                            }
+                        }
+
+                        // 2. Si no tiene link o es genérico, inferir automáticamente según título y contenido
+                        if (!$ofertaUrl) {
+                            $tituloUpper = strtoupper($oferta->titulo ?? '');
+                            $descUpper   = strtoupper($oferta->descripcion ?? '');
+                            $texto       = $tituloUpper . ' ' . $descUpper;
+
+                            $matchedMod = null;
+                            $brandKeywords = ['EZENT', 'GENWORK', 'OFISZU', 'PROWORK', 'HENKO', 'RAITO'];
+
+                            // Buscar coincidencia en la colección de modelos disponibles ($modelo)
+                            if (isset($modelo) && count($modelo) > 0) {
+                                foreach ($brandKeywords as $kw) {
+                                    if (str_contains($texto, $kw)) {
+                                        $matchedMod = $modelo->first(function($m) use ($kw) {
+                                            $mText = strtoupper(($m->prefix ?? '') . ' ' . ($m->descripcion ?? '') . ' ' . ($m->nombre ?? ''));
+                                            return str_contains($mText, $kw);
+                                        });
+                                        if ($matchedMod) break;
+                                    }
+                                }
+
+                                if (!$matchedMod) {
+                                    $matchedMod = $modelo->first(function($m) use ($texto) {
+                                        $mDesc = strtoupper(trim($m->descripcion ?? ''));
+                                        $mNom  = strtoupper(trim($m->nombre ?? ''));
+                                        return (!empty($mDesc) && str_contains($texto, $mDesc)) || (!empty($mNom) && str_contains($texto, $mNom));
+                                    });
+                                }
+                            }
+
+                            // Si no se encontró en la colección filtrada, buscar en App\Modelo
+                            if (!$matchedMod) {
+                                foreach ($brandKeywords as $kw) {
+                                    if (str_contains($texto, $kw)) {
+                                        $matchedMod = \App\Modelo::whereRaw("UPPER(CONCAT(COALESCE(prefix,''), ' ', COALESCE(descripcion,''), ' ', COALESCE(nombre,''))) LIKE ?", ["%{$kw}%"])
+                                            ->whereIn('activo', ['SI', 'Si'])
+                                            ->first();
+                                        if ($matchedMod) break;
+                                    }
+                                }
+                            }
+
+                            if ($matchedMod) {
+                                $ofertaUrl = route('detallemod', $matchedMod->id);
+                            } else {
+                                $foundKw = null;
+                                foreach ($brandKeywords as $kw) {
+                                    if (str_contains($texto, $kw)) {
+                                        $foundKw = $kw;
+                                        break;
+                                    }
+                                }
+                                if ($foundKw) {
+                                    $ofertaUrl = route('catalogo', ['busqueda' => $foundKw]);
+                                } else {
+                                    $ofertaUrl = route('catalogo');
+                                }
+                            }
+                        }
                     @endphp
-                    <div class="oferta-card">
+                    <a href="{{ $ofertaUrl }}" class="oferta-card" title="Ver {{ $oferta->titulo }}">
                         <div class="oferta-content">
                             <h3>{{ $oferta->titulo }}</h3>
                             <p>{{ $oferta->descripcion }}</p>
@@ -1349,7 +1432,7 @@
                         <div class="oferta-image-wrapper {{ $oferta->color_fondo }}">
                             <img src="{{ $imgSrc }}" alt="{{ $oferta->titulo }}">
                         </div>
-                    </div>
+                    </a>
                     @endforeach
                 </div>
             </div>
