@@ -95,15 +95,15 @@
         margin-bottom: 0;
     }
 
-    /* Mobile: Layout horizontal en 3 columnas ([ícono] [label] [valor]) idéntico a Imagen 2 */
+    /* Mobile: Layout horizontal en 3 columnas ([ícono] [label] [valor]) con mayor separación */
     .spec-row-item {
         display: grid;
-        grid-template-columns: 20px 110px 1fr;
+        grid-template-columns: 20px 118px 1fr;
         grid-template-rows: auto;
-        column-gap: 10px;
+        column-gap: 14px;
         row-gap: 0;
         align-items: center;
-        padding: 12px 0;
+        padding: 16px 0;
         border-bottom: 1px solid #EAEAEA;
         box-sizing: border-box;
         transition: background-color 0.15s ease;
@@ -250,14 +250,14 @@
     .mobile-actions-stack {
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        margin-bottom: 26px;
+        gap: 12px;
+        margin-bottom: 28px;
     }
     .mobile-action-btn {
         width: 100%;
-        height: 46px;
-        min-height: 46px;
-        padding: 0 16px;
+        height: 48px;
+        min-height: 48px;
+        padding: 0 18px;
         border-radius: 6px;
         display: flex;
         align-items: center;
