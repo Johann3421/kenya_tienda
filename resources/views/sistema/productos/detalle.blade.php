@@ -89,7 +89,7 @@
 
     /* Specs Block Container */
     .specs-table-container {
-        background: #fff;
+        background: transparent;
         border-top: 1px solid #EAEAEA;
         padding: 0;
         margin-bottom: 0;
@@ -107,9 +107,10 @@
         border-bottom: 1px solid #EAEAEA;
         box-sizing: border-box;
         transition: background-color 0.15s ease;
+        background: transparent;
     }
     .spec-row-item:hover {
-        background-color: #fafbfc;
+        background-color: transparent;
     }
     .spec-col-icon {
         grid-column: 1;
