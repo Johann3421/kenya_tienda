@@ -95,13 +95,14 @@
         margin-bottom: 0;
     }
 
-    /* Mobile: Layout vertical (Icon + Label in top row, Value below with ~4px margin) */
+    /* Mobile: Layout horizontal en 3 columnas ([ícono] [label] [valor]) idéntico a Imagen 2 */
     .spec-row-item {
         display: grid;
-        grid-template-columns: 20px 1fr;
-        grid-template-rows: auto auto;
-        column-gap: 8px;
-        row-gap: 4px;
+        grid-template-columns: 20px 110px 1fr;
+        grid-template-rows: auto;
+        column-gap: 10px;
+        row-gap: 0;
+        align-items: center;
         padding: 12px 0;
         border-bottom: 1px solid #EAEAEA;
         box-sizing: border-box;
@@ -122,7 +123,7 @@
     }
     .spec-icon {
         color: #b97737;
-        font-size: 15px;
+        font-size: 14px;
         line-height: 1;
         text-align: center;
     }
@@ -131,36 +132,32 @@
         grid-row: 1;
         display: flex;
         align-items: center;
-        font-size: 11px;
+        font-size: 10.5px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.6px;
         color: #9c9c9c;
         line-height: 1.2;
     }
     .spec-col-value {
-        grid-column: 2;
-        grid-row: 2;
-        font-size: 14px;
-        font-weight: 800;
+        grid-column: 3;
+        grid-row: 1;
+        font-size: 12.5px;
+        font-weight: 700;
         color: #111111;
-        line-height: 1.35;
-        margin-top: 2px;
+        line-height: 1.3;
+        margin-top: 0;
+        word-break: break-word;
     }
 
     /* Desktop (>= 768px): Layout horizontal 3 columnas fijas (ícono | label | valor) */
     @media (min-width: 768px) {
         .spec-row-item {
             grid-template-columns: 24px 160px 1fr;
-            grid-template-rows: auto;
             column-gap: 16px;
-            row-gap: 0;
-            align-items: center;
             padding: 18px 0;
         }
         .spec-col-icon {
-            grid-column: 1;
-            grid-row: 1;
             width: 24px;
             height: 24px;
         }
@@ -168,19 +165,12 @@
             font-size: 16px;
         }
         .spec-col-label {
-            grid-column: 2;
-            grid-row: 1;
             font-size: 11px;
             letter-spacing: 0.8px;
-            color: #9c9c9c;
         }
         .spec-col-value {
-            grid-column: 3;
-            grid-row: 1;
             font-size: 15px;
             font-weight: 800;
-            color: #111111;
-            margin-top: 0;
         }
     }
 
@@ -260,20 +250,20 @@
     .mobile-actions-stack {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
         margin-bottom: 26px;
     }
     .mobile-action-btn {
         width: 100%;
-        height: 48px;
-        min-height: 48px;
-        padding: 0 18px;
-        border-radius: 8px;
+        height: 46px;
+        min-height: 46px;
+        padding: 0 16px;
+        border-radius: 6px;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-size: 14px;
+        font-size: 13.5px;
         font-weight: 700;
         text-decoration: none !important;
         box-sizing: border-box;
@@ -282,12 +272,12 @@
     .mobile-action-white {
         background: #ffffff;
         color: #1a1a1a;
-        border: 1px solid #e0d7cf;
+        border: 1px solid #e8ded5;
     }
     .mobile-action-white:hover {
         background: #f8f9fa;
         color: #000;
-        border-color: #ccc;
+        border-color: #d8cec5;
     }
     .mobile-action-wsp {
         background: #25D366 !important;
