@@ -293,7 +293,7 @@
                 </div>
                 <div class="info-item">
                     <i class="fa-solid fa-phone"></i>
-                    <span>+51 958 021 778</span>
+                    <a href="https://api.whatsapp.com/send/?phone=51958021778&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">+51 958 021 778</a>
                 </div>
                 <div class="info-item">
                     <i class="fa-solid fa-location-dot"></i>
@@ -305,6 +305,7 @@
                 </div>
 
                 <div class="contact-social">
+                    <a href="https://api.whatsapp.com/send/?phone=51958021778&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" title="WhatsApp Corporativo"><i class="fa-brands fa-whatsapp"></i></a>
                     <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#"><i class="fa-brands fa-instagram"></i></a>
                     <a href="#"><i class="fa-brands fa-tiktok"></i></a>

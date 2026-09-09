@@ -1246,7 +1246,7 @@
                     <span>Las nuevas empresas afiliadas a Kenya reciben beneficios únicos en su primer pedido.</span>
                 </div>
                 <div class="promo-right">
-                    <a href="https://wa.me/51999888777" class="btn-saber-mas" target="_blank">¡Cotiza Ahora!</a>
+                    <a href="https://api.whatsapp.com/send/?phone=51958021778&text&type=phone_number&app_absent=0" class="btn-saber-mas" target="_blank" rel="noopener">¡Cotiza Ahora!</a>
                 </div>
             </div>
         </section>
@@ -1481,7 +1481,7 @@
 
                                     $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
                                     $novedadPartNumber = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
-                                    
+
                                     $novedadStock = $novedad->modelo->stock_vigente ?? $novedad->stock_inicial ?? 20;
                                 @endphp
                                 <div class="novedad-card">

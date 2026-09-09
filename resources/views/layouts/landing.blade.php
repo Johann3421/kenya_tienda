@@ -762,7 +762,7 @@ body {
                         </li>
                         <li>
                             <i class="kenya-icon fab fa-whatsapp"></i>
-                            <span>958 021 778</span>
+                            <a href="https://api.whatsapp.com/send/?phone=51958021778&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">958 021 778</a>
                         </li>
                     </ul>
                 </div>
@@ -1008,7 +1008,7 @@ body {
         });
     </script>
     <!-- Floating CEM WhatsApp Conversion Widget -->
-    <a href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Quisiera solicitar cotización de computadoras y equipos corporativos.') }}" 
+    <a href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Quisiera solicitar cotización de computadoras y equipos corporativos.') }}&type=phone_number&app_absent=0" 
        target="_blank" 
        rel="noopener" 
        title="Cotizaciones y Ventas Corporativas por WhatsApp" 

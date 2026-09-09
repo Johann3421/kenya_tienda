@@ -99,7 +99,7 @@
                                             <pre class="m-b-0">@{{soporte.reporte_tecnico}}</pre>
                                         </div>
                                     </td>
-                                    <td class="text-center"><a :href="'https://wa.me/51'+whatsapp.descripcion+'?text=Hola%20quisiera%20saber%20sobre%20el%20estado%20de%20mi%20soporte%20técnico:%20*'+soporte.codigo_barras+zeroFill(soporte.id, 4)+'*'" target="_blank" class="btn btn-success"> <i class="bx bxl-whatsapp"></i> Soporte</a></td>
+                                    <td class="text-center"><a :href="'https://api.whatsapp.com/send/?phone=51'+whatsapp.descripcion+'&text=Hola%20quisiera%20saber%20sobre%20el%20estado%20de%20mi%20soporte%20técnico:%20*'+soporte.codigo_barras+zeroFill(soporte.id, 4)+'*&type=phone_number&app_absent=0'" target="_blank" rel="noopener" class="btn btn-success"> <i class="bx bxl-whatsapp"></i> Soporte</a></td>
                                 </tr>
                             </tbody>
                         </table>

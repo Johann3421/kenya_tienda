@@ -921,7 +921,7 @@
                     </div>
 
                     {{-- 3. Cotizar por WhatsApp (verde #1ebd5b con texto apilado en 2 líneas) --}}
-                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="desktop-wsp-btn">
+                    <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="desktop-wsp-btn">
                         <i class="bx bxl-whatsapp" style="font-size:26px; line-height:1;"></i>
                         <div style="font-size:15px; font-weight:800; color:#ffffff; line-height:1.15; text-align:left;">
                             <div>Cotizar por</div>
@@ -966,7 +966,7 @@
                     @endif
 
                     {{-- 3. Cotizar por WhatsApp (Verde #25D366) --}}
-                    <a target="_blank" href="https://wa.me/+51958021778?text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}" class="mobile-action-btn mobile-action-wsp">
+                    <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="mobile-action-btn mobile-action-wsp">
                         <i class="bx bxl-whatsapp" style="font-size:22px;"></i>
                         <span>Cotizar por WhatsApp</span>
                     </a>
@@ -1046,7 +1046,7 @@
                         @endif
                     </div>
                 </div>
-                <a target="_blank" href="https://wa.me/+51958021778?text=!Quiero Informacion sobre el producto" class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600; white-space:nowrap; font-size:14px;">
+                <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Quiero información sobre el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600; white-space:nowrap; font-size:14px;">
                     <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                 </a>
             </div>

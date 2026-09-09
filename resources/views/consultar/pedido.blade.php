@@ -96,7 +96,7 @@
                                             <li v-for="detalle in pedido.get_detalles">@{{detalle.descripcion}}</li>
                                         </ul>
                                     </td>
-                                    <td class="text-center"><a :href="'https://wa.me/51'+whatsapp.descripcion+'?text=Hola%20quisiera%20saber%20sobre%20el%20estado%20de%20mi%20pedido:%20*'+pedido.codigo_barras+zeroFill(pedido.id, 4)+'*'" target="_blank" class="btn btn-success"> <i class="bx bxl-whatsapp"></i> Soporte</a></td>
+                                    <td class="text-center"><a :href="'https://api.whatsapp.com/send/?phone=51'+whatsapp.descripcion+'&text=Hola%20quisiera%20saber%20sobre%20el%20estado%20de%20mi%20pedido:%20*'+pedido.codigo_barras+zeroFill(pedido.id, 4)+'*&type=phone_number&app_absent=0'" target="_blank" rel="noopener" class="btn btn-success"> <i class="bx bxl-whatsapp"></i> Soporte</a></td>
                                 </tr>
                             </tbody>
                         </table>
