@@ -537,11 +537,11 @@
                             $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $rawName);
                             
                             $specs = [];
-                            if (!empty($producto->procesador)) $specs[] = trim($producto->procesador);
-                            if (!empty($producto->ram)) $specs[] = trim($producto->ram);
-                            if (!empty($producto->almacenamiento)) $specs[] = trim($producto->almacenamiento);
-                            if (!empty($producto->sistema_operativo)) $specs[] = trim($producto->sistema_operativo);
-                            if (!empty($producto->tarjetavideo)) $specs[] = trim($producto->tarjetavideo);
+                            if (!empty($producto->procesador)) $specs[] = ['label' => 'PROCESADOR', 'value' => trim($producto->procesador)];
+                            if (!empty($producto->ram)) $specs[] = ['label' => 'RAM', 'value' => trim($producto->ram)];
+                            if (!empty($producto->almacenamiento)) $specs[] = ['label' => 'DISCO', 'value' => trim($producto->almacenamiento)];
+                            if (!empty($producto->sistema_operativo)) $specs[] = ['label' => null, 'value' => trim($producto->sistema_operativo)];
+                            if (!empty($producto->tarjetavideo)) $specs[] = ['label' => 'GRAFICOS', 'value' => trim($producto->tarjetavideo)];
                         @endphp
 
                         <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
@@ -550,7 +550,18 @@
                         @if(count($specs) > 0)
                             <div class="product-specs-chips">
                                 @foreach($specs as $spec)
-                                    <span class="spec-chip">{{ $spec }}</span>
+                                    @php
+                                        $hasLabel = is_array($spec) && !empty($spec['label']);
+                                        $label = $hasLabel ? $spec['label'] . ':' : '';
+                                        $val = is_array($spec) ? $spec['value'] : $spec;
+                                        $fullText = $hasLabel ? $label . ' ' . $val : $val;
+                                    @endphp
+                                    <span class="spec-chip" title="{{ $fullText }}">
+                                        @if($hasLabel)
+                                            <strong style="color: #222; font-weight: 700; margin-right: 4px;">{{ $label }}</strong>
+                                        @endif
+                                        <span>{{ $val }}</span>
+                                    </span>
                                 @endforeach
                             </div>
                         @endif

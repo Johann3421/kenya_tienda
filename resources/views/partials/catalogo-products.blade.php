@@ -88,24 +88,24 @@
                     $especs = $producto->getRelation('especificaciones');
                     if ($especs) {
                         $pantalla = $especs->firstWhere('campo', 'Tamaño de Pantalla')->descripcion ?? null;
-                        if ($pantalla) $specs[] = trim($pantalla);
+                        if ($pantalla) $specs[] = ['label' => 'PANTALLA', 'value' => trim($pantalla)];
                         
                         $resolucion = $especs->firstWhere('campo', 'Resolución')->descripcion ?? null;
-                        if ($resolucion) $specs[] = trim($resolucion);
+                        if ($resolucion) $specs[] = ['label' => 'RESOLUCIÓN', 'value' => trim($resolucion)];
                     }
                     
                     if (!empty($producto->video_vga)) {
-                        $specs[] = 'VGA: ' . trim($producto->video_vga);
+                        $specs[] = ['label' => 'VGA', 'value' => trim($producto->video_vga)];
                     }
                     if (!empty($producto->video_hdmi)) {
-                        $specs[] = 'HDMI: ' . trim($producto->video_hdmi);
+                        $specs[] = ['label' => 'HDMI', 'value' => trim($producto->video_hdmi)];
                     }
                 } else {
-                    if (!empty($producto->procesador)) $specs[] = $normalizarCPU($producto->procesador);
-                    if (!empty($producto->ram)) $specs[] = $normalizarRAM($producto->ram);
-                    if (!empty($producto->almacenamiento)) $specs[] = trim($producto->almacenamiento);
-                    if (!empty($producto->sistema_operativo)) $specs[] = trim($producto->sistema_operativo);
-                    if (!empty($producto->tarjetavideo)) $specs[] = $normalizarTV($producto->tarjetavideo);
+                    if (!empty($producto->procesador)) $specs[] = ['label' => 'PROCESADOR', 'value' => $normalizarCPU($producto->procesador)];
+                    if (!empty($producto->ram)) $specs[] = ['label' => 'RAM', 'value' => $normalizarRAM($producto->ram)];
+                    if (!empty($producto->almacenamiento)) $specs[] = ['label' => 'DISCO', 'value' => trim($producto->almacenamiento)];
+                    if (!empty($producto->sistema_operativo)) $specs[] = ['label' => null, 'value' => trim($producto->sistema_operativo)];
+                    if (!empty($producto->tarjetavideo)) $specs[] = ['label' => 'GRAFICOS', 'value' => $normalizarTV($producto->tarjetavideo)];
                 }
             @endphp
 
@@ -118,7 +118,18 @@
             @if(count($specs) > 0)
                 <div class="product-specs-chips">
                     @foreach($specs as $spec)
-                        <span class="spec-chip">{{ $spec }}</span>
+                        @php
+                            $hasLabel = is_array($spec) && !empty($spec['label']);
+                            $label = $hasLabel ? $spec['label'] . ':' : '';
+                            $val = is_array($spec) ? $spec['value'] : $spec;
+                            $fullText = $hasLabel ? $label . ' ' . $val : $val;
+                        @endphp
+                        <span class="spec-chip" title="{{ $fullText }}">
+                            @if($hasLabel)
+                                <strong style="color: #222; font-weight: 700; margin-right: 4px;">{{ $label }}</strong>
+                            @endif
+                            <span>{{ $val }}</span>
+                        </span>
                     @endforeach
                 </div>
             @endif
