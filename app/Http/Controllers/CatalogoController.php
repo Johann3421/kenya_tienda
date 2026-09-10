@@ -119,13 +119,61 @@ class CatalogoController extends Controller
             return strtoupper(trim($v));
         };
 
+        $normalizarAlmacenamiento = function(string $v): string {
+            $v = trim($v);
+            if ($v === '') return '';
+            $v = preg_replace('/\s+/', ' ', $v);
+
+            // Si es dual/mixto con separador '/'
+            if (str_contains($v, '/')) {
+                $partes = explode('/', $v);
+                $partesNorm = array_map(function($p) {
+                    $p = trim($p);
+                    $p = preg_replace('/(\d+)\s*(TB|GB)/i', '$1 $2', $p);
+                    $p = preg_replace_callback('/\b(ssd|hdd|nvme|rpm|m\.2)\b/i', fn($m) => strtoupper($m[1]), $p);
+                    $p = preg_replace('/\s+/', ' ', $p);
+                    return trim($p);
+                }, $partes);
+
+                return implode(' / ', $partesNorm);
+            }
+
+            // Normalizar espacio número y unidad (ej: "1TB" -> "1 TB")
+            $v = preg_replace('/(\d+)\s*(TB|GB)/i', '$1 $2', $v);
+
+            // Múltiples unidades, ej: "2 X 1 TB", "2x 1TB"
+            if (preg_match('/^(\d+)\s*[xX]\s*(\d+)\s*(TB|GB)/i', $v, $m)) {
+                $qty = (int)$m[1];
+                $size = (int)$m[2];
+                $unit = strtoupper($m[3]);
+                $total = $qty * $size;
+                $capacidad = "$total $unit";
+            } elseif (preg_match('/(\d+(?:\.\d+)?)\s*(TB|GB)/i', $v, $m)) {
+                $capacidad = $m[1] . ' ' . strtoupper($m[2]);
+            } else {
+                return $v;
+            }
+
+            // Si es disco de estado sólido (SSD, M.2, NVMe)
+            if (preg_match('/\b(SSD|M\.2|NVME)\b/i', $v)) {
+                return "$capacidad (SSD/ M.2/ NVME)";
+            }
+
+            // Si es solo disco mecánico HDD
+            if (preg_match('/\bHDD\b/i', $v)) {
+                return "$capacidad HDD";
+            }
+
+            return $v;
+        };
+
         foreach ($directColumns as $col) {
             if ($request->filled($col)) {
                 $values = array_map('trim', explode(',', $request->$col));
                 $values = array_filter($values, fn($v) => $v !== '');
 
                 if (!empty($values)) {
-                    if (in_array($col, ['tarjetavideo', 'procesador', 'ram'])) {
+                    if (in_array($col, ['tarjetavideo', 'procesador', 'ram', 'almacenamiento'])) {
                         // Expandimos a los valores crudos
                         $todosLosCrudos = \App\Producto::whereNotNull($col)
                             ->whereRaw("TRIM($col) != ''")
@@ -136,10 +184,11 @@ class CatalogoController extends Controller
                             ->values();
 
                         $expandidos = $todosLosCrudos
-                            ->filter(function($raw) use ($col, $values, $normalizarTV, $normalizarCPU, $normalizarRAM) {
+                            ->filter(function($raw) use ($col, $values, $normalizarTV, $normalizarCPU, $normalizarRAM, $normalizarAlmacenamiento) {
                                 if ($col === 'tarjetavideo') $norm = $normalizarTV($raw);
                                 elseif ($col === 'procesador') $norm = $normalizarCPU($raw);
                                 elseif ($col === 'ram') $norm = $normalizarRAM($raw);
+                                elseif ($col === 'almacenamiento') $norm = $normalizarAlmacenamiento($raw);
                                 else $norm = $raw;
                                 
                                 return in_array($norm, $values, true);
