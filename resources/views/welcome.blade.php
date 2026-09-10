@@ -1161,6 +1161,7 @@
 @section('content')
     <!-- CONTENEDOR PRINCIPAL AISLADO -->
     <div id="main-welcome-container">
+        <h1 class="visually-hidden">Venta de Computadoras de Escritorio, PCs y Laptops en Perú | KENYA Technology</h1>
 
         <!-- ══════════════════════════════════════════════════════════
              HERO SLIDER - 4 BANNERS ESTÁTICOS

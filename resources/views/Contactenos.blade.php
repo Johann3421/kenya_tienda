@@ -1,6 +1,11 @@
 @extends('layouts.landing')
 
-@section('title', 'Contáctenos')
+@section('title', 'Contacto y Cotizaciones de Computadoras en Perú | KENYA Technology')
+@section('meta_description', 'Comunícate con KENYA Technology para cotizaciones de computadoras de escritorio, PCs, laptops y atención corporativa o Convenio Marco en Lima y Huánuco, Perú.')
+@section('meta_keywords', 'contacto kenya technology, cotizar computadoras peru, comprar pcs lima, importaciones kenya huanuco, atencion convenio marco')
+@section('canonical', route('contactenos'))
+@section('og_title', 'Contacto y Cotizaciones | KENYA Technology Perú')
+@section('og_description', 'Cotiza computadoras de escritorio, laptops y equipamiento corporativo con garantía On-Site de 36 meses.')
 
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">

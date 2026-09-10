@@ -25,6 +25,13 @@ class SitemapController extends Controller
             ['loc' => $baseUrl . '/contactenos', 'priority' => '0.6', 'changefreq' => 'monthly'],
         ];
 
+        // Modelos de catálogo activos
+        $modelos = \App\Modelo::whereRaw("UPPER(activo) = 'SI'")
+            ->whereHas('getProducto', function ($q) {
+                $q->where('pagina_web', 'SI')->noSuspendido();
+            })
+            ->get(['id', 'updated_at']);
+
         // Productos activos indexables
         $productos = Producto::noSuspendido()
             ->whereNotNull('nombre')
@@ -41,6 +48,18 @@ class SitemapController extends Controller
             $xml .= '<lastmod>' . date('Y-m-d') . '</lastmod>';
             $xml .= '<changefreq>' . $url['changefreq'] . '</changefreq>';
             $xml .= '<priority>' . $url['priority'] . '</priority>';
+            $xml .= '</url>';
+        }
+
+        foreach ($modelos as $modelo) {
+            $lastmod = $modelo->updated_at ? $modelo->updated_at->format('Y-m-d') : date('Y-m-d');
+            $modUrl = route('detallemod', $modelo->id, false);
+
+            $xml .= '<url>';
+            $xml .= '<loc>' . htmlspecialchars($baseUrl . $modUrl) . '</loc>';
+            $xml .= '<lastmod>' . $lastmod . '</lastmod>';
+            $xml .= '<changefreq>weekly</changefreq>';
+            $xml .= '<priority>0.85</priority>';
             $xml .= '</url>';
         }
 

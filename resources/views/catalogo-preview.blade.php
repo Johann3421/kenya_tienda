@@ -1,6 +1,11 @@
 @extends('layouts.landing')
 
-@section('title', 'Catálogo Preview')
+@section('title', 'Catálogo de Computadoras de Escritorio, PCs y Laptops en Perú | KENYA Technology')
+@section('meta_description', 'Catálogo completo de computadoras de escritorio, PCs corporativas, laptops y monitores en Perú. Equipos KENYA Technology para empresas y Convenio Marco con 36 meses de garantía On-Site.')
+@section('meta_keywords', 'catalogo computadoras peru, pcs de escritorio, computadoras corporativas, laptops kenya, ofiszu, ezent, prowork, convenio marco peru compras')
+@section('canonical', route('catalogo'))
+@section('og_title', 'Catálogo de Computadoras y PCs de Escritorio en Perú | KENYA Technology')
+@section('og_description', 'Encuentra computadoras de escritorio, laptops y equipos B2B con garantía On-Site de 36 meses a nivel nacional.')
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/detallemod.css') }}">

@@ -1,6 +1,11 @@
 @extends('layouts.landing') {{-- Asegúrate de tener tu header/footer aquí --}}
 
-@section('title', 'Quiénes Somos')
+@section('title', 'Quiénes Somos | Fabricante y Distribuidor de Computadoras en Perú | KENYA Technology')
+@section('meta_description', 'Conoce la historia y trayectoria de KENYA Technology (IMPORTACIONES KENYA). Fabricante y distribuidor de computadoras de escritorio, laptops y soluciones B2B con 36 meses de garantía On-Site en todo el Perú.')
+@section('meta_keywords', 'quienes somos kenya, importaciones kenya, kenya technology, fabricante computadoras peru, empresa computo peru')
+@section('canonical', route('quienes.somos'))
+@section('og_title', 'Quiénes Somos | KENYA Technology Perú')
+@section('og_description', 'Fabricante y distribuidor peruano de computadoras de escritorio y soluciones tecnológicas B2B.')
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">

@@ -15,13 +15,26 @@
         </ul>
     </nav>
 @endsection
+@php
+    use App\Modelo;
+    use Illuminate\Support\Str;
+
+    $modeloId = request()->route('id') ?? request()->route('modelo');
+    $modelo = Modelo::findOrFail($modeloId);
+    $modDesc = $modelo->descripcion ?? 'Modelo';
+    $seoTitle = 'Computadoras ' . $modDesc . ' en Perú | KENYA Technology';
+    $seoDesc = 'Catálogo de computadoras ' . $modDesc . ' de KENYA Technology en Perú. Fichas técnicas, precios para empresas y Convenio Marco con 36 meses de garantía On-Site.';
+@endphp
+
+@section('title', $seoTitle)
+@section('meta_description', $seoDesc)
+@section('meta_keywords', 'computadoras ' . strtolower($modDesc) . ', pcs kenya ' . strtolower($modDesc) . ', venta de computadoras peru, kenya technology')
+@section('canonical', url()->current())
+@section('og_title', $seoTitle)
+@section('og_description', $seoDesc)
+
 @section('content')
     @php
-        use App\Modelo;
-        use Illuminate\Support\Str;
-
-        $modeloId = request()->route('id') ?? request()->route('modelo');
-        $modelo = Modelo::findOrFail($modeloId);
         $modeloDescripcion = mb_strtolower((string) ($modelo->descripcion ?? ''));
         $isTonerModel = ((int) ($modelo->id ?? 0) === 10)
             || str_contains($modeloDescripcion, 'toner')

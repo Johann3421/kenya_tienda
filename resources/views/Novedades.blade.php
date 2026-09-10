@@ -1,6 +1,11 @@
 @extends('layouts.landing')
 
-@section('title', 'Novedades')
+@section('title', 'Novedades y Nuevos Modelos de Computadoras en Perú | KENYA Technology')
+@section('meta_description', 'Descubre los últimos lanzamientos y novedades en computadoras de escritorio, PCs para empresas y laptops de KENYA Technology en Perú. Tecnología de vanguardia con garantía On-Site.')
+@section('meta_keywords', 'novedades computadoras peru, nuevos modelos pc peru, computadoras kenya, laptops nuevas peru')
+@section('canonical', route('novedades'))
+@section('og_title', 'Novedades de Computadoras y Equipos | KENYA Technology')
+@section('og_description', 'Últimos ingresos de computadoras de escritorio, PCs corporativas y laptops con 36 meses de garantía On-Site.')
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">
