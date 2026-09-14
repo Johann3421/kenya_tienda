@@ -2,6 +2,29 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+    <!-- Google tag (gtag.js) - Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9PPGF4FHXE"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9PPGF4FHXE');
+
+        // Rastreo de conversión para cotizaciones por WhatsApp
+        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('click', function (e) {
+                var target = e.target.closest('a[href*="whatsapp.com"], a[href*="wa.me"]');
+                if (target) {
+                    gtag('event', 'cotizacion_whatsapp', {
+                        'event_category': 'Leads',
+                        'event_label': window.location.pathname,
+                        'value': 1
+                    });
+                }
+            });
+        });
+    </script>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
