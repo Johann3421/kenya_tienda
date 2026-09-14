@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Producto;
 use App\Modelo;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -44,14 +43,6 @@ class SitemapController extends Controller
                 })
                 ->get(['id', 'updated_at']);
 
-            // Productos activos indexables en web
-            $productos = Producto::where('pagina_web', 'SI')
-                ->noSuspendido()
-                ->whereNotNull('nombre')
-                ->where('nombre', '!=', '')
-                ->orderBy('id', 'desc')
-                ->get(['id', 'updated_at']);
-
             $content = '<?xml version="1.0" encoding="UTF-8"?>';
             $content .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
@@ -73,18 +64,6 @@ class SitemapController extends Controller
                 $content .= '<lastmod>' . $lastmod . '</lastmod>';
                 $content .= '<changefreq>weekly</changefreq>';
                 $content .= '<priority>0.85</priority>';
-                $content .= '</url>';
-            }
-
-            foreach ($productos as $producto) {
-                $lastmod = $producto->updated_at ? $producto->updated_at->format('Y-m-d') : date('Y-m-d');
-                $prodUrl = '/cotizar/producto/' . $producto->id;
-
-                $content .= '<url>';
-                $content .= '<loc>' . htmlspecialchars($baseUrl . $prodUrl) . '</loc>';
-                $content .= '<lastmod>' . $lastmod . '</lastmod>';
-                $content .= '<changefreq>weekly</changefreq>';
-                $content .= '<priority>0.8</priority>';
                 $content .= '</url>';
             }
 
