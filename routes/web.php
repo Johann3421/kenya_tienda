@@ -206,13 +206,16 @@ Route::get('/sorteo', fn() => redirect('/'))->name('serial.draw');
 Route::post('/sorteo', fn() => redirect('/'))->name('serial.draw.store');
 Route::post('/sorteo/claim', fn() => redirect('/'))->name('serial.draw.claim');
 
+// Detalle de producto público (indexable en SEO / Google, precios B2B protegidos en vista)
+Route::get('/cotizar/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('cotizar.detalle');
+Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('producto.detalle');
+
 Route::middleware(['auth:cliente'])->group(function () {
     Route::get('/mi-perfil',        [App\Http\Controllers\ClienteWebController::class, 'perfil'])->name('cliente.perfil');
     Route::post('/mi-perfil',       [App\Http\Controllers\ClienteWebController::class, 'actualizarPerfil'])->name('cliente.perfil.update');
     Route::get('/mis-cotizaciones', [App\Http\Controllers\ClienteWebController::class, 'cotizaciones'])->name('cliente.cotizaciones');
     Route::prefix('cotizar')->name('cotizar.')->group(function () {
         Route::get('/', [App\Http\Controllers\CotizarController::class, 'index'])->name('index');
-        Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('detalle');
     });
 });
 // -----------------------------------------------------------------------

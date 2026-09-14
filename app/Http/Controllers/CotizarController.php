@@ -36,7 +36,11 @@ class CotizarController extends Controller
 
     public function detalle($id)
     {
-        $producto = Producto::findOrFail($id);
+        $query = Producto::query();
+        if (!\Illuminate\Support\Facades\Auth::guard('cliente')->check()) {
+            $query->noSuspendido()->where('pagina_web', 'SI');
+        }
+        $producto = $query->findOrFail($id);
 
         // ponytail: misma lógica de ordenamiento que ProductoController@detalle
         $especificaciones = Especificacion::where('producto_id', $id)
