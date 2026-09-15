@@ -36,6 +36,10 @@ class CotizarController extends Controller
 
     public function detalle($id)
     {
+        if (!is_numeric($id)) {
+            abort(404);
+        }
+
         $query = Producto::query();
         if (!\Illuminate\Support\Facades\Auth::guard('cliente')->check()) {
             $query->noSuspendido()->where('pagina_web', 'SI');

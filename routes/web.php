@@ -8,6 +8,7 @@ use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\SerialDrawController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SitemapController;
+use App\Http\Controllers\LlmsController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -209,8 +210,8 @@ Route::post('/sorteo', fn() => redirect('/'))->name('serial.draw.store');
 Route::post('/sorteo/claim', fn() => redirect('/'))->name('serial.draw.claim');
 
 // Detalle de producto público (indexable en SEO / Google, precios B2B protegidos en vista)
-Route::get('/cotizar/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('cotizar.detalle');
-Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('producto.detalle');
+Route::get('/cotizar/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('cotizar.detalle')->whereNumber('id');
+Route::get('/producto/{id}', [App\Http\Controllers\CotizarController::class, 'detalle'])->name('producto.detalle')->whereNumber('id');
 
 Route::middleware(['auth:cliente'])->group(function () {
     Route::get('/mi-perfil',        [App\Http\Controllers\ClienteWebController::class, 'perfil'])->name('cliente.perfil');
@@ -253,7 +254,7 @@ Route::post('/productos/asignar-filtros', [ProductoController::class, 'asignarFi
 
 
 // Ruta fuera del grupo de middleware (si no requiere autenticación)
-Route::get('producto/{id}/detalle', [ProductoController::class, 'detalle'])->name('producto_detalle');
+Route::get('producto/{id}/detalle', [ProductoController::class, 'detalle'])->name('producto_detalle')->whereNumber('id');
 
 // ------------------------ PRODUCTO-DRIVERS --------------------------------
 Route::group(['middleware' => ['can:producto_drivers']], function () {
