@@ -1210,7 +1210,12 @@
                         }
                     }
                 @endphp
-                <div class="hero-slide {{ $brandClass }} @if($index == 0) active @endif" style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover;">
+                <div class="hero-slide {{ $brandClass }} @if($index == 0) active @endif"
+                     @if($index == 0)
+                         style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover;"
+                     @else
+                         data-bg="url('{{ asset('storage/' . $banner->imagen) }}') center/cover"
+                     @endif>
                     <div class="hero-slide-content">
                         <h1>{{ $banner->titulo }}</h1>
                         <h2>{{ $banner->descripcion }}</h2>
@@ -1265,7 +1270,7 @@
                 <div class="categoria-grid" id="categoria-grid">
                     <button class="categoria-btn active" data-category="*">
                         <div class="categoria-card">
-                            <img src="{{ asset('producto-placeholder.png') }}" alt="Todos">
+                            <img src="{{ asset('producto-placeholder.png') }}" alt="Todos" loading="lazy" decoding="async">
                         </div>
                         <p class="categoria-label">Todos</p>
                     </button>
@@ -1273,9 +1278,9 @@
                         <button class="categoria-btn" data-category=".filter-{{ $cat->id }}">
                             <div class="categoria-card">
                                 @if ($cat->img_url)
-                                    <img src="{{ $cat->img_url }}" alt="{{ $cat->nombre }}">
+                                    <img src="{{ $cat->img_url }}" alt="{{ $cat->nombre }}" loading="lazy" decoding="async">
                                 @else
-                                    <img src="{{ asset('producto.jpg') }}" alt="{{ $cat->nombre }}">
+                                    <img src="{{ asset('producto.jpg') }}" alt="{{ $cat->nombre }}" loading="lazy" decoding="async">
                                 @endif
                             </div>
                             <p class="categoria-label">{{ $cat->nombre }}</p>
@@ -1312,9 +1317,15 @@
                             <div class="producto-card filter-{{ $mod->categoria_id }} {{ $brandClass }}">
                                 <div class="producto-imagen">
                                     @if ($mod->img_mod)
-                                        <img src="{{ asset('storage/' . $mod->img_mod) }}" alt="{{ $mod->descripcion ?? 'Producto' }}">
+                                        @php
+                                            $modWebp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $mod->img_mod);
+                                        @endphp
+                                        <picture>
+                                            <source srcset="{{ asset('storage/' . $modWebp) }}" type="image/webp">
+                                            <img src="{{ asset('storage/' . $mod->img_mod) }}" alt="{{ $mod->descripcion ?? 'Producto' }}" loading="lazy" decoding="async">
+                                        </picture>
                                     @else
-                                        <img src="{{ asset('producto.jpg') }}" alt="{{ $mod->descripcion ?? 'Producto' }}">
+                                        <img src="{{ asset('producto.jpg') }}" alt="{{ $mod->descripcion ?? 'Producto' }}" loading="lazy" decoding="async">
                                     @endif
                                 </div>
                                 <div class="producto-info">
@@ -1431,7 +1442,13 @@
                             <p>{{ $oferta->descripcion }}</p>
                         </div>
                         <div class="oferta-image-wrapper {{ $oferta->color_fondo }}">
-                            <img src="{{ $imgSrc }}" alt="{{ $oferta->titulo }}">
+                            @php
+                                $webpSrc = preg_replace('/\.(png|jpe?g)$/i', '.webp', $imgSrc);
+                            @endphp
+                            <picture>
+                                <source srcset="{{ $webpSrc }}" type="image/webp">
+                                <img src="{{ $imgSrc }}" alt="{{ $oferta->titulo }}" loading="lazy" decoding="async">
+                            </picture>
                         </div>
                     </a>
                     @endforeach
@@ -1488,7 +1505,7 @@
                                 <div class="novedad-card">
                                     <span class="novedad-badge">Nuevo</span>
                                     <div class="novedad-imagen">
-                                        <img src="{{ $imgUrl }}" alt="{{ $cleanName }}" onerror="this.onerror=null; this.src='{{ asset('producto.jpg') }}';">
+                                        <img src="{{ $imgUrl }}" alt="{{ $cleanName }}" loading="lazy" decoding="async" onerror="this.onerror=null; this.src='{{ asset('producto.jpg') }}';">
                                     </div>
                                     <div class="novedad-info">
                                         <h5 class="novedad-titulo">
@@ -1555,10 +1572,19 @@
 
                 const dots = container.querySelectorAll('.hero-dot');
 
+                function ensureSlideBg(slide) {
+                    if (slide && slide.dataset.bg && !slide.style.background) {
+                        slide.style.background = slide.dataset.bg;
+                    }
+                }
+
                 function goToSlide(index) {
                     slides[currentSlide].classList.remove('active');
                     dots[currentSlide].classList.remove('active');
                     currentSlide = index;
+                    ensureSlideBg(slides[currentSlide]);
+                    const nextIdx = (currentSlide + 1) % slides.length;
+                    ensureSlideBg(slides[nextIdx]);
                     slides[currentSlide].classList.add('active');
                     dots[currentSlide].classList.add('active');
                 }
@@ -1570,6 +1596,13 @@
                 function prevSlide() {
                     goToSlide((currentSlide - 1 + slides.length) % slides.length);
                 }
+
+                // Cargar en background el resto de slides tras la carga inicial
+                window.addEventListener('load', () => {
+                    setTimeout(() => {
+                        slides.forEach(ensureSlideBg);
+                    }, 2500);
+                });
 
                 function startInterval() {
                     slideInterval = setInterval(nextSlide, 5000);
