@@ -244,8 +244,8 @@
                                                 <div >
                                                     <div>
                                                         <label class="image_show" for="file_edit" title="Buscar Imagen"
-                                                            v-if="producto.imagen">
-                                                            <img id="show_image" class="img-fluid">
+                                                            v-if="producto.imagen_url">
+                                                            <img id="show_image" class="img-fluid" :src="producto.imagen_url" alt="Vista previa">
                                                             <input type="file" id="file_edit" style="display: none;"
                                                                 v-on:change="changeImagen($event)" accept="image/*">
                                                         </label>
@@ -349,8 +349,8 @@
                                                 <div >
                                                     <div>
                                                         <label class="image_show" for="file_edit" title="Buscar Imagen"
-                                                            v-if="producto.imagen">
-                                                            <img id="show_image" class="img-fluid" :src="'storage/app/public/'+producto.imagen">
+                                                            v-if="producto.imagen_url">
+                                                            <img id="show_image" class="img-fluid" :src="producto.imagen_url" alt="Vista previa">
                                                             <input type="file" id="file_edit" style="display: none;"
                                                                 v-on:change="changeImagen($event)" accept="image/*">
                                                         </label>
@@ -564,5 +564,5 @@
 
 @section('js')
     <script src="{{ asset('moment.min.js') }}"></script>
-    <script src="{{ asset('js/views/categorias/categoria.js') }}"></script>
+    <script src="{{ asset('js/views/categorias/categoria.js') }}?v={{ time() }}"></script>
 @endsection

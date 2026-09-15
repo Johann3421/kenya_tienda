@@ -246,8 +246,8 @@
                                                     <div >
                                                         <div>
                                                             <label class="image_show" for="file_edit" title="Buscar Imagen"
-                                                                v-if="modelo.imagen">
-                                                                <img id="show_image" class="img-fluid">
+                                                                v-if="modelo.imagen_url">
+                                                                <img id="show_image" class="img-fluid" :src="modelo.imagen_url" alt="Vista previa">
                                                                 <input type="file" id="file_edit" style="display: none;"
                                                                     v-on:change="changeImagen($event)" accept="image/*">
                                                             </label>
@@ -367,8 +367,8 @@
                                                     <div >
                                                         <div>
                                                             <label class="image_show" for="file_edit" title="Buscar Imagen"
-                                                                v-if="modelo.imagen">
-                                                                <img id="show_image" class="img-fluid" :src="modelo.imagen_url || '{{ asset('storage/MODELOS/1/IMG_TJHVWjAG4F.png') }}'">
+                                                                v-if="modelo.imagen_url">
+                                                                <img id="show_image" class="img-fluid" :src="modelo.imagen_url" alt="Vista previa">
                                                                 <input type="file" id="file_edit" style="display: none;"
                                                                     v-on:change="changeImagen($event)" accept="image/*">
                                                             </label>

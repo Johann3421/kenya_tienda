@@ -1318,12 +1318,21 @@
                                 <div class="producto-imagen">
                                     @if ($mod->img_mod)
                                         @php
-                                            $modWebp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $mod->img_mod);
+                                            $cleanMod = ltrim($mod->img_mod, '/');
+                                            $cleanMod = preg_replace('#^storage/#', '', $cleanMod);
+                                            $modWebp = preg_replace('/\.(png|jpe?g)$/i', '.webp', $cleanMod);
+                                            $hasWebp = file_exists(public_path('storage/' . $modWebp));
+                                            $hasOrig = file_exists(public_path('storage/' . $cleanMod));
+                                            $modImgUrl = $hasOrig ? asset('storage/' . $cleanMod) : (file_exists(public_path($cleanMod)) ? asset($cleanMod) : asset('producto.jpg'));
                                         @endphp
-                                        <picture>
-                                            <source srcset="{{ asset('storage/' . $modWebp) }}" type="image/webp">
-                                            <img src="{{ asset('storage/' . $mod->img_mod) }}" alt="{{ $mod->descripcion ?? 'Producto' }}" loading="lazy" decoding="async">
-                                        </picture>
+                                        @if ($hasWebp)
+                                            <picture>
+                                                <source srcset="{{ asset('storage/' . $modWebp) }}" type="image/webp">
+                                                <img src="{{ $modImgUrl }}" alt="{{ $mod->descripcion ?? 'Producto' }}" loading="lazy" decoding="async">
+                                            </picture>
+                                        @else
+                                            <img src="{{ $modImgUrl }}" alt="{{ $mod->descripcion ?? 'Producto' }}" loading="lazy" decoding="async">
+                                        @endif
                                     @else
                                         <img src="{{ asset('producto.jpg') }}" alt="{{ $mod->descripcion ?? 'Producto' }}" loading="lazy" decoding="async">
                                     @endif
@@ -1443,12 +1452,20 @@
                         </div>
                         <div class="oferta-image-wrapper {{ $oferta->color_fondo }}">
                             @php
+                                $cleanImg = preg_replace('#^https?://[^/]+/#', '', $imgSrc);
+                                $cleanImg = ltrim($cleanImg, '/');
+                                $webpCandidate = preg_replace('/\.(png|jpe?g)$/i', '.webp', $cleanImg);
+                                $hasWebp = file_exists(public_path($webpCandidate));
                                 $webpSrc = preg_replace('/\.(png|jpe?g)$/i', '.webp', $imgSrc);
                             @endphp
-                            <picture>
-                                <source srcset="{{ $webpSrc }}" type="image/webp">
+                            @if ($hasWebp)
+                                <picture>
+                                    <source srcset="{{ $webpSrc }}" type="image/webp">
+                                    <img src="{{ $imgSrc }}" alt="{{ $oferta->titulo }}" loading="lazy" decoding="async">
+                                </picture>
+                            @else
                                 <img src="{{ $imgSrc }}" alt="{{ $oferta->titulo }}" loading="lazy" decoding="async">
-                            </picture>
+                            @endif
                         </div>
                     </a>
                     @endforeach

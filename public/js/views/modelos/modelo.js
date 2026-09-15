@@ -179,12 +179,13 @@ new Vue({
 
                 case 'edit':
                     this.resetDatos();
-                    this.search_categoria =  seleccion.categoria_descripcion,
-                    this.modelo.categoria_id_actualizar = seleccion.categoria_id,
-                    this.modelo.descripcion =  seleccion.descripcion,
-                    this.modelo.estado    =  seleccion.activo ? seleccion.activo.toUpperCase() : null,
-                    this.modelo.imagen = seleccion.img_mod
-                    this.modelo.imagen_url = '/storage/MODELOS/' + (seleccion.img_mod || '')
+                    this.search_categoria = seleccion.categoria_descripcion;
+                    this.modelo.categoria_id_actualizar = seleccion.categoria_id;
+                    this.modelo.descripcion = seleccion.descripcion;
+                    this.modelo.estado = seleccion.activo ? seleccion.activo.toUpperCase() : null;
+                    let cleanImg = (seleccion.img_mod || '').replace(/^\/?(storage\/)?/, '');
+                    this.modelo.imagen = seleccion.img_mod || null;
+                    this.modelo.imagen_url = cleanImg ? '/storage/' + cleanImg : '';
 
                     break;
                 case 'duplicate':
@@ -224,7 +225,9 @@ new Vue({
             formData.append('categoria_id', this.modelo.categoria_id);
             formData.append('descripcion', this.modelo.descripcion);
             formData.append('estado', this.modelo.estado);
-            formData.append('imagen', this.modelo.imagen);
+            if (this.modelo.imagen instanceof File) {
+                formData.append('imagen', this.modelo.imagen);
+            }
 
             if (Object.keys(this.errors).length === 0) {
                 axios.post('../modelos/store',
@@ -271,7 +274,9 @@ new Vue({
             formData.append('categoria_id', this.modelo.categoria_id_actualizar);
             formData.append('descripcion', this.modelo.descripcion);
             formData.append('estado', this.modelo.estado);
-            formData.append('imagen', this.modelo.imagen);
+            if (this.modelo.imagen instanceof File) {
+                formData.append('imagen', this.modelo.imagen);
+            }
 
             axios.post('../modelos/update',
                 formData, {
@@ -366,7 +371,7 @@ new Vue({
                 descripcion: null,
                 estado: null,
                 imagen: null,
-                imagen_url: null
+                imagen_url: ''
             };
             this.stockForm = {
                 modelo_id: 'ALL',
@@ -414,28 +419,29 @@ new Vue({
         changeImagen($event)
         {
             let files = $event.target.files;
-            if ((/\.(jpg|png|gif)$/i).test(files[0].name)) {
-                if(files[0].size <= (2 * Math.pow(2, 20))){
+            if (!files || !files[0]) return;
 
-                    const reader = new FileReader
-                    reader.readAsDataURL(files[0])
-                    reader.onload = function(){
-                        $("#show_image").prop('src', reader.result);
-                    }
+            if ((/\.(jpe?g|png|gif|webp)$/i).test(files[0].name)) {
+                if(files[0].size <= (5 * Math.pow(2, 20))){
+                    const self = this;
+                    const reader = new FileReader();
+                    reader.onload = function(e){
+                        self.modelo.imagen_url = e.target.result;
+                        self.modelo.imagen = files[0];
+                        $("#show_image").prop('src', e.target.result);
+                    };
+                    reader.readAsDataURL(files[0]);
+                    this.modelo.imagen = files[0];
                 }else{
                     $('#file').val('');
                     $('#file_edit').val('');
-                    files = [''];
-                    this.Alert('warning', 'Incorrecto', 'La imagen debe tener un tamaño máximo de 2MB');
+                    this.Alert('warning', 'Incorrecto', 'La imagen debe tener un tamaño máximo de 5MB');
                 }
             }else{
                 $('#file').val('');
                 $('#file_edit').val('');
-                files = [''];
-                this.Alert('warning', 'Incorrecto', 'Solo se aceptan formatos de imagenes de jpg, png y gif.');
+                this.Alert('warning', 'Incorrecto', 'Solo se aceptan formatos de imagenes de jpg, jpeg, png, gif y webp.');
             }
-
-            this.modelo.imagen = files[0];
         },
         abrirStockModal(modeloId = 'ALL') {
             this.stockForm.modelo_id = modeloId || 'ALL';

@@ -150,7 +150,9 @@ new Vue({
                     this.resetDatos();
                     this.categoria = seleccion.nombre;
                     this.estado = seleccion.activo ? seleccion.activo.toUpperCase() : null;
-                    this.producto.imagen = seleccion.img_cat;
+                    let cleanCatImg = (seleccion.img_cat || '').replace(/^\/?(storage\/app\/public\/|storage\/)?/, '');
+                    this.producto.imagen = seleccion.img_cat || null;
+                    this.producto.imagen_url = cleanCatImg ? '/storage/' + cleanCatImg : '';
 
                     break;
                 case "duplicate":
@@ -181,7 +183,9 @@ new Vue({
 
             formData.append("nombre", this.categoria);
             formData.append("estado", this.estado);
-            formData.append("imagen", this.producto.imagen);
+            if (this.producto.imagen instanceof File) {
+                formData.append("imagen", this.producto.imagen);
+            }
 
             if (Object.keys(this.errors).length === 0) {
                 axios
@@ -228,7 +232,9 @@ new Vue({
             formData.append("id", this.id);
             formData.append("nombre", this.categoria);
             formData.append("estado", this.estado);
-            formData.append("imagen", this.producto.imagen);
+            if (this.producto.imagen instanceof File) {
+                formData.append("imagen", this.producto.imagen);
+            }
 
             axios
                 .post("../categorias/update", formData, {
@@ -333,11 +339,12 @@ new Vue({
                 });
         },
         resetDatos() {
-            (this.categoria = null),
-                (this.estado = null),
-                (this.producto = {
-                    imagen: "",
-                });
+            this.categoria = null;
+            this.estado = null;
+            this.producto = {
+                imagen: null,
+                imagen_url: ''
+            };
         },
         closeModal() {
             this.modal = false;
@@ -380,37 +387,37 @@ new Vue({
         },
         changeImagen($event) {
             let files = $event.target.files;
+            if (!files || !files[0]) return;
 
-            console.log(files[0]);
-            if (/\.(jpg|png|gif)$/i.test(files[0].name)) {
-                if (files[0].size <= 2 * Math.pow(2, 20)) {
+            if (/\.(jpe?g|png|gif|webp)$/i.test(files[0].name)) {
+                if (files[0].size <= 5 * Math.pow(2, 20)) {
+                    const self = this;
                     const reader = new FileReader();
-                    reader.readAsDataURL(files[0]);
-                    reader.onload = function () {
-                        $("#show_image").prop("src", reader.result);
+                    reader.onload = function (e) {
+                        self.producto.imagen_url = e.target.result;
+                        self.producto.imagen = files[0];
+                        $("#show_image").prop("src", e.target.result);
                     };
+                    reader.readAsDataURL(files[0]);
+                    this.producto.imagen = files[0];
                 } else {
                     $("#file").val("");
                     $("#file_edit").val("");
-                    files = [""];
                     this.Alert(
                         "warning",
                         "Incorrecto",
-                        "La imagen debe tener un tamaño máximo de 2MB"
+                        "La imagen debe tener un tamaño máximo de 5MB"
                     );
                 }
             } else {
                 $("#file").val("");
                 $("#file_edit").val("");
-                files = [""];
                 this.Alert(
                     "warning",
                     "Incorrecto",
-                    "Solo se aceptan formatos de imagenes de jpg, png y gif."
+                    "Solo se aceptan formatos de imagenes de jpg, jpeg, png, gif y webp."
                 );
             }
-
-            this.producto.imagen = files[0];
         },
     },
 });
