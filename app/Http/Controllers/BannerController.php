@@ -50,12 +50,12 @@ class BannerController extends Controller
 
             $banner = new Banner();
             if ($request->hasFile('imagen')) {
-                $file = $request->file('imagen');
-                $extension = $file->extension();
-                $file_name = Str::random(10).'.'.$extension;
-
-                Storage::putFileAs('public/BANNERS', $file, $file_name);
-                $banner->imagen = 'BANNERS/'.$file_name;
+                $banner->imagen = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    'BANNERS',
+                    1920,
+                    85
+                );
             }
             $banner->titulo = $request->titulo;
             $banner->titulo_color = $request->titulo_color;
@@ -92,14 +92,13 @@ class BannerController extends Controller
 
             $banner = Banner::findOrFail($request->id);
             if ($request->hasFile('imagen')) {
-                $anterior = $banner->imagen;
-                $file = $request->file('imagen');
-                $extension = $file->extension();
-                $file_name = Str::random(10).'.'.$extension;
-
-                Storage::putFileAs('public/BANNERS', $file, $file_name);
-                Storage::delete('public/'.$anterior);
-                $banner->imagen = 'BANNERS/'.$file_name;
+                \App\Services\ImageOptimizerService::deleteIfExists($banner->imagen);
+                $banner->imagen = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    'BANNERS',
+                    1920,
+                    85
+                );
             }
             $banner->titulo = $request->titulo;
             $banner->titulo_color = $request->titulo_color;
@@ -115,7 +114,7 @@ class BannerController extends Controller
             return [
                 'type'     =>  'success',
                 'title'    =>  'CORRECTO: ',
-                'message'  =>  'El Banner se actualizó correctamente.'
+                'message'  =>  'El Banner se actualizo correctamente.'
             ];
 
         } catch (\Throwable $th) {
@@ -137,7 +136,7 @@ class BannerController extends Controller
 
             $banner = Banner::findOrFail($request->id);
             if ($banner->imagen) {
-                Storage::delete('public/'.$banner->imagen);
+                \App\Services\ImageOptimizerService::deleteIfExists($banner->imagen);
             }
             $banner->delete();
             

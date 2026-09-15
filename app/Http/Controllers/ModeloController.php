@@ -101,14 +101,13 @@ class ModeloController extends Controller
             $route = 'MODELOS/'.$modelo->id; // relative path inside the public disk
 
             if ($request->hasFile('imagen')) {
-                $file = $request->file('imagen');
-                $extension = $file->extension();
-                $file_name = 'IMG_'.Str::random(10).'.'.$extension;
-
-                // Use explicit public disk to avoid double "public/public" if FILESYSTEM_DRIVER changes
-                Storage::disk('public')->putFileAs($route, $file, $file_name);
-                $modelo->img_mod = $route.'/'.$file_name; // store path relative to disk root
-
+                $modelo->img_mod = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    $route,
+                    900,
+                    82,
+                    'IMG'
+                );
                 $modelo->save();
             }
 
@@ -156,17 +155,17 @@ class ModeloController extends Controller
             $route = 'MODELOS/'.$modelo->id; // relative path inside the public disk
 
             if ($request->hasFile('imagen')) {
-                // Delete previous file using the public disk
                 if ($modelo->img_mod) {
-                    Storage::disk('public')->delete($modelo->img_mod);
+                    \App\Services\ImageOptimizerService::deleteIfExists($modelo->img_mod);
                 }
 
-                $file = $request->file('imagen');
-                $extension = $file->extension();
-                $file_name = 'IMG_'.Str::random(10).'.'.$extension;
-
-                Storage::disk('public')->putFileAs($route, $file, $file_name);
-                $modelo->img_mod = $route.'/'.$file_name;
+                $modelo->img_mod = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    $route,
+                    900,
+                    82,
+                    'IMG'
+                );
             }
 
             $modelo->update();

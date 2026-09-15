@@ -49,12 +49,12 @@ class OfertasWebController extends Controller
 
             $oferta = new OfertaWeb();
             if ($request->hasFile('imagen')) {
-                $file      = $request->file('imagen');
-                $extension = $file->extension();
-                $file_name = Str::random(10) . '.' . $extension;
-
-                Storage::putFileAs('public/OFERTAS', $file, $file_name);
-                $oferta->imagen = 'OFERTAS/' . $file_name;
+                $oferta->imagen = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    'OFERTAS',
+                    1200,
+                    82
+                );
             }
             $oferta->titulo      = $request->titulo;
             $oferta->descripcion = $request->descripcion;
@@ -87,14 +87,15 @@ class OfertasWebController extends Controller
 
             $oferta = OfertaWeb::findOrFail($request->id);
             if ($request->hasFile('imagen')) {
-                $anterior  = $oferta->imagen;
-                $file      = $request->file('imagen');
-                $extension = $file->extension();
-                $file_name = Str::random(10) . '.' . $extension;
-
-                Storage::putFileAs('public/OFERTAS', $file, $file_name);
-                Storage::delete('public/' . $anterior);
-                $oferta->imagen = 'OFERTAS/' . $file_name;
+                if ($oferta->imagen) {
+                    \App\Services\ImageOptimizerService::deleteIfExists($oferta->imagen);
+                }
+                $oferta->imagen = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    'OFERTAS',
+                    1200,
+                    82
+                );
             }
             $oferta->titulo      = $request->titulo;
             $oferta->descripcion = $request->descripcion;
@@ -116,7 +117,7 @@ class OfertasWebController extends Controller
             return [
                 'type'    => 'danger',
                 'title'   => 'ERROR: ',
-                'message' => 'Ocurrió un error al actualizar la Oferta, intente nuevamente.',
+                'message' => 'Ocurrió un error al actualizar la Oferta: ' . $th->getMessage(),
             ];
         }
     }
@@ -128,7 +129,7 @@ class OfertasWebController extends Controller
 
             $oferta = OfertaWeb::findOrFail($request->id);
             if ($oferta->imagen) {
-                Storage::delete('public/' . $oferta->imagen);
+                \App\Services\ImageOptimizerService::deleteIfExists($oferta->imagen);
             }
             $oferta->delete();
 

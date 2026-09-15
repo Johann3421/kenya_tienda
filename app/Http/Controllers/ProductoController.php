@@ -167,15 +167,17 @@ public function store(Request $request)
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
         $producto->save();
 
-        // Subir imágenes (igual que ya tienes)
+        // Subir imágenes optimizadas a WebP (con fallback JPG/PNG)
         $route = 'PRODUCTOS/' . $producto->id;
         for ($i = 1; $i <= 5; $i++) {
             if ($request->hasFile('imagen_' . $i)) {
-                $file = $request->file('imagen_' . $i);
-                $extension = $file->extension();
-                $file_name = 'IMG' . $i . '_' . Str::random(10) . '.' . $extension;
-                Storage::putFileAs('public/' . $route, $file, $file_name);
-                $producto->{'imagen_' . $i} = $route . '/' . $file_name;
+                $producto->{'imagen_' . $i} = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen_' . $i),
+                    $route,
+                    800,
+                    82,
+                    'IMG' . $i
+                );
             }
         }
         $producto->save();
@@ -248,19 +250,20 @@ public function update(Request $request)
         // Subir PDF de ficha técnica
         $producto->ficha_tecnica = $this->subirFichaTecnica($request, $producto);
 
-        // Subir imágenes (igual que ya tienes)
+        // Subir imágenes optimizadas a WebP (con fallback JPG/PNG)
         $route = 'PRODUCTOS/' . $producto->id;
         for ($i = 1; $i <= 5; $i++) {
             if ($request->hasFile('imagen_' . $i)) {
-                // Elimina la imagen anterior si existe
                 if ($producto->{'imagen_' . $i}) {
-                    Storage::delete('public/' . $producto->{'imagen_' . $i});
+                    \App\Services\ImageOptimizerService::deleteIfExists($producto->{'imagen_' . $i});
                 }
-                $file = $request->file('imagen_' . $i);
-                $extension = $file->extension();
-                $file_name = 'IMG' . $i . '_' . Str::random(10) . '.' . $extension;
-                Storage::putFileAs('public/' . $route, $file, $file_name);
-                $producto->{'imagen_' . $i} = $route . '/' . $file_name;
+                $producto->{'imagen_' . $i} = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen_' . $i),
+                    $route,
+                    800,
+                    82,
+                    'IMG' . $i
+                );
             }
         }
         $producto->save();
@@ -441,8 +444,13 @@ public function subirFichaTecnica(Request $request, $producto)
         $imagen_ficha = $request->file('imagen_ficha')->storeAs('/', $nombre_ficha, 'public');
 
         $imagen = $request->file('imagen');
-        $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre) . '.' . $imagen->extension();
-        $imagen = $request->file('imagen')->storeAs('/', $nombre, 'public');
+        $nombre = \App\Services\ImageOptimizerService::storeOptimized(
+            $imagen,
+            'PRODUCTOS',
+            800,
+            82,
+            preg_replace('([^A-Za-z0-9])', '', $request->nombre)
+        );
 
         Producto::create([
             'nombre'                => mb_strtoupper($request->nombre),
@@ -593,16 +601,17 @@ public function subirFichaTecnica(Request $request, $producto)
                 return response()->json($validator->errors()->all(), 422);
             }
 
-            if (\Storage::disk('public')->exists($producto->imagen)) {
-
-                \Storage::disk('public')->delete($producto->imagen);
+            if ($producto->imagen) {
+                \App\Services\ImageOptimizerService::deleteIfExists($producto->imagen);
             }
 
-            $imagen = $request->file('imagen');
-            $nombre = preg_replace('([^A-Za-z0-9])', '', $request->nombre) . '.' . $imagen->extension();
-            $imagen = $request->file('imagen')->storeAs('/', $nombre, 'public');
-
-            $producto->imagen = $nombre;
+            $producto->imagen = \App\Services\ImageOptimizerService::storeOptimized(
+                $request->file('imagen'),
+                'PRODUCTOS',
+                800,
+                82,
+                preg_replace('([^A-Za-z0-9])', '', $request->nombre)
+            );
         }
 
         $producto->nombre                = mb_strtoupper($request->nombre);
@@ -760,6 +769,14 @@ public function subirFichaTecnica(Request $request, $producto)
             DB::beginTransaction();
 
             $producto = Producto::findOrFail($request->id);
+            for ($i = 1; $i <= 5; $i++) {
+                if ($producto->{'imagen_' . $i}) {
+                    \App\Services\ImageOptimizerService::deleteIfExists($producto->{'imagen_' . $i});
+                }
+            }
+            if ($producto->imagen) {
+                \App\Services\ImageOptimizerService::deleteIfExists($producto->imagen);
+            }
             $producto->delete();
 
             DB::commit();

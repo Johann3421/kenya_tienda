@@ -38,18 +38,16 @@ class BannerMedioController extends Controller
             'posicion' => 'string|in:medio,superior,inferior'
         ]);
 
-        // Guardar la imagen directamente en public/banners
+        // Guardar la imagen optimizada a WebP en storage/banners
         $image = $request->file('imagen');
-        $imageName = time().'_'.Str::slug($validated['titulo'] ?? 'banner').'.'.$image->getClientOriginalExtension();
-
-        // Crear directorio si no existe en storage
-        if (!File::exists(public_path('storage/banners'))) {
-            File::makeDirectory(public_path('storage/banners'), 0755, true);
-        }
-
-        // Mover la imagen
-        $image->move(public_path('storage/banners'), $imageName);
-        $imagePath = 'storage/banners/'.$imageName;
+        $stored = \App\Services\ImageOptimizerService::storeOptimized(
+            $image,
+            'banners',
+            1400,
+            85,
+            Str::slug($validated['titulo'] ?? 'banner')
+        );
+        $imagePath = 'storage/'.$stored;
 
         // Crear el banner
         $banner = BannerMedio::create([
@@ -90,14 +88,19 @@ class BannerMedioController extends Controller
 
     if ($request->hasFile('imagen')) {
         // Eliminar imagen anterior
-        if (file_exists(public_path($bannerMedio->imagen_path))) {
-            unlink(public_path($bannerMedio->imagen_path));
+        if ($bannerMedio->imagen_path) {
+            \App\Services\ImageOptimizerService::deleteIfExists($bannerMedio->imagen_path);
         }
 
-        // Guardar nueva imagen
-        $imageName = time().'_'.Str::slug($request->titulo ?? 'banner').'.'.$request->imagen->extension();
-        $request->imagen->move(public_path('storage/banners'), $imageName);
-        $validated['imagen_path'] = 'storage/banners/'.$imageName;
+        // Guardar nueva imagen optimizada
+        $stored = \App\Services\ImageOptimizerService::storeOptimized(
+            $request->file('imagen'),
+            'banners',
+            1400,
+            85,
+            Str::slug($request->titulo ?? 'banner')
+        );
+        $validated['imagen_path'] = 'storage/'.$stored;
     }
 
     $bannerMedio->update($validated);
@@ -114,9 +117,9 @@ class BannerMedioController extends Controller
     public function destroy(BannerMedio $bannerMedio)
     {
         try {
-            // Eliminar la imagen del directorio public
-            if (File::exists(public_path($bannerMedio->imagen_path))) {
-                File::delete(public_path($bannerMedio->imagen_path));
+            // Eliminar la imagen
+            if ($bannerMedio->imagen_path) {
+                \App\Services\ImageOptimizerService::deleteIfExists($bannerMedio->imagen_path);
             }
 
             // Eliminar el registro

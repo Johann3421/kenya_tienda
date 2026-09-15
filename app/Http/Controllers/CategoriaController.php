@@ -61,17 +61,13 @@ class CategoriaController extends Controller
             $route = 'CATEGORIAS/'.$categoria->id;
 
             if ($request->hasFile('imagen')) {
-                $file_1 = $request->file('imagen');
-                $extension_1 = $file_1->extension();
-                $file_name_1 = 'IMG1_'.Str::random(10).'.'.$extension_1;
-
-                $savedPath = Storage::disk('public')->putFileAs($route, $file_1, $file_name_1);
-                
-                if (!$savedPath || !Storage::disk('public')->exists($savedPath)) {
-                    throw new \Exception('Error al guardar la imagen en el almacenamiento');
-                }
-
-                $categoria->img_cat = $savedPath;
+                $categoria->img_cat = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    $route,
+                    500,
+                    82,
+                    'IMG1'
+                );
                 $categoria->save();
             }
 
@@ -112,23 +108,17 @@ class CategoriaController extends Controller
             $route = 'CATEGORIAS/'.$categoria->id;
 
             if ($request->hasFile('imagen')) {
-                // Delete old image if exists
-                if ($categoria->img_cat && Storage::disk('public')->exists($categoria->img_cat)) {
-                    Storage::disk('public')->delete($categoria->img_cat);
+                if ($categoria->img_cat) {
+                    \App\Services\ImageOptimizerService::deleteIfExists($categoria->img_cat);
                 }
 
-                $file = $request->file('imagen');
-                $extension = $file->extension();
-                $file_name = 'IMG_'.Str::random(10).'.'.$extension;
-
-                // Save new image and verify it was saved
-                $savedPath = Storage::disk('public')->putFileAs($route, $file, $file_name);
-                
-                if (!$savedPath || !Storage::disk('public')->exists($savedPath)) {
-                    throw new \Exception('Error al guardar la imagen en el almacenamiento');
-                }
-
-                $categoria->img_cat = $savedPath;
+                $categoria->img_cat = \App\Services\ImageOptimizerService::storeOptimized(
+                    $request->file('imagen'),
+                    $route,
+                    500,
+                    82,
+                    'IMG'
+                );
             }
 
             $categoria->save();
