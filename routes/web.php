@@ -16,6 +16,8 @@ Route::get('/limpiar-cache', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
         
         return response()->json([
             'status' => 'Cache limpiada correctamente en el contenedor',
