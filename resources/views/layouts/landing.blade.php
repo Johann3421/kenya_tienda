@@ -605,19 +605,41 @@ body {
 
 .kenya-contact-list li {
     display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     align-items: flex-start !important;
-    gap: 8px !important;
+    gap: 10px !important;
+    margin-bottom: 12px !important;
 }
 
 .kenya-contact-list li .kenya-icon {
-    flex-shrink: 0;
-    margin-top: 3px;
-    width: 14px;
-    text-align: center;
+    flex-shrink: 0 !important;
+    width: 18px !important;
+    min-width: 18px !important;
+    margin-top: 3px !important;
+    text-align: center !important;
+    color: #ee7c31 !important;
+    font-size: 15px !important;
 }
 
 .kenya-contact-list li span {
-    line-height: 1.45;
+    line-height: 1.45 !important;
+    color: #bdbdbd !important;
+    word-break: break-word !important;
+}
+
+.kenya-contact-list li a {
+    color: inherit !important;
+    text-decoration: none !important;
+    display: inline !important;
+    transform: none !important;
+    transition: color 0.2s ease !important;
+}
+
+.kenya-contact-list li a:hover {
+    color: #ee7c31 !important;
+    text-decoration: underline !important;
+    transform: none !important;
 }
 </style>
 
@@ -789,15 +811,15 @@ body {
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-envelope"></i>
-                            <span>acuerdos.marco@kenya.com.pe</span>
+                            <span><a href="mailto:acuerdos.marco@kenya.com.pe">acuerdos.marco@kenya.com.pe</a></span>
                         </li>
                         <li>
                             <i class="kenya-icon fas fa-envelope"></i>
-                            <span>soporte@kenya.com.pe</span>
+                            <span><a href="mailto:soporte@kenya.com.pe">soporte@kenya.com.pe</a></span>
                         </li>
                         <li>
-                            <i class="kenya-icon fab fa-whatsapp"></i>
-                            <a href="https://api.whatsapp.com/send/?phone=51958021778&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" style="color:inherit; text-decoration:none;">958 021 778</a>
+                            <i class="kenya-icon fa-brands fa-whatsapp"></i>
+                            <span><a href="https://api.whatsapp.com/send/?phone=51958021778&text&type=phone_number&app_absent=0" target="_blank" rel="noopener">958 021 778</a></span>
                         </li>
                     </ul>
                 </div>
