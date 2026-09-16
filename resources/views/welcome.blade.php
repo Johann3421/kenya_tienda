@@ -70,8 +70,8 @@
         }
         @font-face {
             font-family: 'RaitoFont';
-            src: url('{{ asset("TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.ttf") }}?v=20260916') format('truetype'),
-                 url('{{ asset("TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.otf") }}?v=20260916') format('opentype');
+            src: url('{{ asset("TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.ttf") }}?v=original') format('truetype'),
+                 url('{{ asset("TIPOGRAFIA%20KENYA/RAITO/Raito-Regular.otf") }}?v=original') format('opentype');
             font-display: swap;
         }
 
