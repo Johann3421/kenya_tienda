@@ -1217,7 +1217,7 @@
                          data-bg="url('{{ asset('storage/' . $banner->imagen) }}') center/cover"
                      @endif>
                     <div class="hero-slide-content">
-                        <h1>{{ $banner->titulo }}</h1>
+                        <h1>{{ $brandClass === 'brand-raito' ? preg_replace('/RAITO/i', 'Raito', $banner->titulo) : $banner->titulo }}</h1>
                         <h2>{{ $banner->descripcion }}</h2>
                         <p>{{ $banner->contenido }}</p>
                         <a class="hero-btn" href="{{ $bannerUrl }}">{{ $banner->link_nombre }}</a>
@@ -1344,7 +1344,7 @@
                                         <span class="producto-categoria">{{ strtoupper($mod->prefix) }}</span>
                                     @endif
                                     <h6 class="producto-titulo" title="{{ ($mod->prefix ? $mod->prefix . ' ' : '') . ($mod->descripcion ?? '') }}">
-                                        {{ Str::limit($mod->descripcion ?? '', 40) }}
+                                        {{ $brandClass === 'brand-raito' ? preg_replace('/RAITO/i', 'Raito', Str::limit($mod->descripcion ?? '', 40)) : Str::limit($mod->descripcion ?? '', 40) }}
                                     </h6>
                                 </div>
                                 <div class="producto-accion">
