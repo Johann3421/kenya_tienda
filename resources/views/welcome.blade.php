@@ -123,7 +123,6 @@
             font-size: 2.7rem !important;
             font-weight: 900 !important;
             letter-spacing: 2px !important;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.5) !important;
             margin: 0 0 20px 0 !important;
             color: #ffffff !important;
             transform: translateY(30px) !important;
@@ -140,7 +139,6 @@
         #main-welcome-container .hero-slide h2 {
             font-size: 1.2rem !important;
             font-weight: 400 !important;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5) !important;
             margin: 0 0 15px 0 !important;
             color: #ffffff !important;
             transform: translateY(30px) !important;
