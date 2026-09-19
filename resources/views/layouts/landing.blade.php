@@ -767,13 +767,14 @@ body {
     <footer class="kenya-final-footer">
         <div class="kenya-footer-fullwidth">
             <div class="kenya-footer-columns">
-                <!-- Columna 1: Información -->
+                <!-- Columna 1: Quiénes somos -->
                 <div class="kenya-footer-col">
-                    <h3 class="kenya-footer-heading">Información</h3>
+                    <h3 class="kenya-footer-heading">Quiénes somos</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="{{ route('quienes.somos') }}">Quiénes somos</a></li>
-                        <li><a href="{{ route('quienes.somos') }}">Misión y Visión</a></li>
-                        <li><a href="{{ route('quienes.somos') }}">Historia</a></li>
+                        <li><a href="{{ route('quienes.somos') }}#historia">Historia</a></li>
+                        <li><a href="{{ route('quienes.somos') }}#mision">Misión</a></li>
+                        <li><a href="{{ route('quienes.somos') }}#vision">Visión</a></li>
+                        <li><a href="{{ route('quienes.somos') }}#valores">Valores</a></li>
                     </ul>
                 </div>
 
@@ -781,25 +782,24 @@ body {
                 <div class="kenya-footer-col">
                     <h3 class="kenya-footer-heading">Atención al cliente</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="{{ route('consultar.garantia') }}">Consulta el estado de tu Producto</a></li>
                         <li><a href="{{ route('contactenos') }}">Preguntas frecuentes</a></li>
                         <li><a href="{{ route('consultar.garantia') }}#terms">Términos y condiciones de garantía</a></li>
                     </ul>
                 </div>
 
-                <!-- Columna 3: Videos tutoriales -->
+                <!-- Columna 3: Soporte técnico -->
                 <div class="kenya-footer-col">
-                    <h3 class="kenya-footer-heading">CONTROLADORES</h3>
+                    <h3 class="kenya-footer-heading">Soporte técnico</h3>
                     <ul class="kenya-footer-list">
                         <li><a href="{{ route('consultar.garantia') }}">Descargar controladores</a></li>
                         <li><a href="{{ route('consultar.garantia') }}">Estado de la garantía</a></li>
-                        <li><a href="{{ route('consultar.garantia') }}">Problemas con la activación</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}">Guía de activación</a></li>
                     </ul>
                 </div>
 
-                <!-- Columna 4: Contáctanos -->
+                <!-- Columna 4: Contáctenos -->
                 <div class="kenya-footer-col">
-                    <h3 class="kenya-footer-heading">Contáctanos</h3>
+                    <h3 class="kenya-footer-heading">Contáctenos</h3>
                     <ul class="kenya-footer-list kenya-contact-list">
                         <li>
                             <i class="kenya-icon fas fa-map-marker-alt"></i>

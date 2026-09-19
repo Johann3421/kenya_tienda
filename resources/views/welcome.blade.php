@@ -1620,7 +1620,7 @@
                 });
 
                 function startInterval() {
-                    slideInterval = setInterval(nextSlide, 5000);
+                    slideInterval = setInterval(nextSlide, 8000);
                 }
 
                 function resetInterval() {

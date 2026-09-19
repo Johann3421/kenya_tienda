@@ -88,6 +88,7 @@
             justify-content: space-between;
             gap: 40px;
             margin-bottom: 70px;
+            scroll-margin-top: 100px;
         }
 
         #quienes-somos-page .about-text {
@@ -135,6 +136,7 @@
             text-align: left;
             border-radius: 12px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            scroll-margin-top: 100px;
         }
 
         #quienes-somos-page .value-card:hover {
@@ -195,7 +197,7 @@
         <section class="about-section">
             <div class="about-container">
                 <!-- Parte superior: Texto e Imagen -->
-                <div class="about-intro">
+                <div class="about-intro" id="historia">
                     <div class="about-text">
                         <h2><i class="fa-solid fa-clock-rotate-left icon-title"></i> Nuestra Historia</h2>
                         <div class="about-description">
@@ -207,15 +209,15 @@
 
                 <!-- Parte inferior: Grid de Valores, Visión y Misión -->
                 <div class="values-grid">
-                    <div class="value-card">
+                    <div class="value-card" id="valores">
                         <h3><i class="fa-solid fa-hand-holding-heart icon-title"></i> Nuestros Valores</h3>
                         <p>Nuestros Principios Culturales nos ayudan a conectarnos con la cultura de la empresa, siendo fundamentales para que podamos seguir creciendo dentro de nuestra gran familia Kenya Computers. Nos basamos en la transparencia, el esfuerzo y el trabajo en equipo.</p>
                     </div>
-                    <div class="value-card">
+                    <div class="value-card" id="vision">
                         <h3><i class="fa-solid fa-eye icon-title"></i> Nuestra Visión</h3>
                         <p>"Ser la marca peruana de computadoras más reconocida y confiable a nivel nacional e internacional, destacando por nuestra innovación, calidad, rendimiento y compromiso con el medio ambiente."</p>
                     </div>
-                    <div class="value-card">
+                    <div class="value-card" id="mision">
                         <h3><i class="fa-solid fa-bullseye icon-title"></i> Nuestra Misión</h3>
                         <p>Desarrollar computadoras de alto rendimiento que brinden potencia, eficiencia y confiabilidad, ofreciendo a nuestros clientes la mejor experiencia tecnológica en cada equipo KENYA TECHNOLOGY.</p>
                     </div>
