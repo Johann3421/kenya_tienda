@@ -20,7 +20,7 @@
 ## 2. Archivos Modificados
 - `resources/views/welcome.blade.php`: Intervalo de rotación del hero slider aumentado de 5000ms a 8000ms.
 - `resources/views/layouts/landing.blade.php`: Actualización de títulos y listas de enlaces en las 4 columnas del footer (`kenya-final-footer`).
-- `resources/views/quienes-somos.blade.php`: Incorporación de anclas (`#historia`, `#mision`, `#vision`, `#valores`) y `scroll-margin-top` para navegación directa desde el footer.
+- `resources/views/quienes-somos.blade.php`: Actualización completa de los textos de Historia, Misión, Visión y Valores (con lista estructurada), e incorporación de anclas con `scroll-margin-top`.
 
 ---
 

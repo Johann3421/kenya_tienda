@@ -201,25 +201,33 @@
                     <div class="about-text">
                         <h2><i class="fa-solid fa-clock-rotate-left icon-title"></i> Nuestra Historia</h2>
                         <div class="about-description">
-                            <p>Desde nuestros inicios, en <strong>KENYA TECHNOLOGY</strong> apostamos por crear computadoras de alto desempeño adaptadas a las necesidades de un mercado en constante evolución. Con una trayectoria basada en innovación, calidad y compromiso, hemos acompañado a miles de usuarios ofreciendo equipos ensamblados con tecnología moderna, excelente rendimiento y altos estándares de calidad. Hoy continuamos creciendo como una marca peruana enfocada en desarrollar computadoras confiables, eficientes y preparadas para el futuro.</p>
-                            <p>Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de calidad, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo.</p>
+                            <p>Desde nuestros inicios, en <strong>KENYA TECHNOLOGY</strong> apostamos por crear computadoras de alto desempeño adaptadas a las necesidades Gubernamentales del mercado nacional en crecimiento.</p>
+                            <p>Con una trayectoria basada en innovación, calidad y compromiso, hemos acompañado a nuestros usuarios ofreciendo equipos Informáticos con la más avanzada tecnología, excelente rendimiento y altos estándares de calidad.</p>
+                            <p>Hoy continuamos creciendo como una marca orgullosamente peruana enfocada en desarrollar computadoras confiables, eficientes y preparadas para resolver los distintos retos geográficos de Costa, Sierra y Selva de nuestro Perú.</p>
+                            <p>Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de la más alta calidad y garantía, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Parte inferior: Grid de Valores, Visión y Misión -->
+                <!-- Parte inferior: Grid de Misión, Visión y Valores -->
                 <div class="values-grid">
-                    <div class="value-card" id="valores">
-                        <h3><i class="fa-solid fa-hand-holding-heart icon-title"></i> Nuestros Valores</h3>
-                        <p>Nuestros Principios Culturales nos ayudan a conectarnos con la cultura de la empresa, siendo fundamentales para que podamos seguir creciendo dentro de nuestra gran familia Kenya Computers. Nos basamos en la transparencia, el esfuerzo y el trabajo en equipo.</p>
-                    </div>
-                    <div class="value-card" id="vision">
-                        <h3><i class="fa-solid fa-eye icon-title"></i> Nuestra Visión</h3>
-                        <p>"Ser la marca peruana de computadoras más reconocida y confiable a nivel nacional e internacional, destacando por nuestra innovación, calidad, rendimiento y compromiso con el medio ambiente."</p>
-                    </div>
                     <div class="value-card" id="mision">
                         <h3><i class="fa-solid fa-bullseye icon-title"></i> Nuestra Misión</h3>
                         <p>Desarrollar computadoras de alto rendimiento que brinden potencia, eficiencia y confiabilidad, ofreciendo a nuestros clientes la mejor experiencia tecnológica en cada equipo KENYA TECHNOLOGY.</p>
+                    </div>
+                    <div class="value-card" id="vision">
+                        <h3><i class="fa-solid fa-eye icon-title"></i> Nuestra Visión</h3>
+                        <p>Ser la marca peruana de computadoras más reconocida y confiable a nivel nacional e internacional, destacando por nuestra innovación, calidad, rendimiento y compromiso con el medio ambiente.</p>
+                    </div>
+                    <div class="value-card" id="valores">
+                        <h3><i class="fa-solid fa-hand-holding-heart icon-title"></i> Nuestros Valores</h3>
+                        <p>Nuestros principios como marca Kenya Technology nos ayudan a conectarnos con la cultura de las empresas privadas y/o gubernamentales, siendo fundamentales para que podamos seguir creciendo dentro de nuestra gran familia, siempre basándonos en la:</p>
+                        <ul class="valores-list" style="margin: 12px 0 0 18px; padding: 0; color: #444; font-size: 0.95rem; line-height: 1.8;">
+                            <li><strong>Actitud.</strong></li>
+                            <li><strong>Ética.</strong></li>
+                            <li><strong>Transparencia.</strong></li>
+                            <li><strong>Responsabilidad.</strong></li>
+                        </ul>
                     </div>
                 </div>
             </div>
