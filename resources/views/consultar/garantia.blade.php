@@ -159,7 +159,8 @@
         #garantia .video-details { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         #garantia .video-title { color: #333; font-size: 0.9rem; line-height: 1.4; }
 
-        #garantia .terms-container { display: none; background: #fff; border-radius: 16px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); overflow: hidden; }
+        html { scroll-behavior: smooth; }
+        #garantia .terms-container { display: none; background: #fff; border-radius: 16px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); overflow: hidden; scroll-margin-top: 110px; }
         #garantia .terms-layout { display: flex; min-height: 500px; }
         #garantia .terms-sidebar { width: 280px; background-color: #f9f9f9; padding: 30px; border-right: 1px solid #eaeaea; flex-shrink: 0; }
         #garantia .terms-sidebar h4 { color: #333; font-size: 1.1rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f26522; }
@@ -419,6 +420,8 @@
         </div>
     </div>
 
+    <div id="terminos" style="scroll-margin-top: 110px;"></div>
+    <div id="terms" style="scroll-margin-top: 110px;"></div>
     <div class="terms-container" id="tab-terminos-content" style="display: none; max-width: 1200px; margin: 0 auto 40px;">
         <div class="terms-layout">
             <aside class="terms-sidebar">
@@ -520,6 +523,50 @@
                 el.addEventListener('click', function(e) {
                     e.preventDefault();
                     document.querySelector('.support-tab[data-target="tab-terminos"]').click();
+                });
+            });
+
+            function activateTabByHash() {
+                var hash = (window.location.hash || '').toLowerCase();
+                if (hash === '#terminos' || hash === '#terms' || hash === '#tab-terminos' || hash === '#tab-terminos-content') {
+                    var tabTerminos = document.querySelector('.support-tab[data-target="tab-terminos"]');
+                    if (tabTerminos) {
+                        tabTerminos.click();
+                        setTimeout(function() {
+                            var target = document.getElementById('tab-terminos-content') || document.getElementById('terminos');
+                            if (target) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = target.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
+                } else if (hash === '#controladores' || hash === '#tab-controladores') {
+                    document.querySelector('.support-tab[data-target="tab-controladores"]')?.click();
+                } else if (hash === '#galeria' || hash === '#tab-galeria' || hash === '#videos') {
+                    document.querySelector('.support-tab[data-target="tab-galeria"]')?.click();
+                } else if (hash === '#garantia' || hash === '#tab-garantia') {
+                    document.querySelector('.support-tab[data-target="tab-garantia"]')?.click();
+                }
+            }
+
+            if (window.location.hash) {
+                setTimeout(activateTabByHash, 200);
+            }
+
+            window.addEventListener('hashchange', function() {
+                activateTabByHash();
+            });
+
+            document.querySelectorAll('a[href*="#terminos"], a[href*="#terms"]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    if (window.location.pathname.replace(/\/$/, '').endsWith('/consultar/garantia')) {
+                        e.preventDefault();
+                        if (window.location.hash !== '#terminos') {
+                            history.pushState(null, null, '#terminos');
+                        }
+                        activateTabByHash();
+                    }
                 });
             });
 

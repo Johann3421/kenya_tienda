@@ -783,7 +783,7 @@ body {
                     <h3 class="kenya-footer-heading">Comunícate con nosotros</h3>
                     <ul class="kenya-footer-list">
                         <li><a href="{{ route('contactenos') }}">Preguntas frecuentes</a></li>
-                        <li><a href="{{ route('consultar.garantia') }}#terms">Términos y condiciones de garantía</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}#terminos">Términos y condiciones de garantía</a></li>
                     </ul>
                 </div>
 
