@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-09-21-integracion-oem-deteccion-hardware-pc|2026-09-21: Integración OEM de fábrica y detección automática de hardware para PCs Kenya]]
 - [[2026-09-21-guia-descarga-controladores-serial|2026-09-21: Guía informativa y autofoco para descarga de controladores por serie]]
 - [[2026-09-21-deep-linking-terminos-garantia|2026-09-21: Deep linking directo a Términos y Condiciones de Garantía]]
 - [[2026-09-21-deep-linking-scroll-footer-quienes-somos|2026-09-21: Navegación y scroll suave con resalte visual desde Footer a Quiénes Somos]]

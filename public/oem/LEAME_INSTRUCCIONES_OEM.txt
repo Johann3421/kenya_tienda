@@ -1,0 +1,30 @@
+====================================================================
+           KENYA TECHNOLOGY - GUIA DE INTEGRACION OEM DE FABRICA
+====================================================================
+
+Este directorio contiene las herramientas para la integracion de soporte
+automatico en computadoras KENYA (PCs de escritorio y laptops).
+
+ARCHIVOS INCLUIDOS:
+-------------------
+1. instalar-oem-kenya.bat
+   - Script para ejecutar en la imagen maestra de Windows (Sysprep/OEM).
+   - Registra el protocolo de Windows 'kenya://' para que la web
+     https://www.kenya.com.pe detecte el equipo con 1 solo clic.
+   - Crea un acceso directo en el Escritorio: "Soporte y Drivers KENYA".
+
+2. detectar-pc-kenya.bat
+   - Asistente portable descargable por los usuarios desde la web.
+   - Lee el número de serie de la placa madre/BIOS (WMI) y abre el navegador
+     con la garantía y controladores precargados al instante.
+
+3. desinstalar-oem-kenya.bat
+   - Script de limpieza si se requiere revertir la configuración.
+
+COMO IMPLEMENTAR EN EL TALLER / ENSAMBLAJE:
+-------------------------------------------
+1. En la imagen de Windows que se instala en las PCs Kenya:
+   Ejecutar como Administrador "instalar-oem-kenya.bat".
+2. Listo. A partir de ese momento, la PC puede ser detectada automáticamente
+   desde la página web o usando el acceso directo del escritorio.
+====================================================================

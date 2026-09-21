@@ -229,6 +229,106 @@
             animation: searchHighlightPulse 1.8s ease-in-out;
             border-color: #f26522;
         }
+
+        /* Auto-detect OEM */
+        #garantia .auto-detect-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-top: 18px;
+        }
+        #garantia .btn-auto-detect {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            color: #f26522;
+            border: 1.5px solid #f26522;
+            padding: 9px 24px;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(242, 101, 34, 0.08);
+        }
+        #garantia .btn-auto-detect:hover {
+            background: #f26522;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(242, 101, 34, 0.22);
+        }
+        #garantia .auto-detect-hint {
+            font-size: 0.82rem;
+            color: #777;
+        }
+
+        /* Modal Deteccion */
+        .detect-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .detect-modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 520px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .detect-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+        .detect-modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #222;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .detect-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .detect-modal-close:hover {
+            color: #f26522;
+        }
+        .detect-modal-body {
+            padding: 24px;
+            text-align: center;
+        }
+        .detect-modal-footer {
+            padding: 14px 24px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+        }
     </style>
 @endsection
 @section('content')
@@ -256,6 +356,14 @@
             <button v-on:click="Buscar">Buscar</button>
         </div>
         <p v-if="errors.search" style="color: #f26522; margin-top: 15px; font-weight: 600;">@{{ errors.search[0] }}</p>
+
+        <!-- Detección automática para PCs Kenya -->
+        <div class="auto-detect-wrapper">
+            <button type="button" class="btn-auto-detect" id="btnAutoDetect" onclick="detectarPCKenya()">
+                <i class="fa-solid fa-laptop-medical"></i> Detectar mi PC Kenya automáticamente
+            </button>
+            <span class="auto-detect-hint">Lee la serie de tu equipo de forma rápida y segura sin buscar la etiqueta.</span>
+        </div>
     </section>
 
     <!-- Empty State / Guía informativa para descarga de controladores -->
@@ -273,6 +381,44 @@
         <div style="display: inline-flex; align-items: center; gap: 8px; background: #fff; padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; color: #666; border: 1px solid #fed7c3;">
             <i class="fa-solid fa-circle-info" style="color: #f26522;"></i>
             <span><strong>¿Dónde encontrarlo?</strong> En la etiqueta posterior del CPU o laptop con código de barras de 14 caracteres.</span>
+        </div>
+        <div style="margin-top: 18px;">
+            <button type="button" class="btn-auto-detect" onclick="detectarPCKenya()">
+                <i class="fa-solid fa-laptop-medical"></i> O detectar mi PC Kenya automáticamente
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Guía de Detección Automática -->
+    <div id="modal-detectar-kenya" class="detect-modal-backdrop" style="display: none;">
+        <div class="detect-modal-box">
+            <div class="detect-modal-header">
+                <h3><i class="fa-solid fa-laptop-medical" style="color: #f26522;"></i> Detección Automática de Equipo</h3>
+                <button type="button" class="detect-modal-close" onclick="cerrarModalDetectar()">&times;</button>
+            </div>
+            <div class="detect-modal-body">
+                <p style="color: #444; font-size: 0.95rem; margin-bottom: 18px; line-height: 1.5;">
+                    Si tu equipo no cuenta aún con el protocolo OEM de fábrica o se formateó el sistema, puedes usar nuestro <strong>Asistente Portable de 1 Clic</strong>:
+                </p>
+                <div style="background: #fdfaf8; border-radius: 12px; padding: 18px; border: 1.5px solid #ffe0d0; margin-bottom: 16px; text-align: left;">
+                    <div style="font-weight: 700; color: #222; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-download" style="color: #f26522;"></i> Opción 1: Descargar Asistente de 1 Clic
+                    </div>
+                    <p style="font-size: 0.86rem; color: #666; margin: 0 0 12px;">Descarga y abre el detector ligero. Solo lee la serie de tu hardware y abre esta página automáticamente:</p>
+                    <a href="{{ asset('oem/detectar-pc-kenya.bat') }}" download class="btn-download-detector" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(to right, #ff3c00, #ff9c00); color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(242,101,34,0.25);">
+                        <i class="fa-solid fa-file-arrow-down"></i> Descargar Detector Kenya (.bat)
+                    </a>
+                </div>
+                <div style="background: #f8f8f8; border-radius: 12px; padding: 16px 18px; border: 1px solid #eee; text-align: left;">
+                    <div style="font-weight: 700; color: #222; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-barcode" style="color: #f26522;"></i> Opción 2: Ingresar la serie manualmente
+                    </div>
+                    <p style="font-size: 0.86rem; color: #666; margin: 0;">Revisa la etiqueta de 14 dígitos en la parte trasera de tu CPU o base de la laptop.</p>
+                </div>
+            </div>
+            <div class="detect-modal-footer">
+                <button type="button" class="btn-outline" onclick="cerrarModalDetectar()" style="padding: 8px 24px; cursor: pointer;">Cerrar</button>
+            </div>
         </div>
     </div>
 
@@ -503,6 +649,55 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
     <script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
     <script>
+        function detectarPCKenya() {
+            var btn = document.getElementById('btnAutoDetect');
+            var originalHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Conectando con PC...';
+                btn.disabled = true;
+            }
+
+            var protocolTriggered = false;
+
+            function onBlur() {
+                protocolTriggered = true;
+                clearTimeout(fallbackTimer);
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Conectado con la PC';
+                    setTimeout(function() {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }, 4000);
+                }
+                window.removeEventListener('blur', onBlur);
+            }
+
+            window.addEventListener('blur', onBlur);
+
+            // Temporizador de respaldo si no responde el protocolo nativo kenya://
+            var fallbackTimer = setTimeout(function() {
+                if (!protocolTriggered) {
+                    window.removeEventListener('blur', onBlur);
+                    if (btn) {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }
+                    var modal = document.getElementById('modal-detectar-kenya');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                    }
+                }
+            }, 1800);
+
+            // Invocar protocolo OEM de fábrica de Windows
+            window.location.href = 'kenya://detect';
+        }
+
+        function cerrarModalDetectar() {
+            var modal = document.getElementById('modal-detectar-kenya');
+            if (modal) modal.style.display = 'none';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Tab switching
             document.querySelectorAll('.support-tab').forEach(tab => {
