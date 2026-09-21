@@ -76,6 +76,10 @@
             background-color: #ffffff;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         #quienes-somos-page .about-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -88,7 +92,9 @@
             justify-content: space-between;
             gap: 40px;
             margin-bottom: 70px;
-            scroll-margin-top: 100px;
+            scroll-margin-top: 110px;
+            border-radius: 12px;
+            transition: all 0.35s ease;
         }
 
         #quienes-somos-page .about-text {
@@ -135,13 +141,47 @@
             padding: 40px 30px;
             text-align: left;
             border-radius: 12px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            scroll-margin-top: 100px;
+            border: 2px solid transparent;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+            scroll-margin-top: 110px;
         }
 
         #quienes-somos-page .value-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        /* Resalte al llegar por anclaje (Deep Linking) */
+        #quienes-somos-page .value-card:target,
+        #quienes-somos-page .value-card.target-highlight {
+            border-color: #f26522 !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 12px 30px rgba(242, 101, 34, 0.2) !important;
+            transform: translateY(-6px);
+            animation: kenyaCardPulse 1.8s ease-in-out;
+        }
+
+        #quienes-somos-page .about-intro:target,
+        #quienes-somos-page .about-intro.target-highlight {
+            background-color: #fffaf7;
+            padding: 24px;
+            box-shadow: 0 6px 20px rgba(242, 101, 34, 0.12);
+            border-left: 4px solid #f26522;
+            animation: kenyaCardPulse 1.8s ease-in-out;
+        }
+
+        @keyframes kenyaCardPulse {
+            0% {
+                transform: scale(0.99);
+                box-shadow: 0 0 0 0 rgba(242, 101, 34, 0.4);
+            }
+            40% {
+                transform: scale(1.02);
+                box-shadow: 0 0 0 10px rgba(242, 101, 34, 0);
+            }
+            100% {
+                transform: translateY(-6px);
+            }
         }
 
         #quienes-somos-page .value-card h3 {
@@ -233,4 +273,28 @@
             </div>
         </section>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function highlightTarget(hash) {
+                if (!hash) return;
+                var el = document.querySelector(hash);
+                if (el) {
+                    el.classList.remove('target-highlight');
+                    void el.offsetWidth;
+                    el.classList.add('target-highlight');
+                }
+            }
+
+            if (window.location.hash) {
+                setTimeout(function() {
+                    highlightTarget(window.location.hash);
+                }, 200);
+            }
+
+            window.addEventListener('hashchange', function() {
+                highlightTarget(window.location.hash);
+            });
+        });
+    </script>
 @endsection
