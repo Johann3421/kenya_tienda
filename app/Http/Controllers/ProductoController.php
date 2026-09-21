@@ -352,6 +352,8 @@ public function subirFichaTecnica(Request $request, $producto)
             'Accesorios'                  => 19,
             'Características Adicionales' => 20,
             // ── PCs ────────────────────────────────────────────
+            'Formato / Chasis'            => 29,
+            'Formato'                     => 29,
             'Procesador'                  => 30,
             'RAM'                         => 31,
             'Almacenamiento'              => 32,
@@ -363,6 +365,8 @@ public function subirFichaTecnica(Request $request, $producto)
             'Suite Ofimática'             => 38,
             'Salida HDMI'                 => 39,
             'Soporte VESA'                => 40,
+            'Fuente de Poder'             => 41,
+            'Seguridad'                   => 42,
         ];
 
         $especificaciones = Especificacion::where('producto_id', $id)
@@ -1028,12 +1032,13 @@ public function importarEspecificaciones(Request $request)
             if (str_contains($c, 'PUERTO') || str_contains($c, 'USB')) return 'PUERTOS MÍNIMOS';
             if (str_contains($c, 'SLOT') || str_contains($c, 'EXPANSI') || str_contains($c, 'PCI') || str_contains($c, 'RANURA')) return 'SLOT DE EXPANSIÓN';
             if (str_contains($c, 'FUENTE') || str_contains($c, 'PSU') || str_contains($c, 'POWER')) return 'FUENTE DE PODER';
+            if (str_contains($c, 'SEGURIDAD') || str_contains($c, 'TPM')) return 'SEGURIDAD';
             if (str_contains($c, 'GARANT')) return 'GARANTÍA DE FÁBRICA';
             if (str_contains($c, 'EMPAQUE')) return 'EMPAQUE';
             if (str_contains($c, 'CERTIFIC')) return 'CERTIFICACIONES';
             if (str_contains($c, 'ACCESORIO') || str_contains($c, 'OTROS')) return 'ACCESORIOS Y OTROS';
             if (str_contains($c, 'RAEE')) return 'SISTEMA RAEE';
-            if (str_contains($c, 'FORMATO') || str_contains($c, 'FACTOR') || str_contains($c, 'CHASIS') || str_contains($c, 'SUMINISTRO')) return 'FORMATO';
+            if (str_contains($c, 'FORMATO') || str_contains($c, 'FACTOR') || str_contains($c, 'CHASIS') || str_contains($c, 'SUMINISTRO')) return 'FORMATO / CHASIS';
             if (str_contains($c, 'RESOLUCI')) return 'RESOLUCIÓN';
             if (str_contains($c, 'PANTALLA') || str_contains($c, 'PULGADAS')) return 'PANTALLA';
             if (str_contains($c, 'TECLADO') || str_contains($c, 'MOUSE') || str_contains($c, 'PERIFÉRIC')) return 'TECLADO Y MOUSE';
@@ -1073,7 +1078,7 @@ public function importarEspecificaciones(Request $request)
 
         if ($isPc) {
             $canonicalPcOrder = [
-                'FORMATO',
+                'FORMATO / CHASIS',
                 'PROCESADOR',
                 'MEMORIA RAM',
                 'ALMACENAMIENTO',
@@ -1084,9 +1089,9 @@ public function importarEspecificaciones(Request $request)
                 'CHIPSET',
                 'CONECTIVIDAD LAN',
                 'CONECTIVIDAD WLAN',
-                'PUERTOS MÍNIMOS',
                 'SLOT DE EXPANSIÓN',
                 'FUENTE DE PODER',
+                'SEGURIDAD',
                 'GARANTÍA DE FÁBRICA',
                 'EMPAQUE',
                 'CERTIFICACIONES',

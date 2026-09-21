@@ -83,6 +83,9 @@ class SyncFichasCommand extends Command
         'N° DE PARTE'                    => 'numero_parte_ref',
         'Nº DE PARTE'                    => 'numero_parte_ref',
         'DIMENSIONES'                    => 'dimensiones',
+        'FORMATO / CHASIS'               => 'formato',
+        'FORMATO/CHASIS'                 => 'formato',
+        'CHASIS'                         => 'formato',
         'FORMATO'                        => 'formato',
         'FACTOR DE FORMA'                => 'formato',
         'FACTORDE FORMA'                 => 'formato',
@@ -111,6 +114,9 @@ class SyncFichasCommand extends Command
         'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
         'RANURASDE EXPANSIÓN'            => 'slot_expansion',
         'FUENTE DE PODER'                => 'fuente_poder',
+        'SEGURIDAD TPM'                  => 'seguridad',
+        'SEGURIDAD'                      => 'seguridad',
+        'TPM'                            => 'seguridad',
         'GARANTIA DE FABRICA'            => 'garantia_de_fabrica',
         'GARANTÍA DE FÁBRICA'            => 'garantia_de_fabrica',
         'GARANTIA'                       => 'garantia_de_fabrica',
@@ -141,12 +147,13 @@ class SyncFichasCommand extends Command
         'mouse'               => 'Mouse',
         'suite_ofimatica'     => 'Suite Ofimática',
         'garantia_de_fabrica' => 'Garantía de Fábrica',
-        'formato'             => 'Formato',
+        'formato'             => 'Formato / Chasis',
         'sonido'              => 'Sonido',
         'chipset'             => 'Chipset',
         'puertos_minimos'     => 'Puertos Mínimos',
         'slot_expansion'      => 'Slot de Expansión',
         'fuente_poder'        => 'Fuente de Poder',
+        'seguridad'           => 'Seguridad',
         'empaque'             => 'Empaque',
         'certificaciones'     => 'Certificaciones',
         'accesorios_otros'    => 'Accesorios y Otros',
@@ -440,11 +447,78 @@ class SyncFichasCommand extends Command
     // ─── Sincronizar tabla especificaciones ────────────────────────────────────
 
     /**
+     * Normaliza y sanitiza especificaciones de computadoras:
+     * - Desacopla Seguridad TPM 2.0 de Fuente de Poder.
+     * - Mueve certificaciones (ROHS, FCC, CE, RAEE) erróneas desde Empaque hacia Certificaciones.
+     * - Limpia Garantía de Fábrica eliminando prefijos de modelo repetidos.
+     * - Descarta Puertos Mínimos y textos legales residuales de Accesorios y Otros.
+     */
+    private function normalizePcSpecs(array $specs): array
+    {
+        // 1. Quitar Puertos Mínimos (requerimiento explícito del cliente)
+        unset($specs['puertos_minimos']);
+
+        // 2. Desacoplar Seguridad TPM 2.0 de Fuente de Poder
+        if (!empty($specs['fuente_poder'])) {
+            $fp = (string) $specs['fuente_poder'];
+            if (preg_match('/(?:seguridad|tpm)\s*[:\-]?\s*(.+)$/iu', $fp, $mSeg)) {
+                if (empty($specs['seguridad'])) {
+                    $specs['seguridad'] = trim($mSeg[1]);
+                }
+                $specs['fuente_poder'] = trim(preg_replace('/[\/,\|\-]?\s*(?:seguridad|tpm)\s*[:\-]?\s*.+$/iu', '', $fp));
+            } elseif (preg_match('/\bTPM\s*2\.0\b/i', $fp)) {
+                if (empty($specs['seguridad'])) {
+                    $specs['seguridad'] = 'TPM 2.0';
+                }
+                $specs['fuente_poder'] = trim(preg_replace('/[\/,\|\-]?\s*TPM\s*2\.0.*$/iu', '', $fp));
+            }
+        }
+
+        if (!empty($specs['seguridad'])) {
+            $seg = trim((string) $specs['seguridad']);
+            if (!str_contains(strtoupper($seg), 'TPM')) {
+                $specs['seguridad'] = 'TPM ' . $seg;
+            }
+        }
+
+        // 3. Mover certificaciones desde Empaque hacia Certificaciones
+        if (!empty($specs['empaque'])) {
+            $emp = (string) $specs['empaque'];
+            if (preg_match('/(?:ROHS|ROSH|FCC|CE|RAEE|SISTEMA\s+DE\s+MANEJO)/i', $emp)) {
+                if (empty($specs['certificaciones']) || in_array(strtoupper(trim((string)$specs['certificaciones'])), ['NO ESPECIFICADO', 'NO', 'N/A'])) {
+                    $specs['certificaciones'] = $emp;
+                }
+                $specs['empaque'] = 'Empaque individual de fábrica';
+            }
+        }
+
+        // 4. Limpiar Garantía de Fábrica
+        if (!empty($specs['garantia_de_fabrica'])) {
+            $gar = (string) $specs['garantia_de_fabrica'];
+            $gar = preg_replace('/^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+/iu', '', $gar);
+            $gar = preg_replace('/^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)/iu', '$1', $gar);
+            $specs['garantia_de_fabrica'] = trim($gar);
+        }
+
+        // 5. Limpiar Accesorios y Otros si contiene texto residual legal
+        if (!empty($specs['accesorios_otros'])) {
+            $acc = (string) $specs['accesorios_otros'];
+            if (preg_match('/ESPECIFICACIONES\s+T[EÉ]CNICAS/iu', $acc) || preg_match('/MARCA\s+REGISTRADA/iu', $acc)) {
+                unset($specs['accesorios_otros']);
+            }
+        }
+
+        return $specs;
+    }
+
+    /**
      * Borra las especificaciones existentes del producto y las recrea
      * a partir del array $specs (columna → valor).
      */
     private function syncEspecificaciones(int $productoId, array $specs): void
     {
+        $specs = $this->normalizePcSpecs($specs);
+
         DB::table('especificaciones')->where('producto_id', $productoId)->delete();
 
         $rows = [];
@@ -608,8 +682,8 @@ class SyncFichasCommand extends Command
 
         return [
             'graficos', 'sistema_operativo', 'suite_ofimatica',
-            'formato', 'sonido', 'chipset', 'puertos_minimos',
-            'slot_expansion', 'fuente_poder', 'empaque',
+            'formato', 'sonido', 'chipset',
+            'slot_expansion', 'fuente_poder', 'seguridad', 'empaque',
             'certificaciones', 'accesorios_otros',
         ];
     }

@@ -755,8 +755,57 @@
                     if (str_contains($name, 'rendimiento') || str_contains($name, 'paginas')) return 'fa-solid fa-gauge-high';
                     if (str_contains($name, 'sistema') || str_contains($name, 'operativo') || str_contains($name, 'so')) return 'fa-solid fa-laptop-code';
                     if (str_contains($name, 'conectividad') || str_contains($name, 'red') || str_contains($name, 'wlan') || str_contains($name, 'wifi')) return 'fa-solid fa-wifi';
+                    if (str_contains($name, 'seguridad') || str_contains($name, 'tpm')) return 'fa-solid fa-shield-halved';
                     return 'fa-solid fa-microchip';
                 };
+
+                // Extracción y sanitización para PCs (auditoría / Ficha 368 / EZENT)
+                $formatoRaw = $getSpecValue(['/formato\s*\/\s*chasis|formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']);
+                
+                $fuenteRaw = $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder']);
+                $seguridadRaw = $getSpecValue(['/seguridad|tpm/']);
+                
+                // Desacoplar Seguridad TPM 2.0 de Fuente de Poder si vienen juntos
+                if ($fuenteRaw) {
+                    if (preg_match('/(?:seguridad|tpm)\s*[:\-]?\s*(.+)$/iu', $fuenteRaw, $mSeg)) {
+                        if (!$seguridadRaw) {
+                            $seguridadRaw = trim($mSeg[1]);
+                        }
+                        $fuenteRaw = trim(preg_replace('/[\/,\|\-]?\s*(?:seguridad|tpm)\s*[:\-]?\s*.+$/iu', '', $fuenteRaw));
+                    } elseif (preg_match('/\bTPM\s*2\.0\b/i', $fuenteRaw)) {
+                        if (!$seguridadRaw) {
+                            $seguridadRaw = 'TPM 2.0';
+                        }
+                        $fuenteRaw = trim(preg_replace('/[\/,\|\-]?\s*TPM\s*2\.0.*$/iu', '', $fuenteRaw));
+                    }
+                }
+                if ($seguridadRaw && !str_contains(strtoupper($seguridadRaw), 'TPM')) {
+                    $seguridadRaw = 'TPM ' . $seguridadRaw;
+                }
+
+                $garantiaRaw = $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia']);
+                if ($garantiaRaw) {
+                    // Limpiar prefijo repetido del modelo/marca: "UNIDAD KENYA TECHNOLOGY EZENT T700..."
+                    $garantiaRaw = preg_replace('/^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+/iu', '', $garantiaRaw);
+                    $garantiaRaw = preg_replace('/^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)/iu', '$1', $garantiaRaw);
+                    $garantiaRaw = trim($garantiaRaw);
+                }
+
+                $empaqueRaw = $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque', 'empaque_de_fabrica']);
+                $certificacionesRaw = $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones', 'certificacion']);
+
+                // Mover certificaciones que vinieron erróneamente en Empaque
+                if ($empaqueRaw && preg_match('/(?:ROHS|ROSH|FCC|CE|RAEE|SISTEMA\s+DE\s+MANEJO)/i', $empaqueRaw)) {
+                    if (!$certificacionesRaw || in_array(strtoupper(trim($certificacionesRaw)), ['NO ESPECIFICADO', 'NO', 'N/A'])) {
+                        $certificacionesRaw = $empaqueRaw;
+                    }
+                    $empaqueRaw = 'Empaque individual de fábrica';
+                }
+
+                $accesoriosRaw = $getSpecValue(['/accesorio|otros|observaciones|incluye/']) ?? $getProductValue(['accesorios']);
+                if ($accesoriosRaw && (preg_match('/ESPECIFICACIONES\s+T[EÉ]CNICAS/iu', $accesoriosRaw) || preg_match('/MARCA\s+REGISTRADA/iu', $accesoriosRaw))) {
+                    $accesoriosRaw = null;
+                }
 
                 // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
                 $topOrdered = [];
@@ -790,13 +839,13 @@
                 } elseif (!$isMonitor) {
                     if ($isDesktopOrWorkstation) {
                         $topOrdered = [
-                            (object) ['campo' => 'FORMATO', 'descripcion' => $getSpecValue(['/formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'FORMATO / CHASIS', 'descripcion' => $formatoRaw ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'PROCESADOR', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'CHIPSET', 'descripcion' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'VIDEO', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'MEMORIA RAM', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'ALMACENAMIENTO', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'FUENTE PODER', 'descripcion' => $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'FUENTE PODER', 'descripcion' => $fuenteRaw ?? 'No especificado', 'descripcion2' => ''],
                         ];
                     } else {
                         $topOrdered = [
@@ -1136,7 +1185,7 @@
                 $oldPcRows = [
                     ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
                     ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
-                    ['label' => 'Formato', 'value' => $getSpecValue(['/formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro'])],
+                    ['label' => 'Formato / Chasis', 'value' => $formatoRaw],
                     ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
                     ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
                     ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
@@ -1147,14 +1196,21 @@
                     ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset'])],
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
                     ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
-                    ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
                     ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2|ranura/'])],
-                    ['label' => 'Fuente de Poder', 'value' => $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder'])],
-                    ['label' => 'Garantia', 'value' => $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia'])],
-                    ['label' => 'Empaque', 'value' => $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque', 'empaque_de_fabrica'])],
-                    ['label' => 'Certificaciones', 'value' => $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones', 'certificacion'])],
-                    ['label' => 'Accesorios y Otros', 'value' => $getSpecValue(['/accesorio|otros|observaciones|incluye/']) ?? $getProductValue(['accesorios'])],
+                    ['label' => 'Fuente de Poder', 'value' => $fuenteRaw],
                 ];
+
+                if (!empty($seguridadRaw)) {
+                    $oldPcRows[] = ['label' => 'Seguridad', 'value' => $seguridadRaw];
+                }
+
+                $oldPcRows[] = ['label' => 'Garantia', 'value' => $garantiaRaw];
+                $oldPcRows[] = ['label' => 'Empaque', 'value' => $empaqueRaw];
+                $oldPcRows[] = ['label' => 'Certificaciones', 'value' => $certificacionesRaw];
+
+                if (!empty($accesoriosRaw)) {
+                    $oldPcRows[] = ['label' => 'Accesorios y Otros', 'value' => $accesoriosRaw];
+                }
             @endphp
             @forelse($oldPcRows as $fr)
             <div style="display:flex; align-items:center; padding:14px 24px; border-bottom:1px solid #f5f5f5; transition:background 0.15s;" onmouseover="this.style.background='#fafafa'" onmouseout="this.style.background='transparent'">

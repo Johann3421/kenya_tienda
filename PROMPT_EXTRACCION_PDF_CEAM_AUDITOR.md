@@ -62,6 +62,9 @@ from pypdf import PdfReader
 TOKENS_PC: Dict[str, str] = {
     # Ordenados preferentemente: tokens más específicos primero
     "TIPO DE PRODUCTO": "tipo_producto",
+    "FORMATO / CHASIS": "formato",
+    "FORMATO/CHASIS": "formato",
+    "CHASIS": "formato",
     "FORMATO": "formato",
     "FACTOR DE FORMA": "formato",
     "FACTORDE FORMA": "formato",
@@ -100,6 +103,9 @@ TOKENS_PC: Dict[str, str] = {
     "SLOT DE EXPANSIÓN": "slot_expansion",
     "FUENTE DE PODER": "fuente_poder",
     "POTENCIA FUENTE": "fuente_poder",
+    "SEGURIDAD TPM": "seguridad",
+    "SEGURIDAD": "seguridad",
+    "TPM": "seguridad",
     "GARANTIA DE FABRICA": "garantia_de_fabrica",
     "GARANTÍA DE FÁBRICA": "garantia_de_fabrica",
     "GARANTIA": "garantia_de_fabrica",
@@ -470,7 +476,58 @@ def extraer_especificaciones_pdf(
 
     else:
         # Computadoras, Laptops, Servidores, etc.
-        return extraer_por_tokens(texto, TOKENS_PC)
+        raw_specs = extraer_por_tokens(texto, TOKENS_PC)
+        return post_procesar_specs_pc(raw_specs)
+
+
+def post_procesar_specs_pc(specs: Dict[str, str]) -> Dict[str, str]:
+    """
+    Sanitiza y desacopla campos cruzados de PCs:
+    - Quita 'puertos_minimos' (texto residual legal).
+    - Desacopla Seguridad TPM 2.0 de Fuente de Poder.
+    - Mueve certificaciones (ROHS, FCC, CE, RAEE) erróneas desde Empaque a Certificaciones.
+    - Limpia repetición de modelo en Garantía.
+    - Descarta Accesorios y Otros si contiene texto residual legal.
+    """
+    # 1. Quitar puertos_minimos
+    specs.pop("puertos_minimos", None)
+
+    # 2. Desacoplar Seguridad TPM de Fuente de Poder
+    fp = specs.get("fuente_poder", "")
+    if fp:
+        m = re.search(r'(?:seguridad|tpm)\s*[:\-]?\s*(.+)$', fp, re.IGNORECASE)
+        if m:
+            if not specs.get("seguridad"):
+                specs["seguridad"] = m.group(1).strip()
+            specs["fuente_poder"] = re.sub(r'[\/,\|\-]?\s*(?:seguridad|tpm)\s*[:\-]?\s*.+$', '', fp, flags=re.IGNORECASE).strip()
+        elif "tpm 2.0" in fp.lower():
+            if not specs.get("seguridad"):
+                specs["seguridad"] = "TPM 2.0"
+            specs["fuente_poder"] = re.sub(r'[\/,\|\-]?\s*tpm\s*2\.0.*$', '', fp, flags=re.IGNORECASE).strip()
+
+    if specs.get("seguridad") and "tpm" not in specs["seguridad"].lower():
+        specs["seguridad"] = f"TPM {specs['seguridad']}"
+
+    # 3. Mover certificaciones desde Empaque
+    emp = specs.get("empaque", "")
+    if emp and re.search(r'ROHS|ROSH|FCC|CE|RAEE|SISTEMA\s+DE\s+MANEJO', emp, re.IGNORECASE):
+        if not specs.get("certificaciones") or specs["certificaciones"].upper() in ["NO ESPECIFICADO", "NO", "N/A"]:
+            specs["certificaciones"] = emp
+        specs["empaque"] = "Empaque individual de fábrica"
+
+    # 4. Limpiar Garantía
+    gar = specs.get("garantia_de_fabrica", "")
+    if gar:
+        gar = re.sub(r'^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+', '', gar, flags=re.IGNORECASE)
+        gar = re.sub(r'^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)', r'\1', gar, flags=re.IGNORECASE)
+        specs["garantia_de_fabrica"] = gar.strip()
+
+    # 5. Limpiar texto residual de Accesorios y Otros
+    acc = specs.get("accesorios_otros", "")
+    if acc and re.search(r'ESPECIFICACIONES\s+T[EÉ]CNICAS|MARCA\s+REGISTRADA', acc, re.IGNORECASE):
+        specs.pop("accesorios_otros", None)
+
+    return specs
 ```
 
 ---
