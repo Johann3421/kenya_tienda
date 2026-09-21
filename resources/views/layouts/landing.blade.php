@@ -780,7 +780,7 @@ body {
 
                 <!-- Columna 2: Atención al cliente -->
                 <div class="kenya-footer-col">
-                    <h3 class="kenya-footer-heading">Atención al cliente</h3>
+                    <h3 class="kenya-footer-heading">Comunícate con nosotros</h3>
                     <ul class="kenya-footer-list">
                         <li><a href="{{ route('contactenos') }}">Preguntas frecuentes</a></li>
                         <li><a href="{{ route('consultar.garantia') }}#terms">Términos y condiciones de garantía</a></li>
@@ -1065,10 +1065,10 @@ body {
         });
     </script>
     <!-- Floating CEM WhatsApp Conversion Widget -->
-    <a href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Quisiera solicitar cotización de computadoras y equipos corporativos.') }}&type=phone_number&app_absent=0" 
-       target="_blank" 
-       rel="noopener" 
-       title="Cotizaciones y Ventas Corporativas por WhatsApp" 
+    <a href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Quisiera solicitar cotización de computadoras y equipos corporativos.') }}&type=phone_number&app_absent=0"
+       target="_blank"
+       rel="noopener"
+       title="Cotizaciones y Ventas Corporativas por WhatsApp"
        style="position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; background-color: #25d366; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 18px rgba(37,211,102,0.45); z-index: 9999; text-decoration: none; transition: transform 0.2s ease;"
        onmouseover="this.style.transform='scale(1.1)';"
        onmouseout="this.style.transform='scale(1)';"
