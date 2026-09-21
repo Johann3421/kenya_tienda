@@ -114,6 +114,15 @@ new Vue({
                     // Habilitar pestañas solo si la búsqueda fue exitosa
                     if(this.state == 'success') {
                         this.tabsEnabled = true;
+                        var emptyPrompt = document.getElementById('drivers-empty-prompt');
+                        if (emptyPrompt) emptyPrompt.style.display = 'none';
+                        var activeTab = document.querySelector('.support-tab.active');
+                        if (activeTab && activeTab.getAttribute('data-target') === 'tab-controladores') {
+                            var cContent = document.getElementById('tab-controladores-content');
+                            if (cContent) cContent.style.display = 'block';
+                            var gContent = document.getElementById('tab-garantia-content');
+                            if (gContent) gContent.style.display = 'none';
+                        }
                     }
                 }).catch(error => {
                     this.loading = false;

@@ -219,6 +219,16 @@
             #garantia .search-box button { width: 100%; }
             #garantia .video-grid { grid-template-columns: 1fr; }
         }
+
+        @keyframes searchHighlightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(242, 101, 34, 0.5); border-color: #f26522; }
+            50% { box-shadow: 0 0 0 8px rgba(242, 101, 34, 0.2); border-color: #f26522; }
+            100% { box-shadow: none; border-color: #ccc; }
+        }
+        #garantia .search-box input.search-highlight-pulse {
+            animation: searchHighlightPulse 1.8s ease-in-out;
+            border-color: #f26522;
+        }
     </style>
 @endsection
 @section('content')
@@ -247,6 +257,24 @@
         </div>
         <p v-if="errors.search" style="color: #f26522; margin-top: 15px; font-weight: 600;">@{{ errors.search[0] }}</p>
     </section>
+
+    <!-- Empty State / Guía informativa para descarga de controladores -->
+    <div id="drivers-empty-prompt" style="display: none; max-width: 850px; margin: 0 auto 40px; padding: 28px 24px; background: #fff8f5; border: 1.5px dashed #f26522; border-radius: 16px; text-align: center;">
+        <div style="width: 56px; height: 56px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 4px 14px rgba(242,101,34,0.18);">
+            <i class="fa-solid fa-gear" style="font-size: 1.7rem; color: #f26522;"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; color: #222; font-weight: 700; margin-bottom: 8px;">
+            Identifica tu equipo KENYA para descargar controladores
+        </h3>
+        <p style="color: #555; font-size: 0.95rem; line-height: 1.6; max-width: 680px; margin: 0 auto 16px;">
+            Para garantizar la compatibilidad exacta y el rendimiento óptimo de tu computadora, los controladores se asignan según la placa madre, procesador y componentes específicos de cada equipo. 
+            <strong>Ingresa el número de serie en la casilla superior</strong> para listar los drivers certificados (Audio, Chipset, Red, Video).
+        </p>
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: #fff; padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; color: #666; border: 1px solid #fed7c3;">
+            <i class="fa-solid fa-circle-info" style="color: #f26522;"></i>
+            <span><strong>¿Dónde encontrarlo?</strong> En la etiqueta posterior del CPU o laptop con código de barras de 14 caracteres.</span>
+        </div>
+    </div>
 
     <div id="main-results-container" style="display: none;" v-show="state != null">
         <div v-if="loading" class="loading-container">
@@ -471,7 +499,7 @@
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
         }
     </script>
-    <script src="{{ asset('js/consultar/garantia.js') }}?v=5"></script>
+    <script src="{{ asset('js/consultar/garantia.js') }}?v=6"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
     <script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
     <script>
@@ -483,7 +511,11 @@
                     document.querySelectorAll('.support-tab').forEach(t => t.classList.remove('active'));
                     this.classList.add('active');
                     const target = this.getAttribute('data-target');
+                    const emptyPrompt = document.getElementById('drivers-empty-prompt');
+                    const vueApp = document.querySelector('#garantia')?.__vue__;
+
                     if (target === 'tab-garantia') {
+                        if (emptyPrompt) emptyPrompt.style.display = 'none';
                         document.getElementById('main-results-container').style.display = '';
                         const gContent = document.getElementById('tab-garantia-content');
                         if (gContent) gContent.style.display = '';
@@ -492,14 +524,35 @@
                         document.getElementById('tab-galeria-content').style.display = 'none';
                         document.getElementById('tab-terminos-content').style.display = 'none';
                     } else if (target === 'tab-controladores') {
-                        document.getElementById('main-results-container').style.display = '';
-                        const gContent = document.getElementById('tab-garantia-content');
-                        if (gContent) gContent.style.display = 'none';
-                        const cContent = document.getElementById('tab-controladores-content');
-                        if (cContent) cContent.style.display = 'block';
+                        if (!vueApp || vueApp.state !== 'success') {
+                            if (emptyPrompt) {
+                                emptyPrompt.style.display = 'block';
+                                setTimeout(function() {
+                                    var sInput = document.querySelector('.search-box input');
+                                    if (sInput) {
+                                        sInput.focus();
+                                        sInput.classList.add('search-highlight-pulse');
+                                        setTimeout(function() { sInput.classList.remove('search-highlight-pulse'); }, 2000);
+                                    }
+                                }, 100);
+                            }
+                            document.getElementById('main-results-container').style.display = 'none';
+                            const gContent = document.getElementById('tab-garantia-content');
+                            if (gContent) gContent.style.display = 'none';
+                            const cContent = document.getElementById('tab-controladores-content');
+                            if (cContent) cContent.style.display = 'none';
+                        } else {
+                            if (emptyPrompt) emptyPrompt.style.display = 'none';
+                            document.getElementById('main-results-container').style.display = '';
+                            const gContent = document.getElementById('tab-garantia-content');
+                            if (gContent) gContent.style.display = 'none';
+                            const cContent = document.getElementById('tab-controladores-content');
+                            if (cContent) cContent.style.display = 'block';
+                        }
                         document.getElementById('tab-galeria-content').style.display = 'none';
                         document.getElementById('tab-terminos-content').style.display = 'none';
                     } else if (target === 'tab-galeria') {
+                        if (emptyPrompt) emptyPrompt.style.display = 'none';
                         document.getElementById('main-results-container').style.display = 'none';
                         document.getElementById('tab-galeria-content').style.display = 'block';
                         document.getElementById('tab-terminos-content').style.display = 'none';
@@ -510,6 +563,7 @@
                             }
                         });
                     } else if (target === 'tab-terminos') {
+                        if (emptyPrompt) emptyPrompt.style.display = 'none';
                         document.getElementById('main-results-container').style.display = 'none';
                         document.getElementById('tab-galeria-content').style.display = 'none';
                         document.getElementById('tab-terminos-content').style.display = 'block';
@@ -542,11 +596,50 @@
                         }, 250);
                     }
                 } else if (hash === '#controladores' || hash === '#tab-controladores') {
-                    document.querySelector('.support-tab[data-target="tab-controladores"]')?.click();
+                    var tabControladores = document.querySelector('.support-tab[data-target="tab-controladores"]');
+                    if (tabControladores) {
+                        tabControladores.click();
+                        setTimeout(function() {
+                            var searchSection = document.querySelector('.warranty-search-section');
+                            if (searchSection) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = searchSection.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                            var searchInput = document.querySelector('.search-box input');
+                            if (searchInput) {
+                                searchInput.focus();
+                                searchInput.classList.add('search-highlight-pulse');
+                                setTimeout(function() { searchInput.classList.remove('search-highlight-pulse'); }, 2000);
+                            }
+                        }, 250);
+                    }
                 } else if (hash === '#galeria' || hash === '#tab-galeria' || hash === '#videos') {
-                    document.querySelector('.support-tab[data-target="tab-galeria"]')?.click();
+                    var tabGaleria = document.querySelector('.support-tab[data-target="tab-galeria"]');
+                    if (tabGaleria) {
+                        tabGaleria.click();
+                        setTimeout(function() {
+                            var target = document.getElementById('tab-galeria-content');
+                            if (target) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = target.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
                 } else if (hash === '#garantia' || hash === '#tab-garantia') {
-                    document.querySelector('.support-tab[data-target="tab-garantia"]')?.click();
+                    var tabGarantia = document.querySelector('.support-tab[data-target="tab-garantia"]');
+                    if (tabGarantia) {
+                        tabGarantia.click();
+                        setTimeout(function() {
+                            var searchSection = document.querySelector('.warranty-search-section');
+                            if (searchSection) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = searchSection.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
                 }
             }
 
@@ -558,14 +651,18 @@
                 activateTabByHash();
             });
 
-            document.querySelectorAll('a[href*="#terminos"], a[href*="#terms"]').forEach(function(link) {
+            document.querySelectorAll('a[href*="#terminos"], a[href*="#terms"], a[href*="#controladores"], a[href*="#garantia"], a[href*="#galeria"]').forEach(function(link) {
                 link.addEventListener('click', function(e) {
                     if (window.location.pathname.replace(/\/$/, '').endsWith('/consultar/garantia')) {
-                        e.preventDefault();
-                        if (window.location.hash !== '#terminos') {
-                            history.pushState(null, null, '#terminos');
+                        var href = this.getAttribute('href');
+                        var hash = href.includes('#') ? href.split('#')[1] : null;
+                        if (hash) {
+                            e.preventDefault();
+                            if (window.location.hash !== '#' + hash) {
+                                history.pushState(null, null, '#' + hash);
+                            }
+                            activateTabByHash();
                         }
-                        activateTabByHash();
                     }
                 });
             });

@@ -791,9 +791,9 @@ body {
                 <div class="kenya-footer-col">
                     <h3 class="kenya-footer-heading">Soporte técnico</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="{{ route('consultar.garantia') }}">Descargar controladores</a></li>
-                        <li><a href="{{ route('consultar.garantia') }}">Estado de la garantía</a></li>
-                        <li><a href="{{ route('consultar.garantia') }}">Guía de activación</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}#controladores">Descargar controladores</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}#garantia">Estado de la garantía</a></li>
+                        <li><a href="{{ route('consultar.garantia') }}#galeria">Guía de activación</a></li>
                     </ul>
                 </div>
 
