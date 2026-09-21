@@ -780,9 +780,9 @@ body {
 
                 <!-- Columna 2: Atención al cliente -->
                 <div class="kenya-footer-col">
-                    <h3 class="kenya-footer-heading">Comunícate con nosotros</h3>
+                    <h3 class="kenya-footer-heading">Atención al cliente</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="{{ route('contactenos') }}">Preguntas frecuentes</a></li>
+                        <li><a href="{{ route('contactenos') }}">Comunícate con nosotros</a></li>
                         <li><a href="{{ route('consultar.garantia') }}#terminos">Términos y condiciones de garantía</a></li>
                     </ul>
                 </div>
