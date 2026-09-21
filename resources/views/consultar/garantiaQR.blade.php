@@ -1,670 +1,10 @@
 @extends('layouts.landing')
-@section('css')
-    <style>
-        .col1 {
-            width: 10%;
-        }
-
-        .col2 {
-            width: 10%;
-        }
-
-        .col3 {
-            width: 20%;
-        }
-
-        .col4 {
-            width: 45%;
-        }
-
-        .col5 {
-            width: 15%;
-        }
-
-        .table-sm td {
-            vertical-align: middle !important;
-        }
-
-        .E1,
-        .E2,
-        .E3,
-        .E4,
-        .E5,
-        .E6 {
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .E1 {
-            background-color: red;
-        }
-
-        .E2 {
-            background-color: #00c1c1;
-        }
-
-        .E3 {
-            background-color: purple;
-        }
-
-        .E4 {
-            background-color: orange;
-        }
-
-        .E5 {
-            background-color: green;
-        }
-
-        .E6 {
-            background-color: #0077ff;
-        }
-
-        pre {
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            padding: 5px 10px;
-            margin-bottom: 0;
-        }
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        .cat {
-            height: 200px;
-            width: 200px;
-        }
-    </style>
-    <style>
-        .warranty-section {
-            padding: 2rem 0;
-            background-color: #f8f9fa;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .warranty-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        /* Estilo de las pestañas */
-        .tabs-container {
-            margin-bottom: 2rem;
-        }
-
-        .nav-tabs {
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .nav-item {
-            margin-bottom: -2px;
-        }
-
-        .nav-link {
-            color: #6c757d;
-            border: none;
-            padding: 12px 20px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border-radius: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-link i,
-        .nav-link iconify-icon {
-            margin-right: 8px;
-            font-size: 18px;
-        }
-
-        .nav-link.active {
-            color: #fff;
-            background-color: #E67E22;
-            /* Naranja más oscuro */
-            border-color: transparent;
-            border-bottom: 3px solid #D35400;
-        }
-
-        .nav-link.disabled {
-            color: #adb5bd;
-            pointer-events: none;
-        }
-
-        .nav-link:not(.active):not(.disabled):hover {
-            color: #E67E22;
-            border-color: transparent;
-            background-color: rgba(230, 126, 34, 0.1);
-        }
-
-        /* Contenido de las pestañas */
-        .tab-content {
-            background: white;
-            border-radius: 0 8px 8px 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-        }
-
-        /* Estilos generales (manteniendo los anteriores con ajustes de color) */
-        .search-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .search-box {
-            width: 100%;
-            max-width: 500px;
-        }
-
-        .modern-input-group {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .modern-input {
-            border: none;
-            padding: 12px 15px;
-            font-size: 16px;
-            background-color: white;
-        }
-
-        .modern-input:focus {
-            box-shadow: none;
-            border-color: #E67E22;
-        }
-
-        .search-button {
-            background-color: #E67E22;
-            /* Naranja más oscuro */
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .search-button:hover {
-            background-color: #D35400;
-            /* Naranja más oscuro - hover */
-            transform: translateY(-1px);
-        }
-
-        .error-message {
-            font-size: 13px;
-            color: #dc3545;
-            margin-top: 5px;
-            text-align: center;
-        }
-
-        .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .modern-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(230, 126, 34, 0.3);
-            /* Naranja más oscuro */
-            border-radius: 50%;
-            border-top-color: #E67E22;
-            /* Naranja más oscuro */
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 1rem;
-        }
-
-        .loading-text {
-            font-size: 1.25rem;
-            color: #6c757d;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .warranty-card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .card-header {
-            background-color: #E67E22;
-            /* Naranja más oscuro */
-            color: white;
-            padding: 15px 20px;
-            font-weight: 600;
-            font-size: 18px;
-        }
-
-        .card-content {
-            display: flex;
-            padding: 20px;
-            flex-wrap: wrap;
-        }
-
-        .details-column,
-        .tech-column {
-            padding: 0 15px;
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .details-column {
-            border-right: 1px solid #eee;
-        }
-
-        .section-title {
-            font-weight: 700;
-            font-size: 16px;
-            color: #343a40;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-title i,
-        .section-title iconify-icon {
-            margin-right: 8px;
-            font-size: 18px;
-            color: #E67E22;
-            /* Naranja más oscuro */
-        }
-
-        .detail-item {
-            font-size: 14px;
-            margin-bottom: 12px;
-            color: #6c757d;
-            display: flex;
-            align-items: center;
-        }
-
-        .detail-item i,
-        .detail-item iconify-icon {
-            width: 20px;
-            text-align: center;
-            color: #E67E22;
-            /* Naranja más oscuro */
-        }
-
-        .product-image-container {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .product-image {
-            max-height: 180px;
-            max-width: 100%;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .warranty-progress {
-            margin: 20px 0;
-        }
-
-        .progress {
-            height: 10px;
-            border-radius: 5px;
-            background-color: #e9ecef;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            border-radius: 5px;
-            transition: width 0.6s ease;
-        }
-
-        .progress.active .progress-bar {
-            background-color: #E67E22;
-            /* Naranja más oscuro */
-        }
-
-        .progress.expired .progress-bar {
-            background-color: #dc3545;
-        }
-
-        .progress.expiring .progress-bar {
-            background-color: #17a2b8;
-        }
-
-        .expiration-message {
-            font-size: 13px;
-            padding: 8px 12px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        .expiration-message.active {
-            background-color: rgba(230, 126, 34, 0.1);
-            /* Naranja más oscuro */
-            color: #E67E22;
-            /* Naranja más oscuro */
-        }
-
-        .expiration-message.expired {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-        }
-
-        .expiration-message.expiring {
-            background-color: rgba(23, 162, 184, 0.1);
-            color: #17a2b8;
-        }
-
-        .tech-specs {
-            margin-top: 20px;
-        }
-
-        .tech-link {
-            color: #E67E22;
-            /* Naranja más oscuro */
-            font-weight: 600;
-            text-decoration: none;
-            transition: color 0.2s;
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 12px;
-            border: 1px solid #E67E22;
-            /* Naranja más oscuro */
-            border-radius: 5px;
-        }
-
-        .tech-link:hover {
-            color: #D35400;
-            /* Naranja más oscuro - hover */
-            background-color: rgba(230, 126, 34, 0.1);
-            /* Naranja más oscuro */
-        }
-
-        .tech-link iconify-icon {
-            margin-right: 8px;
-        }
-
-        .manual-item {
-            margin-bottom: 10px;
-        }
-
-        .manual-item a {
-            color: #495057;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            transition: color 0.2s;
-        }
-
-        .manual-item a:hover {
-            color: #E67E22;
-            /* Naranja más oscuro */
-        }
-
-        .manual-item iconify-icon {
-            margin-right: 8px;
-            color: #E67E22;
-            /* Naranja más oscuro */
-        }
-
-        /* Estilos para la pestaña de controladores */
-        .drivers-container {
-            padding: 20px;
-        }
-
-        .drivers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .driver-card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            border-left: 4px solid #E67E22;
-            /* Naranja más oscuro */
-            transition: transform 0.2s;
-        }
-
-        .driver-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .driver-name {
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #343a40;
-        }
-
-        .driver-download {
-            color: #E67E22;
-            /* Naranja más oscuro */
-            text-decoration: none;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            transition: color 0.2s;
-        }
-
-        .driver-download:hover {
-            color: #D35400;
-            /* Naranja más oscuro - hover */
-        }
-
-        .driver-download iconify-icon {
-            margin-right: 5px;
-        }
-
-        /* Estilos para la pestaña de videos */
-        .video-gallery {
-            padding: 20px;
-        }
-
-        .videos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .video-item {
-            background: #f8f9fa;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .video-title {
-            padding: 12px;
-            font-weight: 600;
-            color: #343a40;
-            text-align: center;
-        }
-
-        /* Estilos para términos y condiciones */
-        .terms-container {
-            padding: 20px;
-        }
-
-        .terms-content {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-
-        .terms-content p {
-            margin-bottom: 10px;
-            color: #495057;
-            line-height: 1.6;
-        }
-
-        .no-results,
-        .no-data {
-            text-align: center;
-            padding: 2rem;
-            font-size: 18px;
-            color: #6c757d;
-        }
-
-        .no-results strong,
-        .no-data i {
-            color: #343a40;
-        }
-
-        .no-data i {
-            font-size: 24px;
-            display: block;
-            margin-bottom: 10px;
-            color: #E67E22;
-            /* Naranja más oscuro */
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .card-content {
-                flex-direction: column;
-            }
-
-            .details-column {
-                border-right: none;
-                border-bottom: 1px solid #eee;
-                padding-bottom: 20px;
-                margin-bottom: 20px;
-            }
-
-            .nav-link {
-                padding: 10px 12px;
-                font-size: 14px;
-            }
-        }
-
-        /* Estilos para la barra de progreso por etapas */
-        .warranty-progress {
-            margin: 20px 0;
-        }
-
-        .progress {
-            height: 20px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-
-        .progress-bar {
-            height: 100%;
-            transition: width 0.6s ease;
-        }
-
-        /* Colores para cada etapa */
-        .new-stage {
-            background-color: #4CAF50;
-            /* Verde */
-        }
-
-        .mid-stage {
-            background-color: #FFC107;
-            /* Amarillo */
-        }
-
-        .ending-stage {
-            background-color: #F44336;
-            /* Rojo */
-            animation: pulse 1.5s infinite;
-        }
-
-        .expired-stage {
-            background-color: #9E9E9E;
-            /* Gris */
-        }
-
-        /* Animación para la etapa "Por vencer" */
-        @keyframes pulse {
-            0% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        /* Estilos para las etiquetas de estado */
-        .warranty-stage-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
-
-        .warranty-stage-info span {
-            font-size: 12px;
-            color: #6c757d;
-            display: flex;
-            align-items: center;
-        }
-
-        .warranty-stage-info span.active {
-            font-weight: bold;
-            color: #000;
-        }
-
-        .warranty-stage-info i {
-            margin-right: 5px;
-        }
-
-        /* Mensajes de expiración */
-        .expiration-message {
-            padding: 10px;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-
-        .expiration-message.new {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .expiration-message.mid {
-            background-color: #fff8e1;
-            color: #ff8f00;
-        }
-
-        .expiration-message.ending {
-            background-color: #ffebee;
-            color: #c62828;
-            font-weight: bold;
-        }
-
-        .expiration-message.expired {
-            background-color: #f5f5f5;
-            color: #616161;
-        }
-    </style>
-@endsection
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
         <ul class="kenya-nav-list">
             <li><a href="{{ url('/') }}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
             <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
-            <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
+            <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catalogo</a></li>
             <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
             <li class="kenya-active"><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
             {{-- Sorteo temporalmente oculto en producción --}}
@@ -673,334 +13,697 @@
         </ul>
     </nav>
 @endsection
+@section('css')
+    <style>
+        #garantia { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #333; line-height: 1.6; }
+        #garantia .container { max-width: 1400px; margin: 0 auto; width: 100%; padding: 0; }
+
+        #garantia .support-hero {
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('{{ asset("banersoporte.png?v=2") }}') center/cover no-repeat;
+            padding: 90px 20px; text-align: left;
+        }
+        #garantia .support-hero h1 { font-size: 2.8rem; color: #000; font-weight: 400; margin-bottom: -3px; }
+        #garantia .support-hero p { font-size: 1.3rem; color: #000; font-weight: 300; max-width: 800px; margin: 0; }
+
+        #garantia .support-nav-container { background: #fff; width: 100%; border-bottom: 1px solid #ccc; }
+        #garantia .support-nav { display: flex; justify-content: left; max-width: 1200px; margin: 0 240px; padding: 0; list-style: none; flex-wrap: wrap; }
+        #garantia .support-nav li a {
+            display: flex; align-items: center; border-radius: 100px; gap: 10px; padding: 15px 30px;
+            color: #333; text-decoration: none; font-weight: 600; font-size: 1.05rem; transition: background-color 0.3s; cursor: pointer;
+        }
+        #garantia .support-nav li a.active { background: linear-gradient(to right, #ff3c00, #ff9c00); color: #fff; }
+        #garantia .support-nav li a:hover:not(.active) { background-color: #eaeaea; }
+
+        #garantia .warranty-search-section { text-align: center; padding: 40px 20px; }
+        #garantia .warranty-search-section p { margin-bottom: 15px; color: #444; font-size: 0.95rem; }
+        #garantia .search-box { display: flex; justify-content: center; max-width: 600px; margin: 0 auto; gap: 10px; }
+        #garantia .search-box input {
+            flex-grow: 1; padding: 12px 20px; border: 1px solid #ccc; border-radius: 100px;
+            font-size: 1rem; color: #666; outline: none;
+        }
+        #garantia .search-box input:focus { border-color: #f26522; }
+        #garantia .search-box button {
+            background: linear-gradient(to right, #ff3c00, #ff9c00); color: white; border: none;
+            padding: 12px 35px; font-size: 1.2rem; font-weight: bold; border-radius: 100px; cursor: pointer; transition: background-color 0.3s;
+        }
+        #garantia .search-box button:hover { background-color: #d9531e; }
+
+        #garantia #main-results-container { max-width: 1200px; margin: 0 auto 40px; }
+
+        #garantia .result-card { background: #fff; border-radius: 16px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); display: flex; overflow: hidden; }
+        #garantia .result-image { background-color: #eee; width: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; }
+        #garantia .result-image img { max-width: 100%; height: auto; display: block; object-fit: cover; }
+        #garantia .result-details { padding: 25px; flex-grow: 1; }
+        #garantia .result-title { color: #555; font-size: 1.1rem; font-weight: 600; }
+        #garantia .result-subtitle { color: #4b4b4b; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px; }
+        #garantia .details-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 25px; }
+        #garantia .details-col h4 { color: #f26522; margin-bottom: 6px; font-size: 1rem; font-weight: 600; }
+        #garantia .details-col ul { list-style: none; }
+        #garantia .details-col ul li { font-size: 0.95rem; margin-bottom: 0; color: #444; display: flex; align-items: center; gap: 10px; }
+        #garantia .details-col.specs ul li::before { content: '\25B6'; font-size: 0.6rem; color: #666; }
+
+        #garantia .progress-section { margin: 25px 0; }
+        #garantia .progress-bar-container { width: 100%; height: 20px; background-color: #e5e7eb; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+        #garantia .progress-bar-fill { height: 100%; background-color: #f26522; width: 40%; transition: width 0.6s ease; }
+        #garantia .progress-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: #555; padding: 0 5px; }
+        #garantia .progress-labels span { display: flex; align-items: center; gap: 5px; }
+
+        #garantia .bottom-info { display: flex; justify-content: space-between; align-items: flex-end; padding-top: 0; }
+        #garantia .warranty-date { font-weight: bold; color: #333; font-size: 0.95rem; }
+        #garantia .warranty-link { font-size: 0.7rem; color: #0066cc; text-decoration: none; display: block; margin-top: 0; cursor: pointer; }
+        #garantia .action-buttons { display: flex; gap: 15px; }
+        #garantia .btn-outline {
+            border: 1px solid #f26522; color: #f26522; background: transparent; padding: 6px 15px;
+            font-size: 0.85rem; border-radius: 100px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.3s;
+        }
+        #garantia .btn-outline:hover { background: #f26522; color: #fff; }
+
+        #garantia .progress-bar-fill.new-stage { background-color: #4CAF50; }
+        #garantia .progress-bar-fill.mid-stage { background-color: #FFC107; }
+        #garantia .progress-bar-fill.ending-stage { background-color: #F44336; animation: pulse 1.5s infinite; }
+        #garantia .progress-bar-fill.expired-stage { background-color: #9E9E9E; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        #garantia .stage-labels { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 14px; font-size: 12px; }
+        #garantia .stage-labels span {
+            color: #aaa; background-color: #f4f4f4; padding: 6px 14px; border-radius: 20px;
+            font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; display: inline-flex; align-items: center; gap: 4px;
+        }
+        #garantia .stage-labels span.active { font-weight: bold; color: #fff; }
+        #garantia .stage-labels span.active:nth-child(1) { background-color: #9E9E9E; }
+        #garantia .stage-labels span.active:nth-child(2) { background-color: #F44336; }
+        #garantia .stage-labels span.active:nth-child(3) { background-color: #FFC107; }
+        #garantia .stage-labels span.active:nth-child(4) { background-color: #4CAF50; }
+
+        /* ---- Drivers accordion ---- */
+        #garantia .drivers-container { display: none; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); }
+        #garantia .drivers-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+        #garantia .drivers-filters { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        #garantia .filter-pill {
+            background: #f4f4f4; border: 1px solid #ddd; color: #555; padding: 6px 16px;
+            border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        #garantia .filter-pill.active { background: linear-gradient(to right,#ff3c00,#ff9c00); color:#fff; border-color: transparent; }
+        #garantia .view-icons { display: flex; gap: 10px; color: #aaa; font-size: 1.1rem; }
+        #garantia .view-icons i { cursor: pointer; transition: color 0.2s; }
+        #garantia .view-icons i.active-view { color: #f26522; }
+        #garantia .drivers-list-view { display: flex; flex-direction: column; gap: 12px; }
+        #garantia .driver-accordion-group { border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
+        #garantia .driver-accordion-trigger {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 16px 20px; background: #fafafa; cursor: pointer; transition: background 0.2s;
+        }
+        #garantia .driver-accordion-trigger:hover { background: #f0f0f0; }
+        #garantia .card-icon-title { display: flex; align-items: center; gap: 14px; font-weight: 700; color: #333; font-size: 0.95rem; }
+        #garantia .card-icon-title i { font-size: 1.3rem; color: #f26522; width: 24px; text-align: center; }
+        #garantia .toggle-icon { color: #aaa; font-size: 0.85rem; transition: transform 0.25s; }
+        #garantia .driver-accordion-group.open .toggle-icon { transform: rotate(180deg); }
+        #garantia .accordion-content { display: none; padding: 0 20px; background: #fff; }
+        #garantia .driver-accordion-group.open .accordion-content { display: block; }
+        #garantia .driver-file-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 0; border-bottom: 1px solid #f0f0f0; gap: 16px; flex-wrap: wrap;
+        }
+        #garantia .driver-file-item:last-child { border-bottom: none; }
+        #garantia .file-details { flex: 1; min-width: 0; }
+        #garantia .file-details h4 { font-size: 0.9rem; color: #333; margin: 0 0 6px; font-weight: 600; }
+        #garantia .file-meta { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.78rem; color: #777; }
+        #garantia .file-meta span strong { color: #555; }
+
+        /* ---- Drivers Grid View ---- */
+        #garantia .drivers-grid-view { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        #garantia .driver-card-grid {
+            padding: 25px 15px; text-align: center; display: flex; flex-direction: column;
+            align-items: center; min-height: 180px; position: relative;
+            background: #f9f9f9; border-radius: 12px; transition: all 0.3s ease; border: 1px solid #eee;
+        }
+        #garantia .driver-card-grid:hover { border-color: #f26522; box-shadow: 0 5px 20px rgba(242,101,34,0.1); transform: translateY(-3px); }
+        #garantia .driver-card-grid .icon-wrapper {
+            width: 60px; height: 60px; border-radius: 50%; background: #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
+        }
+        #garantia .driver-card-grid .icon-wrapper i { font-size: 1.8rem; color: #f26522; margin: 0; }
+        #garantia .driver-card-grid h4.driver-cat { font-size: 0.95rem; font-weight: 700; color: #333; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.02em; }
+        #garantia .driver-card-grid span.driver-name {
+            font-size: 0.75rem; color: #777; margin-bottom: 15px; 
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            text-overflow: ellipsis; line-height: 1.3;
+        }
+
+        #garantia .video-gallery-container { display: none; background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); }
+        #garantia .video-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        #garantia .video-card { background: #fdfdfd; border-radius: 8px; overflow: hidden; transition: box-shadow 0.3s ease; display: flex; flex-direction: column; }
+        #garantia .video-card:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        #garantia .video-thumbnail { width: 100%; aspect-ratio: 16/9; position: relative; background-color: #000; }
+        #garantia .video-thumbnail iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        #garantia .video-details { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        #garantia .video-title { color: #333; font-size: 0.9rem; line-height: 1.4; }
+
+        html { scroll-behavior: smooth; }
+        #garantia .terms-container { display: none; background: #fff; border-radius: 16px; box-shadow: 0 5px 25px rgba(0,0,0,0.05); overflow: hidden; scroll-margin-top: 110px; }
+        #garantia .terms-layout { display: flex; min-height: 500px; }
+        #garantia .terms-sidebar { width: 280px; background-color: #f9f9f9; padding: 30px; border-right: 1px solid #eaeaea; flex-shrink: 0; }
+        #garantia .terms-sidebar h4 { color: #333; font-size: 1.1rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f26522; }
+        #garantia .terms-nav { list-style: none; }
+        #garantia .terms-nav li { margin-bottom: 12px; }
+        #garantia .terms-nav a { text-decoration: none; color: #555; font-size: 0.95rem; transition: color 0.3s; display: block; cursor: pointer; }
+        #garantia .terms-nav a:hover, #garantia .terms-nav a.active-term { color: #f26522; font-weight: 600; padding-left: 5px; }
+        #garantia .terms-content { padding: 40px; flex-grow: 1; max-width: 900px; }
+        #garantia .terms-content h2 { font-size: 1.8rem; color: #222; margin-bottom: 5px; }
+
+        #garantia .pdf-controls { display: flex; gap: 10px; margin-bottom: 15px; padding: 10px; background-color: #f8f9fa; border-radius: 4px; flex-wrap: wrap; align-items: center; }
+        #garantia .pdf-btn { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; }
+        #garantia .pdf-btn-primary { background: #f26522; color: #fff; }
+        #garantia .pdf-btn-success { background: #28a745; color: #fff; }
+        #garantia .pdf-zoom-level { font-weight: 600; color: #333; margin-left: 10px; }
+        #garantia .pdf-center-container { text-align: center; }
+        #garantia #pdf-viewer canvas { margin: 5px auto; max-width: 100%; height: auto !important; }
+        #garantia .pdf-fullscreen-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; }
+        #garantia .pdf-fullscreen-modal.active { display: flex; align-items: center; justify-content: center; }
+        #garantia .pdf-fullscreen-content { width: 95%; height: 95%; background: #fff; border-radius: 8px; display: flex; flex-direction: column; overflow: hidden; }
+        #garantia .pdf-fullscreen-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f8f9fa; border-bottom: 1px solid #ddd; }
+        #garantia .pdf-fullscreen-header h3 { margin: 0; }
+        #garantia .pdf-close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #333; }
+        #garantia .pdf-fullscreen-viewer { flex: 1; overflow: auto; padding: 20px; text-align: center; }
+        #garantia #pdf-fullscreen-container canvas { margin: 5px auto; max-width: 100%; }
+
+        #garantia .loading-container { display: flex; flex-direction: column; align-items: center; padding: 2rem; }
+        #garantia .modern-spinner { width: 50px; height: 50px; border: 4px solid rgba(242,101,34,0.3); border-radius: 50%; border-top-color: #f26522; animation: spin 1s ease-in-out infinite; margin-bottom: 1rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #garantia .no-data, #garantia .no-results { text-align: center; padding: 3rem; color: #999; font-size: 1rem; }
+
+        @media (max-width: 992px) {
+            #garantia .support-hero h1 { font-size: 2rem; }
+            #garantia .support-hero p { font-size: 1.1rem; }
+            #garantia .result-card { flex-direction: column; }
+            #garantia .result-image { width: 100%; padding: 30px; }
+            #garantia .details-grid { grid-template-columns: 1fr; }
+            #garantia .bottom-info { flex-direction: column; align-items: flex-start; gap: 20px; }
+            #garantia .video-grid { grid-template-columns: repeat(2, 1fr); }
+            #garantia .terms-layout { flex-direction: column; }
+            #garantia .terms-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #eaeaea; }
+            #garantia .terms-content { padding: 25px; }
+            #garantia .support-nav { margin: 0 20px; }
+            #garantia .support-nav li a { padding: 12px 20px; font-size: 0.95rem; }
+        }
+        @media (max-width: 768px) {
+            #garantia .support-nav { justify-content: center; margin: 0 10px; }
+            #garantia .support-nav li a { padding: 10px 16px; font-size: 0.85rem; gap: 6px; }
+        }
+        @media (max-width: 576px) {
+            #garantia .support-hero { padding: 40px 16px; }
+            #garantia .support-hero h1 { font-size: 1.4rem; line-height: 1.25; }
+            #garantia .support-hero p { font-size: 0.95rem; }
+            #garantia .search-box { flex-direction: column; align-items: stretch; }
+            #garantia .search-box input { width: 100%; min-width: 0; }
+            #garantia .search-box button { width: 100%; }
+            #garantia .video-grid { grid-template-columns: 1fr; }
+        }
+
+        @keyframes searchHighlightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(242, 101, 34, 0.5); border-color: #f26522; }
+            50% { box-shadow: 0 0 0 8px rgba(242, 101, 34, 0.2); border-color: #f26522; }
+            100% { box-shadow: none; border-color: #ccc; }
+        }
+        #garantia .search-box input.search-highlight-pulse {
+            animation: searchHighlightPulse 1.8s ease-in-out;
+            border-color: #f26522;
+        }
+
+        /* Auto-detect OEM */
+        #garantia .auto-detect-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-top: 18px;
+        }
+        #garantia .btn-auto-detect {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            color: #f26522;
+            border: 1.5px solid #f26522;
+            padding: 9px 24px;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 8px rgba(242, 101, 34, 0.08);
+        }
+        #garantia .btn-auto-detect:hover {
+            background: #f26522;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(242, 101, 34, 0.22);
+        }
+        #garantia .auto-detect-hint {
+            font-size: 0.82rem;
+            color: #777;
+        }
+
+        /* Modal Deteccion */
+        .detect-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .detect-modal-box {
+            background: #ffffff;
+            border-radius: 16px;
+            max-width: 520px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+            animation: modalFadeIn 0.3s ease;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .detect-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+        .detect-modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #222;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .detect-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .detect-modal-close:hover {
+            color: #f26522;
+        }
+        .detect-modal-body {
+            padding: 24px;
+            text-align: center;
+        }
+        .detect-modal-footer {
+            padding: 14px 24px;
+            background: #fafafa;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+@endsection
 @section('content')
-    <main id="main">
+<div id="garantia">
+    <section class="support-hero">
+        <div class="container">
+            <h1>Bienvenido al centro de soporte Kenya</h1>
+            <p>Controladores, actualizaciones, guías prácticas, ayuda técnica y más</p>
+        </div>
+    </section>
 
-        <!-- ======= Breadcrumbs Section ======= -->
-        <section class="breadcrumbs">
-            <div class="container">
+    <div class="support-nav-container">
+        <ul class="support-nav">
+            <li><a class="support-tab active" data-target="tab-garantia"><i class="fa-solid fa-certificate"></i> Garantía</a></li>
+            <li><a class="support-tab" data-target="tab-controladores"><i class="fa-solid fa-gear"></i> Controladores</a></li>
+            <li><a class="support-tab" data-target="tab-galeria"><i class="fa-brands fa-youtube"></i> Galería de videos</a></li>
+            <li><a class="support-tab" data-target="tab-terminos"><i class="fa-solid fa-file-invoice"></i> Términos y condiciones</a></li>
+        </ul>
+    </div>
 
-                <div class="d-flex justify-content-between align-items-center">
-                    <h2>Buscar soporte</h2>
-                    <ol>
-                        <li><a href="{{ url('/') }}"><i class="bx bx-home"></i> Inicio</a></li>
-                        <li>Consultar</li>
-                    </ol>
+    <section class="warranty-search-section">
+        <p>Identifique su producto para obtener información sobre el estado de su garantía o descargar controladores.</p>
+        <div class="search-box">
+            <input type="text" v-model="search" placeholder="Ingrese su número de serie" maxlength="14">
+            <button v-on:click="Buscar">Buscar</button>
+        </div>
+        <p v-if="errors.search" style="color: #f26522; margin-top: 15px; font-weight: 600;">@{{ errors.search[0] }}</p>
+
+        <!-- Detección automática para PCs Kenya -->
+        <div class="auto-detect-wrapper">
+            <button type="button" class="btn-auto-detect" id="btnAutoDetect" onclick="detectarPCKenya()">
+                <i class="fa-solid fa-laptop-medical"></i> Detectar mi PC Kenya automáticamente
+            </button>
+            <span class="auto-detect-hint">Lee la serie de tu equipo de forma rápida y segura sin buscar la etiqueta.</span>
+        </div>
+    </section>
+
+    <!-- Empty State / Guía informativa para descarga de controladores -->
+    <div id="drivers-empty-prompt" style="display: none; max-width: 850px; margin: 0 auto 40px; padding: 28px 24px; background: #fff8f5; border: 1.5px dashed #f26522; border-radius: 16px; text-align: center;">
+        <div style="width: 56px; height: 56px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 4px 14px rgba(242,101,34,0.18);">
+            <i class="fa-solid fa-gear" style="font-size: 1.7rem; color: #f26522;"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; color: #222; font-weight: 700; margin-bottom: 8px;">
+            Identifica tu equipo KENYA para descargar controladores
+        </h3>
+        <p style="color: #555; font-size: 0.95rem; line-height: 1.6; max-width: 680px; margin: 0 auto 16px;">
+            Para garantizar la compatibilidad exacta y el rendimiento óptimo de tu computadora, los controladores se asignan según la placa madre, procesador y componentes específicos de cada equipo. 
+            <strong>Ingresa el número de serie en la casilla superior</strong> para listar los drivers certificados (Audio, Chipset, Red, Video).
+        </p>
+        <div style="display: inline-flex; align-items: center; gap: 8px; background: #fff; padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; color: #666; border: 1px solid #fed7c3;">
+            <i class="fa-solid fa-circle-info" style="color: #f26522;"></i>
+            <span><strong>¿Dónde encontrarlo?</strong> En la etiqueta posterior del CPU o laptop con código de barras de 14 caracteres.</span>
+        </div>
+        <div style="margin-top: 18px;">
+            <button type="button" class="btn-auto-detect" onclick="detectarPCKenya()">
+                <i class="fa-solid fa-laptop-medical"></i> O detectar mi PC Kenya automáticamente
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Guía de Detección Automática -->
+    <div id="modal-detectar-kenya" class="detect-modal-backdrop" style="display: none;">
+        <div class="detect-modal-box">
+            <div class="detect-modal-header">
+                <h3><i class="fa-solid fa-laptop-medical" style="color: #f26522;"></i> Detección Automática de Equipo</h3>
+                <button type="button" class="detect-modal-close" onclick="cerrarModalDetectar()">&times;</button>
+            </div>
+            <div class="detect-modal-body">
+                <p style="color: #444; font-size: 0.95rem; margin-bottom: 18px; line-height: 1.5;">
+                    Si tu equipo no cuenta aún con el protocolo OEM de fábrica o se formateó el sistema, puedes usar nuestro <strong>Asistente Portable de 1 Clic</strong>:
+                </p>
+                <div style="background: #fdfaf8; border-radius: 12px; padding: 18px; border: 1.5px solid #ffe0d0; margin-bottom: 16px; text-align: left;">
+                    <div style="font-weight: 700; color: #222; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-download" style="color: #f26522;"></i> Opción 1: Descargar Asistente de 1 Clic
+                    </div>
+                    <p style="font-size: 0.86rem; color: #666; margin: 0 0 12px;">Descarga y abre el detector ligero. Solo lee la serie de tu hardware y abre esta página automáticamente:</p>
+                    <a href="{{ asset('oem/detectar-pc-kenya.bat') }}" download class="btn-download-detector" style="display: inline-flex; align-items: center; gap: 8px; background: linear-gradient(to right, #ff3c00, #ff9c00); color: #fff; text-decoration: none; padding: 10px 22px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 12px rgba(242,101,34,0.25);">
+                        <i class="fa-solid fa-file-arrow-down"></i> Descargar Detector Kenya (.bat)
+                    </a>
+                </div>
+                <div style="background: #f8f8f8; border-radius: 12px; padding: 16px 18px; border: 1px solid #eee; text-align: left;">
+                    <div style="font-weight: 700; color: #222; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-barcode" style="color: #f26522;"></i> Opción 2: Ingresar la serie manualmente
+                    </div>
+                    <p style="font-size: 0.86rem; color: #666; margin: 0;">Revisa la etiqueta de 14 dígitos en la parte trasera de tu CPU o base de la laptop.</p>
+                </div>
+            </div>
+            <div class="detect-modal-footer">
+                <button type="button" class="btn-outline" onclick="cerrarModalDetectar()" style="padding: 8px 24px; cursor: pointer;">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-results-container" style="display: none;" v-show="state != null">
+        <div v-if="loading" class="loading-container">
+            <div class="modern-spinner"></div>
+            <p style="font-size: 1.25rem; color: #6c757d;">Buscando...</p>
+        </div>
+
+        <div v-if="state == 'success' && !loading">
+            <article class="result-card" id="tab-garantia-content">
+                <div class="result-image">
+                    <img :src="(garantia.get_productos && garantia.get_productos[0] && garantia.get_productos[0].modelo && (garantia.get_productos[0].modelo.img_url || garantia.get_productos[0].modelo.img_mod)) ? (garantia.get_productos[0].modelo.img_url || '/storage/' + garantia.get_productos[0].modelo.img_mod) : '{{ asset('producto.jpg') }}'" alt="Producto">
+                </div>
+                <div class="result-details">
+                    <h3 class="result-title">Estado del Producto</h3>
+                    <h2 class="result-subtitle">@{{ garantia.get_productos && garantia.get_productos[0] ? garantia.get_productos[0].nombre + ' (' + garantia.serie + ')' : garantia.serie }}</h2>
+
+                    <div class="details-grid">
+                        <div class="details-col">
+                            <h4>Detalles</h4>
+                            <ul>
+                                <li><i class="fa-solid fa-barcode"></i> <strong>Serie:</strong> @{{ garantia.serie }}</li>
+                                <li><i class="fa-regular fa-calendar-days"></i> <strong>Inicia:</strong> @{{ garantia.fecha_venta }}</li>
+                                <li><i class="fa-regular fa-clock"></i> <strong>Garantía:</strong> @{{ garantia.garantia }} meses</li>
+                            </ul>
+                        </div>
+                        <div class="details-col specs">
+                            <h4>Especificaciones</h4>
+                            <ul>
+                                <li v-if="garantia.get_productos && garantia.get_productos[0] && garantia.get_productos[0].procesador">@{{ garantia.get_productos[0].procesador }}</li>
+                                <li v-if="garantia.get_productos && garantia.get_productos[0] && garantia.get_productos[0].ram">@{{ garantia.get_productos[0].ram }}</li>
+                                <li v-if="garantia.get_productos && garantia.get_productos[0] && garantia.get_productos[0].almacenamiento">@{{ garantia.get_productos[0].almacenamiento }}</li>
+                                <li v-if="garantia.get_productos && garantia.get_productos[0] && garantia.get_productos[0].sistema_operativo">@{{ garantia.get_productos[0].sistema_operativo }}</li>
+                                <li v-if="garantia.get_productos && garantia.get_productos[0] && garantia.get_productos[0].suite_ofimatica">@{{ garantia.get_productos[0].suite_ofimatica }}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="progress-section">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" :class="warrantyStageClass" :style="'width:' + porcentajeGarantia + '%'"></div>
+                        </div>
+                        <div class="progress-labels">
+                            <span><i class="fa-regular fa-circle-xmark"></i> Vencida</span>
+                            <span><i class="fa-solid fa-circle-exclamation"></i> Por vencer</span>
+                            <span><i class="fa-regular fa-clock"></i> Intermedia</span>
+                            <span><i class="fa-regular fa-circle-check"></i> Nueva</span>
+                        </div>
+                        <div class="stage-labels">
+                            <span :class="{ 'active': warrantyStage === 'expired' }"><i class="fa-regular fa-circle-xmark"></i> Vencida</span>
+                            <span :class="{ 'active': warrantyStage === 'ending' }"><i class="fa-solid fa-circle-exclamation"></i> Por vencer</span>
+                            <span :class="{ 'active': warrantyStage === 'mid' }"><i class="fa-regular fa-clock"></i> Intermedia</span>
+                            <span :class="{ 'active': warrantyStage === 'new' }"><i class="fa-regular fa-circle-check"></i> Nueva</span>
+                        </div>
+                    </div>
+
+                    <div class="bottom-info">
+                        <div>
+                            <div class="warranty-date"><i class="fa-regular fa-calendar-check"></i> La garantía vence: @{{ garantia.fecha_Vencimiento }}</div>
+                            <a class="warranty-link" href="#">&gt; Términos y condiciones de la garantía.</a>
+                        </div>
+                        <div class="action-buttons" v-if="garantia.get_productos && garantia.get_productos[0]">
+                            <a :href="'/storage/' + garantia.get_productos[0].ficha_tecnica" target="_blank" class="btn-outline" v-if="garantia.get_productos[0].ficha_tecnica">
+                                <i class="fa-solid fa-download"></i> Ficha Técnica
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <div class="drivers-container" style="display: none; margin-top: 0;" id="tab-controladores-content">
+                <div class="drivers-header">
+                    <div class="drivers-filters">
+                        <button class="filter-pill active">Todas las actualizaciones (@{{ filteredDrivers.length }})</button>
+                    </div>
+                    <div class="view-icons">
+                        <i class="fa-solid fa-table-cells-large" :class="{'active-view': viewMode === 'grid'}" @click="viewMode = 'grid'"></i>
+                        <i class="fa-solid fa-list" :class="{'active-view': viewMode === 'list'}" @click="viewMode = 'list'"></i>
+                    </div>
                 </div>
 
-            </div>
-        </section><!-- Breadcrumbs Section -->
-
-        <section class="warranty-section" id="garantia">
-            <div class="warranty-container">
-                <!-- Pestañas -->
-                <div class="tabs-container">
-                    <ul class="nav nav-tabs" id="warrantyTabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="warranty-tab" data-toggle="tab" href="#warranty" role="tab">
-                                <i class="bx bx-shield"></i> Garantía
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="drivers-tab" data-toggle="tab" href="#drivers" role="tab">
-                                <i class="bx bx-chip"></i> Controladores
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab">
-                                <i class="bx bx-video"></i> Galería de Video
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="terms-tab" data-toggle="tab" href="#terms" role="tab">
-                                <i class="bx bx-file"></i> Términos y Condiciones
-                            </a>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content" id="warrantyTabsContent">
-                        <!-- Pestaña de Garantía -->
-                        <div class="tab-pane fade show active" id="warranty" role="tabpanel">
-                            <div class="warranty-card">
-                                <div class="card-header">
-                                    <div class="product-title" v-for="nom in garantia.get_productos">
-                                        Producto: @{{ nom.nombre }}
-                                    </div>
+                <div v-if="filteredDrivers.length > 0">
+                    
+                    <!-- VISTA DE LISTA (ACORDEÓN) -->
+                    <div class="drivers-list-view" v-if="viewMode === 'list'">
+                        <div v-for="(drivers, categoria) in driversByCategory" class="driver-accordion-group" :key="categoria">
+                            <div class="driver-accordion-trigger" @click="toggleAccordion($event)">
+                                <div class="card-icon-title">
+                                    <i :class="getCategoryIcon(categoria)"></i>
+                                    <span>@{{ categoria }} (@{{ drivers.length }})</span>
                                 </div>
-                                <div class="card-content">
-                                    <div class="details-column">
-                                        <div class="section-title">
-                                            <iconify-icon icon="zondicons:align-center"></iconify-icon> DETALLES
-                                        </div>
-                                        <div class="detail-item">
-                                            <i class="fa-solid fa-tv"></i> Serie: @{{ garantia.serie }}
-                                        </div>
-                                        <div class="detail-item">
-                                            <iconify-icon icon="bx:calendar"></iconify-icon> Inicia: @{{ garantia.fecha_venta }}
-                                        </div>
-                                        <div class="detail-item">
-                                            <iconify-icon icon="bx:time"></iconify-icon> Garantía: @{{ garantia.garantia }}
-                                            Meses
-                                        </div>
-                                        <div class="product-image-container">
-                                            <img v-for="producto in garantia.get_productos"
-                                                :src="producto.modelo && producto.modelo.img_mod ?
-                                                    '/storage/' + producto.modelo.img_mod :
-                                                    (producto.imagen_1 ? '/storage/' + producto.imagen_1 :
-                                                        '/producto.jpg')"
-                                                class="product-image" :alt="'Imagen de ' + producto.nombre">
-                                        </div>
-
-                                        <!-- Nuevo sistema de progreso por etapas -->
-                                        <div class="warranty-progress">
-                                            <div class="progress">
-                                                <div class="progress-bar"
-                                                    :style="'width:' + calcularPorcentajeGarantia() + '%'"
-                                                    :class="getWarrantyStageClass()">
-                                                    <span class="progress-text" v-if="showDaysCount()">
-                                                        @{{ diasRestantes }} días restantes
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="warranty-stage-info">
-                                                <span :class="{ 'active': warrantyStage === 'expired' }">
-                                                    <i class="bx bx-x-circle"></i> Vencida
-                                                </span>
-                                                <span :class="{ 'active': warrantyStage === 'ending' }">
-                                                    <i class="bx bx-error-circle"></i> Por vencer
-                                                </span>
-                                                <span :class="{ 'active': warrantyStage === 'mid' }">
-                                                    <i class="bx bx-time"></i> Intermedia
-                                                </span>
-                                                <span :class="{ 'active': warrantyStage === 'new' }">
-                                                    <i class="bx bx-check-circle"></i> Nueva
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="expiration-message" :class="warrantyStage">
-                                            <iconify-icon icon="bx:calendar"></iconify-icon>
-                                            <span v-if="warrantyStage === 'new'">
-                                                Garantía nueva - @{{ diasRestantes }} días restantes (Vence:
-                                                @{{ garantia.fecha_Vencimiento }})
-                                            </span>
-                                            <span v-else-if="warrantyStage === 'mid'">
-                                                Garantía en etapa intermedia - @{{ diasRestantes }} días restantes (Vence:
-                                                @{{ garantia.fecha_Vencimiento }})
-                                            </span>
-                                            <span v-else-if="warrantyStage === 'ending'">
-                                                ¡Garantía por vencer! - Solo @{{ diasRestantes }} días restantes (Vence:
-                                                @{{ garantia.fecha_Vencimiento }})
-                                            </span>
-                                            <span v-else-if="warrantyStage === 'expired'">
-                                                Garantía vencida el @{{ garantia.fecha_Vencimiento }}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="tech-column" v-for="det in garantia.get_productos">
-                                        <div class="section-title">
-                                            <i class="bx bx-chip"></i> ESPECIFICACIONES
-                                        </div>
-                                        <div class="tech-specs">
-                                            <p v-if="det.procesador"><i class="bx bx-right-arrow"></i>
-                                                @{{ det.procesador }}</p>
-                                            <p v-if="det.ram"><i class="bx bx-right-arrow"></i>
-                                                @{{ det.ram }}</p>
-                                            <p v-if="det.almacenamiento"><i class="bx bx-right-arrow"></i>
-                                                @{{ det.almacenamiento }}</p>
-                                            <p v-if="det.sistema_operativo"><i class="bx bx-right-arrow"></i>
-                                                @{{ det.sistema_operativo }}</p>
-                                            <p v-if="det.suite_ofimatica"><i class="bx bx-right-arrow"></i>
-                                                @{{ det.suite_ofimatica }}</p>
-                                        </div>
-
-                                        <div class="section-title" style="margin-top: 20px;">
-                                            <i class="bx bx-file-blank"></i> DOCUMENTOS
-                                        </div>
-                                        <div class="tech-specs">
-                                            <a :href="'../storage/' + det.ficha_tecnica" target="_blank"
-                                                class="tech-link">
-                                                <iconify-icon icon="bx:download"></iconify-icon> FICHA TÉCNICA
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <i class="fa-solid fa-chevron-down toggle-icon"></i>
                             </div>
-                        </div>
-
-                        <!-- Pestaña de Controladores -->
-                        <div class="tab-pane fade" id="drivers" role="tabpanel">
-                            <div class="drivers-container">
-                                <div class="section-title">
-                                    <i class="bx bx-chip"></i> CONTROLADORES DISPONIBLES
-                                </div>
-                                <div v-if="garantia.get_driversprod && garantia.get_driversprod.get_drivers && garantia.get_driversprod.get_drivers.length"
-                                    class="drivers-grid">
-                                    <div v-for="drivers in garantia.get_driversprod.get_drivers" class="driver-card">
-                                        <div class="driver-name">@{{ drivers.nombre }}</div>
-                                        <a :href="'../storage/' + drivers.link" target="_blank" class="driver-download">
-                                            <iconify-icon icon="bx:download"></iconify-icon> Descargar
-                                        </a>
+                            <div class="accordion-content">
+                                <div v-for="driver in drivers" class="driver-file-item" :key="driver.id">
+                                    <div class="file-details">
+                                        <h4>@{{ driver.nombre }}</h4>
+                                        <div class="file-meta">
+                                            <span v-if="driver.version"><strong>Versión:</strong> @{{ driver.version }}</span>
+                                            <span v-if="driver.liberado"><strong>Fecha:</strong> @{{ driver.liberado }}</span>
+                                            <span v-if="driver.tamano"><strong>Tamaño:</strong> @{{ driver.tamano }} @{{ driver.unidad }}</span>
+                                            <span v-if="driver.gravedad"><strong>Gravedad:</strong> @{{ driver.gravedad }}</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div v-else class="no-data">
-                                    <i class="bx bx-info-circle"></i> No hay controladores disponibles.
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pestaña de Galería de Video -->
-                        <div class="tab-pane fade" id="gallery" role="tabpanel">
-                            <div class="video-gallery">
-                                <div class="section-title">
-                                    <i class="bx bx-video"></i> VIDEOS RELACIONADOS
-                                </div>
-                                <div class="videos-grid">
-                                    <div class="video-item">
-                                        <iframe width="100%" height="200"
-                                            src="https://www.youtube.com/embed/ejemplo1" frameborder="0"
-                                            allowfullscreen></iframe>
-                                        <div class="video-title">Instalación del Producto</div>
-                                    </div>
-                                    <div class="video-item">
-                                        <iframe width="100%" height="200"
-                                            src="https://www.youtube.com/embed/ejemplo2" frameborder="0"
-                                            allowfullscreen></iframe>
-                                        <div class="video-title">Configuración Básica</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Pestaña de Términos y Condiciones -->
-                        <div class="tab-pane fade" id="terms" role="tabpanel">
-                            <div class="terms-container">
-                                <div class="section-title">
-                                    <i class="bx bx-file"></i> TÉRMINOS Y CONDICIONES DE GARANTÍA
-                                </div>
-                                <div class="terms-content">
-                                    <p>1. La garantía cubre defectos de fabricación bajo condiciones normales de uso.</p>
-                                    <p>2. El período de garantía es de @{{ garantia.garantia || 'X' }} meses a partir de la fecha de
-                                        compra.</p>
-                                    <p>3. La garantía no cubre daños por mal uso, accidentes o modificaciones no
-                                        autorizadas.</p>
-                                    <p>4. Para hacer válida la garantía debe presentar este comprobante y el producto con su
-                                        número de serie legible.</p>
-                                    <p>5. La garantía no incluye daños por fenómenos naturales o condiciones ambientales
-                                        extremas.</p>
-                                    <p>6. El servicio de garantía puede incluir reparación o reemplazo del producto a
-                                        criterio del fabricante.</p>
+                                    <a :href="'/storage/' + driver.link" target="_blank" class="btn-outline">
+                                        <i class="fa-solid fa-download"></i> Descargar
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- VISTA DE CUADRÍCULA (GRID) -->
+                    <div class="drivers-grid-view" v-if="viewMode === 'grid'">
+                        <div v-for="driver in filteredDrivers" class="driver-card-grid" :key="driver.id">
+                            <div class="icon-wrapper">
+                                <i :class="getCategoryIcon(driver.categoria)"></i>
+                            </div>
+                            <h4 class="driver-cat">@{{ driver.categoria }}</h4>
+                            <span class="driver-name" :title="driver.nombre">@{{ driver.nombre }}</span>
+                            <a :href="'/storage/' + driver.link" target="_blank" class="btn-outline" style="margin-top: auto;">
+                                <i class="fa-solid fa-download"></i> Descargar
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                <div v-else class="no-data"><i class="fa-solid fa-magnifying-glass"></i> Sin controladores disponibles para este producto</div>
+            </div>
+        </div>
+
+        <div v-else-if="state == 'error' && !loading" class="no-results">
+            No se encontró garantía para <strong>@{{ search }}</strong>
+        </div>
+    </div>
+
+    <div class="video-gallery-container" id="tab-galeria-content" style="display: none; max-width: 1200px; margin: 0 auto 40px;">
+        <h3 style="margin-bottom: 20px;"><i class="fa-brands fa-youtube"></i> GALERÍA DE VIDEOS</h3>
+        <div class="video-grid">
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-details">
+                    <h4 class="video-title">Embalaje de piezas de servicio de unidades reemplazables Kenya</h4>
                 </div>
             </div>
-        </section>
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-details">
+                    <h4 class="video-title">Cómo encontrar la información de su garantía Kenya</h4>
+                </div>
+            </div>
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-details">
+                    <h4 class="video-title">Cómo localizar un centro de reparación Kenya</h4>
+                </div>
+            </div>
+            <div class="video-card">
+                <div class="video-thumbnail">
+                    <iframe data-src="https://www.youtube-nocookie.com/embed/mFswNoideic?rel=0" src="about:blank" title="YouTube" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+                <div class="video-details">
+                    <h4 class="video-title">Recorriendo la BIOS UEFI Kenya</h4>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </main><!-- End #main -->
+    <div id="terminos" style="scroll-margin-top: 110px;"></div>
+    <div id="terms" style="scroll-margin-top: 110px;"></div>
+    <div class="terms-container" id="tab-terminos-content" style="display: none; max-width: 1200px; margin: 0 auto 40px;">
+        <div class="terms-layout">
+            <aside class="terms-sidebar">
+                <h4>Índice de Políticas</h4>
+                <ul class="terms-nav">
+                    <li><a class="active-term" href="#">1. Vigencia de la garantía</a></li>
+                    <li><a href="#">2. Información general</a></li>
+                    <li><a href="#">3. Condiciones</a></li>
+                    <li><a href="#">4. Exclusiones</a></li>
+                </ul>
+            </aside>
+            <div class="terms-content">
+                <div id="pdf-controls" class="pdf-controls">
+                    <button id="pdf-zoom-in" class="pdf-btn pdf-btn-primary"><i class="bx bx-plus"></i> Zoom +</button>
+                    <button id="pdf-zoom-out" class="pdf-btn pdf-btn-primary"><i class="bx bx-minus"></i> Zoom -</button>
+                    <button id="pdf-fullscreen" class="pdf-btn pdf-btn-success"><i class="bx bx-fullscreen"></i> Pantalla Completa</button>
+                    <span id="pdf-zoom-level" class="pdf-zoom-level">100%</span>
+                </div>
+                <div class="pdf-center-container"><div id="pdf-viewer"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="pdf-fullscreen-modal" class="pdf-fullscreen-modal">
+        <div class="pdf-fullscreen-content">
+            <div class="pdf-fullscreen-header">
+                <h3>Términos y Condiciones</h3>
+                <button id="pdf-close-fullscreen" class="pdf-close-btn"><i class="bx bx-x"></i></button>
+            </div>
+            <div class="pdf-fullscreen-controls" style="padding: 10px 20px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #ddd;">
+                <button id="pdf-fullscreen-zoom-in" class="pdf-btn pdf-btn-primary"><i class="bx bx-plus"></i></button>
+                <button id="pdf-fullscreen-zoom-out" class="pdf-btn pdf-btn-primary"><i class="bx bx-minus"></i></button>
+                <span id="pdf-fullscreen-zoom-level" class="pdf-zoom-level">100%</span>
+            </div>
+            <div class="pdf-fullscreen-viewer"><div id="pdf-fullscreen-container"></div></div>
+        </div>
+    </div>
+</div>
 @endsection
 @section('js')
     <script>
         var my_whatsapp = {!! json_encode($whatsapp) !!};
         var mi_fecha = {!! json_encode(date('Y-m-d')) !!};
-        let serie_id = {!! json_encode(isset($serie) ? $serie : '') !!};
-        const garantiaphp = {!! json_encode($garantia) !!};
+        var garantiaphp = {!! json_encode($garantia) !!};
+        var serie_param = {!! json_encode(isset($serie) ? $serie : '') !!};
+        // Configure Axios CSRF
+        var csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        if (csrfToken && window.axios) {
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+        }
     </script>
-
+    <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
+    <script src="{{ asset('js/pdfjs/pdf.js') }}"></script>
     <script>
+        // Vue App para Garantía QR
         new Vue({
             el: '#garantia',
             data: {
-                search: '',
+                search: (garantiaphp && garantiaphp.serie) ? garantiaphp.serie : serie_param,
                 loading: false,
-                garantia: [],
+                garantia: (garantiaphp && garantiaphp.id) ? garantiaphp : [],
                 errors: [],
-                state: null,
+                state: (garantiaphp && garantiaphp.id) ? 'success' : (serie_param ? 'error' : null),
                 whatsapp: my_whatsapp,
                 vencido: mi_fecha,
-                // Nuevas propiedades para el sistema de etapas
-                warrantyStage: 'new',
-                diasRestantes: 0,
-                mesesTotalesGarantia: 0
+                tabsEnabled: !!(garantiaphp && garantiaphp.id),
+                mesesTotalesGarantia: 0,
+                viewMode: 'grid',
             },
-            created() {
-                if (serie_id !== '') {
-                    this.search = serie_id;
-                }
-                this.garantia = garantiaphp;
-
-                // Calcular el estado inicial si hay datos de garantía
-                if (this.garantia && this.garantia.fecha_Vencimiento) {
-                    this.calcularPorcentajeGarantia();
-                }
-            },
-            methods: {
-                getProductImageUrl(producto) {
-        // Verificar si es un caso especial (toner o modelo ID 10)
-        const isSpecialCase = producto.modelo &&
-            (producto.modelo.id === 10 ||
-             (producto.modelo.descripcion &&
-              producto.modelo.descripcion.toLowerCase().includes('toner')));
-
-        // Si es caso especial, usar imagen_1 si existe
-        if (isSpecialCase) {
-            return producto.imagen_1 ? this.generateImageUrl(producto.imagen_1) : '/producto.jpg';
-        }
-
-        // Para casos normales, usar img_mod del modelo si existe
-        if (producto.modelo && producto.modelo.img_mod) {
-            return this.generateImageUrl(producto.modelo.img_mod);
-        }
-
-        // Fallback a imagen_1 si no hay modelo
-        if (producto.imagen_1) {
-            return this.generateImageUrl(producto.imagen_1);
-        }
-
-        // Imagen por defecto
-        return '/producto.jpg';
-    },
-
-    generateImageUrl(path) {
-        // Usar URL absoluta en producción
-        if (process.env.NODE_ENV === 'production') {
-            return window.location.origin + '/storage/' + path;
-        }
-        return '/storage/' + path;
-    },
-                // Método para calcular el porcentaje y etapa de la garantía
-                calcularPorcentajeGarantia() {
-                    if (!this.garantia.fecha_venta || !this.garantia.fecha_Vencimiento) return 0;
-
+            computed: {
+                filteredDrivers() {
+                    if (!this.garantia.get_driversprod || !this.garantia.get_driversprod.get_drivers) return [];
+                    return this.garantia.get_driversprod.get_drivers.filter(driver => {
+                        if (!driver.serie || driver.serie.length === 0) return true;
+                        if (Array.isArray(driver.serie)) {
+                            return driver.serie.map(s => s.toUpperCase()).includes(this.search.toUpperCase());
+                        }
+                        return driver.serie.toUpperCase() === this.search.toUpperCase();
+                    });
+                },
+                porcentajeGarantia() {
+                    if (!this.garantia || !this.garantia.fecha_venta || !this.garantia.fecha_Vencimiento) return 0;
                     const fechaInicio = new Date(this.garantia.fecha_venta);
                     const fechaFin = new Date(this.garantia.fecha_Vencimiento);
                     const hoy = new Date();
-
-                    // Calcular días totales y restantes
                     const diasTotales = Math.ceil((fechaFin - fechaInicio) / (1000 * 60 * 60 * 24));
-                    this.diasRestantes = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
-
-                    // Calcular porcentaje de tiempo RESTANTE (no transcurrido)
-                    const porcentajeRestante = (this.diasRestantes / diasTotales) * 100;
-
-                    // Determinar la etapa de la garantía
-                    if (this.diasRestantes <= 0) {
-                        this.warrantyStage = 'expired';
-                    } else if (porcentajeRestante <= 20) {
-                        this.warrantyStage = 'ending'; // Últimos 20% del tiempo
-                    } else if (porcentajeRestante <= 50) {
-                        this.warrantyStage = 'mid'; // Entre 20-50% del tiempo restante
-                    } else {
-                        this.warrantyStage = 'new'; // Más del 50% del tiempo restante
-                    }
-
+                    const diasRest = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+                    const porcentajeRestante = (diasRest / diasTotales) * 100;
                     return Math.max(0, Math.min(100, porcentajeRestante));
                 },
-
-                // Método para obtener las clases CSS según la etapa
-                getWarrantyStageClass() {
+                warrantyStage() {
+                    if (!this.garantia || !this.garantia.fecha_Vencimiento) return 'new';
+                    const fechaFin = new Date(this.garantia.fecha_Vencimiento);
+                    const hoy = new Date();
+                    const diasRest = Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+                    const porcentaje = this.porcentajeGarantia;
+                    if (diasRest <= 0) return 'expired';
+                    if (porcentaje <= 20) return 'ending';
+                    if (porcentaje <= 50) return 'mid';
+                    return 'new';
+                },
+                diasRestantes() {
+                    if (!this.garantia || !this.garantia.fecha_Vencimiento) return 0;
+                    const fechaFin = new Date(this.garantia.fecha_Vencimiento);
+                    const hoy = new Date();
+                    return Math.ceil((fechaFin - hoy) / (1000 * 60 * 60 * 24));
+                },
+                warrantyStageClass() {
                     return {
                         'new-stage': this.warrantyStage === 'new',
                         'mid-stage': this.warrantyStage === 'mid',
@@ -1010,33 +713,76 @@
                         'progress-bar-striped': this.warrantyStage === 'ending'
                     };
                 },
-
-                // Mostrar conteo de días solo cuando está por vencer
-                showDaysCount() {
-                    return this.warrantyStage === 'ending' || this.warrantyStage === 'mid';
+                driversByCategory() {
+                    if (!this.filteredDrivers || this.filteredDrivers.length === 0) return {};
+                    return this.filteredDrivers.reduce((groups, driver) => {
+                        const cat = driver.categoria || 'General';
+                        if (!groups[cat]) groups[cat] = [];
+                        groups[cat].push(driver);
+                        return groups;
+                    }, {});
+                }
+            },
+            methods: {
+                getCategoryIcon(categoria) {
+                    const map = {
+                        'AUDIO':       'fa-solid fa-volume-high',
+                        'CHIPSET':     'fa-solid fa-microchip',
+                        'LAN':         'fa-solid fa-network-wired',
+                        'SATA RAID':   'fa-solid fa-hard-drive',
+                        'VGA':         'fa-solid fa-desktop',
+                        'WLAN':        'fa-solid fa-wifi',
+                        'BLUETOOTH':   'fa-brands fa-bluetooth-b',
+                        'USB':         'fa-solid fa-plug',
+                        'BIOS':        'fa-solid fa-memory',
+                        'GENERAL':     'fa-solid fa-gear',
+                    };
+                    return map[(categoria || '').toUpperCase()] || 'fa-solid fa-gear';
                 },
-
-                // Métodos existentes
+                toggleAccordion(event) {
+                    const group = event.currentTarget.closest('.driver-accordion-group');
+                    if (group) group.classList.toggle('open');
+                },
+                showDaysCount() {
+                    return this.warrantyStage !== 'expired' && this.diasRestantes <= 60;
+                },
                 Buscar() {
                     this.errors = [];
                     this.garantia = [];
+                    this.tabsEnabled = false;
 
-                    if (this.search.length == 11) {
+                    if (this.search.length == 14) {
                         this.loading = true;
-                        urlBuscar = (serie_id !== '') ? '../garantia/buscar' : 'garantia/buscar';
-                        axios.post(urlBuscar, {
+                        axios.post('{{ url("/consultar/garantia/buscar") }}', {
                             search: this.search,
                         }).then(response => {
                             this.loading = false;
                             this.state = response.data.state;
                             this.garantia = response.data.garantia;
-                            this.calcularPorcentajeGarantia();
+                            if(this.state == 'success') {
+                                this.tabsEnabled = true;
+                                var emptyPrompt = document.getElementById('drivers-empty-prompt');
+                                if (emptyPrompt) emptyPrompt.style.display = 'none';
+                                var activeTab = document.querySelector('.support-tab.active');
+                                if (activeTab && activeTab.getAttribute('data-target') === 'tab-controladores') {
+                                    var cContent = document.getElementById('tab-controladores-content');
+                                    if (cContent) cContent.style.display = 'block';
+                                    var gContent = document.getElementById('tab-garantia-content');
+                                    if (gContent) gContent.style.display = 'none';
+                                }
+                            }
                         }).catch(error => {
                             this.loading = false;
-                            alert("Ocurrio un error al buscar, por favor intente nuevamente.");
+                            this.tabsEnabled = false;
+                            if (error.response && error.response.status === 422) {
+                                this.errors = error.response.data.errors;
+                            } else {
+                                alert("Ocurrió un error al buscar, por favor intente nuevamente.");
+                            }
                         });
                     } else {
-                        this.errors['search'] = ['El codigo debe ser de 11 caracteres.'];
+                        this.errors['search'] = ['El código debe ser de 14 caracteres.'];
+                        this.tabsEnabled = false;
                     }
                 },
                 Fecha(doc) {
@@ -1046,24 +792,325 @@
                     let year = date.getFullYear()
                     let hour = date.getHours()
                     let min = this.zeroFill(date.getMinutes(), 2);
-
                     hour = this.zeroFill(hour, 2);
-
-                    if (month < 10) {
-                        return (`${day}-0${month}-${year} ${hour}:${min}`)
-                    } else {
-                        return (`${day}-${month}-${year} ${hour}:${min}`)
-                    }
+                    if (month < 10) return (`${day}-0${month}-${year} ${hour}:${min}`);
+                    return (`${day}-${month}-${year} ${hour}:${min}`);
                 },
                 zeroFill(number, width) {
                     width -= number.toString().length;
-                    if (width > 0) {
-                        return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
-                    }
+                    if (width > 0) return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
                     return number + "";
-                },
-            },
+                }
+            }
+        });
+
+        // Detección de PC Kenya
+        function detectarPCKenya() {
+            var btn = document.getElementById('btnAutoDetect');
+            var originalHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Conectando con PC...';
+                btn.disabled = true;
+            }
+
+            var protocolTriggered = false;
+
+            function onBlur() {
+                protocolTriggered = true;
+                clearTimeout(fallbackTimer);
+                if (btn) {
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Conectado con la PC';
+                    setTimeout(function() {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }, 4000);
+                }
+                window.removeEventListener('blur', onBlur);
+            }
+
+            window.addEventListener('blur', onBlur);
+
+            var fallbackTimer = setTimeout(function() {
+                if (!protocolTriggered) {
+                    window.removeEventListener('blur', onBlur);
+                    if (btn) {
+                        btn.innerHTML = originalHtml;
+                        btn.disabled = false;
+                    }
+                    var modal = document.getElementById('modal-detectar-kenya');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                    }
+                }
+            }, 1800);
+
+            window.location.href = 'kenya://detect';
+        }
+
+        function cerrarModalDetectar() {
+            var modal = document.getElementById('modal-detectar-kenya');
+            if (modal) modal.style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            document.querySelectorAll('.support-tab').forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.support-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    const target = this.getAttribute('data-target');
+                    const emptyPrompt = document.getElementById('drivers-empty-prompt');
+                    const vueApp = document.querySelector('#garantia')?.__vue__;
+
+                    if (target === 'tab-garantia') {
+                        if (emptyPrompt) emptyPrompt.style.display = 'none';
+                        document.getElementById('main-results-container').style.display = '';
+                        const gContent = document.getElementById('tab-garantia-content');
+                        if (gContent) gContent.style.display = '';
+                        const cContent = document.getElementById('tab-controladores-content');
+                        if (cContent) cContent.style.display = 'none';
+                        document.getElementById('tab-galeria-content').style.display = 'none';
+                        document.getElementById('tab-terminos-content').style.display = 'none';
+                    } else if (target === 'tab-controladores') {
+                        if (!vueApp || vueApp.state !== 'success') {
+                            if (emptyPrompt) {
+                                emptyPrompt.style.display = 'block';
+                                setTimeout(function() {
+                                    var sInput = document.querySelector('.search-box input');
+                                    if (sInput) {
+                                        sInput.focus();
+                                        sInput.classList.add('search-highlight-pulse');
+                                        setTimeout(function() { sInput.classList.remove('search-highlight-pulse'); }, 2000);
+                                    }
+                                }, 100);
+                            }
+                            document.getElementById('main-results-container').style.display = 'none';
+                            const gContent = document.getElementById('tab-garantia-content');
+                            if (gContent) gContent.style.display = 'none';
+                            const cContent = document.getElementById('tab-controladores-content');
+                            if (cContent) cContent.style.display = 'none';
+                        } else {
+                            if (emptyPrompt) emptyPrompt.style.display = 'none';
+                            document.getElementById('main-results-container').style.display = '';
+                            const gContent = document.getElementById('tab-garantia-content');
+                            if (gContent) gContent.style.display = 'none';
+                            const cContent = document.getElementById('tab-controladores-content');
+                            if (cContent) cContent.style.display = 'block';
+                        }
+                        document.getElementById('tab-galeria-content').style.display = 'none';
+                        document.getElementById('tab-terminos-content').style.display = 'none';
+                    } else if (target === 'tab-galeria') {
+                        if (emptyPrompt) emptyPrompt.style.display = 'none';
+                        document.getElementById('main-results-container').style.display = 'none';
+                        document.getElementById('tab-galeria-content').style.display = 'block';
+                        document.getElementById('tab-terminos-content').style.display = 'none';
+                        document.querySelectorAll('#tab-galeria-content iframe[data-src]').forEach(function(iframe) {
+                            if (iframe.getAttribute('src') === 'about:blank') {
+                                iframe.setAttribute('src', iframe.getAttribute('data-src'));
+                            }
+                        });
+                    } else if (target === 'tab-terminos') {
+                        if (emptyPrompt) emptyPrompt.style.display = 'none';
+                        document.getElementById('main-results-container').style.display = 'none';
+                        document.getElementById('tab-galeria-content').style.display = 'none';
+                        document.getElementById('tab-terminos-content').style.display = 'block';
+                        renderMainPDF();
+                        pdfRendered = true;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.warranty-link').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector('.support-tab[data-target="tab-terminos"]').click();
+                });
+            });
+
+            function activateTabByHash() {
+                var hash = (window.location.hash || '').toLowerCase();
+                if (hash === '#terminos' || hash === '#terms' || hash === '#tab-terminos' || hash === '#tab-terminos-content') {
+                    var tabTerminos = document.querySelector('.support-tab[data-target="tab-terminos"]');
+                    if (tabTerminos) {
+                        tabTerminos.click();
+                        setTimeout(function() {
+                            var target = document.getElementById('tab-terminos-content') || document.getElementById('terminos');
+                            if (target) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = target.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
+                } else if (hash === '#controladores' || hash === '#tab-controladores') {
+                    var tabControladores = document.querySelector('.support-tab[data-target="tab-controladores"]');
+                    if (tabControladores) {
+                        tabControladores.click();
+                        setTimeout(function() {
+                            var searchSection = document.querySelector('.warranty-search-section');
+                            if (searchSection) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = searchSection.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                            var searchInput = document.querySelector('.search-box input');
+                            if (searchInput) {
+                                searchInput.focus();
+                                searchInput.classList.add('search-highlight-pulse');
+                                setTimeout(function() { searchInput.classList.remove('search-highlight-pulse'); }, 2000);
+                            }
+                        }, 250);
+                    }
+                } else if (hash === '#galeria' || hash === '#tab-galeria' || hash === '#videos') {
+                    var tabGaleria = document.querySelector('.support-tab[data-target="tab-galeria"]');
+                    if (tabGaleria) {
+                        tabGaleria.click();
+                        setTimeout(function() {
+                            var target = document.getElementById('tab-galeria-content');
+                            if (target) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = target.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
+                } else if (hash === '#garantia' || hash === '#tab-garantia') {
+                    var tabGarantia = document.querySelector('.support-tab[data-target="tab-garantia"]');
+                    if (tabGarantia) {
+                        tabGarantia.click();
+                        setTimeout(function() {
+                            var searchSection = document.querySelector('.warranty-search-section');
+                            if (searchSection) {
+                                var headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                                var targetPos = searchSection.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+                                window.scrollTo({ top: targetPos, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
+                }
+            }
+
+            if (window.location.hash) {
+                setTimeout(activateTabByHash, 200);
+            }
+
+            window.addEventListener('hashchange', function() {
+                activateTabByHash();
+            });
+
+            document.querySelectorAll('a[href*="#terminos"], a[href*="#terms"], a[href*="#controladores"], a[href*="#garantia"], a[href*="#galeria"]').forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    if (window.location.pathname.includes('/consultar/garantia')) {
+                        var href = this.getAttribute('href');
+                        var hash = href.includes('#') ? href.split('#')[1] : null;
+                        if (hash) {
+                            e.preventDefault();
+                            if (window.location.hash !== '#' + hash) {
+                                history.pushState(null, null, '#' + hash);
+                            }
+                            activateTabByHash();
+                        }
+                    }
+                });
+            });
+
+            // PDF
+            let pdfRendered = false;
+            let currentScale = 1.0;
+            let fullscreenScale = 1.0;
+
+            function getOptimalPDFScale() {
+                const w = window.innerWidth;
+                if (w <= 480) return 1.0;
+                if (w <= 576) return 1.0;
+                if (w <= 768) return 1.8;
+                if (w <= 992) return 1.5;
+                return 1.2;
+            }
+
+            currentScale = getOptimalPDFScale();
+            fullscreenScale = currentScale;
+
+            function renderPDF(containerId, scale) {
+                if (!window.pdfjsLib) return;
+                pdfjsLib.GlobalWorkerOptions.workerSrc = "{{ asset('js/pdfjs/pdf.worker.js') }}";
+                const url = "{{ asset('GARANTIA_KENYA_SIN_HORARIO.pdf') }}";
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                container.innerHTML = '';
+                const renderScale = scale !== undefined ? scale : currentScale;
+                pdfjsLib.getDocument(url).promise.then(function(pdf) {
+                    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                        pdf.getPage(pageNum).then(function(page) {
+                            const viewport = page.getViewport({ scale: renderScale });
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            canvas.height = viewport.height;
+                            canvas.width = viewport.width;
+                            canvas.style.maxWidth = '100%';
+                            canvas.style.height = 'auto';
+                            container.appendChild(canvas);
+                            page.render({ canvasContext: ctx, viewport: viewport });
+                        });
+                    }
+                });
+            }
+
+            function renderMainPDF(scale) { renderPDF('pdf-viewer', scale); }
+            function renderFullscreenPDF(scale) { renderPDF('pdf-fullscreen-container', scale); }
+
+            function updateZoom(scale, displayEl) {
+                if (displayEl) displayEl.textContent = Math.round(scale * 100) + '%';
+            }
+
+            const zoomIn = document.getElementById('pdf-zoom-in');
+            const zoomOut = document.getElementById('pdf-zoom-out');
+            const zoomLevel = document.getElementById('pdf-zoom-level');
+            const fullscreenBtn = document.getElementById('pdf-fullscreen');
+            const modal = document.getElementById('pdf-fullscreen-modal');
+            const closeBtn = document.getElementById('pdf-close-fullscreen');
+            const fsZoomIn = document.getElementById('pdf-fullscreen-zoom-in');
+            const fsZoomOut = document.getElementById('pdf-fullscreen-zoom-out');
+            const fsZoomLevel = document.getElementById('pdf-fullscreen-zoom-level');
+
+            if (zoomLevel) updateZoom(currentScale, zoomLevel);
+
+            if (zoomIn) zoomIn.addEventListener('click', function() {
+                currentScale = Math.min(currentScale + 0.2, 3.0);
+                renderMainPDF(currentScale);
+                updateZoom(currentScale, zoomLevel);
+            });
+            if (zoomOut) zoomOut.addEventListener('click', function() {
+                currentScale = Math.max(currentScale - 0.2, 0.5);
+                renderMainPDF(currentScale);
+                updateZoom(currentScale, zoomLevel);
+            });
+            if (fullscreenBtn) fullscreenBtn.addEventListener('click', function() {
+                modal.classList.add('active');
+                fullscreenScale = currentScale;
+                if (fsZoomLevel) updateZoom(fullscreenScale, fsZoomLevel);
+                setTimeout(() => renderFullscreenPDF(fullscreenScale), 100);
+            });
+            if (closeBtn) closeBtn.addEventListener('click', function() { modal.classList.remove('active'); });
+            if (modal) modal.addEventListener('click', function(e) { if (e.target === modal) modal.classList.remove('active'); });
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modal?.classList.contains('active')) modal.classList.remove('active'); });
+            if (fsZoomIn) fsZoomIn.addEventListener('click', function() {
+                fullscreenScale = Math.min(fullscreenScale + 0.2, 4.0);
+                renderFullscreenPDF(fullscreenScale);
+                if (fsZoomLevel) updateZoom(fullscreenScale, fsZoomLevel);
+            });
+            if (fsZoomOut) fsZoomOut.addEventListener('click', function() {
+                fullscreenScale = Math.max(fullscreenScale - 0.2, 0.5);
+                renderFullscreenPDF(fullscreenScale);
+                if (fsZoomLevel) updateZoom(fullscreenScale, fsZoomLevel);
+            });
+
+            let resizeTO;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTO);
+                resizeTO = setTimeout(function() { if (pdfRendered) renderMainPDF(currentScale); }, 300);
+            });
         });
     </script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.0/iconify-icon.min.js"></script>
 @endsection
