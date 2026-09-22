@@ -117,13 +117,18 @@ TOKENS_PC: Dict[str, str] = {
     "UNIDAD OPTICA": "unidad_optica",
     "UNIDAD ÓPTICA": "unidad_optica",
     "EMPAQUE": "empaque",
+    "CERTIFICACIÓN": "certificaciones",
+    "CERTIFICACIÓN³": "certificaciones",
+    "CERTIFICACION": "certificaciones",
     "CERTIFICACIONES": "certificaciones",
+    "SISTEMA DE MANEJO DE RAEE": "sistema_raee",
+    "SISTEMA MANEJO RAEE": "sistema_raee",
+    "SIST. MANEJO RAEE": "sistema_raee",
+    "SISTEMA RAEE": "sistema_raee",
     "ACCESORIOS Y OTROS": "accesorios_otros",
     "ACCESORIOSY OTROS": "accesorios_otros",
-    "ACCESORIOS": "accesorios_otros",
-    "OTROS": "accesorios_otros",
-    "SIST. MANEJO RAEE": "sistema_raee",
-    "SISTEMA DE MANEJO DE RAEE": "sistema_raee",
+    "ACCESORIOS": "accesorios",
+    "OTROS": "otros",
 }
 
 # Tokens para Monitores

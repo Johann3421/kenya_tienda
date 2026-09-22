@@ -367,6 +367,15 @@ public function subirFichaTecnica(Request $request, $producto)
             'Soporte VESA'                => 40,
             'Fuente de Poder'             => 41,
             'Seguridad'                   => 42,
+            'Garantia'                    => 43,
+            'Empaque'                     => 44,
+            'Certificaciones'             => 45,
+            'Sistema de Manejo de Raee'   => 46,
+            'Sistema de Manejo de RAEE'   => 46,
+            'Sistema RAEE'                => 46,
+            'Accesorios'                  => 47,
+            'Accesorios y Otros'          => 47,
+            'Otros'                       => 48,
         ];
 
         $especificaciones = Especificacion::where('producto_id', $id)

@@ -134,12 +134,20 @@ class SyncFichasCommand extends Command
         'GARANTIA'                       => 'garantia_de_fabrica',
         'GARANTÍA'                       => 'garantia_de_fabrica',
         'EMPAQUE'                        => 'empaque',
+        'CERTIFICACIÓN'                  => 'certificaciones',
+        'CERTIFICACIÓN³'                 => 'certificaciones',
+        'CERTIFICACION'                  => 'certificaciones',
         'CERTIFICACIONES'                => 'certificaciones',
+        'SISTEMA DE MANEJO DE RAEE'      => 'sistema_raee',
+        'SISTEMA MANEJO RAEE'            => 'sistema_raee',
+        'SIST. MANEJO RAEE'              => 'sistema_raee',
+        'SISTEMA RAEE'                   => 'sistema_raee',
         'ACCESORIOS Y OTROS'             => 'accesorios_otros',
         'ACCESORIOSY OTROS'              => 'accesorios_otros',
         'ACCESORIOS Y/O OTROS'           => 'accesorios_otros',
         'ACCESORIOS / OTROS'             => 'accesorios_otros',
-        'ACCESORIOS'                     => 'accesorios_otros',
+        'ACCESORIOS'                     => 'accesorios',
+        'OTROS'                          => 'otros',
     ];
 
     /** Etiquetas legibles para la tabla especificaciones */
@@ -169,7 +177,10 @@ class SyncFichasCommand extends Command
         'seguridad'           => 'Seguridad',
         'empaque'             => 'Empaque',
         'certificaciones'     => 'Certificaciones',
+        'sistema_raee'        => 'Sistema de Manejo de Raee',
+        'accesorios'          => 'Accesorios',
         'accesorios_otros'    => 'Accesorios y Otros',
+        'otros'               => 'Otros',
         // ── Tóner ───────────────────────────────────────────────────────────
         'tipo_suministro'     => 'Tipo de suministro',
         'modelo_toner'        => 'Modelo',
@@ -491,15 +502,75 @@ class SyncFichasCommand extends Command
             }
         }
 
-        // 3. Mover certificaciones desde Empaque hacia Certificaciones
-        if (!empty($specs['empaque'])) {
-            $emp = (string) $specs['empaque'];
-            if (preg_match('/(?:ROHS|ROSH|FCC|CE|RAEE|SISTEMA\s+DE\s+MANEJO)/i', $emp)) {
-                if (empty($specs['certificaciones']) || in_array(strtoupper(trim((string)$specs['certificaciones'])), ['NO ESPECIFICADO', 'NO', 'N/A'])) {
-                    $specs['certificaciones'] = $emp;
+        // 3. Desensamblar y limpiar Empaque, Certificaciones y Sistema de Manejo de RAEE
+        $dirtyBlob = null;
+        if (!empty($specs['empaque']) && preg_match('/(?:Certificaci[oó]n|ROHS|ROSH|FCC|CE|RAEE|Sistema\s+de\s+Manejo)/iu', (string)$specs['empaque'])) {
+            $dirtyBlob = (string)$specs['empaque'];
+        } elseif (!empty($specs['certificaciones']) && preg_match('/(?:En\s+caja|Empaque|Sistema\s+de\s+Manejo|RaeeColectivo)/iu', (string)$specs['certificaciones'])) {
+            $dirtyBlob = (string)$specs['certificaciones'];
+        }
+
+        if ($dirtyBlob !== null) {
+            if (preg_match('/^(.*?)(?=(?:Certificaci[oó]n|Certificaciones|Sist(?:ema)?\.?\s*(?:de\s*)?Manejo|\bRAEE\b))/iu', $dirtyBlob, $mEmp)) {
+                $pEmp = trim($mEmp[1], " \t\n\r\0\x0B,.-:;");
+                if ($pEmp !== '') {
+                    $specs['empaque'] = $pEmp;
                 }
-                $specs['empaque'] = 'Empaque individual de fábrica';
             }
+            if (preg_match('/(?:Certificaci[oó]n[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*|Certificaciones)\s*[:\-]?\s*(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b|$))/iu', $dirtyBlob, $mCert)) {
+                $pCert = trim($mCert[1], " \t\n\r\0\x0B,.-:;");
+                if ($pCert !== '') {
+                    $specs['certificaciones'] = $pCert;
+                }
+            }
+            if (preg_match('/(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b)\s*[:\-]?\s*(.*)$/iu', $dirtyBlob, $mRaee)) {
+                $pRaee = trim($mRaee[1], " \t\n\r\0\x0B,.-:;");
+                if ($pRaee !== '') {
+                    $specs['sistema_raee'] = $pRaee;
+                }
+            }
+        }
+
+        // Sanitizar Certificaciones (quitar superíndices, prefijos y residuos)
+        if (!empty($specs['certificaciones'])) {
+            $cert = (string) $specs['certificaciones'];
+            $cert = preg_replace('/^(?:Certificaci[oó]n[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $cert);
+            if (preg_match('/^(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b))/iu', $cert, $mOnlyCert)) {
+                $cert = trim($mOnlyCert[1], " \t\n\r\0\x0B,.-:;");
+            }
+            $cert = preg_replace('/[\x{2070}-\x{2079}\x{00B2}\x{00B3}\x{00B9}]/u', '', $cert);
+            $cert = trim($cert, " \t\n\r\0\x0B,.-:;");
+            if (in_array(strtoupper($cert), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($cert) < 2) {
+                $specs['certificaciones'] = 'ROSH, FCC, CE';
+            } else {
+                $specs['certificaciones'] = $cert;
+            }
+        } elseif (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram'])) {
+            $specs['certificaciones'] = 'ROSH, FCC, CE';
+        }
+
+        // Sanitizar Empaque
+        if (!empty($specs['empaque'])) {
+            $emp = trim((string)$specs['empaque'], " \t\n\r\0\x0B,.-:;");
+            if (in_array(strtoupper($emp), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($emp) < 2) {
+                $specs['empaque'] = 'En caja - Unidad';
+            } else {
+                $specs['empaque'] = $emp;
+            }
+        } elseif (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram'])) {
+            $specs['empaque'] = 'En caja - Unidad';
+        }
+
+        // Sanitizar Sistema RAEE
+        if (!empty($specs['sistema_raee'])) {
+            $raee = trim((string)$specs['sistema_raee'], " \t\n\r\0\x0B,.-:;");
+            if (in_array(strtoupper($raee), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($raee) < 2) {
+                $specs['sistema_raee'] = 'Colectivo';
+            } else {
+                $specs['sistema_raee'] = $raee;
+            }
+        } elseif (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram'])) {
+            $specs['sistema_raee'] = 'Colectivo';
         }
 
         // 4. Limpiar Garantía de Fábrica: cortar en CARRY-IN y quitar texto residual
@@ -517,21 +588,39 @@ class SyncFichasCommand extends Command
             $specs['garantia_de_fabrica'] = trim($gar);
         }
 
-        // 5. Limpiar Accesorios y Otros: eliminar pie de página legal, filtrar residuos "y" y garantizar valor para PCs
-        if (!empty($specs['accesorios_otros'])) {
-            $acc = (string) $specs['accesorios_otros'];
-            $acc = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $acc);
-            $acc = trim($acc, " \t\n\r\0\x0B:;,-.");
-            if (in_array(strtoupper($acc), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($acc) < 3) {
-                unset($specs['accesorios_otros']);
+        // 5. Desacoplar y limpiar Accesorios y Otros
+        $rawAcc = (string) ($specs['accesorios_otros'] ?? $specs['accesorios'] ?? '');
+        if ($rawAcc !== '') {
+            $rawAcc = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $rawAcc);
+            if (preg_match('/^(.*?)(?:\s+Otros\s*[:\-]?\s*|\s*\bOtros:\s*)(.+)$/isu', $rawAcc, $mSplit)) {
+                $accOnly = trim($mSplit[1], " \t\n\r\0\x0B:;,-.");
+                $otrosOnly = trim($mSplit[2], " \t\n\r\0\x0B:;,-.");
+                if ($accOnly !== '') {
+                    $specs['accesorios'] = $accOnly;
+                    $specs['accesorios_otros'] = $accOnly;
+                }
+                if ($otrosOnly !== '' && empty($specs['otros'])) {
+                    $specs['otros'] = $otrosOnly;
+                }
             } else {
-                $specs['accesorios_otros'] = $acc;
+                $accClean = trim($rawAcc, " \t\n\r\0\x0B:;,-.");
+                if (!in_array(strtoupper($accClean), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) && mb_strlen($accClean) >= 3) {
+                    $specs['accesorios'] = $accClean;
+                    $specs['accesorios_otros'] = $accClean;
+                }
             }
         }
 
-        // Si quedó vacío pero es una PC Kenya (posee fuente, chipset, procesador o ram), asignar valor estándar
-        if (empty($specs['accesorios_otros']) && (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram']) || !empty($specs['sistema_operativo']))) {
-            $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+        // Si es PC Kenya y quedó vacío accesorios u otros:
+        $isPc = (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram']) || !empty($specs['sistema_operativo']));
+        if ($isPc) {
+            if (empty($specs['accesorios']) && empty($specs['accesorios_otros'])) {
+                $specs['accesorios'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+            }
+            if (empty($specs['otros'])) {
+                $specs['otros'] = 'Sistema de Enfriamiento por Flujo de Aire';
+            }
         }
 
         // 6. Sanitizar Puertos Mínimos: limpiar notas al pie y notas técnicas residuales
@@ -738,7 +827,7 @@ class SyncFichasCommand extends Command
             'graficos', 'sistema_operativo', 'suite_ofimatica',
             'formato', 'sonido', 'chipset', 'puertos_minimos',
             'slot_expansion', 'fuente_poder', 'seguridad', 'empaque',
-            'certificaciones', 'accesorios_otros',
+            'certificaciones', 'sistema_raee', 'accesorios', 'accesorios_otros', 'otros',
         ];
     }
 

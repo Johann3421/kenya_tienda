@@ -865,19 +865,84 @@
                     $garantiaRaw = trim($garantiaRaw);
                 }
 
-                $empaqueRaw = $getSpecValue(['/empaque|packag/']) ?? $getProductValue(['Empaque', 'empaque_de_fabrica']);
-                $certificacionesRaw = $getSpecValue(['/certific|iso/']) ?? $getProductValue(['Certificaciones', 'certificacion']);
+                $empaqueRaw = $getSpecValue(['/^empaque/i', '/packag/i']) ?? $getProductValue(['Empaque', 'empaque_de_fabrica']);
+                $certificacionesRaw = $getSpecValue(['/^certific/i', '/\biso\b/i']) ?? $getProductValue(['Certificaciones', 'certificacion']);
+                $raeeRaw = $getSpecValue(['/sistema.*raee/i', '/sist.*manejo.*raee/i', '/\braee\b/i']) ?? $getProductValue(['sistema_raee', 'raee']);
 
-                // Mover certificaciones que vinieron erróneamente en Empaque
-                if ($empaqueRaw && preg_match('/(?:ROHS|ROSH|FCC|CE|RAEE|SISTEMA\s+DE\s+MANEJO)/i', $empaqueRaw)) {
-                    if (!$certificacionesRaw || in_array(strtoupper(trim($certificacionesRaw)), ['NO ESPECIFICADO', 'NO', 'N/A'])) {
-                        $certificacionesRaw = $empaqueRaw;
-                    }
-                    $empaqueRaw = 'Empaque individual de fábrica';
+                // Desensamblar blobs concatenados en Empaque o Certificaciones (ej. "En caja - Unidad Certificación³ ROSH, FCC, CE Sistema de Manejo de RaeeColectivo")
+                $dirtyBlob = null;
+                if ($empaqueRaw && preg_match('/(?:Certificaci[oó]n|ROHS|ROSH|FCC|CE|RAEE|Sistema\s+de\s+Manejo)/iu', $empaqueRaw)) {
+                    $dirtyBlob = $empaqueRaw;
+                } elseif ($certificacionesRaw && preg_match('/(?:En\s+caja|Empaque|Sistema\s+de\s+Manejo|RaeeColectivo)/iu', $certificacionesRaw)) {
+                    $dirtyBlob = $certificacionesRaw;
                 }
 
-                $accesoriosRaw = $getSpecValue(['/accesorio|otros|observaciones|incluye/']) ?? $getProductValue(['accesorios']);
+                if ($dirtyBlob !== null) {
+                    if (preg_match('/^(.*?)(?=(?:Certificaci[oó]n|Certificaciones|Sist(?:ema)?\.?\s*(?:de\s*)?Manejo|\bRAEE\b))/iu', $dirtyBlob, $mEmp)) {
+                        $pEmp = trim($mEmp[1], " \t\n\r\0\x0B,.-:;");
+                        if (!empty($pEmp) && mb_strlen($pEmp) >= 2) {
+                            $empaqueRaw = $pEmp;
+                        }
+                    }
+                    if (preg_match('/(?:Certificaci[oó]n[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*|Certificaciones)\s*[:\-]?\s*(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b|$))/iu', $dirtyBlob, $mCert)) {
+                        $pCert = trim($mCert[1], " \t\n\r\0\x0B,.-:;");
+                        if (!empty($pCert)) {
+                            $certificacionesRaw = $pCert;
+                        }
+                    }
+                    if (preg_match('/(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b)\s*[:\-]?\s*(.*)$/iu', $dirtyBlob, $mRaee)) {
+                        $pRaee = trim($mRaee[1], " \t\n\r\0\x0B,.-:;");
+                        if (!empty($pRaee)) {
+                            $raeeRaw = $pRaee;
+                        }
+                    }
+                }
+
+                // Sanitizar Certificaciones (quitar prefijos, superíndices residuales y notas al pie)
+                if ($certificacionesRaw) {
+                    $certificacionesRaw = preg_replace('/^(?:Certificaci[oó]n[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $certificacionesRaw);
+                    if (preg_match('/^(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b))/iu', $certificacionesRaw, $mOnlyCert)) {
+                        $certificacionesRaw = trim($mOnlyCert[1], " \t\n\r\0\x0B,.-:;");
+                    }
+                    $certificacionesRaw = preg_replace('/[\x{2070}-\x{2079}\x{00B2}\x{00B3}\x{00B9}]/u', '', $certificacionesRaw);
+                    $certificacionesRaw = trim($certificacionesRaw, " \t\n\r\0\x0B,.-:;");
+                }
+                if ((empty($certificacionesRaw) || in_array(strtoupper($certificacionesRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) && $isDesktopOrWorkstation) {
+                    $certificacionesRaw = 'ROSH, FCC, CE';
+                }
+
+                // Sanitizar Empaque
+                if ($empaqueRaw) {
+                    $empaqueRaw = trim($empaqueRaw, " \t\n\r\0\x0B,.-:;");
+                }
+                if ((empty($empaqueRaw) || in_array(strtoupper($empaqueRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) && $isDesktopOrWorkstation) {
+                    $empaqueRaw = 'En caja - Unidad';
+                }
+
+                // Sanitizar Sistema RAEE
+                if ($raeeRaw) {
+                    $raeeRaw = preg_replace('/^(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b)\s*[:\-]?\s*/iu', '', $raeeRaw);
+                    $raeeRaw = trim($raeeRaw, " \t\n\r\0\x0B,.-:;");
+                }
+                if ((empty($raeeRaw) || in_array(strtoupper($raeeRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) && $isDesktopOrWorkstation) {
+                    $raeeRaw = 'Colectivo';
+                }
+
+                // Extracción independiente de Accesorios y Otros
+                $accesoriosRaw = $getSpecValue(['/^accesorios?$/i', '/^accesorio$/i']) ?? $getProductValue(['accesorios']);
+                $otrosRaw = $getSpecValue(['/^otros$/i', '/\botros\b/i', '/caracter[íi]sticas\s+adicionales/i']) ?? $getProductValue(['otros', 'caracteristicas_adicionales']);
+
+                if (empty($accesoriosRaw)) {
+                    $accesoriosRaw = $getSpecValue(['/accesorio.*otros/i', '/accesorio/i', '/observaciones/i', '/incluye/i']) ?? $getProductValue(['accesorios_otros']);
+                }
+
                 if ($accesoriosRaw) {
+                    if (preg_match('/^(.*?)(?:\s+Otros\s*[:\-]?\s*|\s*\bOtros:\s*)(.+)$/isu', $accesoriosRaw, $mSplit)) {
+                        $accesoriosRaw = trim($mSplit[1], " \t\n\r\0\x0B,.-:;");
+                        if (empty($otrosRaw)) {
+                            $otrosRaw = trim($mSplit[2], " \t\n\r\0\x0B,.-:;");
+                        }
+                    }
                     $accesoriosRaw = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $accesoriosRaw);
                     $accesoriosRaw = trim($accesoriosRaw, " \t\n\r\0\x0B,.-:;");
                     if (in_array(strtoupper($accesoriosRaw), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($accesoriosRaw) < 3) {
@@ -885,9 +950,12 @@
                     }
                 }
 
-                // Fallback para modelos EZENT / PC Kenya de fábrica si no se extrajo o quedó en residuo "y"
                 if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
                     $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                }
+
+                if (empty($otrosRaw) && $isDesktopOrWorkstation) {
+                    $otrosRaw = 'Sistema de Enfriamiento por Flujo de Aire';
                 }
 
                 // Extracción y sanitización de Puertos Mínimos (auditoría / Ficha 368 / EZENT)
@@ -1360,8 +1428,19 @@
                 $oldPcRows[] = ['label' => 'Empaque', 'value' => $empaqueRaw];
                 $oldPcRows[] = ['label' => 'Certificaciones', 'value' => $certificacionesRaw];
 
-                if (!empty($accesoriosRaw)) {
-                    $oldPcRows[] = ['label' => 'Accesorios y Otros', 'value' => $accesoriosRaw];
+                if (!empty($raeeRaw)) {
+                    $oldPcRows[] = ['label' => 'Sistema de Manejo de Raee', 'value' => $raeeRaw];
+                }
+
+                if (!empty($otrosRaw)) {
+                    if (!empty($accesoriosRaw)) {
+                        $oldPcRows[] = ['label' => 'Accesorios', 'value' => $accesoriosRaw];
+                    }
+                    $oldPcRows[] = ['label' => 'Otros', 'value' => $otrosRaw];
+                } else {
+                    if (!empty($accesoriosRaw)) {
+                        $oldPcRows[] = ['label' => 'Accesorios y Otros', 'value' => $accesoriosRaw];
+                    }
                 }
             @endphp
             @forelse($oldPcRows as $fr)

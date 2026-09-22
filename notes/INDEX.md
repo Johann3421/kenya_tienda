@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-09-22-desagrupacion-empaque-certificaciones-raee-otros|2026-09-22: Desagrupación y Sanitización de Empaque, Certificaciones, Sistema RAEE, Accesorios y Otros]]
 - [[2026-09-22-mapeo-chasis-a-formato-torre-mediana|2026-09-22: Mapeo de Chasis a Formato, Extracción de Torre Mediana e Inferencia por Modelo]]
 - [[2026-09-22-correccion-puertos-minimos-descarte-booleano|2026-09-22: Corrección de Puertos Mínimos, Descarte de Valores Booleanos y Fallback Exacto de PDF]]
 - [[2026-09-22-sintesis-contexto-y-sanitizacion-puertos-minimos|2026-09-22: Síntesis de Contexto Integral, Auditoría Fichas PC y Sanitización de Puertos Mínimos]]
