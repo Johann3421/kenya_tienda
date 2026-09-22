@@ -489,11 +489,18 @@ class SyncFichasCommand extends Command
             }
         }
 
-        // 4. Limpiar Garantía de Fábrica
+        // 4. Limpiar Garantía de Fábrica: cortar en CARRY-IN y quitar texto residual
         if (!empty($specs['garantia_de_fabrica'])) {
             $gar = (string) $specs['garantia_de_fabrica'];
             $gar = preg_replace('/^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+/iu', '', $gar);
             $gar = preg_replace('/^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)/iu', '$1', $gar);
+            if (preg_match('/^(.*?\bCARRY[\s\-]IN\b)/iu', $gar, $mCarry)) {
+                $gar = trim($mCarry[1]);
+            } elseif (preg_match('/^(.*?\bON[\s\-]SITE\b)/iu', $gar, $mOnSite)) {
+                $gar = trim($mOnSite[1]);
+            } else {
+                $gar = preg_replace('/(\d+\s*MESES)\s+(?:UNIDAD|KENYA).*$/iu', '$1', $gar);
+            }
             $specs['garantia_de_fabrica'] = trim($gar);
         }
 

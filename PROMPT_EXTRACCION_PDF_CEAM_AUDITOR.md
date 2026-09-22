@@ -511,11 +511,18 @@ def post_procesar_specs_pc(specs: Dict[str, str]) -> Dict[str, str]:
             specs["certificaciones"] = emp
         specs["empaque"] = "Empaque individual de fábrica"
 
-    # 4. Limpiar Garantía
+    # 4. Limpiar Garantía: cortar en CARRY-IN y descartar texto residual
     gar = specs.get("garantia_de_fabrica", "")
     if gar:
         gar = re.sub(r'^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+', '', gar, flags=re.IGNORECASE)
         gar = re.sub(r'^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)', r'\1', gar, flags=re.IGNORECASE)
+        m_carry = re.search(r'^(.*?\bCARRY[\s\-]IN\b)', gar, re.IGNORECASE)
+        if m_carry:
+            gar = m_carry.group(1).strip()
+        elif re.search(r'^(.*?\bON[\s\-]SITE\b)', gar, re.IGNORECASE):
+            gar = re.search(r'^(.*?\bON[\s\-]SITE\b)', gar, re.IGNORECASE).group(1).strip()
+        else:
+            gar = re.sub(r'(\d+\s*MESES)\s+(?:UNIDAD|KENYA).*$', r'\1', gar, flags=re.IGNORECASE).strip()
         specs["garantia_de_fabrica"] = gar.strip()
 
     # 5. Limpiar texto residual de Accesorios y Otros

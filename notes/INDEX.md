@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-09-22-truncado-garantia-carry-in|2026-09-22: Truncado de Garantía hasta 'CARRY-IN' y remoción de texto residual]]
 - [[2026-09-22-reversion-formato-y-puertos-minimos|2026-09-22: Reincorporación de campo 'Formato' y 'Puertos Mínimos']]
 - [[2026-09-21-normalizacion-especificaciones-fichas-tecnicas|2026-09-21: Normalización y sanitización de especificaciones de fichas técnicas (Caso EZENT)]]
 - [[2026-09-21-rediseño-garantia-qr-nuevo-estandar|2026-09-21: Rediseño de vista Garantía QR al nuevo estándar unificado]]

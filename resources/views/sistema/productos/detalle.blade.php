@@ -788,6 +788,15 @@
                     // Limpiar prefijo repetido del modelo/marca: "UNIDAD KENYA TECHNOLOGY EZENT T700..."
                     $garantiaRaw = preg_replace('/^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+/iu', '', $garantiaRaw);
                     $garantiaRaw = preg_replace('/^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)/iu', '$1', $garantiaRaw);
+                    
+                    // Cortar exactamente en CARRY-IN / CARRY IN (o modalidades equivalentes) y descartar todo lo posterior
+                    if (preg_match('/^(.*?\bCARRY[\s\-]IN\b)/iu', $garantiaRaw, $mCarry)) {
+                        $garantiaRaw = trim($mCarry[1]);
+                    } elseif (preg_match('/^(.*?\bON[\s\-]SITE\b)/iu', $garantiaRaw, $mOnSite)) {
+                        $garantiaRaw = trim($mOnSite[1]);
+                    } else {
+                        $garantiaRaw = preg_replace('/(\d+\s*MESES)\s+(?:UNIDAD|KENYA).*$/iu', '$1', $garantiaRaw);
+                    }
                     $garantiaRaw = trim($garantiaRaw);
                 }
 
