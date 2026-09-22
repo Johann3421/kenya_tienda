@@ -29,7 +29,11 @@
      - `Empaque`: Extrae el texto previo a `Certificación` / `RAEE` (obteniendo `"En caja - Unidad"`).
      - `Certificaciones`: Extrae el tramo entre `Certificación` y `Sistema de Manejo de Raee` (obteniendo `"ROSH, FCC, CE"` y limpiando superíndices como `³`).
      - `Sistema de Manejo de Raee`: Extrae el valor posterior a `Sistema de Manejo de Raee` (obteniendo `"Colectivo"`).
-   - **Desacoplamiento de Accesorios y Otros:** Detección de subcadenas `"Otros: ..."` dentro de accesorios y extracción independiente de `otrosRaw` (`"Sistema de Enfriamiento por Flujo de Aire"`).
+   - **Desacoplamiento Estricto de Accesorios y Otros:** 
+     - Exclusión de cualquier campo que contenga `"accesorio"` al buscar `"Otros"` (evitando que `Accesorios y Otros` alimente la variable `otrosRaw`).
+     - Descarte automático si el candidato a `otrosRaw` contiene palabras clave de periféricos (`teclado`, `mouse`, `cable de poder`, `manuales`).
+     - Extracción prioritaria de `"Sistema de Enfriamiento por Flujo de Aire"` desde specs, descripciones o fallback de fábrica Perú Compras.
+     - Condicional estricto en `$oldPcRows` (`otrosRaw !== accesoriosRaw`) garantizando que `Accesorios` y `Otros` muestren valores independientes.
    - **Fila Independiente en `$oldPcRows`:**
      - Agregada fila para `Sistema de Manejo de Raee`.
      - Si existe `Otros`, renderiza `Accesorios` y `Otros` como filas separadas idénticas al PDF oficial.

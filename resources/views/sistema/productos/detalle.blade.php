@@ -928,19 +928,76 @@
                     $raeeRaw = 'Colectivo';
                 }
 
-                // Extracción independiente de Accesorios y Otros
-                $accesoriosRaw = $getSpecValue(['/^accesorios?$/i', '/^accesorio$/i']) ?? $getProductValue(['accesorios']);
-                $otrosRaw = $getSpecValue(['/^otros$/i', '/\botros\b/i', '/caracter[íi]sticas\s+adicionales/i']) ?? $getProductValue(['otros', 'caracteristicas_adicionales']);
+                // Extracción independiente y desacoplada de Accesorios y Otros
+                $accesoriosRaw = null;
+                $otrosRaw = null;
 
+                // 1. Buscar especificación estrictamente para 'Otros' (sin contener la palabra 'accesorio')
+                foreach ($specsList as $sp) {
+                    $c = strtolower(trim($sp->campo ?? ''));
+                    if (str_contains($c, 'accesorio')) continue;
+                    if ($c === 'otros' || $c === 'otro' || str_starts_with($c, 'otros') || str_contains($c, 'adicionales') || str_contains($c, 'enfriamiento')) {
+                        $val = $cleanValue($sp->descripcion ?? null);
+                        if ($val && !preg_match('/teclado|mouse|cable\s+de\s+poder|manuales/i', $val)) {
+                            $otrosRaw = $val;
+                            break;
+                        }
+                    }
+                }
+
+                // 2. Buscar si en alguna fila de especificaciones se menciona el sistema de enfriamiento
+                if (empty($otrosRaw)) {
+                    foreach ($specsList as $sp) {
+                        $d = trim($sp->descripcion ?? '');
+                        if (preg_match('/sistema\s+de\s+enfriamiento(?:\s+por\s+flujo\s+de\s+aire)?/iu', $d, $mEnf)) {
+                            $otrosRaw = trim($mEnf[0]);
+                            break;
+                        }
+                    }
+                }
+
+                // 3. Buscar en el texto descriptivo del producto
+                if (empty($otrosRaw)) {
+                    $textSources = [
+                        $producto->especificaciones ?? '',
+                        $producto->descripcion ?? '',
+                        $producto->descripcion_2 ?? '',
+                    ];
+                    foreach ($textSources as $txt) {
+                        if (empty($txt)) continue;
+                        if (preg_match('/(?:^|\b)Otros\s*[:\-]?\s*([^\n\r]+)/iu', $txt, $mOtr)) {
+                            $cand = trim($mOtr[1], " \t\n\r\0\x0B,.-:;");
+                            if (!empty($cand) && !preg_match('/teclado|mouse|cable\s+de\s+poder|manuales/i', $cand)) {
+                                $otrosRaw = $cand;
+                                break;
+                            }
+                        }
+                        if (preg_match('/sistema\s+de\s+enfriamiento(?:\s+por\s+flujo\s+de\s+aire)?/iu', $txt, $mEnf)) {
+                            $otrosRaw = trim($mEnf[0]);
+                            break;
+                        }
+                    }
+                }
+
+                // 4. Buscar Accesorios (sin confundir con Otros)
+                foreach ($specsList as $sp) {
+                    $c = strtolower(trim($sp->campo ?? ''));
+                    if (str_contains($c, 'accesorio')) {
+                        $accesoriosRaw = $cleanValue($sp->descripcion ?? null);
+                        break;
+                    }
+                }
                 if (empty($accesoriosRaw)) {
-                    $accesoriosRaw = $getSpecValue(['/accesorio.*otros/i', '/accesorio/i', '/observaciones/i', '/incluye/i']) ?? $getProductValue(['accesorios_otros']);
+                    $accesoriosRaw = $getProductValue(['accesorios', 'accesorios_otros']);
                 }
 
                 if ($accesoriosRaw) {
+                    // Si dentro de accesorios venía "Otros: Sistema de Enfriamiento..."
                     if (preg_match('/^(.*?)(?:\s+Otros\s*[:\-]?\s*|\s*\bOtros:\s*)(.+)$/isu', $accesoriosRaw, $mSplit)) {
                         $accesoriosRaw = trim($mSplit[1], " \t\n\r\0\x0B,.-:;");
-                        if (empty($otrosRaw)) {
-                            $otrosRaw = trim($mSplit[2], " \t\n\r\0\x0B,.-:;");
+                        $posibleOtros = trim($mSplit[2], " \t\n\r\0\x0B,.-:;");
+                        if (empty($otrosRaw) && !empty($posibleOtros) && !preg_match('/teclado|mouse/i', $posibleOtros)) {
+                            $otrosRaw = $posibleOtros;
                         }
                     }
                     $accesoriosRaw = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $accesoriosRaw);
@@ -950,6 +1007,12 @@
                     }
                 }
 
+                // Descartar si otrosRaw erróneamente tomó los accesorios
+                if ($otrosRaw && preg_match('/teclado|mouse|cable\s+de\s+poder|manuales/i', $otrosRaw)) {
+                    $otrosRaw = null;
+                }
+
+                // Fallbacks para PCs de escritorio / Workstations Kenya oficiales de Perú Compras
                 if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
                     $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
                 }
@@ -1432,7 +1495,7 @@
                     $oldPcRows[] = ['label' => 'Sistema de Manejo de Raee', 'value' => $raeeRaw];
                 }
 
-                if (!empty($otrosRaw)) {
+                if (!empty($otrosRaw) && $otrosRaw !== $accesoriosRaw) {
                     if (!empty($accesoriosRaw)) {
                         $oldPcRows[] = ['label' => 'Accesorios', 'value' => $accesoriosRaw];
                     }
@@ -1440,6 +1503,8 @@
                 } else {
                     if (!empty($accesoriosRaw)) {
                         $oldPcRows[] = ['label' => 'Accesorios y Otros', 'value' => $accesoriosRaw];
+                    } elseif (!empty($otrosRaw)) {
+                        $oldPcRows[] = ['label' => 'Otros', 'value' => $otrosRaw];
                     }
                 }
             @endphp
