@@ -125,8 +125,9 @@ class SyncFichasCommand extends Command
         'CERTIFICACIONES'                => 'certificaciones',
         'ACCESORIOS Y OTROS'             => 'accesorios_otros',
         'ACCESORIOSY OTROS'              => 'accesorios_otros',
+        'ACCESORIOS Y/O OTROS'           => 'accesorios_otros',
+        'ACCESORIOS / OTROS'             => 'accesorios_otros',
         'ACCESORIOS'                     => 'accesorios_otros',
-        'OTROS'                          => 'accesorios_otros',
     ];
 
     /** Etiquetas legibles para la tabla especificaciones */
@@ -504,12 +505,21 @@ class SyncFichasCommand extends Command
             $specs['garantia_de_fabrica'] = trim($gar);
         }
 
-        // 5. Limpiar Accesorios y Otros si contiene texto residual legal
+        // 5. Limpiar Accesorios y Otros: eliminar pie de página legal, filtrar residuos "y" y garantizar valor para PCs
         if (!empty($specs['accesorios_otros'])) {
             $acc = (string) $specs['accesorios_otros'];
-            if (preg_match('/ESPECIFICACIONES\s+T[EÉ]CNICAS/iu', $acc) || preg_match('/MARCA\s+REGISTRADA/iu', $acc)) {
+            $acc = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $acc);
+            $acc = trim($acc, " \t\n\r\0\x0B:;,-.");
+            if (in_array(strtoupper($acc), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($acc) < 3) {
                 unset($specs['accesorios_otros']);
+            } else {
+                $specs['accesorios_otros'] = $acc;
             }
+        }
+
+        // Si quedó vacío pero es una PC Kenya (posee fuente, chipset, procesador o ram), asignar valor estándar
+        if (empty($specs['accesorios_otros']) && (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram']) || !empty($specs['sistema_operativo']))) {
+            $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
         }
 
         return $specs;
@@ -830,7 +840,17 @@ class SyncFichasCommand extends Command
         $specs = $this->parseTokenizedText(
             $text,
             self::PDF_SPEC_TOKENS,
-            ['UNIDAD KENYA TECHNOLOGY', 'SIST. MANEJO RAEE', 'WWW.', 'HTTP://', 'HTTPS://']
+            [
+                'ESPECIFICACIONES TÉCNICAS',
+                'ESPECIFICACIONES TECNICAS',
+                'KENYA TECHNOLOGY',
+                'MARCA REGISTRADA',
+                'UNIDAD KENYA TECHNOLOGY',
+                'SIST. MANEJO RAEE',
+                'WWW.',
+                'HTTP://',
+                'HTTPS://'
+            ]
         );
 
         // Fallback robusto para PDFs de tóner con etiquetas variantes.
@@ -941,25 +961,51 @@ class SyncFichasCommand extends Command
         $specs = [];
         $upper = mb_strtoupper($text, 'UTF-8');
 
-        $positions = [];
-        foreach (array_keys($tokenMap) as $token) {
+        $rawMatches = [];
+        foreach ($tokenMap as $token => $specKey) {
             $pattern = '/(?<![A-ZÁÉÍÓÚÑ])' . preg_quote($token, '/') . '(?![A-ZÁÉÍÓÚÑ])/u';
             if (preg_match($pattern, $upper, $m, PREG_OFFSET_CAPTURE)) {
-                $positions[$token] = $m[0][1];
+                $rawMatches[] = [
+                    'token'   => $token,
+                    'specKey' => $specKey,
+                    'start'   => $m[0][1],
+                    'end'     => $m[0][1] + strlen($m[0][0]),
+                    'len'     => strlen($token),
+                ];
             }
         }
 
-        asort($positions);
-        $tokenList  = array_keys($positions);
-        $tokenCount = count($tokenList);
+        // Ordenar por inicio ascendente; si coinciden, el token más largo (más específico) va primero
+        usort($rawMatches, function ($a, $b) {
+            if ($a['start'] === $b['start']) {
+                return $b['len'] <=> $a['len'];
+            }
+            return $a['start'] <=> $b['start'];
+        });
 
+        // Desolapar: si dos tokens se solapan (ej. ACCESORIOS Y OTROS vs ACCESORIOS), descartar el token solapado menor
+        $cleanTokens = [];
+        foreach ($rawMatches as $m) {
+            $overlap = false;
+            foreach ($cleanTokens as $c) {
+                if ($m['start'] < $c['end'] && $m['end'] > $c['start']) {
+                    $overlap = true;
+                    break;
+                }
+            }
+            if (!$overlap) {
+                $cleanTokens[] = $m;
+            }
+        }
+
+        $tokenCount = count($cleanTokens);
         for ($i = 0; $i < $tokenCount; $i++) {
-            $token = $tokenList[$i];
-            $specKey = $tokenMap[$token];
-            $start = $positions[$token] + strlen($token);
+            $curr = $cleanTokens[$i];
+            $specKey = $curr['specKey'];
+            $start = $curr['end'];
 
             if ($i + 1 < $tokenCount) {
-                $end = $positions[$tokenList[$i + 1]];
+                $end = $cleanTokens[$i + 1]['start'];
             } else {
                 $end = strlen($text);
                 foreach ($endMarkers as $marker) {

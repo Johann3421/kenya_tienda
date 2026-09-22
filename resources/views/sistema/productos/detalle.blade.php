@@ -812,8 +812,17 @@
                 }
 
                 $accesoriosRaw = $getSpecValue(['/accesorio|otros|observaciones|incluye/']) ?? $getProductValue(['accesorios']);
-                if ($accesoriosRaw && (preg_match('/ESPECIFICACIONES\s+T[EÉ]CNICAS/iu', $accesoriosRaw) || preg_match('/MARCA\s+REGISTRADA/iu', $accesoriosRaw))) {
-                    $accesoriosRaw = null;
+                if ($accesoriosRaw) {
+                    $accesoriosRaw = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $accesoriosRaw);
+                    $accesoriosRaw = trim($accesoriosRaw, " \t\n\r\0\x0B,.-:;");
+                    if (in_array(strtoupper($accesoriosRaw), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($accesoriosRaw) < 3) {
+                        $accesoriosRaw = null;
+                    }
+                }
+
+                // Fallback para modelos EZENT / PC Kenya de fábrica si no se extrajo o quedó en residuo "y"
+                if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
+                    $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
                 }
 
                 // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
