@@ -103,24 +103,22 @@ class SyncFichasCommand extends Command
         'MEMORIA RAM'                    => 'ram',
         'RAM'                            => 'ram',
         'ALMACENAMIENTO'                 => 'almacenamiento',
-        'VIDEO'                          => 'graficos',
-        'GRAFICOS'                       => 'graficos',
-        'GRÁFICOS'                       => 'graficos',
         'TARJETA GRAFICA'                => 'graficos',
         'TARJETA GRÁFICA'                => 'graficos',
+        'GRAFICOS'                       => 'graficos',
+        'GRÁFICOS'                       => 'graficos',
         'SISTEMA OPERATIVO'              => 'sistema_operativo',
         'SUITE OFIMATICA PRE-INSTALADA'  => 'suite_ofimatica',
         'SUITE OFIMATICA'                => 'suite_ofimatica',
         'SUITE OFIMÁTICA'                => 'suite_ofimatica',
         'SONIDO'                         => 'sonido',
-        'AUDIO'                          => 'sonido',
         'CHIPSET'                        => 'chipset',
         'LAN'                            => 'conectividad',
         'WLAN'                           => 'conectividad_wlan',
         'PUERTOS MINIMOS'                => 'puertos_minimos',
         'PUERTOS MÍNIMOS'                => 'puertos_minimos',
+        'PUERTOS:'                       => 'puertos_minimos',
         'PUERTOS'                        => 'puertos_minimos',
-        'PUERTO'                         => 'puertos_minimos',
         'SLOT DE EXPANSION'              => 'slot_expansion',
         'SLOT DE EXPANSIÓN'              => 'slot_expansion',
         'RANURAS DE EXPANSIÓN MÍNIMOS'    => 'slot_expansion',
@@ -130,16 +128,16 @@ class SyncFichasCommand extends Command
         'FUENTE DE PODER'                => 'fuente_poder',
         'SEGURIDAD TPM'                  => 'seguridad',
         'SEGURIDAD'                      => 'seguridad',
-        'TPM'                            => 'seguridad',
         'GARANTIA DE FABRICA'            => 'garantia_de_fabrica',
         'GARANTÍA DE FÁBRICA'            => 'garantia_de_fabrica',
         'GARANTIA'                       => 'garantia_de_fabrica',
         'GARANTÍA'                       => 'garantia_de_fabrica',
         'EMPAQUE'                        => 'empaque',
-        'CERTIFICACIÓN'                  => 'certificaciones',
-        'CERTIFICACIÓN³'                 => 'certificaciones',
-        'CERTIFICACION'                  => 'certificaciones',
         'CERTIFICACIONES'                => 'certificaciones',
+        'CERTIFICACIÓN²'                 => 'certificaciones',
+        'CERTIFICACIÓN³'                 => 'certificaciones',
+        'CERTIFICACION²'                 => 'certificaciones',
+        'CERTIFICACION³'                 => 'certificaciones',
         'SISTEMA DE MANEJO DE RAEE'      => 'sistema_raee',
         'SISTEMA MANEJO RAEE'            => 'sistema_raee',
         'SIST. MANEJO RAEE'              => 'sistema_raee',
@@ -632,13 +630,12 @@ class SyncFichasCommand extends Command
             $pts = preg_replace('/^puertos\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/iu', '', $pts);
             $pts = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $pts);
             $pts = trim($pts, " \t\n\r\0\x0B:;,-.");
-            if (in_array(strtoupper($pts), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'SI', 'SÍ', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', ''], true) || mb_strlen($pts) < 4) {
+            if (in_array(strtoupper($pts), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'SI', 'SÍ', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', ''], true) || mb_strlen($pts) < 4 || preg_match('/^(?:y\/o\s*slots|podr[íi]a)/iu', $pts)) {
                 $specs['puertos_minimos'] = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
             } else {
-                // Insertar separador ' | ' antes de sub-secciones conocidas (Frontales, Posteriores, Tarjeta de Video)
+                // Insertar separador ' | ' antes de sub-secciones conocidas (Frontal/Posterior/Tarjeta de Video)
                 // para que el blade pueda renderizarlas en líneas separadas vía nl2br.
-                $pts = preg_replace('/\s+(Frontales|Posteriores|Tarjeta\s+de\s+Video)\s*:/iu', ' | $1:', $pts);
-                // Limpiar ' | ' al inicio si quedó
+                $pts = preg_replace('/\s+(Frontal(?:es)?|Posterior(?:es)?|Tarjeta\s+de\s+Video)\s*[:\-]?/iu', ' | $1:', $pts);
                 $pts = ltrim($pts, ' |');
                 $specs['puertos_minimos'] = trim($pts);
             }
@@ -985,6 +982,9 @@ class SyncFichasCommand extends Command
         if (!$text) {
             return [];
         }
+
+        // Descartar bloque de Comentarios / notas al pie inicial antes de la tabla de especificaciones
+        $text = preg_replace('/^\s*Comentarios\b.*?(?=\b(?:Modelo|Formato|Chasis|Factor\s+de\s+Forma|Procesador)\b)/isu', '', $text);
 
         $specs = $this->parseTokenizedText(
             $text,

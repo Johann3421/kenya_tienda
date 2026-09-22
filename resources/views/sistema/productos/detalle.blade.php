@@ -900,12 +900,16 @@
 
                 // Sanitizar Certificaciones (quitar prefijos, superíndices residuales y notas al pie)
                 if ($certificacionesRaw) {
-                    $certificacionesRaw = preg_replace('/^(?:Certificaci[oó]n[⁰¹²³⁴⁵⁶⁷⁸⁹\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $certificacionesRaw);
-                    if (preg_match('/^(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b))/iu', $certificacionesRaw, $mOnlyCert)) {
-                        $certificacionesRaw = trim($mOnlyCert[1], " \t\n\r\0\x0B,.-:;");
+                    if (preg_match('/(?:componentes\s+Internos|Im[áa]genes\s+referenciales|Numerode\s*Parte)/iu', $certificacionesRaw)) {
+                        $certificacionesRaw = null;
+                    } else {
+                        $certificacionesRaw = preg_replace('/^(?:Certificaci[oó]n[⁰¹²³⁴⁵⁶⁷⁸⁹\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $certificacionesRaw);
+                        if (preg_match('/^(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b))/iu', $certificacionesRaw, $mOnlyCert)) {
+                            $certificacionesRaw = trim($mOnlyCert[1], " \t\n\r\0\x0B,.-:;");
+                        }
+                        $certificacionesRaw = preg_replace('/[⁰¹²³⁴⁵⁶⁷⁸⁹]/u', '', $certificacionesRaw);
+                        $certificacionesRaw = trim($certificacionesRaw, " \t\n\r\0\x0B,.-:;");
                     }
-                    $certificacionesRaw = preg_replace('/[⁰¹²³⁴⁵⁶⁷⁸⁹]/u', '', $certificacionesRaw);
-                    $certificacionesRaw = trim($certificacionesRaw, " \t\n\r\0\x0B,.-:;");
                 }
                 if ((empty($certificacionesRaw) || in_array(strtoupper($certificacionesRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) && $isDesktopOrWorkstation) {
                     $certificacionesRaw = 'ROSH, FCC, CE';
@@ -1029,6 +1033,9 @@
                         return true;
                     }
                     if (mb_strlen($v) < 4) return true;
+                    if (preg_match('/(?:podr[ií]a\s+integrar|y\/o\s*slots|especificaciones\s+t[eé]cnicas|^\s*y\/o\b)/iu', $v)) {
+                        return true;
+                    }
                     return false;
                 };
 
@@ -1082,10 +1089,12 @@
                     $puertosRaw = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
                 }
 
-                // 6. Limpieza final de superíndices, prefijos "Puertos⁰" / "Puertos:"
+                // 6. Limpieza final de superíndices, prefijos "Puertos⁰" / "Puertos:" y formateo multi-línea
                 if ($puertosRaw) {
                     $puertosRaw = preg_replace('/^puertos\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/iu', '', $puertosRaw);
                     $puertosRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $puertosRaw);
+                    $puertosRaw = preg_replace('/\s+(Frontal(?:es)?|Posterior(?:es)?|Tarjeta\s+de\s+Video)\s*[:\-]?/iu', ' | $1:', $puertosRaw);
+                    $puertosRaw = ltrim($puertosRaw, ' |');
                     $puertosRaw = trim($puertosRaw, " \t\n\r\0\x0B,.-:;");
                 }
 
