@@ -786,16 +786,17 @@
                 $garantiaRaw = $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia']);
                 if ($garantiaRaw) {
                     // Limpiar prefijo repetido del modelo/marca: "UNIDAD KENYA TECHNOLOGY EZENT T700..."
-                    $garantiaRaw = preg_replace('/^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+/iu', '', $garantiaRaw);
-                    $garantiaRaw = preg_replace('/^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)/iu', '$1', $garantiaRaw);
-                    
-                    // Cortar exactamente en CARRY-IN / CARRY IN (o modalidades equivalentes) y descartar todo lo posterior
-                    if (preg_match('/^(.*?\bCARRY[\s\-]IN\b)/iu', $garantiaRaw, $mCarry)) {
-                        $garantiaRaw = trim($mCarry[1]);
-                    } elseif (preg_match('/^(.*?\bON[\s\-]SITE\b)/iu', $garantiaRaw, $mOnSite)) {
-                        $garantiaRaw = trim($mOnSite[1]);
+                    if (preg_match('/\b(\d+\s*MESES.*)$/iu', $garantiaRaw, $mMeses)) {
+                        $garantiaRaw = $mMeses[1];
                     } else {
-                        $garantiaRaw = preg_replace('/(\d+\s*MESES)\s+(?:UNIDAD|KENYA).*$/iu', '$1', $garantiaRaw);
+                        $garantiaRaw = preg_replace('/^(?:UNIDAD\s+)?(?:KENYA\s+TECHNOLOGY)?(?:\s+[A-Z0-9_\-]+)*\s+/iu', '', $garantiaRaw);
+                    }
+                    
+                    // Cortar exactamente en CARRY-IN / ON-SITE y descartar texto posterior
+                    if (preg_match('/^(.*?\b(?:CARRY[\s\-]IN|ON[\s\-]SITE)\b)/iu', $garantiaRaw, $mTipo)) {
+                        $garantiaRaw = trim($mTipo[1]);
+                    } else {
+                        $garantiaRaw = preg_replace('/\s+(?:UNIDAD|KENYA|MARCA|ESPECIFICACIONES).*$/iu', '', $garantiaRaw);
                     }
                     $garantiaRaw = trim($garantiaRaw);
                 }
@@ -823,6 +824,40 @@
                 // Fallback para modelos EZENT / PC Kenya de fábrica si no se extrajo o quedó en residuo "y"
                 if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
                     $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                }
+
+                // Extracción y sanitización de Puertos Mínimos (auditoría / Ficha 368 / EZENT)
+                $puertosRaw = $getSpecValue(['/^puertos\s*m[ií]nimos?$/i', '/^puertos?$/i', '/puertos.*posteriores/i', '/conectividad\s*usb/i', '/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb']);
+                if ($puertosRaw) {
+                    // Si contiene notas al pie legales sobre puertos/slots/potencia/cobertura
+                    if (preg_match('/(?:podr[ií]a\s+integrar|el\s+equipo\s+podr[ií]a|cobertura\s+solo\s+en|certificaci[oó]n\s+de\s+componentes|potencia\s+m[ií]nima|especificaciones\s+t[eé]cnicas)/iu', $puertosRaw)) {
+                        if (preg_match('/^(.*?)(?:[\x{2070}\*¹²³]?\s*(?:podr[ií]a\s+integrar|el\s+equipo\s+podr[ií]a|cobertura\s+solo|potencia\s+m[ií]nima|especificaciones))/iu', $puertosRaw, $mReal) && strlen(trim($mReal[1])) > 5) {
+                            $puertosRaw = trim($mReal[1]);
+                        } else {
+                            $puertosRaw = null;
+                        }
+                    }
+                }
+
+                // Si fue descartado por nota legal o vino vacío, buscar si otra fila contiene los puertos reales
+                if (empty($puertosRaw)) {
+                    foreach ($specsList as $sp) {
+                        $d = trim($sp->descripcion ?? '');
+                        if (preg_match('/\bx\d+\s*usb\b/i', $d) && preg_match('/\b(?:rj45|jacks?|hdmi|vga|line\s*in)\b/i', $d)) {
+                            $puertosRaw = $d;
+                            break;
+                        }
+                    }
+                }
+
+                // Fallback para modelos EZENT / PC Kenya de fábrica si vino solo la nota al pie
+                if (empty($puertosRaw) && $isDesktopOrWorkstation) {
+                    $puertosRaw = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
+                }
+
+                if ($puertosRaw) {
+                    $puertosRaw = preg_replace('/^[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/u', '', $puertosRaw);
+                    $puertosRaw = trim($puertosRaw, " \t\n\r\0\x0B,.-:;");
                 }
 
                 // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
@@ -1214,7 +1249,7 @@
                     ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset'])],
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
                     ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
-                    ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
+                    ['label' => 'Puertos Mínimos', 'value' => $puertosRaw ?? $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
                     ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2|ranura/'])],
                     ['label' => 'Fuente de Poder', 'value' => $fuenteRaw],
                 ];

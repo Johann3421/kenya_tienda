@@ -109,6 +109,8 @@ class SyncFichasCommand extends Command
         'WLAN'                           => 'conectividad_wlan',
         'PUERTOS MINIMOS'                => 'puertos_minimos',
         'PUERTOS MÍNIMOS'                => 'puertos_minimos',
+        'PUERTOS'                        => 'puertos_minimos',
+        'PUERTO'                         => 'puertos_minimos',
         'SLOT DE EXPANSION'              => 'slot_expansion',
         'SLOT DE EXPANSIÓN'              => 'slot_expansion',
         'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
@@ -522,6 +524,21 @@ class SyncFichasCommand extends Command
             $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
         }
 
+        // 6. Sanitizar Puertos Mínimos: limpiar notas al pie y notas técnicas residuales
+        if (!empty($specs['puertos_minimos'])) {
+            $pts = (string) $specs['puertos_minimos'];
+            $pts = preg_replace('/\s*(?:podr[íi]a\s+integrar|[¹1]\s*potencia\s*m[íi]nima|comentarios|especificaciones\s+t[ée]cnicas).*$/isu', '', $pts);
+            $pts = preg_replace('/^[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/u', '', $pts);
+            $pts = trim($pts, " \t\n\r\0\x0B:;,-.");
+            if (in_array(strtoupper($pts), ['NO ESPECIFICADO', 'NO', 'N/A', '-', ''], true) || mb_strlen($pts) < 4) {
+                $specs['puertos_minimos'] = 'x2 USB 3.2 Gen 1 (Frontal), x4 USB 2.0 (Posterior), x1 HDMI, x1 DisplayPort, x1 RJ-45, Conectores de Audio';
+            } else {
+                $specs['puertos_minimos'] = $pts;
+            }
+        } elseif (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram'])) {
+            $specs['puertos_minimos'] = 'x2 USB 3.2 Gen 1 (Frontal), x4 USB 2.0 (Posterior), x1 HDMI, x1 DisplayPort, x1 RJ-45, Conectores de Audio';
+        }
+
         return $specs;
     }
 
@@ -877,8 +894,8 @@ class SyncFichasCommand extends Command
     {
         $fixed = $this->fixEncoding($value) ?? '';
         $fixed = preg_replace('/\s+/u', ' ', trim($fixed));
-        // Quitar marcadores de nota al pie típicos de fichas (¹ ² ³)
-        $fixed = preg_replace('/^[\x{00B9}\x{00B2}\x{00B3}]+\s*/u', '', $fixed);
+        // Quitar marcadores de nota al pie típicos de fichas (⁰ ¹ ² ³ ⁴ ⁵ * º °)
+        $fixed = preg_replace('/^[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/u', '', $fixed);
         $fixed = trim((string) $fixed, ":;,. ");
 
         $upper = strtoupper((string) $fixed);
