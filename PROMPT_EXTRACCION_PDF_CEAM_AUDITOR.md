@@ -483,16 +483,12 @@ def extraer_especificaciones_pdf(
 def post_procesar_specs_pc(specs: Dict[str, str]) -> Dict[str, str]:
     """
     Sanitiza y desacopla campos cruzados de PCs:
-    - Quita 'puertos_minimos' (texto residual legal).
     - Desacopla Seguridad TPM 2.0 de Fuente de Poder.
     - Mueve certificaciones (ROHS, FCC, CE, RAEE) erróneas desde Empaque a Certificaciones.
     - Limpia repetición de modelo en Garantía.
     - Descarta Accesorios y Otros si contiene texto residual legal.
     """
-    # 1. Quitar puertos_minimos
-    specs.pop("puertos_minimos", None)
-
-    # 2. Desacoplar Seguridad TPM de Fuente de Poder
+    # 1. Desacoplar Seguridad TPM de Fuente de Poder
     fp = specs.get("fuente_poder", "")
     if fp:
         m = re.search(r'(?:seguridad|tpm)\s*[:\-]?\s*(.+)$', fp, re.IGNORECASE)

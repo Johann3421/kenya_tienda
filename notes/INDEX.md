@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-09-22-reversion-formato-y-puertos-minimos|2026-09-22: Reincorporación de campo 'Formato' y 'Puertos Mínimos']]
 - [[2026-09-21-normalizacion-especificaciones-fichas-tecnicas|2026-09-21: Normalización y sanitización de especificaciones de fichas técnicas (Caso EZENT)]]
 - [[2026-09-21-rediseño-garantia-qr-nuevo-estandar|2026-09-21: Rediseño de vista Garantía QR al nuevo estándar unificado]]
 - [[2026-09-21-integracion-oem-deteccion-hardware-pc|2026-09-21: Integración OEM de fábrica y detección automática de hardware para PCs Kenya]]

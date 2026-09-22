@@ -147,7 +147,7 @@ class SyncFichasCommand extends Command
         'mouse'               => 'Mouse',
         'suite_ofimatica'     => 'Suite Ofimática',
         'garantia_de_fabrica' => 'Garantía de Fábrica',
-        'formato'             => 'Formato / Chasis',
+        'formato'             => 'Formato',
         'sonido'              => 'Sonido',
         'chipset'             => 'Chipset',
         'puertos_minimos'     => 'Puertos Mínimos',
@@ -455,10 +455,7 @@ class SyncFichasCommand extends Command
      */
     private function normalizePcSpecs(array $specs): array
     {
-        // 1. Quitar Puertos Mínimos (requerimiento explícito del cliente)
-        unset($specs['puertos_minimos']);
-
-        // 2. Desacoplar Seguridad TPM 2.0 de Fuente de Poder
+        // 1. Desacoplar Seguridad TPM 2.0 de Fuente de Poder
         if (!empty($specs['fuente_poder'])) {
             $fp = (string) $specs['fuente_poder'];
             if (preg_match('/(?:seguridad|tpm)\s*[:\-]?\s*(.+)$/iu', $fp, $mSeg)) {
@@ -682,7 +679,7 @@ class SyncFichasCommand extends Command
 
         return [
             'graficos', 'sistema_operativo', 'suite_ofimatica',
-            'formato', 'sonido', 'chipset',
+            'formato', 'sonido', 'chipset', 'puertos_minimos',
             'slot_expansion', 'fuente_poder', 'seguridad', 'empaque',
             'certificaciones', 'accesorios_otros',
         ];

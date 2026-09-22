@@ -839,7 +839,7 @@
                 } elseif (!$isMonitor) {
                     if ($isDesktopOrWorkstation) {
                         $topOrdered = [
-                            (object) ['campo' => 'FORMATO / CHASIS', 'descripcion' => $formatoRaw ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'FORMATO', 'descripcion' => $formatoRaw ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'PROCESADOR', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'CHIPSET', 'descripcion' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'VIDEO', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
@@ -1185,7 +1185,7 @@
                 $oldPcRows = [
                     ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
                     ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
-                    ['label' => 'Formato / Chasis', 'value' => $formatoRaw],
+                    ['label' => 'Formato', 'value' => $formatoRaw],
                     ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
                     ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
                     ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
@@ -1196,6 +1196,7 @@
                     ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset'])],
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
                     ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
+                    ['label' => 'Puertos Mínimos', 'value' => $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
                     ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2|ranura/'])],
                     ['label' => 'Fuente de Poder', 'value' => $fuenteRaw],
                 ];

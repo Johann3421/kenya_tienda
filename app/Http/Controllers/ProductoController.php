@@ -1038,7 +1038,7 @@ public function importarEspecificaciones(Request $request)
             if (str_contains($c, 'CERTIFIC')) return 'CERTIFICACIONES';
             if (str_contains($c, 'ACCESORIO') || str_contains($c, 'OTROS')) return 'ACCESORIOS Y OTROS';
             if (str_contains($c, 'RAEE')) return 'SISTEMA RAEE';
-            if (str_contains($c, 'FORMATO') || str_contains($c, 'FACTOR') || str_contains($c, 'CHASIS') || str_contains($c, 'SUMINISTRO')) return 'FORMATO / CHASIS';
+            if (str_contains($c, 'FORMATO') || str_contains($c, 'FACTOR') || str_contains($c, 'CHASIS') || str_contains($c, 'SUMINISTRO')) return 'FORMATO';
             if (str_contains($c, 'RESOLUCI')) return 'RESOLUCIÓN';
             if (str_contains($c, 'PANTALLA') || str_contains($c, 'PULGADAS')) return 'PANTALLA';
             if (str_contains($c, 'TECLADO') || str_contains($c, 'MOUSE') || str_contains($c, 'PERIFÉRIC')) return 'TECLADO Y MOUSE';
@@ -1078,7 +1078,7 @@ public function importarEspecificaciones(Request $request)
 
         if ($isPc) {
             $canonicalPcOrder = [
-                'FORMATO / CHASIS',
+                'FORMATO',
                 'PROCESADOR',
                 'MEMORIA RAM',
                 'ALMACENAMIENTO',
@@ -1089,6 +1089,7 @@ public function importarEspecificaciones(Request $request)
                 'CHIPSET',
                 'CONECTIVIDAD LAN',
                 'CONECTIVIDAD WLAN',
+                'PUERTOS MÍNIMOS',
                 'SLOT DE EXPANSIÓN',
                 'FUENTE DE PODER',
                 'SEGURIDAD',
