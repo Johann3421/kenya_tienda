@@ -551,6 +551,16 @@ def post_procesar_specs_pc(specs: Dict[str, str]) -> Dict[str, str]:
     elif any(k in specs for k in ("fuente_poder", "chipset", "ram", "procesador")):
         specs["puertos_minimos"] = "x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks"
 
+    # 7. Normalizar Formato / Chasis: limpiar prefijo "Chasis:" o "Formato:"
+    fmt = specs.get("formato", "")
+    if fmt:
+        fmt = re.sub(r'^(?:chasis|formato|factor(?:\s*de\s*forma)?|gabinete)\s*[:\-]?\s*', '', fmt, flags=re.IGNORECASE)
+        fmt = fmt.strip(" \t\n\r:;,-.")
+        if fmt.upper() in ["NO ESPECIFICADO", "NO", "N/A", "-"] or len(fmt) < 3:
+            specs.pop("formato", None)
+        else:
+            specs["formato"] = fmt.title()
+
     return specs
 ```
 

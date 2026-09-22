@@ -27,6 +27,12 @@ class SyncFichasCommand extends Command
     // Tokens del texto de descripción → columna en productos
     // Orden importa: tokens más largos primero para evitar matches parciales
     const SPEC_TOKENS = [
+        'FORMATO / CHASIS:'              => 'formato',
+        'FORMATO/CHASIS:'                => 'formato',
+        'FACTOR DE FORMA:'               => 'formato',
+        'TIPO DE CHASIS:'                => 'formato',
+        'CHASIS:'                        => 'formato',
+        'FORMATO:'                       => 'formato',
         'TIPO DE SUMINISTRO DE IMPRESION:' => 'tipo_suministro',
         'TIPO DE SUMINISTRO DE IMPRESIÓN:' => 'tipo_suministro',
         'SUITE OFIMATICA PRE-INSTALADA:' => 'suite_ofimatica',
@@ -85,10 +91,14 @@ class SyncFichasCommand extends Command
         'DIMENSIONES'                    => 'dimensiones',
         'FORMATO / CHASIS'               => 'formato',
         'FORMATO/CHASIS'                 => 'formato',
+        'FACTOR DE FORMA / CHASIS'       => 'formato',
+        'TIPO DE CHASIS'                 => 'formato',
+        'CHASIS / FORMATO'               => 'formato',
         'CHASIS'                         => 'formato',
         'FORMATO'                        => 'formato',
         'FACTOR DE FORMA'                => 'formato',
         'FACTORDE FORMA'                 => 'formato',
+        'GABINETE'                       => 'formato',
         'PROCESADOR'                     => 'procesador',
         'MEMORIA RAM'                    => 'ram',
         'RAM'                            => 'ram',
@@ -538,6 +548,18 @@ class SyncFichasCommand extends Command
             }
         } elseif (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram'])) {
             $specs['puertos_minimos'] = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
+        }
+
+        // 7. Sanitizar Formato / Chasis: limpiar prefijo "Chasis:" o inferir de modelo
+        if (!empty($specs['formato'])) {
+            $fmt = trim((string)$specs['formato']);
+            $fmt = preg_replace('/^(?:chasis|formato|factor(?:\s*de\s*forma)?|gabinete)\s*[:\-]?\s*/iu', '', $fmt);
+            $fmt = trim($fmt, " \t\n\r\0\x0B:;,-.");
+            if (in_array(strtoupper($fmt), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($fmt) < 3) {
+                unset($specs['formato']);
+            } else {
+                $specs['formato'] = ucwords(strtolower($fmt));
+            }
         }
 
         return $specs;

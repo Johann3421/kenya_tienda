@@ -765,7 +765,66 @@
                 };
 
                 // Extracción y sanitización para PCs (auditoría / Ficha 368 / EZENT)
-                $formatoRaw = $getSpecValue(['/formato\s*\/\s*chasis|formato|factor|chasis|tipo de suministro|suministro/']) ?? $getProductValue(['Tipo de suministro']);
+                // En fichas de Perú Compras, 'Chasis' equivale al 'Formato'
+                $formatoRaw = $getSpecValue([
+                    '/^formato$/i',
+                    '/^chasis$/i',
+                    '/formato\s*\/\s*chasis|formato\/chasis/i',
+                    '/tipo\s*de\s*chasis/i',
+                    '/factor\s*de\s*forma/i',
+                    '/formato|chasis|factor|gabinete/i',
+                    '/tipo de suministro|suministro/'
+                ]) ?? $getProductValue(['Tipo de suministro']);
+
+                // Si no se extrajo directamente de especificaciones, analizar el texto descriptivo del producto
+                if (empty($formatoRaw) || in_array(strtoupper(trim((string)$formatoRaw)), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                    $textSources = [
+                        $producto->descripcion ?? '',
+                        $producto->especificaciones ?? '',
+                        $producto->descripcion_2 ?? '',
+                        $producto->nombre ?? '',
+                        optional($producto->modelo)->descripcion ?? '',
+                        optional($producto->modelo)->nombre ?? '',
+                    ];
+                    foreach ($textSources as $txt) {
+                        if (empty($txt)) continue;
+                        if (preg_match('/(?:chasis|formato|factor(?:\s*de\s*forma)?|gabinete)\s*[:\-]?\s*([a-záéíóúñ0-9\s\/\-_]+?)(?=\b(?:procesador|cpu|memoria|ram|disco|almacenamiento|fuente|placa|motherboard|sistema|tarjeta|\n|\r|$)|;|,)/iu', $txt, $mC)) {
+                            $v = trim($mC[1]);
+                            if (strlen($v) >= 3 && !in_array(strtoupper($v), ['NO', 'SI', 'SÍ', 'N/A', 'NULL', 'NO ESPECIFICADO'], true)) {
+                                $formatoRaw = $v;
+                                break;
+                            }
+                        }
+                        if (preg_match('/\b(torre\s*mediana|small\s*form\s*factor|mini\s*torre|micro\s*torre|mid\s*tower|tower|torre|sff|desktop|all\s*in\s*one|aio|mini\s*pc)\b/iu', $txt, $mDirect)) {
+                            $foundDirect = ucwords(strtolower(trim($mDirect[1])));
+                            if ($foundDirect === 'Sff') $foundDirect = 'Small Form Factor';
+                            if ($foundDirect === 'Torre' || $foundDirect === 'Tower' || $foundDirect === 'Mid Tower') $foundDirect = 'Torre Mediana';
+                            $formatoRaw = $foundDirect;
+                            break;
+                        }
+                    }
+                }
+
+                // Inferencia por nomenclatura estándar de modelos Kenya PC (T = Torre Mediana, S = Small Form Factor)
+                if (empty($formatoRaw) || in_array(strtoupper(trim((string)$formatoRaw)), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                    $fullName = ($producto->nombre ?? '') . ' ' . (optional($producto->modelo)->nombre ?? '') . ' ' . (optional($producto->modelo)->descripcion ?? '') . ' ' . ($producto->nro_parte ?? '');
+                    if (preg_match('/\bT\d{3}\b|\bTOWER\b|\bTORRE\b|\bE7[CT]/i', $fullName)) {
+                        $formatoRaw = 'Torre Mediana';
+                    } elseif (preg_match('/\bS\d{3}\b|\bSFF\b|\bE7S/i', $fullName)) {
+                        $formatoRaw = 'Small Form Factor';
+                    } elseif (preg_match('/\bM\d{3}\b|\bMINI\b/i', $fullName)) {
+                        $formatoRaw = 'Mini PC';
+                    } elseif ($isDesktopOrWorkstation) {
+                        $formatoRaw = 'Torre Mediana';
+                    }
+                }
+
+                if ($formatoRaw) {
+                    $formatoRaw = preg_replace('/^(?:chasis|formato|factor(?:\s*de\s*forma)?|gabinete)\s*[:\-]?\s*/iu', '', $formatoRaw);
+                    $formatoRaw = trim($formatoRaw, " \t\n\r\0\x0B,.-:;");
+                    $formatoRaw = ucwords(strtolower($formatoRaw));
+                    if (strtolower($formatoRaw) === 'sff') $formatoRaw = 'Small Form Factor';
+                }
                 
                 $fuenteRaw = $getSpecValue(['/fuente|psu|power supply/']) ?? $getProductValue(['fuente_poder']);
                 $seguridadRaw = $getSpecValue(['/seguridad|tpm/']);
