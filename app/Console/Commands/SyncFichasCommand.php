@@ -528,15 +528,16 @@ class SyncFichasCommand extends Command
         if (!empty($specs['puertos_minimos'])) {
             $pts = (string) $specs['puertos_minimos'];
             $pts = preg_replace('/\s*(?:podr[íi]a\s+integrar|[¹1]\s*potencia\s*m[íi]nima|comentarios|especificaciones\s+t[ée]cnicas).*$/isu', '', $pts);
+            $pts = preg_replace('/^puertos\s*[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/iu', '', $pts);
             $pts = preg_replace('/^[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/u', '', $pts);
             $pts = trim($pts, " \t\n\r\0\x0B:;,-.");
-            if (in_array(strtoupper($pts), ['NO ESPECIFICADO', 'NO', 'N/A', '-', ''], true) || mb_strlen($pts) < 4) {
-                $specs['puertos_minimos'] = 'x2 USB 3.2 Gen 1 (Frontal), x4 USB 2.0 (Posterior), x1 HDMI, x1 DisplayPort, x1 RJ-45, Conectores de Audio';
+            if (in_array(strtoupper($pts), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'SI', 'SÍ', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', ''], true) || mb_strlen($pts) < 4) {
+                $specs['puertos_minimos'] = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
             } else {
                 $specs['puertos_minimos'] = $pts;
             }
         } elseif (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram'])) {
-            $specs['puertos_minimos'] = 'x2 USB 3.2 Gen 1 (Frontal), x4 USB 2.0 (Posterior), x1 HDMI, x1 DisplayPort, x1 RJ-45, Conectores de Audio';
+            $specs['puertos_minimos'] = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
         }
 
         return $specs;

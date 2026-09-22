@@ -541,12 +541,15 @@ def post_procesar_specs_pc(specs: Dict[str, str]) -> Dict[str, str]:
     pts = specs.get("puertos_minimos", "")
     if pts:
         pts = re.sub(r'\s*(?:podr[íi]a\s+integrar|[¹1]\s*potencia\s*m[íi]nima|comentarios|especificaciones\s+t[ée]cnicas).*$', '', pts, flags=re.IGNORECASE | re.DOTALL)
+        pts = re.sub(r'^puertos\s*[\u2070\u00B9\u00B2\u00B3\u2074-\u2079\*\º\°\:\-\s]+', '', pts, flags=re.IGNORECASE)
         pts = re.sub(r'^[\u2070\u00B9\u00B2\u00B3\u2074-\u2079\*\º\°\:\-\s]+', '', pts)
         pts = pts.strip(" \t\n\r:;,-.")
-        if pts.upper() in ["NO ESPECIFICADO", "NO", "N/A", "-"] or len(pts) < 4:
-            specs["puertos_minimos"] = "x2 USB 3.2 Gen 1 (Frontal), x4 USB 2.0 (Posterior), x1 HDMI, x1 DisplayPort, x1 RJ-45, Conectores de Audio"
+        if pts.upper() in ["NO ESPECIFICADO", "NO", "N/A", "-", "SI", "SÍ", "TRUE", "FALSE", "APLICA", "CUMPLE"] or len(pts) < 4:
+            specs["puertos_minimos"] = "x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks"
         else:
             specs["puertos_minimos"] = pts
+    elif any(k in specs for k in ("fuente_poder", "chipset", "ram", "procesador")):
+        specs["puertos_minimos"] = "x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks"
 
     return specs
 ```

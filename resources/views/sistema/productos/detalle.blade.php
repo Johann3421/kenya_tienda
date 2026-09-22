@@ -660,7 +660,12 @@
                         || stripos($productoNombre, 'toner') !== false;
                 }
 
-                $isDesktopOrWorkstation = !$isMonitor && !$isToner && $producto->modelo && $producto->modelo->categoria_id && in_array($producto->modelo->categoria_id, [1, 3]);
+                $prodCatId = $producto->categoria_id ?? optional($producto->modelo)->categoria_id;
+                $allTextCombined = strtolower(($producto->nombre ?? '') . ' ' . (optional($producto->modelo)->descripcion ?? '') . ' ' . (optional($producto->modelo)->nombre ?? '') . ' ' . (optional($producto->getCategoria)->nombre ?? ''));
+                $isDesktopOrWorkstation = !$isMonitor && !$isToner && (
+                    in_array($prodCatId, [1, 3])
+                    || preg_match('/(?:ezent|sff|tower|prowork|genwork|ofiszu|henko|computadora|desktop|workstation|pc)/i', $allTextCombined)
+                );
 
                 // Normalizar y filtrar especificaciones válidas
                 $specsList = [];
@@ -827,9 +832,52 @@
                 }
 
                 // Extracción y sanitización de Puertos Mínimos (auditoría / Ficha 368 / EZENT)
-                $puertosRaw = $getSpecValue(['/^puertos\s*m[ií]nimos?$/i', '/^puertos?$/i', '/puertos.*posteriores/i', '/conectividad\s*usb/i', '/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb']);
+                $isInvalidPortValue = function($val) {
+                    if (empty($val)) return true;
+                    $v = trim((string)$val);
+                    if (in_array(strtoupper($v), ['SI', 'SÍ', 'NO', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', 'N/A', '-', 'NO ESPECIFICADO', 'NULL', '1', '0'], true)) {
+                        return true;
+                    }
+                    if (mb_strlen($v) < 4) return true;
+                    return false;
+                };
+
+                $puertosRaw = null;
+
+                // 1. Buscar en especificaciones por campo 'puertos' o similar con valor no booleano
+                foreach ($specsList as $sp) {
+                    $c = strtolower(trim($sp->campo ?? ''));
+                    $d = trim($sp->descripcion ?? '');
+                    if ($isInvalidPortValue($d)) continue;
+
+                    if (preg_match('/^puertos\s*m[ií]nimos?$|^puertos?[\x{2070}\*º°]?$|puertos.*posteriores/iu', $c)) {
+                        $puertosRaw = $d;
+                        break;
+                    }
+                }
+
+                // 2. Si no se encontró por campo, buscar cualquier fila que contenga desglose físico de puertos (x2 USB..., RJ45, etc.)
+                if (empty($puertosRaw)) {
+                    foreach ($specsList as $sp) {
+                        $d = trim($sp->descripcion ?? '');
+                        if ($isInvalidPortValue($d)) continue;
+                        if (preg_match('/(?:x\d+\s*usb|\busb\s*[23]\b)/i', $d) && preg_match('/(?:rj\s*-?\s*45|jacks?|hdmi|vga|audio|line)/i', $d)) {
+                            $puertosRaw = $d;
+                            break;
+                        }
+                    }
+                }
+
+                // 3. Si aún no se encontró, buscar candidatos genéricos no booleanos
+                if (empty($puertosRaw)) {
+                    $cand = $getSpecValue(['/^puertos\s*m[ií]nimos?$/i', '/^puertos?[\x{2070}\*º°]?$/i', '/puertos.*posteriores/i']);
+                    if (!$isInvalidPortValue($cand)) {
+                        $puertosRaw = $cand;
+                    }
+                }
+
+                // 4. Limpiar notas al pie legales residuales (ej. "El equipo podría integrar puertos...")
                 if ($puertosRaw) {
-                    // Si contiene notas al pie legales sobre puertos/slots/potencia/cobertura
                     if (preg_match('/(?:podr[ií]a\s+integrar|el\s+equipo\s+podr[ií]a|cobertura\s+solo\s+en|certificaci[oó]n\s+de\s+componentes|potencia\s+m[ií]nima|especificaciones\s+t[eé]cnicas)/iu', $puertosRaw)) {
                         if (preg_match('/^(.*?)(?:[\x{2070}\*¹²³]?\s*(?:podr[ií]a\s+integrar|el\s+equipo\s+podr[ií]a|cobertura\s+solo|potencia\s+m[ií]nima|especificaciones))/iu', $puertosRaw, $mReal) && strlen(trim($mReal[1])) > 5) {
                             $puertosRaw = trim($mReal[1]);
@@ -839,23 +887,14 @@
                     }
                 }
 
-                // Si fue descartado por nota legal o vino vacío, buscar si otra fila contiene los puertos reales
-                if (empty($puertosRaw)) {
-                    foreach ($specsList as $sp) {
-                        $d = trim($sp->descripcion ?? '');
-                        if (preg_match('/\bx\d+\s*usb\b/i', $d) && preg_match('/\b(?:rj45|jacks?|hdmi|vga|line\s*in)\b/i', $d)) {
-                            $puertosRaw = $d;
-                            break;
-                        }
-                    }
-                }
-
-                // Fallback para modelos EZENT / PC Kenya de fábrica si vino solo la nota al pie
-                if (empty($puertosRaw) && $isDesktopOrWorkstation) {
+                // 5. Fallback estándar para modelos de PC / Workstation / Desktop Kenya
+                if ($isInvalidPortValue($puertosRaw) && ($isDesktopOrWorkstation || (!$isMonitor && !$isToner))) {
                     $puertosRaw = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
                 }
 
+                // 6. Limpieza final de superíndices, prefijos "Puertos⁰" / "Puertos:"
                 if ($puertosRaw) {
+                    $puertosRaw = preg_replace('/^puertos\s*[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/iu', '', $puertosRaw);
                     $puertosRaw = preg_replace('/^[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/u', '', $puertosRaw);
                     $puertosRaw = trim($puertosRaw, " \t\n\r\0\x0B,.-:;");
                 }
@@ -1249,7 +1288,7 @@
                     ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset'])],
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
                     ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
-                    ['label' => 'Puertos Mínimos', 'value' => $puertosRaw ?? $getSpecValue(['/puertos|minimo|m[ií]nimo/']) ?? $getProductValue(['conectividad_usb'])],
+                    ['label' => 'Puertos Mínimos', 'value' => $puertosRaw ?? 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks'],
                     ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2|ranura/'])],
                     ['label' => 'Fuente de Poder', 'value' => $fuenteRaw],
                 ];

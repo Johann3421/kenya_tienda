@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-09-22-correccion-puertos-minimos-descarte-booleano|2026-09-22: Corrección de Puertos Mínimos, Descarte de Valores Booleanos y Fallback Exacto de PDF]]
 - [[2026-09-22-sintesis-contexto-y-sanitizacion-puertos-minimos|2026-09-22: Síntesis de Contexto Integral, Auditoría Fichas PC y Sanitización de Puertos Mínimos]]
 - [[2026-09-22-depuracion-accesorios-y-otros-pdf-tokens|2026-09-22: Depuración de Accesorios y Otros, Desolapamiento de Tokens y Token de Seguridad en Fichas]]
 - [[2026-09-22-truncado-garantia-carry-in|2026-09-22: Truncado de Garantía hasta 'CARRY-IN' y remoción de texto residual]]
