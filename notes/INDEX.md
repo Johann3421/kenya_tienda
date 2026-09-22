@@ -16,3 +16,4 @@
 - [[2026-09-21-deep-linking-scroll-footer-quienes-somos|2026-09-21: Navegación y scroll suave con resalte visual desde Footer a Quiénes Somos]]
 - [[2026-09-19-ajuste-hero-tiempo-y-footer|2026-09-19: Ajuste de tiempo en Hero Slider y reestructuración de temas y títulos del Footer]]
 - [[2026-09-22-resolucion-raiz-tokens-pdf-puertos-certificaciones|2026-09-22: Resolución de Causa Raíz en Extracción de PDF (Tokens Ambiguos, Colisiones y Descarte de Comentarios)]]
+- [[2026-09-22-paridad-prowork-pdf-puertos-slots-perifericos|2026-09-22: Paridad 1:1 en Fichas ProWork y Ezent (Puertos, Slots, Periféricos y Certificaciones)]]

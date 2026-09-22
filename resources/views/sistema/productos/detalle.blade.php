@@ -843,12 +843,28 @@
                         $fuenteRaw = trim(preg_replace('/[\/,\|\-]?\s*TPM\s*2\.0.*$/iu', '', $fuenteRaw));
                     }
                 }
+
+                $tecladoRaw = $getSpecValue(['/^teclado$/i', '/teclado/i']) ?? $getProductValue(['teclado']);
+                $mouseRaw = $getSpecValue(['/^mouse$/i', '/mouse/i']) ?? $getProductValue(['mouse']);
+
+                // Desacoplar Teclado y Mouse de Seguridad si fueron absorbidos en sincronizaciones previas
+                if ($seguridadRaw && preg_match('/(?:Teclado|Mouse)/i', $seguridadRaw)) {
+                    if (empty($tecladoRaw) && preg_match('/Teclado\s*[:\-]?\s*(.*?)(?=\s*Mouse\b|$)/isu', $seguridadRaw, $mT)) {
+                        $tecladoRaw = trim($mT[1], " \t\n\r\0\x0B,.-:;");
+                    }
+                    if (empty($mouseRaw) && preg_match('/Mouse\s*[:\-]?\s*(.*?)(?=\s*(?:Fuente|Alimentaci[oó]n|Garant[ií]a|$))/isu', $seguridadRaw, $mM)) {
+                        $mouseRaw = trim($mM[1], " \t\n\r\0\x0B,.-:;");
+                    }
+                    $seguridadRaw = preg_replace('/\s*(?:Teclado|Mouse|Fuente\s+de\s+Poder|Alimentaci[oó]n).*$/isu', '', $seguridadRaw);
+                    $seguridadRaw = trim($seguridadRaw, " \t\n\r\0\x0B,.-:;");
+                }
                 if ($seguridadRaw && !str_contains(strtoupper($seguridadRaw), 'TPM')) {
                     $seguridadRaw = 'TPM ' . $seguridadRaw;
                 }
 
                 $garantiaRaw = $getSpecValue(['/garant[ií]a de f[aá]brica|garant[ií]a|garantia/']) ?? $getProductValue(['garantia_de_fabrica', 'Garantia']);
                 if ($garantiaRaw) {
+                    $garantiaRaw = preg_replace('/^(?:de\s+f[aá]brica[⁰¹²³⁴⁵⁶⁷⁸⁹\*°\d]*\s*)+/iu', '', $garantiaRaw);
                     // Limpiar prefijo repetido del modelo/marca: "UNIDAD KENYA TECHNOLOGY EZENT T700..."
                     if (preg_match('/\b(\d+\s*MESES.*)$/iu', $garantiaRaw, $mMeses)) {
                         $garantiaRaw = $mMeses[1];
@@ -862,7 +878,7 @@
                     } else {
                         $garantiaRaw = preg_replace('/\s+(?:UNIDAD|KENYA|MARCA|ESPECIFICACIONES).*$/iu', '', $garantiaRaw);
                     }
-                    $garantiaRaw = trim($garantiaRaw);
+                    $garantiaRaw = trim($garantiaRaw, " \t\n\r\0\x0B,.-:;");
                 }
 
                 $empaqueRaw = $getSpecValue(['/^empaque/i', '/packag/i']) ?? $getProductValue(['Empaque', 'empaque_de_fabrica']);
@@ -903,11 +919,12 @@
                     if (preg_match('/(?:componentes\s+Internos|Im[áa]genes\s+referenciales|Numerode\s*Parte)/iu', $certificacionesRaw)) {
                         $certificacionesRaw = null;
                     } else {
-                        $certificacionesRaw = preg_replace('/^(?:Certificaci[oó]n[⁰¹²³⁴⁵⁶⁷⁸⁹\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $certificacionesRaw);
+                        $certificacionesRaw = preg_replace('/^(?:Certificaci[oó]n(?:es)?[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*)\s*[:\-]?\s*/iu', '', $certificacionesRaw);
                         if (preg_match('/^(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b))/iu', $certificacionesRaw, $mOnlyCert)) {
                             $certificacionesRaw = trim($mOnlyCert[1], " \t\n\r\0\x0B,.-:;");
                         }
-                        $certificacionesRaw = preg_replace('/[⁰¹²³⁴⁵⁶⁷⁸⁹]/u', '', $certificacionesRaw);
+                        $certificacionesRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\?\*º°:\-\s]+/u', '', $certificacionesRaw);
+                        $certificacionesRaw = preg_replace('/[\x{2070}-\x{2079}\x{00B2}\x{00B3}\x{00B9}]/u', '', $certificacionesRaw);
                         $certificacionesRaw = trim($certificacionesRaw, " \t\n\r\0\x0B,.-:;");
                     }
                 }
@@ -1091,8 +1108,8 @@
 
                 // 6. Limpieza final de superíndices, prefijos "Puertos⁰" / "Puertos:" y formateo multi-línea
                 if ($puertosRaw) {
-                    $puertosRaw = preg_replace('/^puertos\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/iu', '', $puertosRaw);
-                    $puertosRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $puertosRaw);
+                    $puertosRaw = preg_replace('/^puertos(?:\s+m[ií]nimos)?\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/iu', '', $puertosRaw);
+                    $puertosRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $puertosRaw);
                     $puertosRaw = preg_replace('/\s+(Frontal(?:es)?|Posterior(?:es)?|Tarjeta\s+de\s+Video)\s*[:\-]?/iu', ' | $1:', $puertosRaw);
                     $puertosRaw = ltrim($puertosRaw, ' |');
                     $puertosRaw = trim($puertosRaw, " \t\n\r\0\x0B,.-:;");
@@ -1473,6 +1490,16 @@
             @endforelse
         @else
             @php
+                $slotRaw = $getSpecValue(['/^slot.*expansi/i', '/^ranura.*expansi/i', '/slot/i', '/ranura/i', '/pcie|pci/i']);
+                if ($slotRaw) {
+                    $slotRaw = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°\?]?\s*/iu', '', $slotRaw);
+                    $slotRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $slotRaw);
+                    $slotRaw = trim($slotRaw, " \t\n\r\0\x0B:;,.-");
+                    if (mb_strlen($slotRaw) < 3 || in_array(strtoupper($slotRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                        $slotRaw = null;
+                    }
+                }
+
                 $oldPcRows = [
                     ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
                     ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
@@ -1488,13 +1515,22 @@
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
                     ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
                     ['label' => 'Puertos Mínimos', 'value' => $puertosRaw ?? 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks'],
-                    ['label' => 'Slot de Expansión', 'value' => $getSpecValue(['/slot|expansi|pci|m\.2|ranura/'])],
-                    ['label' => 'Fuente de Poder', 'value' => $fuenteRaw],
+                    ['label' => 'Slot de Expansión', 'value' => $slotRaw ?? 'No especificado'],
                 ];
 
                 if (!empty($seguridadRaw)) {
                     $oldPcRows[] = ['label' => 'Seguridad', 'value' => $seguridadRaw];
                 }
+
+                if (!empty($tecladoRaw)) {
+                    $oldPcRows[] = ['label' => 'Teclado', 'value' => $tecladoRaw];
+                }
+
+                if (!empty($mouseRaw)) {
+                    $oldPcRows[] = ['label' => 'Mouse', 'value' => $mouseRaw];
+                }
+
+                $oldPcRows[] = ['label' => 'Fuente de Poder', 'value' => $fuenteRaw];
 
                 $oldPcRows[] = ['label' => 'Garantia', 'value' => $garantiaRaw];
                 $oldPcRows[] = ['label' => 'Empaque', 'value' => $empaqueRaw];

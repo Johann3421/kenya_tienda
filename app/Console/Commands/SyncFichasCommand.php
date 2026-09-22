@@ -119,16 +119,24 @@ class SyncFichasCommand extends Command
         'PUERTOS MÍNIMOS'                => 'puertos_minimos',
         'PUERTOS:'                       => 'puertos_minimos',
         'PUERTOS'                        => 'puertos_minimos',
+        'SLOT DE EXPANSION MINIMOS'      => 'slot_expansion',
+        'SLOT DE EXPANSIÓN MÍNIMOS'      => 'slot_expansion',
         'SLOT DE EXPANSION'              => 'slot_expansion',
         'SLOT DE EXPANSIÓN'              => 'slot_expansion',
         'RANURAS DE EXPANSIÓN MÍNIMOS'    => 'slot_expansion',
-        'RANURAS DE EXPANSIÓN MINIMOS'    => 'slot_expansion',
+        'RANURAS DE EXPANSION MINIMOS'    => 'slot_expansion',
         'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
+        'RANURAS DE EXPANSION'           => 'slot_expansion',
         'RANURASDE EXPANSIÓN'            => 'slot_expansion',
+        'RANURASDE EXPANSION'            => 'slot_expansion',
         'FUENTE DE PODER'                => 'fuente_poder',
         'SEGURIDAD TPM'                  => 'seguridad',
         'SEGURIDAD'                      => 'seguridad',
+        'TECLADO'                        => 'teclado',
+        'MOUSE'                          => 'mouse',
         'GARANTIA DE FABRICA'            => 'garantia_de_fabrica',
+        'GARANTÍA DE FABRICA'            => 'garantia_de_fabrica',
+        'GARANTIA DE FÁBRICA'            => 'garantia_de_fabrica',
         'GARANTÍA DE FÁBRICA'            => 'garantia_de_fabrica',
         'GARANTIA'                       => 'garantia_de_fabrica',
         'GARANTÍA'                       => 'garantia_de_fabrica',
@@ -136,8 +144,10 @@ class SyncFichasCommand extends Command
         'CERTIFICACIONES'                => 'certificaciones',
         'CERTIFICACIÓN²'                 => 'certificaciones',
         'CERTIFICACIÓN³'                 => 'certificaciones',
+        'CERTIFICACIÓN⁴'                 => 'certificaciones',
         'CERTIFICACION²'                 => 'certificaciones',
         'CERTIFICACION³'                 => 'certificaciones',
+        'CERTIFICACION⁴'                 => 'certificaciones',
         'SISTEMA DE MANEJO DE RAEE'      => 'sistema_raee',
         'SISTEMA MANEJO RAEE'            => 'sistema_raee',
         'SIST. MANEJO RAEE'              => 'sistema_raee',
@@ -497,9 +507,13 @@ class SyncFichasCommand extends Command
 
         if (!empty($specs['seguridad'])) {
             $seg = trim((string) $specs['seguridad']);
+            // Quitar texto de periféricos si fueron absorbidos por ausencia de token
+            $seg = preg_replace('/\s*(?:Teclado|Mouse|Fuente\s+de\s+Poder|Alimentaci[oó]n).*$/isu', '', $seg);
+            $seg = trim($seg, " \t\n\r\0\x0B:;,-.");
             if (!str_contains(strtoupper($seg), 'TPM')) {
-                $specs['seguridad'] = 'TPM ' . $seg;
+                $seg = 'TPM ' . $seg;
             }
+            $specs['seguridad'] = $seg;
         }
 
         // 3. Desensamblar y limpiar Empaque, Certificaciones y Sistema de Manejo de RAEE
@@ -534,10 +548,11 @@ class SyncFichasCommand extends Command
         // Sanitizar Certificaciones (quitar superíndices, prefijos y residuos)
         if (!empty($specs['certificaciones'])) {
             $cert = (string) $specs['certificaciones'];
-            $cert = preg_replace('/^(?:Certificaci[oó]n[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $cert);
+            $cert = preg_replace('/^(?:Certificaci[oó]n(?:es)?[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*)\s*[:\-]?\s*/iu', '', $cert);
             if (preg_match('/^(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b))/iu', $cert, $mOnlyCert)) {
                 $cert = trim($mOnlyCert[1], " \t\n\r\0\x0B,.-:;");
             }
+            $cert = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\?\*º°:\-\s]+/u', '', $cert);
             $cert = preg_replace('/[\x{2070}-\x{2079}\x{00B2}\x{00B3}\x{00B9}]/u', '', $cert);
             $cert = trim($cert, " \t\n\r\0\x0B,.-:;");
             if (in_array(strtoupper($cert), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true) || mb_strlen($cert) < 2) {
@@ -573,9 +588,10 @@ class SyncFichasCommand extends Command
             $specs['sistema_raee'] = 'Colectivo';
         }
 
-        // 4. Limpiar Garantía de Fábrica: cortar en CARRY-IN y quitar texto residual
+        // 4. Limpiar Garantía de Fábrica: cortar en CARRY-IN u ON-SITE y quitar texto residual
         if (!empty($specs['garantia_de_fabrica'])) {
             $gar = (string) $specs['garantia_de_fabrica'];
+            $gar = preg_replace('/^(?:de\s+f[aá]brica[⁰¹²³⁴⁵⁶⁷⁸⁹\*°\d]*\s*)+/iu', '', $gar);
             $gar = preg_replace('/^(?:UNIDAD\s+)?KENYA\s+TECHNOLOGY(?:\s+[A-Z0-9_\-]+)*\s+/iu', '', $gar);
             $gar = preg_replace('/^UNIDAD(?:\s+[A-Z0-9_\-]+)+\s+(\d+\s*MESES)/iu', '$1', $gar);
             if (preg_match('/^(.*?\bCARRY[\s\-]IN\b)/iu', $gar, $mCarry)) {
@@ -585,7 +601,7 @@ class SyncFichasCommand extends Command
             } else {
                 $gar = preg_replace('/(\d+\s*MESES)\s+(?:UNIDAD|KENYA).*$/iu', '$1', $gar);
             }
-            $specs['garantia_de_fabrica'] = trim($gar);
+            $specs['garantia_de_fabrica'] = trim($gar, " \t\n\r\0\x0B:;,-.");
         }
 
         // 5. Desacoplar y limpiar Accesorios y Otros
@@ -627,8 +643,8 @@ class SyncFichasCommand extends Command
         if (!empty($specs['puertos_minimos'])) {
             $pts = (string) $specs['puertos_minimos'];
             $pts = preg_replace('/\s*(?:podr[íi]a\s+integrar|[¹1]\s*potencia\s*m[íi]nima|comentarios|especificaciones\s+t[ée]cnicas).*$/isu', '', $pts);
-            $pts = preg_replace('/^puertos\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/iu', '', $pts);
-            $pts = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $pts);
+            $pts = preg_replace('/^puertos(?:\s+m[ií]nimos)?\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/iu', '', $pts);
+            $pts = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $pts);
             $pts = trim($pts, " \t\n\r\0\x0B:;,-.");
             if (in_array(strtoupper($pts), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'SI', 'SÍ', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', ''], true) || mb_strlen($pts) < 4 || preg_match('/^(?:y\/o\s*slots|podr[íi]a)/iu', $pts)) {
                 $specs['puertos_minimos'] = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
@@ -646,8 +662,8 @@ class SyncFichasCommand extends Command
         // 6b. Sanitizar Slot de Expansión: limpiar prefijo residual 'Mínimos²' (ProWork)
         if (!empty($specs['slot_expansion'])) {
             $sl = trim((string) $specs['slot_expansion']);
-            $sl = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°]?\s*/iu', '', $sl);
-            $sl = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $sl);
+            $sl = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°\?]?\s*/iu', '', $sl);
+            $sl = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $sl);
             $sl = trim($sl, " \t\n\r\0\x0B:;,.-");
             if (mb_strlen($sl) < 3) {
                 unset($specs['slot_expansion']);
@@ -843,7 +859,7 @@ class SyncFichasCommand extends Command
         return [
             'graficos', 'sistema_operativo', 'suite_ofimatica',
             'formato', 'sonido', 'chipset', 'puertos_minimos',
-            'slot_expansion', 'fuente_poder', 'seguridad', 'empaque',
+            'slot_expansion', 'fuente_poder', 'seguridad', 'teclado', 'mouse', 'empaque',
             'certificaciones', 'sistema_raee', 'accesorios', 'accesorios_otros', 'otros',
         ];
     }
@@ -983,8 +999,9 @@ class SyncFichasCommand extends Command
             return [];
         }
 
-        // Descartar bloque de Comentarios / notas al pie inicial antes de la tabla de especificaciones
-        $text = preg_replace('/^\s*Comentarios\b.*?(?=\b(?:Modelo|Formato|Chasis|Factor\s+de\s+Forma|Procesador)\b)/isu', '', $text);
+        // Descartar bloque de Comentarios / notas al pie inicial antes de la tabla de especificaciones.
+        // Soporta tanto tablas que inician con Modelo/Formato/Procesador como con Puertos Mínimos cortando tras el Nro de Parte o Marca Registrada.
+        $text = preg_replace('/^\s*Comentarios\b.*?(?:(?:Numero|N[uú]mero|Nro\.?|N°|Nº)(?:de|\s+de)?\s+Parte\b[^\r\n]*[\r\n\s]*|Marca\s+Registrada\b[^\r\n]*[\r\n\s]*|(?=\b(?:Modelo|Chasis|Factor\s+de\s+Forma|Formato|Procesador)\b))/isu', '', $text);
 
         $specs = $this->parseTokenizedText(
             $text,
