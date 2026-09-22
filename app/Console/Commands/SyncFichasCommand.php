@@ -635,10 +635,28 @@ class SyncFichasCommand extends Command
             if (in_array(strtoupper($pts), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'SI', 'SÍ', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', ''], true) || mb_strlen($pts) < 4) {
                 $specs['puertos_minimos'] = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
             } else {
-                $specs['puertos_minimos'] = $pts;
+                // Insertar separador ' | ' antes de sub-secciones conocidas (Frontales, Posteriores, Tarjeta de Video)
+                // para que el blade pueda renderizarlas en líneas separadas vía nl2br.
+                $pts = preg_replace('/\s+(Frontales|Posteriores|Tarjeta\s+de\s+Video)\s*:/iu', ' | $1:', $pts);
+                // Limpiar ' | ' al inicio si quedó
+                $pts = ltrim($pts, ' |');
+                $specs['puertos_minimos'] = trim($pts);
             }
         } elseif (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram'])) {
             $specs['puertos_minimos'] = 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks';
+        }
+
+        // 6b. Sanitizar Slot de Expansión: limpiar prefijo residual 'Mínimos²' (ProWork)
+        if (!empty($specs['slot_expansion'])) {
+            $sl = trim((string) $specs['slot_expansion']);
+            $sl = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°]?\s*/iu', '', $sl);
+            $sl = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $sl);
+            $sl = trim($sl, " \t\n\r\0\x0B:;,.-");
+            if (mb_strlen($sl) < 3) {
+                unset($specs['slot_expansion']);
+            } else {
+                $specs['slot_expansion'] = $sl;
+            }
         }
 
         // 7. Sanitizar Formato / Chasis: limpiar prefijo "Chasis:" o inferir de modelo
@@ -1007,18 +1025,9 @@ class SyncFichasCommand extends Command
     private function sanitizeSpecValue(string $value): ?string
     {
         $fixed = $this->fixEncoding($value) ?? '';
-        // Preservar saltos de línea significativos (entre contenido) como ' | '
-        // antes de colapsar el resto de espacios en blanco.
-        $fixed = preg_replace('/[ \t]*\r?\n[ \t]*/u', ' | ', trim($fixed));
-        // Colapsar espacios/tabs múltiples horizontales
-        $fixed = preg_replace('/[^\S\n]+/u', ' ', $fixed);
-        // Limpiar separadores ' | ' duplicados o al inicio/fin
-        $fixed = preg_replace('/(?:\s*\|\s*){2,}/u', ' | ', $fixed);
-        $fixed = trim((string) $fixed, " |\t:;,.");
+        $fixed = preg_replace('/\s+/u', ' ', trim($fixed));
         // Quitar marcadores de nota al pie típicos de fichas (⁰ ¹ ² ³ ⁴ ⁵ * º °)
         $fixed = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $fixed);
-        // Limpiar prefijos 'MÍNIMOS²' o 'MINIMOS' residuales (e.g. en slot_expansion de ProWork)
-        $fixed = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°]?\s*/iu', '', $fixed);
         $fixed = trim((string) $fixed, ":;,. ");
 
         $upper = strtoupper((string) $fixed);
