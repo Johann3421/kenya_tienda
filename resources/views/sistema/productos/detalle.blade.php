@@ -1514,7 +1514,7 @@
                     <i class="fa-solid fa-circle" style="font-size:5px; color:#ee7c31;"></i>
                     {{ $fr['label'] }}
                 </div>
-                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $fr['value'] ?? 'No especificado' }}</div>
+                <div style="flex:1; color:#1a1a1a; font-size:14px;">{!! nl2br(e(str_replace(' | ', "\n", $fr['value'] ?? 'No especificado'))) !!}</div>
             </div>
             @empty
             <div style="padding:32px; text-align:center; color:#999; font-size:14px;">Aún no tiene especificaciones</div>

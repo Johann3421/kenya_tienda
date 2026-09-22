@@ -123,6 +123,8 @@ class SyncFichasCommand extends Command
         'PUERTO'                         => 'puertos_minimos',
         'SLOT DE EXPANSION'              => 'slot_expansion',
         'SLOT DE EXPANSIÓN'              => 'slot_expansion',
+        'RANURAS DE EXPANSIÓN MÍNIMOS'    => 'slot_expansion',
+        'RANURAS DE EXPANSIÓN MINIMOS'    => 'slot_expansion',
         'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
         'RANURASDE EXPANSIÓN'            => 'slot_expansion',
         'FUENTE DE PODER'                => 'fuente_poder',
@@ -1005,9 +1007,18 @@ class SyncFichasCommand extends Command
     private function sanitizeSpecValue(string $value): ?string
     {
         $fixed = $this->fixEncoding($value) ?? '';
-        $fixed = preg_replace('/\s+/u', ' ', trim($fixed));
+        // Preservar saltos de línea significativos (entre contenido) como ' | '
+        // antes de colapsar el resto de espacios en blanco.
+        $fixed = preg_replace('/[ \t]*\r?\n[ \t]*/u', ' | ', trim($fixed));
+        // Colapsar espacios/tabs múltiples horizontales
+        $fixed = preg_replace('/[^\S\n]+/u', ' ', $fixed);
+        // Limpiar separadores ' | ' duplicados o al inicio/fin
+        $fixed = preg_replace('/(?:\s*\|\s*){2,}/u', ' | ', $fixed);
+        $fixed = trim((string) $fixed, " |\t:;,.");
         // Quitar marcadores de nota al pie típicos de fichas (⁰ ¹ ² ³ ⁴ ⁵ * º °)
         $fixed = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $fixed);
+        // Limpiar prefijos 'MÍNIMOS²' o 'MINIMOS' residuales (e.g. en slot_expansion de ProWork)
+        $fixed = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°]?\s*/iu', '', $fixed);
         $fixed = trim((string) $fixed, ":;,. ");
 
         $upper = strtoupper((string) $fixed);
