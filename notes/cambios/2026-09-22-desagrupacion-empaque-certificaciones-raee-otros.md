@@ -37,6 +37,7 @@
    - **Fila Independiente en `$oldPcRows`:**
      - Agregada fila para `Sistema de Manejo de Raee`.
      - Si existe `Otros`, renderiza `Accesorios` y `Otros` como filas separadas idénticas al PDF oficial.
+   - **Corrección de Error 500 PCRE en Linux:** Se eliminaron las secuencias hexadecimales `\x{2070}` que causaban fallo de compilación PCRE (`character code point value in \x{} or \o{} is too large`) cuando faltaba el flag `u`, reemplazándolas por caracteres Unicode literales estables (`⁰¹²³⁴⁵⁶⁷⁸⁹`) con modificador `/iu`.
    - **Fallbacks Oficiales de Fábrica:** Si los valores están vacíos para PCs Kenya de escritorio, se aplican los valores canónicos homologados en Perú Compras (`En caja - Unidad`, `ROSH, FCC, CE`, `Colectivo`, `Sistema de Enfriamiento por Flujo de Aire`).
 
 2. **Sincronizador Backend ([`SyncFichasCommand.php`](file:///c:/xampp/htdocs/kenya_tienda/app/Console/Commands/SyncFichasCommand.php)):**

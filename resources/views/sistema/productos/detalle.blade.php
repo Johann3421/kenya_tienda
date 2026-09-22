@@ -884,7 +884,7 @@
                             $empaqueRaw = $pEmp;
                         }
                     }
-                    if (preg_match('/(?:Certificaci[oó]n[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*|Certificaciones)\s*[:\-]?\s*(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b|$))/iu', $dirtyBlob, $mCert)) {
+                    if (preg_match('/(?:Certificaci[oó]n[⁰¹²³⁴⁵⁶⁷⁸⁹\d]*|Certificaciones)\s*[:\-]?\s*(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b|$))/iu', $dirtyBlob, $mCert)) {
                         $pCert = trim($mCert[1], " \t\n\r\0\x0B,.-:;");
                         if (!empty($pCert)) {
                             $certificacionesRaw = $pCert;
@@ -900,11 +900,11 @@
 
                 // Sanitizar Certificaciones (quitar prefijos, superíndices residuales y notas al pie)
                 if ($certificacionesRaw) {
-                    $certificacionesRaw = preg_replace('/^(?:Certificaci[oó]n[\x{00B0}-\x{00BE}\x{2070}-\x{2079}\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $certificacionesRaw);
+                    $certificacionesRaw = preg_replace('/^(?:Certificaci[oó]n[⁰¹²³⁴⁵⁶⁷⁸⁹\d]*|Certificaciones)\s*[:\-]?\s*/iu', '', $certificacionesRaw);
                     if (preg_match('/^(.*?)(?=(?:Sist(?:ema)?\.?\s*(?:de\s*Manejo\s*(?:de\s*)?)?Raee|\bRAEE\b))/iu', $certificacionesRaw, $mOnlyCert)) {
                         $certificacionesRaw = trim($mOnlyCert[1], " \t\n\r\0\x0B,.-:;");
                     }
-                    $certificacionesRaw = preg_replace('/[\x{2070}-\x{2079}\x{00B2}\x{00B3}\x{00B9}]/u', '', $certificacionesRaw);
+                    $certificacionesRaw = preg_replace('/[⁰¹²³⁴⁵⁶⁷⁸⁹]/u', '', $certificacionesRaw);
                     $certificacionesRaw = trim($certificacionesRaw, " \t\n\r\0\x0B,.-:;");
                 }
                 if ((empty($certificacionesRaw) || in_array(strtoupper($certificacionesRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) && $isDesktopOrWorkstation) {
@@ -1040,7 +1040,7 @@
                     $d = trim($sp->descripcion ?? '');
                     if ($isInvalidPortValue($d)) continue;
 
-                    if (preg_match('/^puertos\s*m[ií]nimos?$|^puertos?[\x{2070}\*º°]?$|puertos.*posteriores/iu', $c)) {
+                    if (preg_match('/^puertos\s*m[ií]nimos?$|^puertos?[⁰¹²³\*º°]?$|puertos.*posteriores/iu', $c)) {
                         $puertosRaw = $d;
                         break;
                     }
@@ -1060,7 +1060,7 @@
 
                 // 3. Si aún no se encontró, buscar candidatos genéricos no booleanos
                 if (empty($puertosRaw)) {
-                    $cand = $getSpecValue(['/^puertos\s*m[ií]nimos?$/i', '/^puertos?[\x{2070}\*º°]?$/i', '/puertos.*posteriores/i']);
+                    $cand = $getSpecValue(['/^puertos\s*m[ií]nimos?$/iu', '/^puertos?[⁰¹²³\*º°]?$/iu', '/puertos.*posteriores/iu']);
                     if (!$isInvalidPortValue($cand)) {
                         $puertosRaw = $cand;
                     }
@@ -1069,7 +1069,7 @@
                 // 4. Limpiar notas al pie legales residuales (ej. "El equipo podría integrar puertos...")
                 if ($puertosRaw) {
                     if (preg_match('/(?:podr[ií]a\s+integrar|el\s+equipo\s+podr[ií]a|cobertura\s+solo\s+en|certificaci[oó]n\s+de\s+componentes|potencia\s+m[ií]nima|especificaciones\s+t[eé]cnicas)/iu', $puertosRaw)) {
-                        if (preg_match('/^(.*?)(?:[\x{2070}\*¹²³]?\s*(?:podr[ií]a\s+integrar|el\s+equipo\s+podr[ií]a|cobertura\s+solo|potencia\s+m[ií]nima|especificaciones))/iu', $puertosRaw, $mReal) && strlen(trim($mReal[1])) > 5) {
+                        if (preg_match('/^(.*?)(?:[⁰¹²³\*]?\s*(?:podr[ií]a\s+integrar|el\s+equipo\s+podr[ií]a|cobertura\s+solo|potencia\s+m[ií]nima|especificaciones))/iu', $puertosRaw, $mReal) && strlen(trim($mReal[1])) > 5) {
                             $puertosRaw = trim($mReal[1]);
                         } else {
                             $puertosRaw = null;
@@ -1084,8 +1084,8 @@
 
                 // 6. Limpieza final de superíndices, prefijos "Puertos⁰" / "Puertos:"
                 if ($puertosRaw) {
-                    $puertosRaw = preg_replace('/^puertos\s*[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/iu', '', $puertosRaw);
-                    $puertosRaw = preg_replace('/^[\x{2070}\x{00B9}\x{00B2}\x{00B3}\x{2074}-\x{2079}\*\º\°\:\-\s]+/u', '', $puertosRaw);
+                    $puertosRaw = preg_replace('/^puertos\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/iu', '', $puertosRaw);
+                    $puertosRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $puertosRaw);
                     $puertosRaw = trim($puertosRaw, " \t\n\r\0\x0B,.-:;");
                 }
 
