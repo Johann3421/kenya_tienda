@@ -1033,6 +1033,18 @@
                     $otrosRaw = null;
                 }
 
+                // Sanitizar Otros: eliminar disclaimers y texto residual de pie de página
+                if ($otrosRaw) {
+                    $otrosRaw = preg_replace('/\s*(?:Especificaciones\s+T[ée]cnicas|Las\s+im[áa]genes\s+presentadas|Im[áa]genes\s+referenciales|Ficha\s+v[áa]lida|Acuerdo\s+Marco|Comentarios|Marca\s+Registrada|Kenya\s+Technology).*$/isu', '', $otrosRaw);
+                    if (preg_match('/sistema\s+de\s+enfriamiento(?:\s+por\s+flujo\s+de\s+aire)?/iu', $otrosRaw)) {
+                        $otrosRaw = 'Sistema de Enfriamiento por Flujo de Aire';
+                    }
+                    $otrosRaw = trim($otrosRaw, " \t\n\r\0\x0B,.-:;");
+                    if (in_array(strtoupper($otrosRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'SI', 'SÍ', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', ''], true) || mb_strlen($otrosRaw) < 2) {
+                        $otrosRaw = null;
+                    }
+                }
+
                 // Fallbacks para PCs de escritorio / Workstations Kenya oficiales de Perú Compras
                 if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
                     if (empty($tecladoRaw) && empty($otrosRaw)) {
@@ -1043,6 +1055,7 @@
                 if (empty($otrosRaw) && $isDesktopOrWorkstation) {
                     $otrosRaw = 'Sistema de Enfriamiento por Flujo de Aire';
                 }
+
 
                 // Extracción y sanitización de Puertos Mínimos (auditoría / Ficha 368 / EZENT)
                 $isInvalidPortValue = function($val) {

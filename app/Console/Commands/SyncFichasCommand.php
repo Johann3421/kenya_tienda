@@ -634,6 +634,21 @@ class SyncFichasCommand extends Command
             }
         }
 
+        // 5b. Sanitizar Otros: eliminar disclaimers y texto residual de pie de página
+        if (!empty($specs['otros'])) {
+            $otr = (string) $specs['otros'];
+            $otr = preg_replace('/\s*(?:Especificaciones\s+T[ée]cnicas|Las\s+im[áa]genes\s+presentadas|Im[áa]genes\s+referenciales|Ficha\s+v[áa]lida|Acuerdo\s+Marco|Comentarios|Marca\s+Registrada|Kenya\s+Technology).*$/isu', '', $otr);
+            if (preg_match('/sistema\s+de\s+enfriamiento(?:\s+por\s+flujo\s+de\s+aire)?/iu', $otr)) {
+                $otr = 'Sistema de Enfriamiento por Flujo de Aire';
+            }
+            $otr = trim($otr, " \t\n\r\0\x0B:;,-.");
+            if (in_array(strtoupper($otr), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'SI', 'SÍ', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', ''], true) || mb_strlen($otr) < 2) {
+                unset($specs['otros']);
+            } else {
+                $specs['otros'] = $otr;
+            }
+        }
+
         // Si es PC Kenya y quedó vacío accesorios u otros:
         $isPc = (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram']) || !empty($specs['sistema_operativo']));
         if ($isPc) {
@@ -647,6 +662,7 @@ class SyncFichasCommand extends Command
                 $specs['otros'] = 'Sistema de Enfriamiento por Flujo de Aire';
             }
         }
+
 
         // 6. Sanitizar Puertos Mínimos: limpiar notas al pie y notas técnicas residuales
         if (!empty($specs['puertos_minimos'])) {
@@ -1032,6 +1048,17 @@ class SyncFichasCommand extends Command
             [
                 'ESPECIFICACIONES TÉCNICAS',
                 'ESPECIFICACIONES TECNICAS',
+                'LAS IMÁGENES PRESENTADAS',
+                'LAS IMAGENES PRESENTADAS',
+                'IMÁGENES REFERENCIALES',
+                'IMAGENES REFERENCIALES',
+                'FICHA VÁLIDA PARA EL CATÁLOGO',
+                'FICHA VALIDA PARA EL CATALOGO',
+                'FICHA VÁLIDA',
+                'FICHA VALIDA',
+                'CATÁLOGO DE ACUERDO MARCO',
+                'CATALOGO DE ACUERDO MARCO',
+                'ACUERDO MARCO',
                 'KENYA TECHNOLOGY',
                 'MARCA REGISTRADA',
                 'UNIDAD KENYA TECHNOLOGY',
@@ -1041,6 +1068,7 @@ class SyncFichasCommand extends Command
                 'HTTPS://'
             ]
         );
+
 
         // Fallback robusto para PDFs de tóner con etiquetas variantes.
         $tonerSpecs = $this->parseTonerSpecsFromText($text);
@@ -1198,12 +1226,15 @@ class SyncFichasCommand extends Command
             } else {
                 $end = strlen($text);
                 foreach ($endMarkers as $marker) {
-                    $markerPos = stripos($text, $marker, $start);
-                    if ($markerPos !== false && $markerPos < $end) {
-                        $end = $markerPos;
+                    if (preg_match('/' . preg_quote($marker, '/') . '/iu', $text, $mMark, PREG_OFFSET_CAPTURE, $start)) {
+                        $markerPos = $mMark[0][1];
+                        if ($markerPos < $end) {
+                            $end = $markerPos;
+                        }
                     }
                 }
             }
+
 
             $raw = substr($text, $start, max(0, $end - $start));
             $value = $this->sanitizeSpecValue($raw);
