@@ -1035,7 +1035,9 @@
 
                 // Fallbacks para PCs de escritorio / Workstations Kenya oficiales de Perú Compras
                 if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
-                    $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                    if (empty($tecladoRaw) && empty($otrosRaw)) {
+                        $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                    }
                 }
 
                 if (empty($otrosRaw) && $isDesktopOrWorkstation) {
@@ -1522,11 +1524,16 @@
                     $oldPcRows[] = ['label' => 'Seguridad', 'value' => $seguridadRaw];
                 }
 
-                if (!empty($tecladoRaw)) {
+                $isBoolVal = function($val) {
+                    if (empty($val)) return true;
+                    return in_array(strtoupper(trim((string)$val)), ['SI', 'SÍ', 'NO', 'TRUE', 'FALSE', '1', '0', 'N/A', '-', 'NULL'], true);
+                };
+
+                if (!empty($tecladoRaw) && !$isBoolVal($tecladoRaw)) {
                     $oldPcRows[] = ['label' => 'Teclado', 'value' => $tecladoRaw];
                 }
 
-                if (!empty($mouseRaw)) {
+                if (!empty($mouseRaw) && !$isBoolVal($mouseRaw)) {
                     $oldPcRows[] = ['label' => 'Mouse', 'value' => $mouseRaw];
                 }
 

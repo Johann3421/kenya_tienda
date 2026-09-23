@@ -123,12 +123,19 @@ class SyncFichasCommand extends Command
         'SLOT DE EXPANSIÓN MÍNIMOS'      => 'slot_expansion',
         'SLOT DE EXPANSION'              => 'slot_expansion',
         'SLOT DE EXPANSIÓN'              => 'slot_expansion',
-        'RANURAS DE EXPANSIÓN MÍNIMOS'    => 'slot_expansion',
-        'RANURAS DE EXPANSION MINIMOS'    => 'slot_expansion',
-        'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
-        'RANURAS DE EXPANSION'           => 'slot_expansion',
+        'RANURASDE EXPANSIÓNMÍNIMOS'     => 'slot_expansion',
+        'RANURASDE EXPANSIONMINIMOS'     => 'slot_expansion',
+        'RANURAS DE EXPANSIÓNMÍNIMOS'    => 'slot_expansion',
+        'RANURAS DE EXPANSIONMINIMOS'    => 'slot_expansion',
+        'RANURASDE EXPANSIÓN MÍNIMOS'    => 'slot_expansion',
+        'RANURASDE EXPANSION MINIMOS'    => 'slot_expansion',
+        'RANURAS DE EXPANSIÓN MÍNIMOS'   => 'slot_expansion',
+        'RANURAS DE EXPANSION MINIMOS'   => 'slot_expansion',
         'RANURASDE EXPANSIÓN'            => 'slot_expansion',
         'RANURASDE EXPANSION'            => 'slot_expansion',
+        'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
+        'RANURAS DE EXPANSION'           => 'slot_expansion',
+        'RANURAS'                        => 'slot_expansion',
         'FUENTE DE PODER'                => 'fuente_poder',
         'SEGURIDAD TPM'                  => 'seguridad',
         'SEGURIDAD'                      => 'seguridad',
@@ -631,8 +638,10 @@ class SyncFichasCommand extends Command
         $isPc = (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram']) || !empty($specs['sistema_operativo']));
         if ($isPc) {
             if (empty($specs['accesorios']) && empty($specs['accesorios_otros'])) {
-                $specs['accesorios'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
-                $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                if (empty($specs['teclado']) && empty($specs['otros'])) {
+                    $specs['accesorios'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                    $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                }
             }
             if (empty($specs['otros'])) {
                 $specs['otros'] = 'Sistema de Enfriamiento por Flujo de Aire';
@@ -822,7 +831,12 @@ class SyncFichasCommand extends Command
             if (!isset($allowed[$key])) {
                 continue;
             }
-            if (empty($specs[$key]) && !empty($value)) {
+            $curr = trim((string) ($specs[$key] ?? ''));
+            $isGenericOrBool = (
+                $curr === ''
+                || in_array(strtoupper($curr), ['SI', 'SÍ', 'NO', 'TRUE', 'FALSE', 'APLICA', 'CUMPLE', 'N/A', '-', 'NULL', 'NO ESPECIFICADO'], true)
+            );
+            if (($isGenericOrBool || empty($specs[$key])) && !empty($value)) {
                 $specs[$key] = $value;
             }
         }
@@ -836,7 +850,7 @@ class SyncFichasCommand extends Command
 
         foreach ($wanted as $key) {
             $val = strtoupper(trim((string) ($specs[$key] ?? '')));
-            if ($val === '' || $val === 'N/A' || $val === '-') {
+            if ($val === '' || $val === 'N/A' || $val === '-' || in_array($val, ['SI', 'SÍ', 'NO', 'TRUE', 'FALSE', 'NO ESPECIFICADO'], true)) {
                 return true;
             }
         }
@@ -999,9 +1013,18 @@ class SyncFichasCommand extends Command
             return [];
         }
 
-        // Descartar bloque de Comentarios / notas al pie inicial antes de la tabla de especificaciones.
-        // Soporta tanto tablas que inician con Modelo/Formato/Procesador como con Puertos Mínimos cortando tras el Nro de Parte o Marca Registrada.
-        $text = preg_replace('/^\s*Comentarios\b.*?(?:(?:Numero|N[uú]mero|Nro\.?|N°|Nº)(?:de|\s+de)?\s+Parte\b[^\r\n]*[\r\n\s]*|Marca\s+Registrada\b[^\r\n]*[\r\n\s]*|(?=\b(?:Modelo|Chasis|Factor\s+de\s+Forma|Formato|Procesador)\b))/isu', '', $text);
+        // Descartar portada/eslóganes comerciales y bloque de Comentarios / notas al pie previo a la tabla técnica.
+        // La tabla técnica siempre inicia en "Numero de Parte" (o "Modelo" / "Procesador").
+        if (preg_match('/(?:Numero|N[uú]mero|Nro\.?|N°|Nº)(?:de|\s+de)?\s+Parte\b/iu', $text, $m, PREG_OFFSET_CAPTURE)) {
+            $text = substr($text, $m[0][1]);
+        } elseif (preg_match('/(?=\b(?:Modelo\s+(?:PROWORK|EZENT|OFISZU|GENWORK|HENKO)|Modelo|Chasis|Factor\s+de\s+Forma|Formato|Procesador)\b)/iu', $text, $m, PREG_OFFSET_CAPTURE)) {
+            $text = substr($text, $m[0][1]);
+        } elseif (preg_match('/Comentarios\b.*?(?:Marca\s+Registrada\b[^\r\n]*[\r\n\s]*|(?=\b(?:Modelo|Chasis|Factor\s+de\s+Forma|Formato|Procesador)\b))/isu', $text, $m, PREG_OFFSET_CAPTURE)) {
+            $text = substr($text, $m[0][1] + strlen($m[0][0]));
+        }
+
+        // Normalizar palabras concatenadas sin espacio producidas por Smalot PdfParser (ej. "ExpansiónMínimos" -> "Expansión Mínimos")
+        $text = preg_replace('/([a-zñáéíóú])([A-ZÁÉÍÓÚ])/u', '$1 $2', $text);
 
         $specs = $this->parseTokenizedText(
             $text,

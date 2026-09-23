@@ -17,3 +17,4 @@
 - [[2026-09-19-ajuste-hero-tiempo-y-footer|2026-09-19: Ajuste de tiempo en Hero Slider y reestructuración de temas y títulos del Footer]]
 - [[2026-09-22-resolucion-raiz-tokens-pdf-puertos-certificaciones|2026-09-22: Resolución de Causa Raíz en Extracción de PDF (Tokens Ambiguos, Colisiones y Descarte de Comentarios)]]
 - [[2026-09-22-paridad-prowork-pdf-puertos-slots-perifericos|2026-09-22: Paridad 1:1 en Fichas ProWork y Ezent (Puertos, Slots, Periféricos y Certificaciones)]]
+- [[2026-09-23-resolucion-definitiva-prowork-enriquecimiento-pdf-booleano|2026-09-23: Resolución Definitiva en Extracción PDF ProWork (Poda sin anclaje, Tokens sin espacio y Reemplazo de Booleanos)]]
