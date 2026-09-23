@@ -59,3 +59,4 @@ En los modelos de PC (en especial **GENWORK** con gráficos integrados y procesa
   - `Gráficos`: extraído limpiamente como `Integrado - Intel® UHD Graphics 770`.
   - `Puertos Mínimos`: conserva `Tarjeta de Video: x1 HDMI; x3 DisplayPort` sin truncamiento.
 - `php -l app/Console/Commands/SyncFichasCommand.php`: Sintaxis validada sin errores.
+- Compilación de Blade (`detalle.blade.php`) validada con `BladeCompiler` y `php -l` (cierre de bloque `$isToner` verificado).

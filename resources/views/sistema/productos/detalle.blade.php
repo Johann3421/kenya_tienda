@@ -1216,6 +1216,7 @@
                                 ?? 'No especificado',
                         ],
                     ];
+                }
                 // Extracción y sanitización de Suite Ofimática y Gráficos (desacoplamiento de Video/Conectividad)
                 $suiteOfimaticaRaw = $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica']);
                 $graficosRaw = $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']);
