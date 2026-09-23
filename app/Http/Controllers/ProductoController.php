@@ -1035,7 +1035,7 @@ public function importarEspecificaciones(Request $request)
             if (str_contains($c, 'OFIM') || str_contains($c, 'OFFICE')) return 'SUITE OFIMÁTICA';
             if (str_contains($c, 'VIDEO') || str_contains($c, 'GRÁF') || str_contains($c, 'GRAF') || str_contains($c, 'GPU')) return 'CONTROLADOR DE VIDEO';
             if (str_contains($c, 'SONIDO') || str_contains($c, 'AUDIO')) return 'SONIDO';
-            if (str_contains($c, 'CHIPSET')) return 'CHIPSET';
+            if (str_contains($c, 'CHIPSET') || str_contains($c, 'PLACA') || str_contains($c, 'MAINBOARD') || str_contains($c, 'MOTHERBOARD')) return 'CHIPSET';
             if (str_contains($c, 'WLAN') || str_contains($c, 'WIFI') || str_contains($c, 'WIRELESS')) return 'CONECTIVIDAD WLAN';
             if (str_contains($c, 'LAN') || str_contains($c, 'ETHERNET')) return 'CONECTIVIDAD LAN';
             if (str_contains($c, 'PUERTO') || str_contains($c, 'USB')) return 'PUERTOS MÍNIMOS';

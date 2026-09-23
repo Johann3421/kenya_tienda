@@ -909,6 +909,27 @@ class SyncFichasCommand extends Command
             }
         }
 
+        // 8. Sanitizar Chipset: limpiar prefijos y superíndices, inferir si está vacío en PCs Kenya
+        if (!empty($specs['chipset'])) {
+            $chip = trim((string)$specs['chipset']);
+            $chip = preg_replace('/^(?:chipset(?:\s*principal)?|placa(?:\s*madre)?|mainboard|motherboard)\s*[:\-]?\s*/iu', '', $chip);
+            $chip = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $chip);
+            $chip = trim($chip, " \t\n\r\0\x0B:;,-.");
+            if (in_array(strtoupper($chip), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'NULL', 'VACÍO', 'VACIO'], true) || mb_strlen($chip) < 2) {
+                unset($specs['chipset']);
+            } else {
+                $specs['chipset'] = $chip;
+            }
+        }
+        if (empty($specs['chipset']) && (!empty($specs['procesador']) || !empty($specs['ram']) || !empty($specs['fuente_poder']))) {
+            $procText = strtoupper((string)($specs['procesador'] ?? ''));
+            if (str_contains($procText, 'AMD') || str_contains($procText, 'RYZEN') || str_contains($procText, 'ATHLON')) {
+                $specs['chipset'] = 'AMD';
+            } else {
+                $specs['chipset'] = 'Intel';
+            }
+        }
+
         return $specs;
     }
 
@@ -1009,6 +1030,11 @@ class SyncFichasCommand extends Command
             'mouse'               => 'mouse',
             'suite_ofimatica'     => 'suite_ofimatica',
             'garantia_de_fabrica' => 'garantia_de_fabrica',
+            'formato'             => 'formato',
+            'chipset'             => 'chipset',
+            'sonido'              => 'sonido',
+            'fuente_poder'        => 'fuente_poder',
+            'slot_expansion'      => 'slot_expansion',
         ];
 
         $boolCols = [
@@ -1300,7 +1326,12 @@ class SyncFichasCommand extends Command
             'AUDIO INTEGRADO'                => 'sonido',
             'AUDIO'                          => 'sonido',
             'CHIPSET PRINCIPAL'              => 'chipset',
+            'CHIPSET:'                       => 'chipset',
             'CHIPSET'                        => 'chipset',
+            'CHIP SET'                       => 'chipset',
+            'PLACA MADRE'                    => 'chipset',
+            'MAINBOARD'                      => 'chipset',
+            'MOTHERBOARD'                    => 'chipset',
             'CONECTIVIDADº'                  => 'conectividad',
             'CONECTIVIDAD°'                  => 'conectividad',
             'CONECTIVIDAD'                   => 'conectividad',

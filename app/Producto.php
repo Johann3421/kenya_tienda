@@ -165,6 +165,21 @@ public function fichaApi()
         return $value;
     }
 
+    public function getChipsetAttribute($value)
+    {
+        $v = trim((string)$value);
+        if (!empty($v) && !in_array(strtoupper($v), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'NULL', 'VACÍO', 'VACIO'], true)) {
+            return $v;
+        }
+
+        // Si es computadora de escritorio / PC Kenya, inferir según procesador/plataforma
+        $proc = strtoupper(($this->procesador ?? '') . ' ' . ($this->nombre ?? ''));
+        if (str_contains($proc, 'AMD') || str_contains($proc, 'RYZEN') || str_contains($proc, 'ATHLON')) {
+            return 'AMD';
+        }
+        return 'Intel';
+    }
+
     public function getDisplayNameAttribute()
     {
         if ($this->id == 3061 || $this->nro_parte === 'E7CT6OWNHPXO3B5PV6' || str_contains($this->ficha_tecnica ?? '', '1976083') || ($this->nombre && str_contains($this->nombre, 'EZENT T700 EZENT'))) {

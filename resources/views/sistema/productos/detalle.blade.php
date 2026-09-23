@@ -1317,12 +1317,33 @@
                     $graficosRaw = trim($graficosRaw, " \t\n\r\0\x0B:;,-.");
                 }
 
+                // Extracción y normalización de Chipset (con inferencia por Procesador para PCs Kenya)
+                $chipsetRaw = $getSpecValue(['/^chipset[⁰¹²³\*°\?]?$/iu', '/chipset/iu', '/placa\s*madre/iu', '/mainboard/iu', '/motherboard/iu'])
+                    ?? $getProductValue(['chipset']);
+
+                if ($chipsetRaw) {
+                    $chipsetRaw = trim($chipsetRaw, " \t\n\r\0\x0B:;,-.");
+                    if (in_array(strtoupper($chipsetRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-', 'NULL', 'VACÍO', 'VACIO'], true)) {
+                        $chipsetRaw = null;
+                    }
+                }
+
+                if (empty($chipsetRaw) && ($isDesktopOrWorkstation || (!$isMonitor && !$isToner))) {
+                    $procStr = strtoupper(($producto->procesador ?? '') . ' ' . ($getSpecValue(['/procesador|cpu/i']) ?? ''));
+                    if (str_contains($procStr, 'AMD') || str_contains($procStr, 'RYZEN') || str_contains($procStr, 'ATHLON')) {
+                        $chipsetRaw = 'AMD';
+                    } else {
+                        // En la arquitectura oficial de PCs corporativas Kenya: plataforma Intel
+                        $chipsetRaw = 'Intel';
+                    }
+                }
+
                 if (!$isMonitor && !$isToner) {
                     if ($isDesktopOrWorkstation) {
                         $topOrdered = [
                             (object) ['campo' => 'FORMATO', 'descripcion' => $formatoRaw ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'PROCESADOR', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'CHIPSET', 'descripcion' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'CHIPSET', 'descripcion' => $chipsetRaw ?? 'Intel', 'descripcion2' => ''],
                             (object) ['campo' => 'VIDEO', 'descripcion' => $graficosRaw ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'MEMORIA RAM', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'ALMACENAMIENTO', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
@@ -1686,7 +1707,7 @@
                     ['label' => 'Suite Ofimática', 'value' => $suiteOfimaticaRaw ?? 'No'],
                     ['label' => 'Gráficos', 'value' => $graficosRaw ?? 'No especificado'],
                     ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/']) ?? $getProductValue(['sonido'])],
-                    ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset'])],
+                    ['label' => 'Chipset', 'value' => $chipsetRaw ?? 'Intel'],
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],
                     ['label' => 'Wlan', 'value' => $getSpecValue(['/\bwlan\b|wifi|wireless/']) ?? $getProductValue(['conectividad_wlan'])],
                     ['label' => 'Puertos Mínimos', 'value' => $puertosRaw ?? 'x2 USB 3.0; x4 USB 2.0; x1 RJ45; x3 Jacks'],
