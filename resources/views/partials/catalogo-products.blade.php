@@ -47,7 +47,13 @@
 
             @php
                 $rawName = $producto->display_name ?? $producto->nombre ?? 'Nombre no disponible';
-                $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $rawName);
+                $realNroParte = $producto->nro_parte;
+                if ($producto->id == 3061 || $realNroParte === 'E7CT6OWNHPXO3B5PV6' || $realNroParte === 'EZENT T700' || str_contains($producto->ficha_tecnica ?? '', '1976083') || str_contains($rawName, 'EZENT T700 EZENT')) {
+                    $cleanName = 'COMPUTADORA KENYA EZENT T700';
+                    $realNroParte = 'E7CT6OWNHPXO3B5PV6';
+                } else {
+                    $cleanName = preg_replace('/\s*\([A-Z0-9\-\.\s]+\)\s*$/i', '', $rawName);
+                }
                 
                 // Normalizadores para consistencia con los filtros
                 $normalizarTV = function(string $v): string {
@@ -113,7 +119,7 @@
             <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
             
             <div class="product-sku" style="background-color: #f0f4f8; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 600; color: #0056b3; margin-bottom: 12px; font-size: 0.75rem; width: fit-content;">
-                SKU: {{ $producto->nro_parte ?? 'N/A' }}
+                SKU: {{ $realNroParte ?: ($producto->nro_parte ?? 'N/A') }}
             </div>
 
             @if(count($specs) > 0)

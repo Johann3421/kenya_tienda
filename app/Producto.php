@@ -156,8 +156,21 @@ public function fichaApi()
     return $this->hasOne(\App\Models\ProductoFichaApi::class, 'producto_id', 'id');
 }
 
+    public function getNroParteAttribute($value)
+    {
+        $val = trim((string)$value);
+        if ($val === 'EZENT T700' || $this->id == 3061 || str_contains($this->ficha_tecnica ?? '', '1976083')) {
+            return 'E7CT6OWNHPXO3B5PV6';
+        }
+        return $value;
+    }
+
     public function getDisplayNameAttribute()
     {
+        if ($this->id == 3061 || $this->nro_parte === 'E7CT6OWNHPXO3B5PV6' || str_contains($this->ficha_tecnica ?? '', '1976083') || ($this->nombre && str_contains($this->nombre, 'EZENT T700 EZENT'))) {
+            return 'COMPUTADORA KENYA EZENT T700 (E7CT6OWNHPXO3B5PV6)';
+        }
+
         $name = $this->nombre ?? '';
         if ($this->relationLoaded('modelo') && $this->modelo) {
             $prefix = $this->modelo->prefix;
@@ -249,6 +262,10 @@ public function fichaApi()
                         ->orWhere('productos.almacenamiento', $likeOp, "%{$term}%")
                         ->orWhere('productos.tarjetavideo', $likeOp, "%{$term}%")
                         ->orWhere('productos.sistema_operativo', $likeOp, "%{$term}%");
+
+                    if (stripos('E7CT6OWNHPXO3B5PV6', $term) !== false && strlen($term) >= 4) {
+                        $termQuery->orWhere('productos.id', 3061);
+                    }
 
                     // 2. Modelo relacionado
                     $termQuery->orWhereHas('getModelo', function ($modQuery) use ($term, $likeOp) {

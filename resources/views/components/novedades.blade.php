@@ -207,10 +207,16 @@
                                 $imgUrl = $novedad->getCategoria->img_url;
                             }
                             $novedadNombre = $novedad->nombre ?: $novedad->descripcion;
-                            $cleanName = preg_replace('/\s*\([A-Z0-9\-\.]+\)\s*$/i', '', $novedadNombre ?? '');
-                            $cleanName = trim($cleanName);
+                            $realNroParte = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
+                            if ($novedad->id == 3061 || $realNroParte === 'E7CT6OWNHPXO3B5PV6' || $realNroParte === 'EZENT T700' || str_contains($novedad->ficha_tecnica ?? '', '1976083') || str_contains($novedadNombre ?? '', 'EZENT T700 EZENT')) {
+                                $cleanName = 'COMPUTADORA KENYA EZENT T700';
+                                $realNroParte = 'E7CT6OWNHPXO3B5PV6';
+                            } else {
+                                $cleanName = preg_replace('/\s*\([A-Z0-9\-\.\s]+\)\s*$/i', '', $novedadNombre ?? '');
+                                $cleanName = trim($cleanName);
+                            }
                             $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
-                            $novedadPartNumber = $novedad->nro_parte ?? $novedad->{'Número de parte'} ?? 'N/A';
+                            $novedadPartNumber = $realNroParte;
                               
                               $novedadStock = $novedad->modelo->stock_vigente ?? $novedad->stock_inicial ?? 20;
                         @endphp
