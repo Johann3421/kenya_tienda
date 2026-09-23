@@ -354,6 +354,15 @@ class SyncFichasCommand extends Command
                 'ficha_sync_at' => now(),
             ];
 
+            // Corregir nro_parte si el catálogo de Perú Compras traía el nombre del modelo
+            // (ej. 'EZENT T700' en ficha 1976083) y el PDF contiene el PN real ('E7CT6OWNHPXO3B5PV6')
+            $realPnFromPdf = $specs['numero_parte_ref'] ?? null;
+            if ($realPnFromPdf && !$this->isInvalidPartNumber($realPnFromPdf)) {
+                if ($this->isInvalidPartNumber($producto->nro_parte) || ($producto->nro_parte === $codigo && $this->isInvalidPartNumber($codigo))) {
+                    $data['nro_parte'] = $realPnFromPdf;
+                }
+            }
+
             if (!$soloVig && !empty($specs)) {
                 $this->mergeSpecs($data, $specs);
             }
@@ -432,6 +441,21 @@ class SyncFichasCommand extends Command
         return self::SUCCESS;
     }
 
+    /**
+     * Determina si un número de parte registrado es inválido (ej. nombre de modelo 'EZENT T700'
+     * en vez del código de parte oficial alfanumérico).
+     */
+    private function isInvalidPartNumber(?string $pn): bool
+    {
+        if (empty($pn)) return true;
+        $t = trim($pn);
+        if (str_contains($t, ' ')) return true;
+        if (in_array(strtoupper($t), ['EZENT', 'GENWORK', 'PROWORK', 'OFISZU', 'HENKO', 'RAITO', 'NO ESPECIFICADO', 'N/A', '-'], true)) {
+            return true;
+        }
+        return false;
+    }
+
     // ─── Buscar producto (3 estrategias) ─────────────────────────────────────
 
     /**
@@ -481,12 +505,18 @@ class SyncFichasCommand extends Command
             return false;
         }
 
+        $realCodigo = $codigo;
+        $realPnFromPdf = $specs['numero_parte_ref'] ?? null;
+        if ($this->isInvalidPartNumber($codigo) && $realPnFromPdf && !$this->isInvalidPartNumber($realPnFromPdf)) {
+            $realCodigo = $realPnFromPdf;
+        }
+
         $categoriaId = $this->resolveCategoriaId($apiCateg);
-        $nombre      = 'KENYA ' . strtoupper($apiModel) . ' (' . $codigo . ')';
+        $nombre      = 'KENYA ' . strtoupper($apiModel) . ' (' . $realCodigo . ')';
 
         $data = [
             'nombre'        => $nombre,
-            'nro_parte'     => $codigo,
+            'nro_parte'     => $realCodigo,
             'codigo_pc'     => $codigo,
             'vigencia'      => $estado,
             'ficha_sync_at' => now(),
@@ -1035,6 +1065,7 @@ class SyncFichasCommand extends Command
         }
 
         return [
+            'numero_parte_ref',
             'graficos', 'sistema_operativo', 'suite_ofimatica',
             'formato', 'sonido', 'chipset', 'puertos_minimos',
             'slot_expansion', 'fuente_poder', 'seguridad', 'teclado', 'mouse', 'empaque',

@@ -6,15 +6,51 @@
         ? 'Computadora de Escritorio PC'
         : (stripos($catNombre, 'laptop') !== false ? 'Laptop Portátil' : $catNombre);
 
-    $seoTitle = $catPrefix . ' ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . ' | KENYA Perú';
-    $seoDesc = 'Computadora ' . $producto->display_name . ' en Perú. Especificaciones: ' . ($producto->procesador ? 'Procesador: ' . $producto->procesador . ', ' : '') . ($producto->ram ? 'RAM: ' . $producto->ram . ', ' : '') . ($producto->almacenamiento ? 'Almacenamiento: ' . $producto->almacenamiento . '. ' : '') . 'Venta de computadoras, PCs de escritorio y laptops con 36 meses de garantía On-Site.';
+    // Sanitización y corrección de Número de Parte (ej. caso ficha 1976083 / producto 3061)
+    // donde Perú Compras registró erróneamente el nombre de modelo ('EZENT T700') en lugar del PN real ('E7CT6OWNHPXO3B5PV6')
+    $realNroParte = trim((string)($producto->nro_parte ?? ''));
+    $isInvalidPn = function($val) {
+        if (empty($val)) return true;
+        $t = trim((string)$val);
+        return str_contains($t, ' ') || in_array(strtoupper($t), ['EZENT', 'GENWORK', 'PROWORK', 'OFISZU', 'HENKO', 'RAITO', 'NO ESPECIFICADO', 'N/A', '-'], true);
+    };
+
+    if ($isInvalidPn($realNroParte)) {
+        $specPn = null;
+        if (isset($especificaciones)) {
+            foreach ($especificaciones as $sp) {
+                if (preg_match('/numero.*parte|nro.*parte|numero_parte_ref/i', $sp->campo ?? '')) {
+                    $c = trim((string)($sp->descripcion ?? ''));
+                    if (!$isInvalidPn($c)) {
+                        $specPn = $c;
+                        break;
+                    }
+                }
+            }
+        }
+        if ($specPn) {
+            $realNroParte = $specPn;
+        } elseif ($producto->id == 3061 || str_contains($producto->ficha_tecnica ?? '', '1976083') || $realNroParte === 'EZENT T700') {
+            $realNroParte = 'E7CT6OWNHPXO3B5PV6';
+        }
+    }
+
+    $cleanDisplayName = $producto->display_name;
+    if ($producto->nro_parte && $realNroParte && $producto->nro_parte !== $realNroParte) {
+        $cleanDisplayName = str_replace($producto->nro_parte, $realNroParte, $cleanDisplayName);
+    }
+    $cleanDisplayName = preg_replace('/\(\s*EZENT\s+T700\s*\)/i', "({$realNroParte})", $cleanDisplayName);
+    $cleanDisplayName = preg_replace('/\bEZENT\s+T700\s+EZENT\b/i', 'EZENT T700', $cleanDisplayName);
+
+    $seoTitle = $catPrefix . ' ' . $cleanDisplayName . ($realNroParte ? ' (PN: ' . $realNroParte . ')' : '') . ' | KENYA Perú';
+    $seoDesc = 'Computadora ' . $cleanDisplayName . ' en Perú. Especificaciones: ' . ($producto->procesador ? 'Procesador: ' . $producto->procesador . ', ' : '') . ($producto->ram ? 'RAM: ' . $producto->ram . ', ' : '') . ($producto->almacenamiento ? 'Almacenamiento: ' . $producto->almacenamiento . '. ' : '') . 'Venta de computadoras, PCs de escritorio y laptops con 36 meses de garantía On-Site.';
     $seoImage = $producto->imagen_1 ? (str_starts_with($producto->imagen_1, 'http') ? $producto->imagen_1 : asset('storage/' . $producto->imagen_1)) : asset('theme/images/kenya.png');
     $seoUrl = route('cotizar.detalle', $producto->id);
 @endphp
 
 @section('title', $seoTitle)
 @section('meta_description', $seoDesc)
-@section('meta_keywords', 'computadoras, pcs, pcs de escritorio, computadora de escritorio, laptops, equipos de computo, ' . strtolower($producto->display_name) . ', ' . strtolower($producto->nro_parte ?? '') . ', kenya peru')
+@section('meta_keywords', 'computadoras, pcs, pcs de escritorio, computadora de escritorio, laptops, equipos de computo, ' . strtolower($cleanDisplayName) . ', ' . strtolower($realNroParte ?: ($producto->nro_parte ?? '')) . ', kenya peru')
 @section('canonical', $seoUrl)
 
 @section('og_type', 'product')
@@ -28,11 +64,11 @@
 {
   "@context": "https://schema.org/",
   "@type": "Product",
-  "name": "{{ e($producto->display_name) }}",
+  "name": "{{ e($cleanDisplayName) }}",
   "image": ["{{ e($seoImage) }}"],
   "description": "{{ e($seoDesc) }}",
-  "sku": "{{ e($producto->nro_parte ?? $producto->id) }}",
-  "mpn": "{{ e($producto->nro_parte ?? $producto->id) }}",
+  "sku": "{{ e($realNroParte ?: ($producto->nro_parte ?? $producto->id)) }}",
+  "mpn": "{{ e($realNroParte ?: ($producto->nro_parte ?? $producto->id)) }}",
   "brand": {
     "@type": "Brand",
     "name": "KENYA Technology"
@@ -1271,7 +1307,7 @@
 
             <div style="margin-bottom:24px;">
                 <h2 style="font-weight:800; font-size:28px; color:#1a1a1a; margin-bottom:12px; line-height:1.2;">
-                    {{ $producto->display_name }}
+                    {{ $cleanDisplayName }}
                 </h2>
                 <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:13px;">
                     @if($producto->modelo)
@@ -1279,9 +1315,9 @@
                             <i class="fa-solid fa-cube" style="font-size:11px; color:#6c757d;"></i> {{ $producto->modelo->descripcion ?? $producto->modelo->nombre }}
                         </span>
                     @endif
-                    @if($producto->nro_parte)
+                    @if($realNroParte ?: $producto->nro_parte)
                         <span style="display:inline-flex; align-items:center; gap:4px; background:#eaedf0; color:#495057; font-size:11.5px; font-weight:700; padding:4px 10px; border-radius:3px; text-transform:uppercase;">
-                            <span style="color:#6c757d; font-weight:800;">#</span> {{ $producto->nro_parte }}
+                            <span style="color:#6c757d; font-weight:800;">#</span> {{ $realNroParte ?: $producto->nro_parte }}
                         </span>
                     @endif
                     @if($producto->getCategoria)
@@ -1381,7 +1417,7 @@
                     </div>
 
                     {{-- 3. Cotizar por WhatsApp (verde #1ebd5b con texto apilado en 2 líneas) --}}
-                    <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="desktop-wsp-btn">
+                    <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $cleanDisplayName . ($realNroParte ? ' (PN: ' . $realNroParte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="desktop-wsp-btn">
                         <i class="bx bxl-whatsapp" style="font-size:26px; line-height:1;"></i>
                         <div style="font-size:15px; font-weight:800; color:#ffffff; line-height:1.15; text-align:left;">
                             <div>Cotizar por</div>
@@ -1426,7 +1462,7 @@
                     @endif
 
                     {{-- 3. Cotizar por WhatsApp (Verde #25D366) --}}
-                    <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="mobile-action-btn mobile-action-wsp">
+                    <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Solicito cotización para el producto: ' . $cleanDisplayName . ($realNroParte ? ' (PN: ' . $realNroParte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="mobile-action-btn mobile-action-wsp">
                         <i class="bx bxl-whatsapp" style="font-size:22px;"></i>
                         <span>Cotizar por WhatsApp</span>
                     </a>
@@ -1506,7 +1542,7 @@
                         @endif
                     </div>
                 </div>
-                <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Quiero información sobre el producto: ' . $producto->display_name . ($producto->nro_parte ? ' (PN: ' . $producto->nro_parte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600; white-space:nowrap; font-size:14px;">
+                <a target="_blank" href="https://api.whatsapp.com/send/?phone=51958021778&text={{ urlencode('¡Hola KENYA Technology! Quiero información sobre el producto: ' . $cleanDisplayName . ($realNroParte ? ' (PN: ' . $realNroParte . ')' : '') . '. URL: ' . url()->current()) }}&type=phone_number&app_absent=0" class="btn btn-success" style="display:flex; align-items:center; gap:6px; font-weight:600; white-space:nowrap; font-size:14px;">
                     <i class="bx bxl-whatsapp" style="font-size:20px;"></i> Contactar
                 </a>
             </div>
@@ -1561,12 +1597,12 @@
                     <i class="fa-solid fa-circle" style="font-size:5px; color:#ee7c31;"></i>
                     Número de Parte
                 </div>
-                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $producto->nro_parte ?? 'No especificado' }}</div>
+                <div style="flex:1; color:#1a1a1a; font-size:14px;">{{ $realNroParte ?: ($producto->nro_parte ?? 'No especificado') }}</div>
             </div>
         @elseif($isToner)
             @php
                 $oldTonerRows = [
-                    ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte']) ?? $getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/'])],
+                    ['label' => 'Numero de Parte', 'value' => $realNroParte ?: ($getProductValue(['nro_parte', 'Número de parte']) ?? $getSpecValue(['/n[uú]mero de parte|nro\.?\s*parte|nro\.?\s*de\s*parte/']))],
                     ['label' => 'Modelo', 'value' => $getSpecValue(['/^modelo$/', '/modelo/']) ?? $getProductValue(['Modelo']) ?? optional($producto->modelo)->descripcion],
                     ['label' => 'Tipo de suministro', 'value' => $getSpecValue(['/tipo de suministro|suministro|formato/']) ?? $getProductValue(['Tipo de suministro'])],
                     ['label' => 'Color', 'value' => $getSpecValue(['/^color$/', '/color/']) ?? $getProductValue(['Color'])],
@@ -1604,7 +1640,7 @@
                 }
 
                 $oldPcRows = [
-                    ['label' => 'Numero de Parte', 'value' => $getProductValue(['nro_parte', 'Número de parte'])],
+                    ['label' => 'Numero de Parte', 'value' => $realNroParte ?: ($getProductValue(['nro_parte', 'Número de parte']))],
                     ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
                     ['label' => 'Formato', 'value' => $formatoRaw],
                     ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],

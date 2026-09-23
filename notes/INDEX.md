@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-09-23-correccion-numero-parte-ficha-3061-ezent-t700|2026-09-23: Corrección y Detección de Número de Parte Erróneo en Ficha 3061 (EZENT T700)]]
 - [[2026-09-23-desacoplamiento-suite-ofimatica-video-genwork|2026-09-23: Desacoplamiento de Suite Ofimática y Video Integrado en Modelos PC (GENWORK / EZENT)]]
 - [[2026-09-23-separacion-extraccion-por-modelos-pc|2026-09-23: Separación de Extracción y Presentación por Modelos de PC (EZENT, GENWORK, OFISZU, PROWORK)]]
 - [[2026-09-23-sanitizacion-campo-otros-ezent-pdf|2026-09-23: Sanitización y Truncado de Campo 'Otros' en Modelo EZENT y PCs Kenya (Causa Raíz UTF-8 en Marcadores Finales)]]
