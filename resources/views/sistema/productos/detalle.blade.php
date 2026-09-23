@@ -1216,13 +1216,43 @@
                                 ?? 'No especificado',
                         ],
                     ];
-                } elseif (!$isMonitor) {
+                // Extracción y sanitización de Suite Ofimática y Gráficos (desacoplamiento de Video/Conectividad)
+                $suiteOfimaticaRaw = $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica']);
+                $graficosRaw = $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']);
+
+                if ($suiteOfimaticaRaw) {
+                    if (preg_match('/^(.*?)(?=\b(?:Video|Gr[aá]ficos?|Controlador)\b)(.+)$/isu', $suiteOfimaticaRaw, $mSofSplit)) {
+                        $sofOnly = trim($mSofSplit[1]);
+                        $videoRest = trim($mSofSplit[2]);
+                        if (empty($graficosRaw) && preg_match('/^(?:Video\s+Integrado|Video|Gr[aá]ficos?|Controlador(?:\s+de\s+Video)?)\s*[:\-]?\s*(.*?)(?=\b(?:Conectividad|Lan|Puertos|$))/isu', $videoRest, $mV)) {
+                            $extGraf = trim($mV[1], " \t\n\r\0\x0B:;,-.");
+                            if (!empty($extGraf)) {
+                                $graficosRaw = (str_starts_with(strtolower($extGraf), 'integrado') || str_starts_with(strtolower($extGraf), 'dedicado')) ? $extGraf : 'Integrado - ' . $extGraf;
+                            }
+                        }
+                        $suiteOfimaticaRaw = $sofOnly;
+                    }
+                    $suiteOfimaticaRaw = preg_replace('/^\s*\(?\s*pre[\-\s]*instalad[oa]\s*\)?\s*[:\-]?\s*/iu', '', $suiteOfimaticaRaw);
+                    $suiteOfimaticaRaw = preg_replace('/\s*\(?\s*pre[\-\s]*instalad[oa]\s*\)?\s*$/iu', '', $suiteOfimaticaRaw);
+                    $suiteOfimaticaRaw = trim($suiteOfimaticaRaw, " \t\n\r\0\x0B:;,-.");
+                    if (in_array(strtoupper($suiteOfimaticaRaw), ['NO', 'NO APLICA', 'NO INCLUYE', 'SIN OFIMATICA', 'SIN OFIMÁTICA', ''], true)) {
+                        $suiteOfimaticaRaw = 'No';
+                    }
+                }
+
+                if ($graficosRaw) {
+                    $graficosRaw = preg_replace('/^(?:controlador\s+de\s+v[ií]deo|tarjeta\s+de\s+v[ií]deo|tarjeta\s+gr[aá]fica|video\s+integrado|video\s+dedicado|gr[aá]ficos?)\s*[:\-]?\s*/iu', '', $graficosRaw);
+                    $graficosRaw = preg_replace('/\s*(?:Conectividad[\x{00B0}\x{00BA}\d]*|Lan|Sonido|Audio|Chipset|Puertos).*$/isu', '', $graficosRaw);
+                    $graficosRaw = trim($graficosRaw, " \t\n\r\0\x0B:;,-.");
+                }
+
+                if (!$isMonitor && !$isToner) {
                     if ($isDesktopOrWorkstation) {
                         $topOrdered = [
                             (object) ['campo' => 'FORMATO', 'descripcion' => $formatoRaw ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'PROCESADOR', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'CHIPSET', 'descripcion' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'VIDEO', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'VIDEO', 'descripcion' => $graficosRaw ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'MEMORIA RAM', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'ALMACENAMIENTO', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'FUENTE PODER', 'descripcion' => $fuenteRaw ?? 'No especificado', 'descripcion2' => ''],
@@ -1232,7 +1262,7 @@
                             (object) ['campo' => 'PROCESADOR', 'descripcion' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'MEMORIA RAM', 'descripcion' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram']) ?? 'No especificado', 'descripcion2' => ''],
                             (object) ['campo' => 'ALMACENAMIENTO', 'descripcion' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento']) ?? 'No especificado', 'descripcion2' => ''],
-                            (object) ['campo' => 'VIDEO', 'descripcion' => $getSpecValue(['/gr[aá]f|gpu|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo']) ?? 'No especificado', 'descripcion2' => ''],
+                            (object) ['campo' => 'VIDEO', 'descripcion' => $graficosRaw ?? 'No especificado', 'descripcion2' => ''],
                         ];
                     }
                 }
@@ -1580,8 +1610,8 @@
                     ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],
                     ['label' => 'Almacenamiento', 'value' => $getSpecValue(['/almacenamiento|disco|hdd|ssd|nvme|storage/']) ?? $getProductValue(['almacenamiento'])],
                     ['label' => 'Sistema Operativo', 'value' => $getSpecValue(['/sistema operativo|\bos\b|windows|linux/']) ?? $getProductValue(['sistema_operativo'])],
-                    ['label' => 'Suite Ofimática', 'value' => $getSpecValue(['/ofim[aá]tica|office|suite/']) ?? $getProductValue(['suite_ofimatica'])],
-                    ['label' => 'Gráficos', 'value' => $getSpecValue(['/gr[aá]f|gpu|controlador de video|tarjeta de video|tarjeta grafica|tarjeta gráfica|video/']) ?? $getProductValue(['tarjetavideo'])],
+                    ['label' => 'Suite Ofimática', 'value' => $suiteOfimaticaRaw ?? 'No'],
+                    ['label' => 'Gráficos', 'value' => $graficosRaw ?? 'No especificado'],
                     ['label' => 'Sonido', 'value' => $getSpecValue(['/sonido|audio/']) ?? $getProductValue(['sonido'])],
                     ['label' => 'Chipset', 'value' => $getSpecValue(['/chipset/']) ?? $getProductValue(['chipset'])],
                     ['label' => 'Lan', 'value' => $getSpecValue(['/\blan\b|ethernet/']) ?? $getProductValue(['conectividad'])],

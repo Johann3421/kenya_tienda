@@ -103,16 +103,54 @@ class SyncFichasCommand extends Command
         'MEMORIA RAM'                    => 'ram',
         'RAM'                            => 'ram',
         'ALMACENAMIENTO'                 => 'almacenamiento',
+        'TARJETA DE VIDEO DEDICADA'      => 'graficos',
+        'TARJETA DE VÍDEO DEDICADA'      => 'graficos',
+        'TARJETA DE VIDEO INTEGRADA'     => 'graficos',
+        'TARJETA DE VÍDEO INTEGRADA'     => 'graficos',
         'TARJETA GRAFICA'                => 'graficos',
         'TARJETA GRÁFICA'                => 'graficos',
+        'VIDEO INTEGRADO'                => 'graficos',
+        'VÍDEO INTEGRADO'                => 'graficos',
+        'VIDEO DEDICADO'                 => 'graficos',
+        'VÍDEO DEDICADO'                 => 'graficos',
+        'CONTROLADOR DE VIDEO'           => 'graficos',
+        'CONTROLADOR DE VÍDEO'           => 'graficos',
+        'CONTROLADOR GRAFICO'            => 'graficos',
+        'CONTROLADOR GRÁFICO'            => 'graficos',
         'GRAFICOS'                       => 'graficos',
         'GRÁFICOS'                       => 'graficos',
         'SISTEMA OPERATIVO'              => 'sistema_operativo',
+        'SIST. OPERATIVO'                => 'sistema_operativo',
+        'SIST. OPER'                     => 'sistema_operativo',
+        'SUITE OFIMÁTICA (PRE-INSTALADO)'=> 'suite_ofimatica',
+        'SUITE OFIMÁTICA (PRE-INSTALADA)'=> 'suite_ofimatica',
+        'SUITE OFIMÁTICA(PRE-INSTALADO)' => 'suite_ofimatica',
+        'SUITE OFIMÁTICA(PRE-INSTALADA)' => 'suite_ofimatica',
+        'SUITE OFIMATICA (PRE-INSTALADO)'=> 'suite_ofimatica',
+        'SUITE OFIMATICA (PRE-INSTALADA)'=> 'suite_ofimatica',
+        'SUITE OFIMATICA(PRE-INSTALADO)' => 'suite_ofimatica',
+        'SUITE OFIMATICA(PRE-INSTALADA)' => 'suite_ofimatica',
+        'SUITE OFIMÁTICA PRE-INSTALADA'  => 'suite_ofimatica',
+        'SUITE OFIMÁTICA PRE-INSTALADO'  => 'suite_ofimatica',
         'SUITE OFIMATICA PRE-INSTALADA'  => 'suite_ofimatica',
-        'SUITE OFIMATICA'                => 'suite_ofimatica',
+        'SUITE OFIMATICA PRE-INSTALADO'  => 'suite_ofimatica',
+        'SUITE OFIMÁTICA PREINSTALADA'   => 'suite_ofimatica',
+        'SUITE OFIMÁTICA PREINSTALADO'   => 'suite_ofimatica',
+        'SUITE OFIMATICA PREINSTALADA'   => 'suite_ofimatica',
+        'SUITE OFIMATICA PREINSTALADO'   => 'suite_ofimatica',
         'SUITE OFIMÁTICA'                => 'suite_ofimatica',
+        'SUITE OFIMATICA'                => 'suite_ofimatica',
+        'OFIMÁTICA'                      => 'suite_ofimatica',
+        'OFIMATICA'                      => 'suite_ofimatica',
+        'SONIDO INTEGRADO'               => 'sonido',
         'SONIDO'                         => 'sonido',
+        'AUDIO INTEGRADO'                => 'sonido',
+        'AUDIO'                          => 'sonido',
+        'CHIPSET PRINCIPAL'              => 'chipset',
         'CHIPSET'                        => 'chipset',
+        'CONECTIVIDADº'                  => 'conectividad',
+        'CONECTIVIDAD°'                  => 'conectividad',
+        'CONECTIVIDAD'                   => 'conectividad',
         'LAN'                            => 'conectividad',
         'WLAN'                           => 'conectividad_wlan',
         'PUERTOS MINIMOS'                => 'puertos_minimos',
@@ -631,6 +669,43 @@ class SyncFichasCommand extends Command
             $specs['garantia_de_fabrica'] = trim($gar, " \t\n\r\0\x0B:;,-.");
         }
 
+        // 4b. Normalizar Suite Ofimática y Gráficos (evitar que Suite Ofimática absorba Gráficos / Conectividad)
+        if (!empty($specs['suite_ofimatica'])) {
+            $sof = (string) $specs['suite_ofimatica'];
+            // Desacoplar si dentro de suite_ofimática venía Gráficos / Video / Conectividad
+            if (preg_match('/^(.*?)(?=\b(?:Video|Gr[aá]ficos?|Controlador)\b)(.+)$/isu', $sof, $mSofSplit)) {
+                $sofOnly = trim($mSofSplit[1]);
+                $videoRest = trim($mSofSplit[2]);
+                if (empty($specs['graficos']) && preg_match('/^(?:Video\s+Integrado|Video|Gr[aá]ficos?|Controlador(?:\s+de\s+Video)?)\s*[:\-]?\s*(.*?)(?=\b(?:Conectividad|Lan|Puertos|$))/isu', $videoRest, $mV)) {
+                    $extractedGraf = trim($mV[1], " \t\n\r\0\x0B:;,-.");
+                    if (!empty($extractedGraf)) {
+                        $specs['graficos'] = $extractedGraf;
+                    }
+                }
+                $sof = $sofOnly;
+            }
+            // Quitar prefijo o sufijo (Pre-Instalado), (Pre-Instalada), etc.
+            $sof = preg_replace('/^\s*\(?\s*pre[\-\s]*instalad[oa]\s*\)?\s*[:\-]?\s*/iu', '', $sof);
+            $sof = preg_replace('/\s*\(?\s*pre[\-\s]*instalad[oa]\s*\)?\s*$/iu', '', $sof);
+            $sof = trim($sof, " \t\n\r\0\x0B:;,-.");
+            if (in_array(strtoupper($sof), ['NO', 'NO APLICA', 'NO INCLUYE', 'SIN OFIMATICA', 'SIN OFIMÁTICA', ''], true)) {
+                $specs['suite_ofimatica'] = 'No';
+            } elseif ($sof !== '') {
+                $specs['suite_ofimatica'] = $sof;
+            }
+        }
+
+        // Sanitizar Gráficos: quitar prefijos y cortar cualquier residuo posterior (Conectividad, Sonido, etc.)
+        if (!empty($specs['graficos'])) {
+            $grf = (string) $specs['graficos'];
+            $grf = preg_replace('/^(?:controlador\s+de\s+v[ií]deo|tarjeta\s+de\s+v[ií]deo|tarjeta\s+gr[aá]fica|video\s+integrado|video\s+dedicado|gr[aá]ficos?)\s*[:\-]?\s*/iu', '', $grf);
+            $grf = preg_replace('/\s*(?:Conectividad[\x{00B0}\x{00BA}\d]*|Lan|Sonido|Audio|Chipset|Puertos).*$/isu', '', $grf);
+            $grf = trim($grf, " \t\n\r\0\x0B:;,-.");
+            if ($grf !== '') {
+                $specs['graficos'] = $grf;
+            }
+        }
+
         // 5. Normalización de Periféricos (Teclado, Mouse), Accesorios y Otros SEGÚN MODELO
         if (in_array($modelGroup, ['EZENT', 'GENWORK'], true)) {
             // En EZENT y GENWORK los periféricos van exclusivamente agrupados en Accesorios
@@ -1127,19 +1202,53 @@ class SyncFichasCommand extends Command
             'MEMORIA RAM'                    => 'ram',
             'RAM'                            => 'ram',
             'ALMACENAMIENTO'                 => 'almacenamiento',
+            'TARJETA DE VIDEO DEDICADA'      => 'graficos',
+            'TARJETA DE VÍDEO DEDICADA'      => 'graficos',
+            'TARJETA DE VIDEO INTEGRADA'     => 'graficos',
+            'TARJETA DE VÍDEO INTEGRADA'     => 'graficos',
             'TARJETA GRAFICA'                => 'graficos',
             'TARJETA GRÁFICA'                => 'graficos',
+            'VIDEO INTEGRADO'                => 'graficos',
+            'VÍDEO INTEGRADO'                => 'graficos',
+            'VIDEO DEDICADO'                 => 'graficos',
+            'VÍDEO DEDICADO'                 => 'graficos',
+            'CONTROLADOR DE VIDEO'           => 'graficos',
+            'CONTROLADOR DE VÍDEO'           => 'graficos',
+            'CONTROLADOR GRAFICO'            => 'graficos',
+            'CONTROLADOR GRÁFICO'            => 'graficos',
             'GRAFICOS'                       => 'graficos',
             'GRÁFICOS'                       => 'graficos',
-            'VIDEO'                          => 'graficos',
             'SISTEMA OPERATIVO'              => 'sistema_operativo',
-            'SUITE OFIMATICA PRE-INSTALADA'  => 'suite_ofimatica',
+            'SIST. OPERATIVO'                => 'sistema_operativo',
+            'SIST. OPER'                     => 'sistema_operativo',
+            'SUITE OFIMÁTICA (PRE-INSTALADO)'=> 'suite_ofimatica',
+            'SUITE OFIMÁTICA (PRE-INSTALADA)'=> 'suite_ofimatica',
+            'SUITE OFIMÁTICA(PRE-INSTALADO)' => 'suite_ofimatica',
+            'SUITE OFIMÁTICA(PRE-INSTALADA)' => 'suite_ofimatica',
             'SUITE OFIMATICA (PRE-INSTALADO)'=> 'suite_ofimatica',
-            'SUITE OFIMATICA'                => 'suite_ofimatica',
+            'SUITE OFIMATICA (PRE-INSTALADA)'=> 'suite_ofimatica',
+            'SUITE OFIMATICA(PRE-INSTALADO)' => 'suite_ofimatica',
+            'SUITE OFIMATICA(PRE-INSTALADA)' => 'suite_ofimatica',
+            'SUITE OFIMÁTICA PRE-INSTALADA'  => 'suite_ofimatica',
+            'SUITE OFIMÁTICA PRE-INSTALADO'  => 'suite_ofimatica',
+            'SUITE OFIMATICA PRE-INSTALADA'  => 'suite_ofimatica',
+            'SUITE OFIMATICA PRE-INSTALADO'  => 'suite_ofimatica',
+            'SUITE OFIMÁTICA PREINSTALADA'   => 'suite_ofimatica',
+            'SUITE OFIMÁTICA PREINSTALADO'   => 'suite_ofimatica',
+            'SUITE OFIMATICA PREINSTALADA'   => 'suite_ofimatica',
+            'SUITE OFIMATICA PREINSTALADO'   => 'suite_ofimatica',
             'SUITE OFIMÁTICA'                => 'suite_ofimatica',
+            'SUITE OFIMATICA'                => 'suite_ofimatica',
+            'OFIMÁTICA'                      => 'suite_ofimatica',
+            'OFIMATICA'                      => 'suite_ofimatica',
+            'SONIDO INTEGRADO'               => 'sonido',
             'SONIDO'                         => 'sonido',
+            'AUDIO INTEGRADO'                => 'sonido',
             'AUDIO'                          => 'sonido',
+            'CHIPSET PRINCIPAL'              => 'chipset',
             'CHIPSET'                        => 'chipset',
+            'CONECTIVIDADº'                  => 'conectividad',
+            'CONECTIVIDAD°'                  => 'conectividad',
             'CONECTIVIDAD'                   => 'conectividad',
             'LAN'                            => 'conectividad',
             'WLAN'                           => 'conectividad_wlan',
