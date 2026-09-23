@@ -35,14 +35,21 @@
         }
     }
 
-    $cleanDisplayName = $producto->display_name;
-    if ($producto->nro_parte && $realNroParte && $producto->nro_parte !== $realNroParte) {
-        $cleanDisplayName = str_replace($producto->nro_parte, $realNroParte, $cleanDisplayName);
+    // Para producto 3061 / ficha 1976083: modelo oficial EZENT T700 y PN real E7CT6OWNHPXO3B5PV6
+    if ($producto->id == 3061 || $realNroParte === 'E7CT6OWNHPXO3B5PV6' || ($producto->nro_parte === 'EZENT T700' && str_contains($producto->ficha_tecnica ?? '', '1976083'))) {
+        $realNroParte = 'E7CT6OWNHPXO3B5PV6';
+        $cleanDisplayName = 'KENYA EZENT T700 (' . $realNroParte . ')';
+    } else {
+        $cleanDisplayName = $producto->display_name;
+        if ($isInvalidPn($producto->nro_parte) && $realNroParte && !$isInvalidPn($realNroParte)) {
+            $cleanDisplayName = preg_replace('/\(\s*' . preg_quote($producto->nro_parte, '/') . '\s*\)/i', "({$realNroParte})", $cleanDisplayName);
+        }
     }
-    $cleanDisplayName = preg_replace('/\(\s*EZENT\s+T700\s*\)/i', "({$realNroParte})", $cleanDisplayName);
-    $cleanDisplayName = preg_replace('/\bEZENT\s+T700\s+EZENT\b/i', 'EZENT T700', $cleanDisplayName);
 
-    $seoTitle = $catPrefix . ' ' . $cleanDisplayName . ($realNroParte ? ' (PN: ' . $realNroParte . ')' : '') . ' | KENYA Perú';
+    $hasPnInName = $realNroParte && preg_match('/\b' . preg_quote($realNroParte, '/') . '\b/i', $cleanDisplayName);
+    $pnSuffix = ($realNroParte && !$hasPnInName) ? ' (PN: ' . $realNroParte . ')' : '';
+
+    $seoTitle = $catPrefix . ' ' . $cleanDisplayName . $pnSuffix . ' | KENYA Perú';
     $seoDesc = 'Computadora ' . $cleanDisplayName . ' en Perú. Especificaciones: ' . ($producto->procesador ? 'Procesador: ' . $producto->procesador . ', ' : '') . ($producto->ram ? 'RAM: ' . $producto->ram . ', ' : '') . ($producto->almacenamiento ? 'Almacenamiento: ' . $producto->almacenamiento . '. ' : '') . 'Venta de computadoras, PCs de escritorio y laptops con 36 meses de garantía On-Site.';
     $seoImage = $producto->imagen_1 ? (str_starts_with($producto->imagen_1, 'http') ? $producto->imagen_1 : asset('storage/' . $producto->imagen_1)) : asset('theme/images/kenya.png');
     $seoUrl = route('cotizar.detalle', $producto->id);
@@ -1641,7 +1648,7 @@
 
                 $oldPcRows = [
                     ['label' => 'Numero de Parte', 'value' => $realNroParte ?: ($getProductValue(['nro_parte', 'Número de parte']))],
-                    ['label' => 'Modelo', 'value' => optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo'])],
+                    ['label' => 'Modelo', 'value' => ($producto->id == 3061 || $realNroParte === 'E7CT6OWNHPXO3B5PV6') ? 'EZENT T700' : (optional($producto->modelo)->nombre ?? optional($producto->modelo)->descripcion ?? $getProductValue(['Modelo']))],
                     ['label' => 'Formato', 'value' => $formatoRaw],
                     ['label' => 'Procesador', 'value' => $getSpecValue(['/procesador|cpu|intel|amd/']) ?? $getProductValue(['procesador'])],
                     ['label' => 'Memoria Ram', 'value' => $getSpecValue(['/memoria|ram/']) ?? $getProductValue(['ram'])],

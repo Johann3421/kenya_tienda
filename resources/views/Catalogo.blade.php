@@ -186,7 +186,6 @@
               ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%gráf%'")
               ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%graf%'")
               ->orWhereRaw("LOWER(TRIM(especificaciones.campo)) LIKE '%tarjeta%video%'");
-        })nes.campo)) LIKE '%tarjeta%video%'");
         })
         ->whereNotNull('especificaciones.descripcion')
         ->whereRaw("TRIM(especificaciones.descripcion) != ''")

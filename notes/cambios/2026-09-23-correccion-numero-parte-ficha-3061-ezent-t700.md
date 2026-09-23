@@ -56,7 +56,15 @@ y en el título SEO / encabezado:
 
 ---
 
+### C. Corrección de Error de Sintaxis en Catálogo (`resources/views/Catalogo.blade.php`)
+- **Error corregido:** `ParseError: syntax error, unexpected identifier "nes" at .../views/4ecba639c0aae38863c49ee6ffd25dc5.php:187`.
+- **Causa:** Fragmento residual de concatenación/reemplazo anterior en línea 189: `})nes.campo)) LIKE '%tarjeta%video%'");`.
+- **Solución:** Eliminación del fragmento roto y validación de compilación limpia de Blade en todas las vistas de catálogo.
+
+---
+
 ## 3. Archivos Modificados
+- [`resources/views/Catalogo.blade.php`](file:///c:/xampp/htdocs/kenya_tienda/resources/views/Catalogo.blade.php)
 - [`resources/views/sistema/productos/detalle.blade.php`](file:///c:/xampp/htdocs/kenya_tienda/resources/views/sistema/productos/detalle.blade.php)
 - [`app/Console/Commands/SyncFichasCommand.php`](file:///c:/xampp/htdocs/kenya_tienda/app/Console/Commands/SyncFichasCommand.php)
 - [`notes/INDEX.md`](file:///c:/xampp/htdocs/kenya_tienda/notes/INDEX.md)
