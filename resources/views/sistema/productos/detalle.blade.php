@@ -1230,6 +1230,33 @@
                     $puertosRaw = trim($puertosRaw, " \t\n\r\0\x0B,.-:;");
                 }
 
+                // Obtener Slot de Expansión
+                $slotRaw = $getSpecValue(['/^slot.*expansi/i', '/^ranura.*expansi/i', '/slot/i', '/ranura/i', '/pcie|pci/i']);
+                if ($slotRaw) {
+                    $slotRaw = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°\?]?\s*/iu', '', $slotRaw);
+                    $slotRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $slotRaw);
+                    $slotRaw = trim($slotRaw, " \t\n\r\0\x0B:;,.-");
+                    if (mb_strlen($slotRaw) < 3 || in_array(strtoupper($slotRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                        $slotRaw = null;
+                    }
+                }
+
+                // Desacoplar Slot de Expansión y Fuente de Poder si fueron absorbidos en Puertos Mínimos (típico en fichas EZENT/PC)
+                if (!empty($puertosRaw)) {
+                    if (preg_match('/(?:Slot(?:de|\s+de)?\s*Expansi[óo]n[⁰¹²³\*°\?]?)\s*[:\-]?\s*(.*?)(?=\s*(?:Fuente(?:de|\s+de)?\s*Poder|Seguridad|Garant[ií]a|$))/isu', $puertosRaw, $mSlot)) {
+                        if (empty($slotRaw) || in_array(strtoupper(trim((string)$slotRaw)), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                            $slotRaw = trim($mSlot[1], " \t\n\r\0\x0B:;,.-");
+                        }
+                    }
+                    if (preg_match('/(?:Fuente(?:de|\s+de)?\s*Poder)\s*[:\-]?\s*(.*?)(?=\s*(?:Seguridad|Garant[ií]a|Empaque|$))/isu', $puertosRaw, $mFte)) {
+                        if (empty($fuenteRaw) || in_array(strtoupper(trim((string)$fuenteRaw)), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                            $fuenteRaw = trim($mFte[1], " \t\n\r\0\x0B:;,.-");
+                        }
+                    }
+                    $puertosRaw = preg_replace('/\s*(?:Slot(?:de|\s+de)?\s*Expansi[óo]n|Fuente(?:de|\s+de)?\s*Poder).*$/isu', '', $puertosRaw);
+                    $puertosRaw = trim($puertosRaw, " \t\n\r\0\x0B,.-:;");
+                }
+
                 // Top summary: para PCs (no monitores) ordenar Procesador, Memoria, Almacenamiento, Graficos
                 $topOrdered = [];
                 if ($isToner) {
@@ -1636,13 +1663,15 @@
             @endforelse
         @else
             @php
-                $slotRaw = $getSpecValue(['/^slot.*expansi/i', '/^ranura.*expansi/i', '/slot/i', '/ranura/i', '/pcie|pci/i']);
-                if ($slotRaw) {
-                    $slotRaw = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°\?]?\s*/iu', '', $slotRaw);
-                    $slotRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $slotRaw);
-                    $slotRaw = trim($slotRaw, " \t\n\r\0\x0B:;,.-");
-                    if (mb_strlen($slotRaw) < 3 || in_array(strtoupper($slotRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
-                        $slotRaw = null;
+                if (!isset($slotRaw) || $slotRaw === null) {
+                    $slotRaw = $getSpecValue(['/^slot.*expansi/i', '/^ranura.*expansi/i', '/slot/i', '/ranura/i', '/pcie|pci/i']);
+                    if ($slotRaw) {
+                        $slotRaw = preg_replace('/^m[íi]nimos\s*[⁰¹²³\*°\?]?\s*/iu', '', $slotRaw);
+                        $slotRaw = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $slotRaw);
+                        $slotRaw = trim($slotRaw, " \t\n\r\0\x0B:;,.-");
+                        if (mb_strlen($slotRaw) < 3 || in_array(strtoupper($slotRaw), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                            $slotRaw = null;
+                        }
                     }
                 }
 

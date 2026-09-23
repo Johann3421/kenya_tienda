@@ -841,9 +841,20 @@ class SyncFichasCommand extends Command
             }
         }
 
-        // 6. Sanitizar Puertos Mínimos: limpiar notas al pie y notas técnicas residuales
+        // 6. Sanitizar Puertos Mínimos: desacoplar Slot de Expansión y Fuente de Poder si fueron absorbidos en el PDF
         if (!empty($specs['puertos_minimos'])) {
             $pts = (string) $specs['puertos_minimos'];
+            if (preg_match('/(?:Slot(?:de|\s+de)?\s*Expansi[óo]n[⁰¹²³\*°\?]?)\s*[:\-]?\s*(.*?)(?=\s*(?:Fuente(?:de|\s+de)?\s*Poder|Seguridad|Garant[ií]a|$))/isu', $pts, $mSlot)) {
+                if (empty($specs['slot_expansion'])) {
+                    $specs['slot_expansion'] = trim($mSlot[1], " \t\n\r\0\x0B:;,.-");
+                }
+            }
+            if (preg_match('/(?:Fuente(?:de|\s+de)?\s*Poder)\s*[:\-]?\s*(.*?)(?=\s*(?:Seguridad|Garant[ií]a|Empaque|$))/isu', $pts, $mFte)) {
+                if (empty($specs['fuente_poder'])) {
+                    $specs['fuente_poder'] = trim($mFte[1], " \t\n\r\0\x0B:;,.-");
+                }
+            }
+            $pts = preg_replace('/\s*(?:Slot(?:de|\s+de)?\s*Expansi[óo]n|Fuente(?:de|\s+de)?\s*Poder).*$/isu', '', $pts);
             $pts = preg_replace('/\s*(?:podr[íi]a\s+integrar|[¹1]\s*potencia\s*m[íi]nima|comentarios|especificaciones\s+t[ée]cnicas).*$/isu', '', $pts);
             $pts = preg_replace('/^puertos(?:\s+m[ií]nimos)?\s*[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/iu', '', $pts);
             $pts = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $pts);
@@ -871,6 +882,18 @@ class SyncFichasCommand extends Command
                 unset($specs['slot_expansion']);
             } else {
                 $specs['slot_expansion'] = $sl;
+            }
+        }
+
+        // 6c. Sanitizar Fuente de Poder
+        if (!empty($specs['fuente_poder'])) {
+            $fte = trim((string) $specs['fuente_poder']);
+            $fte = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $fte);
+            $fte = trim($fte, " \t\n\r\0\x0B:;,.-");
+            if (mb_strlen($fte) < 3 || in_array(strtoupper($fte), ['NO ESPECIFICADO', 'NO', 'N/A', '-'], true)) {
+                unset($specs['fuente_poder']);
+            } else {
+                $specs['fuente_poder'] = $fte;
             }
         }
 
@@ -1286,6 +1309,11 @@ class SyncFichasCommand extends Command
             'UNIDAD OPTICA'                  => 'unidad_optica',
             'UNIDAD ÓPTICA'                  => 'unidad_optica',
             'FUENTE DE PODER'                => 'fuente_poder',
+            'FUENTEDE PODER'                 => 'fuente_poder',
+            'FUENTE DE ALIMENTACION'         => 'fuente_poder',
+            'FUENTE DE ALIMENTACIÓN'         => 'fuente_poder',
+            'FUENTEDE ALIMENTACION'          => 'fuente_poder',
+            'FUENTEDE ALIMENTACIÓN'          => 'fuente_poder',
             'SEGURIDAD TPM'                  => 'seguridad',
             'SEGURIDAD'                      => 'seguridad',
             'GARANTIA DE FABRICA'            => 'garantia_de_fabrica',
@@ -1317,6 +1345,14 @@ class SyncFichasCommand extends Command
                     'SLOT DE EXPANSIÓN MÍNIMOS'      => 'slot_expansion',
                     'SLOT DE EXPANSION'              => 'slot_expansion',
                     'SLOT DE EXPANSIÓN'              => 'slot_expansion',
+                    'SLOTDE EXPANSION'               => 'slot_expansion',
+                    'SLOTDE EXPANSIÓN'               => 'slot_expansion',
+                    'RANURAS DE EXPANSIÓN MÍNIMOS'   => 'slot_expansion',
+                    'RANURAS DE EXPANSION MINIMOS'   => 'slot_expansion',
+                    'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
+                    'RANURAS DE EXPANSION'           => 'slot_expansion',
+                    'RANURASDE EXPANSIÓN'            => 'slot_expansion',
+                    'RANURASDE EXPANSION'            => 'slot_expansion',
                     'ACCESORIOS Y OTROS'             => 'accesorios_otros',
                     'ACCESORIOSY OTROS'              => 'accesorios_otros',
                     'ACCESORIOS Y/O OTROS'           => 'accesorios_otros',
@@ -1402,14 +1438,21 @@ class SyncFichasCommand extends Command
         }
 
         // Descartar portada/eslóganes comerciales y bloque de Comentarios / notas al pie previo a la tabla técnica.
-        // La tabla técnica siempre inicia en "Numero de Parte" (o "Modelo" / "Procesador").
-        if (preg_match('/(?:Numero|N[uú]mero|Nro\.?|N°|Nº)(?:de|\s+de)?\s+Parte\b/iu', $text, $m, PREG_OFFSET_CAPTURE)) {
+        // La tabla técnica siempre inicia en "Numero de Parte" (o "Modelo" / "Procesador"). Permitir sin espacios: "NumerodeParte", "Modelo\tEZENT", etc.
+        if (preg_match('/(?:Numero|N[uú]mero|Nro\.?|N°|Nº)(?:de|\s*de)?\s*Parte\b/iu', $text, $m, PREG_OFFSET_CAPTURE)) {
             $text = substr($text, $m[0][1]);
-        } elseif (preg_match('/(?=\b(?:Modelo\s+(?:PROWORK|EZENT|OFISZU|GENWORK|HENKO)|Modelo|Chasis|Factor\s+de\s+Forma|Formato|Procesador)\b)/iu', $text, $m, PREG_OFFSET_CAPTURE)) {
+        } elseif (preg_match('/(?=\b(?:Modelo[\s\t]+(?:PROWORK|EZENT|OFISZU|GENWORK|HENKO)|Modelo|Chasis|Factor\s*de\s*Forma|Formato|Procesador)\b)/iu', $text, $m, PREG_OFFSET_CAPTURE)) {
             $text = substr($text, $m[0][1]);
-        } elseif (preg_match('/Comentarios\b.*?(?:Marca\s+Registrada\b[^\r\n]*[\r\n\s]*|(?=\b(?:Modelo|Chasis|Factor\s+de\s+Forma|Formato|Procesador)\b))/isu', $text, $m, PREG_OFFSET_CAPTURE)) {
+        } elseif (preg_match('/Comentarios\b.*?(?:Marca\s+Registrada\b[^\r\n]*[\r\n\s]*|(?=\b(?:Modelo|Chasis|Factor\s*de\s*Forma|Formato|Procesador)\b))/isu', $text, $m, PREG_OFFSET_CAPTURE)) {
             $text = substr($text, $m[0][1] + strlen($m[0][0]));
         }
+
+        // Normalizar preposiciones y conjunciones unidas sin espacio producidas por Smalot PdfParser
+        // ej. "SlotdeExpansión" -> "Slot de Expansión", "FuentedePoder" -> "Fuente de Poder", "AccesoriosyOtros" -> "Accesorios y Otros"
+        $text = preg_replace('/\b(Slot|Fuente|Numero|Número|Nro|Factor|Ranuras?|Sistema|Garant[ií]a|Cable|T[eé]rminos)de\b/iu', '$1 de', $text);
+        $text = preg_replace('/\b(Accesorios)y\b/iu', '$1 y', $text);
+        $text = preg_replace('/\b([A-Za-zñáéíóú]{3,})de([A-ZÁÉÍÓÚ])/u', '$1 de $2', $text);
+        $text = preg_replace('/\b([A-Za-zñáéíóú]{3,})y([A-ZÁÉÍÓÚ])/u', '$1 y $2', $text);
 
         // Normalizar palabras concatenadas sin espacio producidas por Smalot PdfParser (ej. "ExpansiónMínimos" -> "Expansión Mínimos")
         $text = preg_replace('/([a-zñáéíóú])([A-ZÁÉÍÓÚ])/u', '$1 $2', $text);
@@ -1482,8 +1525,8 @@ class SyncFichasCommand extends Command
     {
         $fixed = $this->fixEncoding($value) ?? '';
         $fixed = preg_replace('/\s+/u', ' ', trim($fixed));
-        // Quitar marcadores de nota al pie típicos de fichas (⁰ ¹ ² ³ ⁴ ⁵ * º °)
-        $fixed = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°:\-\s]+/u', '', $fixed);
+        // Quitar marcadores de nota al pie típicos de fichas (⁰ ¹ ² ³ ⁴ ⁵ * º ° ?)
+        $fixed = preg_replace('/^[⁰¹²³⁴⁵⁶⁷⁸⁹\*º°\?\:\-\s]+/u', '', $fixed);
         $fixed = trim((string) $fixed, ":;,. ");
 
         $upper = strtoupper((string) $fixed);
