@@ -277,10 +277,11 @@ class SyncFichasCommand extends Command
             $specs  = $ficha['specs'] ?? [];
             $categoriaApi = strtoupper($ficha['categoria_api'] ?? '');
             $pdfUrl = $ficha['ficha_tecnica_url'] ?? null;
+            $modelGroup = $this->extractModelGroup($ficha['modelo_api'] ?? '');
 
             if (!$soloVig) {
                 $specsBefore = $specs;
-                $specs = $this->enrichSpecsFromPdfIfNeeded($specs, $pdfUrl, $categoriaApi);
+                $specs = $this->enrichSpecsFromPdfIfNeeded($specs, $pdfUrl, $categoriaApi, $modelGroup);
                 if ($categoriaApi === 'TONER') {
                     $specs = $this->normalizeTonerSpecs($specs, $codigo);
                 }
@@ -335,9 +336,10 @@ class SyncFichasCommand extends Command
                         ]
                     );
 
-                    $this->syncEspecificaciones($producto->id, $specs);
+                    $this->syncEspecificaciones($producto->id, $specs, $modelGroup);
                 }
             }
+
 
             $updated++;
             if ($estado === 'SUSPENDIDA') {
@@ -477,8 +479,9 @@ class SyncFichasCommand extends Command
                 'updated_at' => now(),
             ]);
 
-            $this->syncEspecificaciones($newId, $specs);
+            $this->syncEspecificaciones($newId, $specs, $modelGroup);
         }
+
 
         $tag = $dryRun ? '[dry-run] Crearía' : 'Creado';
         $this->line("  <info>{$tag}: {$nombre}</info>");
@@ -494,8 +497,25 @@ class SyncFichasCommand extends Command
      * - Limpia Garantía de Fábrica eliminando prefijos de modelo repetidos.
      * - Descarta Puertos Mínimos y textos legales residuales de Accesorios y Otros.
      */
-    private function normalizePcSpecs(array $specs): array
+    private function normalizePcSpecs(array $specs, string $modelGroup = ''): array
     {
+        if (empty($modelGroup)) {
+            $desc = strtoupper(($specs['modelo_desc'] ?? '') . ' ' . ($specs['numero_parte_ref'] ?? ''));
+            foreach (self::PC_MODEL_GROUPS as $g) {
+                if (str_contains($desc, $g)) {
+                    $modelGroup = $g;
+                    break;
+                }
+            }
+            if (empty($modelGroup) && !empty($specs['numero_parte_ref'])) {
+                $pn = strtoupper($specs['numero_parte_ref']);
+                if (str_starts_with($pn, 'E')) $modelGroup = 'EZENT';
+                elseif (str_starts_with($pn, 'G')) $modelGroup = 'GENWORK';
+                elseif (str_starts_with($pn, 'P')) $modelGroup = 'PROWORK';
+                elseif (str_starts_with($pn, 'KOT')) $modelGroup = 'OFISZU';
+            }
+        }
+
         // 1. Desacoplar Seguridad TPM 2.0 de Fuente de Poder
         if (!empty($specs['fuente_poder'])) {
             $fp = (string) $specs['fuente_poder'];
@@ -611,30 +631,97 @@ class SyncFichasCommand extends Command
             $specs['garantia_de_fabrica'] = trim($gar, " \t\n\r\0\x0B:;,-.");
         }
 
-        // 5. Desacoplar y limpiar Accesorios y Otros
-        $rawAcc = (string) ($specs['accesorios_otros'] ?? $specs['accesorios'] ?? '');
-        if ($rawAcc !== '') {
-            $rawAcc = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $rawAcc);
-            if (preg_match('/^(.*?)(?:\s+Otros\s*[:\-]?\s*|\s*\bOtros:\s*)(.+)$/isu', $rawAcc, $mSplit)) {
-                $accOnly = trim($mSplit[1], " \t\n\r\0\x0B:;,-.");
-                $otrosOnly = trim($mSplit[2], " \t\n\r\0\x0B:;,-.");
-                if ($accOnly !== '') {
-                    $specs['accesorios'] = $accOnly;
-                    $specs['accesorios_otros'] = $accOnly;
+        // 5. Normalización de Periféricos (Teclado, Mouse), Accesorios y Otros SEGÚN MODELO
+        if (in_array($modelGroup, ['EZENT', 'GENWORK'], true)) {
+            // En EZENT y GENWORK los periféricos van exclusivamente agrupados en Accesorios
+            unset($specs['teclado'], $specs['mouse']);
+
+            $rawAcc = (string) ($specs['accesorios_otros'] ?? $specs['accesorios'] ?? '');
+            if ($rawAcc !== '') {
+                $rawAcc = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $rawAcc);
+                if (preg_match('/^(.*?)(?:\s+Otros\s*[:\-]?\s*|\s*\bOtros:\s*)(.+)$/isu', $rawAcc, $mSplit)) {
+                    $accOnly = trim($mSplit[1], " \t\n\r\0\x0B:;,-.");
+                    $otrosOnly = trim($mSplit[2], " \t\n\r\0\x0B:;,-.");
+                    if ($accOnly !== '') {
+                        $specs['accesorios'] = $accOnly;
+                        $specs['accesorios_otros'] = $accOnly;
+                    }
+                    if ($otrosOnly !== '' && empty($specs['otros'])) {
+                        $specs['otros'] = $otrosOnly;
+                    }
+                } else {
+                    $accClean = trim($rawAcc, " \t\n\r\0\x0B:;,-.");
+                    if (!in_array(strtoupper($accClean), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) && mb_strlen($accClean) >= 3) {
+                        $specs['accesorios'] = $accClean;
+                        $specs['accesorios_otros'] = $accClean;
+                    }
                 }
-                if ($otrosOnly !== '' && empty($specs['otros'])) {
-                    $specs['otros'] = $otrosOnly;
+            }
+
+            if (empty($specs['accesorios']) && empty($specs['accesorios_otros'])) {
+                $specs['accesorios'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+            }
+
+            if ($modelGroup === 'EZENT' && empty($specs['otros'])) {
+                $specs['otros'] = 'Sistema de Enfriamiento por Flujo de Aire';
+            }
+        } elseif ($modelGroup === 'OFISZU') {
+            // En OFISZU Teclado y Mouse son descriptivos e independientes; no existe campo Accesorios
+            unset($specs['accesorios'], $specs['accesorios_otros']);
+            if (empty($specs['otros'])) {
+                $specs['otros'] = 'Manuales, Drivers, Certificado de Garantía';
+            }
+        } elseif ($modelGroup === 'PROWORK') {
+            $isDescriptive = function($v) {
+                if (empty($v)) return false;
+                $t = strtoupper(trim((string)$v));
+                return !in_array($t, ['SI', 'SÍ', 'NO', 'TRUE', 'FALSE', '1', '0', 'N/A', '-', 'NULL', ''], true) && mb_strlen($t) > 5;
+            };
+
+            if ($isDescriptive($specs['teclado'] ?? null) || $isDescriptive($specs['mouse'] ?? null)) {
+                // Variante WS90 con teclado y mouse descriptivos
+                unset($specs['accesorios'], $specs['accesorios_otros']);
+                if (empty($specs['otros'])) {
+                    $specs['otros'] = 'Manuales, Drivers, Certificado de Garantía';
                 }
             } else {
-                $accClean = trim($rawAcc, " \t\n\r\0\x0B:;,-.");
-                if (!in_array(strtoupper($accClean), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) && mb_strlen($accClean) >= 3) {
-                    $specs['accesorios'] = $accClean;
-                    $specs['accesorios_otros'] = $accClean;
+                // Variante WS70 con accesorios agrupados
+                unset($specs['teclado'], $specs['mouse']);
+                if (empty($specs['accesorios']) && empty($specs['accesorios_otros'])) {
+                    $specs['accesorios'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                    $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                }
+                if (empty($specs['otros'])) {
+                    $specs['otros'] = 'Sistema de Enfriamiento por Flujo de Aire';
+                }
+            }
+        } else {
+            // Fallback genérico para otros modelos de PC
+            $rawAcc = (string) ($specs['accesorios_otros'] ?? $specs['accesorios'] ?? '');
+            if ($rawAcc !== '') {
+                $rawAcc = preg_replace('/\s*(?:Comentarios|Puertos\s*posteriores|Puertosdevideo|ESPECIFICACIONES\s+T[EÉ]CNICAS|KENYA\s+TECHNOLOGY|MARCA\s+REGISTRADA).*$/isu', '', $rawAcc);
+                if (preg_match('/^(.*?)(?:\s+Otros\s*[:\-]?\s*|\s*\bOtros:\s*)(.+)$/isu', $rawAcc, $mSplit)) {
+                    $accOnly = trim($mSplit[1], " \t\n\r\0\x0B:;,-.");
+                    $otrosOnly = trim($mSplit[2], " \t\n\r\0\x0B:;,-.");
+                    if ($accOnly !== '') {
+                        $specs['accesorios'] = $accOnly;
+                        $specs['accesorios_otros'] = $accOnly;
+                    }
+                    if ($otrosOnly !== '' && empty($specs['otros'])) {
+                        $specs['otros'] = $otrosOnly;
+                    }
+                } else {
+                    $accClean = trim($rawAcc, " \t\n\r\0\x0B:;,-.");
+                    if (!in_array(strtoupper($accClean), ['Y', 'NO ESPECIFICADO', 'NO', 'N/A', '-'], true) && mb_strlen($accClean) >= 3) {
+                        $specs['accesorios'] = $accClean;
+                        $specs['accesorios_otros'] = $accClean;
+                    }
                 }
             }
         }
 
-        // 5b. Sanitizar Otros: eliminar disclaimers y texto residual de pie de página
+        // Sanitizar Otros (para todos los modelos de PC)
         if (!empty($specs['otros'])) {
             $otr = (string) $specs['otros'];
             $otr = preg_replace('/\s*(?:Especificaciones\s+T[ée]cnicas|Las\s+im[áa]genes\s+presentadas|Im[áa]genes\s+referenciales|Ficha\s+v[áa]lida|Acuerdo\s+Marco|Comentarios|Marca\s+Registrada|Kenya\s+Technology).*$/isu', '', $otr);
@@ -648,21 +735,6 @@ class SyncFichasCommand extends Command
                 $specs['otros'] = $otr;
             }
         }
-
-        // Si es PC Kenya y quedó vacío accesorios u otros:
-        $isPc = (!empty($specs['fuente_poder']) || !empty($specs['chipset']) || !empty($specs['ram']) || !empty($specs['sistema_operativo']));
-        if ($isPc) {
-            if (empty($specs['accesorios']) && empty($specs['accesorios_otros'])) {
-                if (empty($specs['teclado']) && empty($specs['otros'])) {
-                    $specs['accesorios'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
-                    $specs['accesorios_otros'] = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
-                }
-            }
-            if (empty($specs['otros'])) {
-                $specs['otros'] = 'Sistema de Enfriamiento por Flujo de Aire';
-            }
-        }
-
 
         // 6. Sanitizar Puertos Mínimos: limpiar notas al pie y notas técnicas residuales
         if (!empty($specs['puertos_minimos'])) {
@@ -716,9 +788,10 @@ class SyncFichasCommand extends Command
      * Borra las especificaciones existentes del producto y las recrea
      * a partir del array $specs (columna → valor).
      */
-    private function syncEspecificaciones(int $productoId, array $specs): void
+    private function syncEspecificaciones(int $productoId, array $specs, string $modelGroup = ''): void
     {
-        $specs = $this->normalizePcSpecs($specs);
+        $specs = $this->normalizePcSpecs($specs, $modelGroup);
+
 
         DB::table('especificaciones')->where('producto_id', $productoId)->delete();
 
@@ -826,7 +899,7 @@ class SyncFichasCommand extends Command
         }
     }
 
-    private function enrichSpecsFromPdfIfNeeded(array $specs, ?string $pdfUrl, string $categoria): array
+    private function enrichSpecsFromPdfIfNeeded(array $specs, ?string $pdfUrl, string $categoria, string $modelGroup = ''): array
     {
         if (strtoupper($categoria) === 'MONITOR' || empty($pdfUrl)) {
             return $specs;
@@ -836,7 +909,7 @@ class SyncFichasCommand extends Command
             return $specs;
         }
 
-        $fromPdf = $this->extractSpecsFromPdfUrl($pdfUrl);
+        $fromPdf = $this->extractSpecsFromPdfUrl($pdfUrl, $modelGroup);
         if (empty($fromPdf)) {
             return $specs;
         }
@@ -894,45 +967,46 @@ class SyncFichasCommand extends Command
         ];
     }
 
-    private function extractSpecsFromPdfUrl(string $pdfUrl): array
+    private function extractSpecsFromPdfUrl(string $pdfUrl, string $modelGroup = ''): array
     {
         $url = trim($pdfUrl);
         if ($url === '') {
             return [];
         }
 
-        if (array_key_exists($url, $this->pdfSpecsCache)) {
-            return $this->pdfSpecsCache[$url];
+        $cacheKey = $url . ($modelGroup ? ':' . $modelGroup : '');
+        if (array_key_exists($cacheKey, $this->pdfSpecsCache)) {
+            return $this->pdfSpecsCache[$cacheKey];
         }
 
         if (!preg_match('/^https?:\/\//i', $url)) {
-            $this->pdfSpecsCache[$url] = [];
+            $this->pdfSpecsCache[$cacheKey] = [];
             return [];
         }
 
         try {
             $resp = Http::timeout(30)->retry(1, 250)->get($url);
             if (!$resp->successful()) {
-                $this->pdfSpecsCache[$url] = [];
+                $this->pdfSpecsCache[$cacheKey] = [];
                 return [];
             }
 
             $contentType = strtolower((string) $resp->header('Content-Type', ''));
             if ($contentType !== '' && str_contains($contentType, 'html') && !str_contains($contentType, 'pdf')) {
-                $this->pdfSpecsCache[$url] = [];
+                $this->pdfSpecsCache[$cacheKey] = [];
                 return [];
             }
 
-            $specs = $this->parsePdfBinaryToSpecs((string) $resp->body());
-            $this->pdfSpecsCache[$url] = $specs;
+            $specs = $this->parsePdfBinaryToSpecs((string) $resp->body(), $modelGroup);
+            $this->pdfSpecsCache[$cacheKey] = $specs;
             return $specs;
         } catch (\Throwable $e) {
-            $this->pdfSpecsCache[$url] = [];
+            $this->pdfSpecsCache[$cacheKey] = [];
             return [];
         }
     }
 
-    private function extractSpecsFromPdfReference(?string $pdfRef): array
+    private function extractSpecsFromPdfReference(?string $pdfRef, string $modelGroup = ''): array
     {
         $ref = trim((string) $pdfRef);
         if ($ref === '') {
@@ -941,20 +1015,20 @@ class SyncFichasCommand extends Command
 
         // Si viene como URL, intentar HTTP primero y luego fallback por ruta local.
         if (preg_match('/^https?:\/\//i', $ref)) {
-            $remote = $this->extractSpecsFromPdfUrl($ref);
+            $remote = $this->extractSpecsFromPdfUrl($ref, $modelGroup);
             if (!empty($remote)) {
                 return $remote;
             }
 
             $path = parse_url($ref, PHP_URL_PATH);
             if (is_string($path) && $path !== '') {
-                return $this->extractSpecsFromPdfReference($path);
+                return $this->extractSpecsFromPdfReference($path, $modelGroup);
             }
 
             return [];
         }
 
-        $cacheKey = 'local:' . $ref;
+        $cacheKey = 'local:' . $ref . ($modelGroup ? ':' . $modelGroup : '');
         if (array_key_exists($cacheKey, $this->pdfSpecsCache)) {
             return $this->pdfSpecsCache[$cacheKey];
         }
@@ -965,7 +1039,7 @@ class SyncFichasCommand extends Command
             return [];
         }
 
-        $specs = $this->parsePdfBinaryToSpecs($binary);
+        $specs = $this->parsePdfBinaryToSpecs($binary, $modelGroup);
         $this->pdfSpecsCache[$cacheKey] = $specs;
         return $specs;
     }
@@ -1013,7 +1087,165 @@ class SyncFichasCommand extends Command
         return null;
     }
 
-    private function parsePdfBinaryToSpecs(string $pdfBinary): array
+    /**
+     * Retorna los tokens de extracción de PDF específicos para cada modelo de PC Kenya,
+     * evitando colisiones de periféricos (Teclado/Mouse dentro de Accesorios en EZENT y GENWORK).
+     */
+    private function getPdfTokensForModel(string $modelGroup, string $pdfText): array
+    {
+        $common = [
+            'TIPO DE SUMINISTRO DE IMPRESION' => 'tipo_suministro',
+            'TIPO DE SUMINISTRO DE IMPRESIÓN' => 'tipo_suministro',
+            'TIPO DE SUMINISTRO'             => 'tipo_suministro',
+            'DESCRIPCION'                    => 'descripcion_toner',
+            'DESCRIPCIÓN'                    => 'descripcion_toner',
+            'MODELO'                         => 'modelo_toner',
+            'COLOR'                          => 'color_toner',
+            'RENDIMIENTO APROXIMADO'         => 'rendimiento',
+            'RENDIMIENTO'                    => 'rendimiento',
+            'NUMERO DE PARTE DEL FABRICANTE' => 'numero_parte_ref',
+            'NÚMERO DE PARTE DEL FABRICANTE' => 'numero_parte_ref',
+            'UNIDADES POR CAJA'              => 'unidad',
+            'UNIDAD CAJA'                    => 'unidad',
+            'NUMERO DE PARTE'                => 'numero_parte_ref',
+            'NÚMERO DE PARTE'                => 'numero_parte_ref',
+            'NUMERODE PARTE'                 => 'numero_parte_ref',
+            'N° DE PARTE'                    => 'numero_parte_ref',
+            'Nº DE PARTE'                    => 'numero_parte_ref',
+            'DIMENSIONES'                    => 'dimensiones',
+            'FORMATO / CHASIS'               => 'formato',
+            'FORMATO/CHASIS'                 => 'formato',
+            'FACTOR DE FORMA / CHASIS'       => 'formato',
+            'TIPO DE CHASIS'                 => 'formato',
+            'CHASIS / FORMATO'               => 'formato',
+            'CHASIS'                         => 'formato',
+            'FORMATO'                        => 'formato',
+            'FACTOR DE FORMA'                => 'formato',
+            'FACTORDE FORMA'                 => 'formato',
+            'GABINETE'                       => 'formato',
+            'PROCESADOR'                     => 'procesador',
+            'MEMORIA RAM'                    => 'ram',
+            'RAM'                            => 'ram',
+            'ALMACENAMIENTO'                 => 'almacenamiento',
+            'TARJETA GRAFICA'                => 'graficos',
+            'TARJETA GRÁFICA'                => 'graficos',
+            'GRAFICOS'                       => 'graficos',
+            'GRÁFICOS'                       => 'graficos',
+            'VIDEO'                          => 'graficos',
+            'SISTEMA OPERATIVO'              => 'sistema_operativo',
+            'SUITE OFIMATICA PRE-INSTALADA'  => 'suite_ofimatica',
+            'SUITE OFIMATICA (PRE-INSTALADO)'=> 'suite_ofimatica',
+            'SUITE OFIMATICA'                => 'suite_ofimatica',
+            'SUITE OFIMÁTICA'                => 'suite_ofimatica',
+            'SONIDO'                         => 'sonido',
+            'AUDIO'                          => 'sonido',
+            'CHIPSET'                        => 'chipset',
+            'CONECTIVIDAD'                   => 'conectividad',
+            'LAN'                            => 'conectividad',
+            'WLAN'                           => 'conectividad_wlan',
+            'UNIDAD OPTICA'                  => 'unidad_optica',
+            'UNIDAD ÓPTICA'                  => 'unidad_optica',
+            'FUENTE DE PODER'                => 'fuente_poder',
+            'SEGURIDAD TPM'                  => 'seguridad',
+            'SEGURIDAD'                      => 'seguridad',
+            'GARANTIA DE FABRICA'            => 'garantia_de_fabrica',
+            'GARANTÍA DE FABRICA'            => 'garantia_de_fabrica',
+            'GARANTIA DE FÁBRICA'            => 'garantia_de_fabrica',
+            'GARANTÍA DE FÁBRICA'            => 'garantia_de_fabrica',
+            'GARANTIA'                       => 'garantia_de_fabrica',
+            'GARANTÍA'                       => 'garantia_de_fabrica',
+            'EMPAQUE'                        => 'empaque',
+            'CERTIFICACIONES'                => 'certificaciones',
+            'CERTIFICACIÓN'                  => 'certificaciones',
+            'CERTIFICACION'                  => 'certificaciones',
+            'SISTEMA DE MANEJO DE RAEE'      => 'sistema_raee',
+            'SISTEMA MANEJO RAEE'            => 'sistema_raee',
+            'SIST. MANEJO RAEE'              => 'sistema_raee',
+            'SISTEMA RAEE'                   => 'sistema_raee',
+        ];
+
+        $group = strtoupper(trim($modelGroup));
+
+        switch ($group) {
+            case 'EZENT':
+            case 'GENWORK':
+                return array_merge($common, [
+                    'PUERTOS MINIMOS'                => 'puertos_minimos',
+                    'PUERTOS MÍNIMOS'                => 'puertos_minimos',
+                    'PUERTOS'                        => 'puertos_minimos',
+                    'SLOT DE EXPANSION MINIMOS'      => 'slot_expansion',
+                    'SLOT DE EXPANSIÓN MÍNIMOS'      => 'slot_expansion',
+                    'SLOT DE EXPANSION'              => 'slot_expansion',
+                    'SLOT DE EXPANSIÓN'              => 'slot_expansion',
+                    'ACCESORIOS Y OTROS'             => 'accesorios_otros',
+                    'ACCESORIOSY OTROS'              => 'accesorios_otros',
+                    'ACCESORIOS Y/O OTROS'           => 'accesorios_otros',
+                    'ACCESORIOS / OTROS'             => 'accesorios_otros',
+                    'ACCESORIOS'                     => 'accesorios',
+                    'OTROS'                          => 'otros',
+                ]);
+
+            case 'OFISZU':
+                return array_merge($common, [
+                    'PUERTOS MINIMOS'                => 'puertos_minimos',
+                    'PUERTOS MÍNIMOS'                => 'puertos_minimos',
+                    'PUERTOS'                        => 'puertos_minimos',
+                    'RANURAS DE EXPANSIÓN MÍNIMOS'   => 'slot_expansion',
+                    'RANURAS DE EXPANSION MINIMOS'   => 'slot_expansion',
+                    'RANURASDE EXPANSIÓN MÍNIMOS'    => 'slot_expansion',
+                    'RANURASDE EXPANSION MINIMOS'    => 'slot_expansion',
+                    'RANURAS DE EXPANSIÓN'           => 'slot_expansion',
+                    'RANURAS DE EXPANSION'           => 'slot_expansion',
+                    'SLOT DE EXPANSIÓN'              => 'slot_expansion',
+                    'SLOT DE EXPANSION'              => 'slot_expansion',
+                    'TECLADO'                        => 'teclado',
+                    'MOUSE'                          => 'mouse',
+                    'DISIPACIÓN DE CALOR'            => 'disipacion',
+                    'DISIPACION DE CALOR'            => 'disipacion',
+                    'OTROS'                          => 'otros',
+                ]);
+
+            case 'PROWORK':
+                $hasAccesorios = preg_match('/(?<![A-ZÁÉÍÓÚÑ])ACCESORIOS(?![A-ZÁÉÍÓÚÑ])/u', mb_strtoupper($pdfText, 'UTF-8'));
+                if ($hasAccesorios) {
+                    return array_merge($common, [
+                        'PUERTOS MINIMOS'                => 'puertos_minimos',
+                        'PUERTOS MÍNIMOS'                => 'puertos_minimos',
+                        'PUERTOS'                        => 'puertos_minimos',
+                        'SLOT DE EXPANSION MINIMOS'      => 'slot_expansion',
+                        'SLOT DE EXPANSIÓN MÍNIMOS'      => 'slot_expansion',
+                        'SLOT DE EXPANSION'              => 'slot_expansion',
+                        'SLOT DE EXPANSIÓN'              => 'slot_expansion',
+                        'ACCESORIOS Y OTROS'             => 'accesorios_otros',
+                        'ACCESORIOSY OTROS'              => 'accesorios_otros',
+                        'ACCESORIOS'                     => 'accesorios',
+                        'OTROS'                          => 'otros',
+                    ]);
+                } else {
+                    return array_merge($common, [
+                        'PUERTOS MINIMOS'                => 'puertos_minimos',
+                        'PUERTOS MÍNIMOS'                => 'puertos_minimos',
+                        'PUERTOS'                        => 'puertos_minimos',
+                        'RANURAS DE EXPANSIÓN MÍNIMOS'   => 'slot_expansion',
+                        'RANURAS DE EXPANSION MINIMOS'   => 'slot_expansion',
+                        'RANURASDE EXPANSIÓN MÍNIMOS'    => 'slot_expansion',
+                        'RANURASDE EXPANSION MINIMOS'    => 'slot_expansion',
+                        'SLOT DE EXPANSION'              => 'slot_expansion',
+                        'SLOT DE EXPANSIÓN'              => 'slot_expansion',
+                        'TECLADO'                        => 'teclado',
+                        'MOUSE'                          => 'mouse',
+                        'DISIPACIÓN DE CALOR'            => 'disipacion',
+                        'DISIPACION DE CALOR'            => 'disipacion',
+                        'OTROS'                          => 'otros',
+                    ]);
+                }
+
+            default:
+                return self::PDF_SPEC_TOKENS;
+        }
+    }
+
+    private function parsePdfBinaryToSpecs(string $pdfBinary, string $modelGroup = ''): array
     {
         if ($pdfBinary === '') {
             return [];
@@ -1042,9 +1274,25 @@ class SyncFichasCommand extends Command
         // Normalizar palabras concatenadas sin espacio producidas por Smalot PdfParser (ej. "ExpansiónMínimos" -> "Expansión Mínimos")
         $text = preg_replace('/([a-zñáéíóú])([A-ZÁÉÍÓÚ])/u', '$1 $2', $text);
 
+        // Inferir modelGroup del texto del PDF si no fue provisto
+        if (empty($modelGroup)) {
+            if (preg_match('/\bModelo\s+(EZENT|PROWORK|GENWORK|OFISZU|HENKO)\b/iu', $text, $mM)) {
+                $modelGroup = strtoupper($mM[1]);
+            } elseif (preg_match('/(?:^|\n)\s*(?:Numero|Nro\.?|N°)\s*(?:de)?\s*Parte\s+([A-Z0-9_\-]+)/iu', $text, $mPn)) {
+                $pn = strtoupper($mPn[1]);
+                if (str_starts_with($pn, 'E')) $modelGroup = 'EZENT';
+                elseif (str_starts_with($pn, 'G')) $modelGroup = 'GENWORK';
+                elseif (str_starts_with($pn, 'P')) $modelGroup = 'PROWORK';
+                elseif (str_starts_with($pn, 'KOT')) $modelGroup = 'OFISZU';
+            }
+        }
+
+        $tokens = $this->getPdfTokensForModel($modelGroup, $text);
+
         $specs = $this->parseTokenizedText(
             $text,
-            self::PDF_SPEC_TOKENS,
+            $tokens,
+
             [
                 'ESPECIFICACIONES TÉCNICAS',
                 'ESPECIFICACIONES TECNICAS',

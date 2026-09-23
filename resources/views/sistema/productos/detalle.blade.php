@@ -1028,6 +1028,22 @@
                     }
                 }
 
+                // Descartar periféricos falsos o corruptos (ej. "Cable de Poder, Manuales, Drivers..." asignado a Mouse o Teclado)
+                $isInvalidPeripheral = function($val) {
+                    if (empty($val)) return true;
+                    $v = strtolower(trim((string)$val));
+                    if (in_array($v, ['si', 'sí', 'no', 'true', 'false', '1', '0', 'n/a', '-', 'null', 'no especificado', 'no aplica'], true)) return true;
+                    if (preg_match('/cable\s+de\s+poder|manuales|drivers|t[eé]rminos\s+de\s+garant[ií]a/i', $v)) return true;
+                    return false;
+                };
+
+                if ($tecladoRaw && $isInvalidPeripheral($tecladoRaw)) {
+                    $tecladoRaw = null;
+                }
+                if ($mouseRaw && $isInvalidPeripheral($mouseRaw)) {
+                    $mouseRaw = null;
+                }
+
                 // Descartar si otrosRaw erróneamente tomó los accesorios
                 if ($otrosRaw && preg_match('/teclado|mouse|cable\s+de\s+poder|manuales/i', $otrosRaw)) {
                     $otrosRaw = null;
@@ -1045,15 +1061,56 @@
                     }
                 }
 
-                // Fallbacks para PCs de escritorio / Workstations Kenya oficiales de Perú Compras
-                if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
-                    if (empty($tecladoRaw) && empty($otrosRaw)) {
+                // Detección de Modelo de PC según taxonomía oficial Perú Compras
+                $modelText = strtolower(($producto->nombre ?? '') . ' ' . (optional($producto->modelo)->descripcion ?? '') . ' ' . (optional($producto->modelo)->nombre ?? '') . ' ' . ($producto->nro_parte ?? ''));
+                $isEzent = str_contains($modelText, 'ezent') || preg_match('/^E7[A-Z0-9]/i', $producto->nro_parte ?? '');
+                $isGenwork = str_contains($modelText, 'genwork') || preg_match('/^GC[0-9]/i', $producto->nro_parte ?? '');
+                $isOfiszu = str_contains($modelText, 'ofiszu') || preg_match('/^KO[0-9]/i', $producto->nro_parte ?? '');
+                $isProwork = str_contains($modelText, 'prowork') || preg_match('/^P[0-9]/i', $producto->nro_parte ?? '');
+
+                if ($isEzent || $isGenwork) {
+                    // En EZENT y GENWORK: Teclado y Mouse NO existen como campos independientes;
+                    // van estrictamente integrados dentro de Accesorios.
+                    $tecladoRaw = null;
+                    $mouseRaw = null;
+                    if (empty($accesoriosRaw)) {
                         $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
                     }
-                }
-
-                if (empty($otrosRaw) && $isDesktopOrWorkstation) {
-                    $otrosRaw = 'Sistema de Enfriamiento por Flujo de Aire';
+                    if ($isEzent) {
+                        $otrosRaw = 'Sistema de Enfriamiento por Flujo de Aire';
+                    }
+                } elseif ($isOfiszu) {
+                    // En OFISZU: Teclado y Mouse son descriptivos e independientes; no existe campo Accesorios.
+                    $accesoriosRaw = null;
+                    if (empty($otrosRaw) || preg_match('/sistema\s+de\s+enfriamiento/i', $otrosRaw)) {
+                        $otrosRaw = 'Manuales, Drivers, Certificado de Garantía';
+                    }
+                } elseif ($isProwork) {
+                    $hasDescriptiveTeclado = !empty($tecladoRaw) && !$isInvalidPeripheral($tecladoRaw) && mb_strlen($tecladoRaw) > 5;
+                    if ($hasDescriptiveTeclado) {
+                        // Variante PROWORK WS90: Teclado y Mouse individuales descriptivos
+                        $accesoriosRaw = null;
+                        if (empty($otrosRaw) || preg_match('/sistema\s+de\s+enfriamiento/i', $otrosRaw)) {
+                            $otrosRaw = 'Manuales, Drivers, Certificado de Garantía';
+                        }
+                    } else {
+                        // Variante PROWORK WS70: Periféricos agrupados en Accesorios
+                        $tecladoRaw = null;
+                        $mouseRaw = null;
+                        if (empty($accesoriosRaw)) {
+                            $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                        }
+                    }
+                } else {
+                    // Fallback para otros modelos de PCs de escritorio / Workstations Kenya
+                    if (empty($accesoriosRaw) && $isDesktopOrWorkstation) {
+                        if (empty($tecladoRaw)) {
+                            $accesoriosRaw = 'Teclado, Mouse, Cable de Poder, Manuales, Drivers, Términos de Garantia';
+                        }
+                    }
+                    if (empty($otrosRaw) && $isDesktopOrWorkstation) {
+                        $otrosRaw = 'Sistema de Enfriamiento por Flujo de Aire';
+                    }
                 }
 
 
@@ -1542,11 +1599,11 @@
                     return in_array(strtoupper(trim((string)$val)), ['SI', 'SÍ', 'NO', 'TRUE', 'FALSE', '1', '0', 'N/A', '-', 'NULL'], true);
                 };
 
-                if (!empty($tecladoRaw) && !$isBoolVal($tecladoRaw)) {
+                if (!empty($tecladoRaw) && !$isBoolVal($tecladoRaw) && !$isInvalidPeripheral($tecladoRaw)) {
                     $oldPcRows[] = ['label' => 'Teclado', 'value' => $tecladoRaw];
                 }
 
-                if (!empty($mouseRaw) && !$isBoolVal($mouseRaw)) {
+                if (!empty($mouseRaw) && !$isBoolVal($mouseRaw) && !$isInvalidPeripheral($mouseRaw)) {
                     $oldPcRows[] = ['label' => 'Mouse', 'value' => $mouseRaw];
                 }
 
