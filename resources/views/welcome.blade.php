@@ -1035,126 +1035,56 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════
-           BARRA GUÍA Y FEEDBACK DE FILTRO DEL CARRUSEL
+           CABECERA DEL CATÁLOGO / MODELOS DEL CARRUSEL
            ═══════════════════════════════════════════════════════════════ */
-        #main-welcome-container .carousel-filtro-bar {
+        #main-welcome-container .catalogo-section-header {
             display: flex !important;
-            align-items: center !important;
+            align-items: baseline !important;
             justify-content: space-between !important;
-            background: #ffffff !important;
-            border: 1px solid #e7e7e7 !important;
-            border-left: 4px solid #f26522 !important;
-            border-radius: 12px !important;
-            padding: 14px 22px !important;
-            margin-bottom: 24px !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04) !important;
+            margin-bottom: 18px !important;
+            padding: 0 4px 14px !important;
+            border-bottom: 1px solid #e5e5e5 !important;
+            gap: 15px !important;
             flex-wrap: wrap !important;
-            gap: 12px !important;
-            transition: all 0.3s ease !important;
         }
 
-        #main-welcome-container .filtro-info-grupo {
+        #main-welcome-container .catalogo-title-wrap {
             display: flex !important;
-            align-items: center !important;
+            align-items: baseline !important;
             gap: 12px !important;
             flex-wrap: wrap !important;
         }
 
-        #main-welcome-container .filtro-tag-pill {
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 6px !important;
-            background: #fff3ec !important;
-            color: #f26522 !important;
-            font-size: 0.78rem !important;
+        #main-welcome-container .catalogo-title {
+            font-size: 1.55rem !important;
             font-weight: 700 !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.06em !important;
-            padding: 4px 12px !important;
-            border-radius: 20px !important;
-        }
-
-        #main-welcome-container .filtro-titulo-dinamico {
+            color: #111111 !important;
             margin: 0 !important;
-            font-size: 1.15rem !important;
-            font-weight: 600 !important;
-            color: #1a1a1a !important;
-            line-height: 1.3 !important;
+            letter-spacing: -0.01em !important;
+            line-height: 1.2 !important;
         }
 
-        #main-welcome-container #filtro-categoria-nombre {
-            color: #f26522 !important;
-            font-weight: 700 !important;
+        #main-welcome-container .catalogo-count {
+            font-size: 0.95rem !important;
+            color: #777777 !important;
+            font-weight: 500 !important;
         }
 
-        #main-welcome-container .filtro-conteo-badge {
+        #main-welcome-container .catalogo-link-all {
             display: inline-flex !important;
             align-items: center !important;
             gap: 6px !important;
-            font-size: 0.85rem !important;
-            color: #555 !important;
-            background: #f7f7f7 !important;
-            padding: 6px 14px !important;
-            border-radius: 20px !important;
-            border: 1px solid #eaeaea !important;
-        }
-
-        #main-welcome-container .filtro-conteo-badge strong {
-            color: #111 !important;
-        }
-
-        #main-welcome-container .carousel-empty-state {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 45px 20px !important;
-            text-align: center !important;
-            width: 100% !important;
-            background: #ffffff !important;
-            border-radius: 12px !important;
-            border: 2px dashed #dedede !important;
-            margin: 15px 0 !important;
-        }
-
-        #main-welcome-container .carousel-empty-state .empty-icon {
-            font-size: 2.4rem !important;
-            color: #f26522 !important;
-            margin-bottom: 12px !important;
-        }
-
-        #main-welcome-container .carousel-empty-state h4 {
-            font-size: 1.15rem !important;
-            font-weight: 700 !important;
-            color: #111 !important;
-            margin: 0 0 8px 0 !important;
-        }
-
-        #main-welcome-container .carousel-empty-state p {
-            font-size: 0.95rem !important;
-            color: #666 !important;
-            max-width: 520px !important;
-            margin: 0 0 18px 0 !important;
-            line-height: 1.4 !important;
-        }
-
-        #main-welcome-container .btn-reset-filter {
-            background: #f26522 !important;
-            color: #fff !important;
-            border: none !important;
-            border-radius: 30px !important;
-            padding: 10px 24px !important;
-            font-weight: 600 !important;
             font-size: 0.9rem !important;
-            cursor: pointer !important;
-            box-shadow: 0 4px 12px rgba(242,101,34,0.25) !important;
-            transition: all 0.25s ease !important;
+            color: #f26522 !important;
+            text-decoration: none !important;
+            font-weight: 600 !important;
+            transition: color 0.2s ease, gap 0.2s ease !important;
         }
 
-        #main-welcome-container .btn-reset-filter:hover {
-            background: #d96b20 !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 16px rgba(242,101,34,0.35) !important;
+        #main-welcome-container .catalogo-link-all:hover {
+            color: #d96b20 !important;
+            gap: 9px !important;
+            text-decoration: none !important;
         }
 
         #main-welcome-container .ofertas-heading {
@@ -1269,10 +1199,10 @@
         }
 
         @media (max-width: 768px) {
-            #main-welcome-container .carousel-filtro-bar {
+            #main-welcome-container .catalogo-section-header {
                 flex-direction: column !important;
                 align-items: flex-start !important;
-                padding: 12px 16px !important;
+                gap: 8px !important;
             }
             #main-welcome-container .ofertas-grid {
                 grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
@@ -1460,21 +1390,15 @@
              ═══════════════════════════════════════════════════════════ -->
         <section class="ofertas-section" id="seccion-catalogo-carrusel">
             <div class="section-container">
-                <!-- BARRA GUÍA Y FEEDBACK DE FILTRO DEL CARRUSEL -->
-                <div class="carousel-filtro-bar">
-                    <div class="filtro-info-grupo">
-                        <span class="filtro-tag-pill">
-                            <i class="fa-solid fa-layer-group"></i> Catálogo de Equipos
-                        </span>
-                        <h3 class="filtro-titulo-dinamico">
-                            Mostrando: <span id="filtro-categoria-nombre">Todos los productos</span>
-                        </h3>
+                <!-- CABECERA DEL CATÁLOGO / MODELOS -->
+                <div class="catalogo-section-header">
+                    <div class="catalogo-title-wrap">
+                        <h3 class="catalogo-title" id="filtro-categoria-nombre">Todos los productos</h3>
+                        <span class="catalogo-count"><span id="filtro-conteo-numero">{{ count($modelo) }}</span> modelos</span>
                     </div>
-                    <div class="filtro-conteo-grupo">
-                        <span class="filtro-conteo-badge" id="filtro-conteo-badge">
-                            <i class="fa-solid fa-check"></i> <strong id="filtro-conteo-numero">{{ count($modelo) }}</strong> modelos disponibles
-                        </span>
-                    </div>
+                    <a href="{{ route('catalogo') }}" class="catalogo-link-all">
+                        Ver catálogo completo <i class="fa-solid fa-chevron-right"></i>
+                    </a>
                 </div>
 
                 <!-- CARRUSEL DE PRODUCTOS -->
@@ -1541,14 +1465,6 @@
                     <button class="carousel-btn carousel-next" aria-label="Siguiente">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
-
-                    <!-- ESTADO VACÍO SI LA CATEGORÍA NO TIENE MODELOS -->
-                    <div class="carousel-empty-state" id="carousel-empty-state" style="display: none;">
-                        <div class="empty-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
-                        <h4>No hay modelos disponibles en esta categoría en este momento</h4>
-                        <p>Estamos actualizando nuestro catálogo continuamente. Puedes restablecer el filtro para ver todos los productos disponibles.</p>
-                        <button type="button" class="btn-reset-filter" id="btn-reset-filter">Ver todos los productos</button>
-                    </div>
                 </div>
 
                 <div class="ofertas-heading">
@@ -1870,8 +1786,6 @@
             const carouselNext = container.querySelector('.carousel-next');
             const filtroNombre = container.querySelector('#filtro-categoria-nombre');
             const filtroConteo = container.querySelector('#filtro-conteo-numero');
-            const emptyState = container.querySelector('#carousel-empty-state');
-            const btnResetFilter = container.querySelector('#btn-reset-filter');
             const carruselSection = container.querySelector('#seccion-catalogo-carrusel');
 
             const updateCarouselAlignment = () => {
@@ -1916,9 +1830,6 @@
                 if (filtroConteo) {
                     filtroConteo.textContent = visibleCount;
                 }
-                if (emptyState) {
-                    emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
-                }
 
                 updateCarouselAlignment();
 
@@ -1947,13 +1858,6 @@
                     const categoryName = btn.querySelector('.categoria-label')?.textContent?.trim() || 'Productos';
                     applyCategoryFilter(selectedCategory, categoryName, true);
                 });
-            });
-
-            btnResetFilter?.addEventListener('click', () => {
-                const allBtn = Array.from(categoryButtons).find(b => b.getAttribute('data-category') === '*');
-                if (allBtn) {
-                    allBtn.click();
-                }
             });
 
             window.addEventListener('resize', updateCarouselAlignment);
