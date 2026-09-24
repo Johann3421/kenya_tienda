@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-09-24-intercambio-dinamico-seccion-principal-quienes-somos|2026-09-24: Intercambio de Posición Dinámico entre Sección Principal y Tarjetas en Quiénes Somos]]
 - [[2026-09-24-guia-visual-scroll-filtro-categorias-welcome|2026-09-24: Scroll Guiado Inteligente y Feedback Visual al Filtrar Categorías en Home (Welcome)]]
 - [[2026-09-23-inferencia-y-normalizacion-chipset-pcs-kenya|2026-09-23: Inferencia, Normalización y Sanitización de Chipset en Computadoras Kenya (Producto 2943)]]
 - [[2026-09-23-correccion-nro-parte-en-catalogo-producto-3061|2026-09-23: Corrección de Título y Número de Parte de Producto 3061 en Catálogo, Novedades y Modelo Eloquent]]
