@@ -325,6 +325,13 @@
             margin: 0 !important;
         }
 
+        #main-welcome-container .section-subtitle {
+            font-size: 1.05rem !important;
+            color: #666 !important;
+            margin: 8px 0 0 0 !important;
+            font-weight: 400 !important;
+        }
+
         /* GRID DE CATEGORÍAS - ESTILO CIRCULAR */
         #main-welcome-container .categorias-section-inner {
             background-color: #ffffff !important;
@@ -420,6 +427,22 @@
             font-weight: bold !important;
         }
 
+        #main-welcome-container .categoria-btn {
+            position: relative !important;
+        }
+
+        #main-welcome-container .categoria-btn.active::after {
+            content: "" !important;
+            position: absolute !important;
+            bottom: -6px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: 32px !important;
+            height: 3px !important;
+            background: #f26522 !important;
+            border-radius: 4px !important;
+        }
+
         /* CARRUSEL DE PRODUCTOS */
         #main-welcome-container .productos-carousel {
             position: relative !important;
@@ -465,6 +488,21 @@
         #main-welcome-container .producto-card:hover {
             transform: translateY(-5px) !important;
             box-shadow: 0 10px 24px rgba(0,0,0,0.1) !important;
+        }
+
+        @keyframes cardFilterIn {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        #main-welcome-container .producto-card.anim-filter {
+            animation: cardFilterIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         }
 
         #main-welcome-container .brand-henko {
@@ -996,6 +1034,129 @@
             background-color: #f8f8f8 !important;
         }
 
+        /* ═══════════════════════════════════════════════════════════════
+           BARRA GUÍA Y FEEDBACK DE FILTRO DEL CARRUSEL
+           ═══════════════════════════════════════════════════════════════ */
+        #main-welcome-container .carousel-filtro-bar {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            background: #ffffff !important;
+            border: 1px solid #e7e7e7 !important;
+            border-left: 4px solid #f26522 !important;
+            border-radius: 12px !important;
+            padding: 14px 22px !important;
+            margin-bottom: 24px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04) !important;
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        #main-welcome-container .filtro-info-grupo {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            flex-wrap: wrap !important;
+        }
+
+        #main-welcome-container .filtro-tag-pill {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            background: #fff3ec !important;
+            color: #f26522 !important;
+            font-size: 0.78rem !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.06em !important;
+            padding: 4px 12px !important;
+            border-radius: 20px !important;
+        }
+
+        #main-welcome-container .filtro-titulo-dinamico {
+            margin: 0 !important;
+            font-size: 1.15rem !important;
+            font-weight: 600 !important;
+            color: #1a1a1a !important;
+            line-height: 1.3 !important;
+        }
+
+        #main-welcome-container #filtro-categoria-nombre {
+            color: #f26522 !important;
+            font-weight: 700 !important;
+        }
+
+        #main-welcome-container .filtro-conteo-badge {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            font-size: 0.85rem !important;
+            color: #555 !important;
+            background: #f7f7f7 !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            border: 1px solid #eaeaea !important;
+        }
+
+        #main-welcome-container .filtro-conteo-badge strong {
+            color: #111 !important;
+        }
+
+        #main-welcome-container .carousel-empty-state {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 45px 20px !important;
+            text-align: center !important;
+            width: 100% !important;
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            border: 2px dashed #dedede !important;
+            margin: 15px 0 !important;
+        }
+
+        #main-welcome-container .carousel-empty-state .empty-icon {
+            font-size: 2.4rem !important;
+            color: #f26522 !important;
+            margin-bottom: 12px !important;
+        }
+
+        #main-welcome-container .carousel-empty-state h4 {
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            color: #111 !important;
+            margin: 0 0 8px 0 !important;
+        }
+
+        #main-welcome-container .carousel-empty-state p {
+            font-size: 0.95rem !important;
+            color: #666 !important;
+            max-width: 520px !important;
+            margin: 0 0 18px 0 !important;
+            line-height: 1.4 !important;
+        }
+
+        #main-welcome-container .btn-reset-filter {
+            background: #f26522 !important;
+            color: #fff !important;
+            border: none !important;
+            border-radius: 30px !important;
+            padding: 10px 24px !important;
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            cursor: pointer !important;
+            box-shadow: 0 4px 12px rgba(242,101,34,0.25) !important;
+            transition: all 0.25s ease !important;
+        }
+
+        #main-welcome-container .btn-reset-filter:hover {
+            background: #d96b20 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 16px rgba(242,101,34,0.35) !important;
+        }
+
         #main-welcome-container .ofertas-heading {
             text-align: center !important;
             margin-bottom: 40px !important;
@@ -1108,6 +1269,11 @@
         }
 
         @media (max-width: 768px) {
+            #main-welcome-container .carousel-filtro-bar {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 12px 16px !important;
+            }
             #main-welcome-container .ofertas-grid {
                 grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
                 gap: 16px !important;
@@ -1262,6 +1428,7 @@
             <div class="section-container">
                 <div class="section-title">
                     <h2>Categorías de producto</h2>
+                    <p class="section-subtitle">Selecciona una categoría para explorar los equipos y modelos disponibles</p>
                 </div>
 
                 <!-- GRID DE CATEGORÍAS -->
@@ -1291,8 +1458,25 @@
         <!-- ═══════════════════════════════════════════════════════════
              SECCIÓN DE OFERTAS (Y CARRUSEL)
              ═══════════════════════════════════════════════════════════ -->
-        <section class="ofertas-section">
+        <section class="ofertas-section" id="seccion-catalogo-carrusel">
             <div class="section-container">
+                <!-- BARRA GUÍA Y FEEDBACK DE FILTRO DEL CARRUSEL -->
+                <div class="carousel-filtro-bar">
+                    <div class="filtro-info-grupo">
+                        <span class="filtro-tag-pill">
+                            <i class="fa-solid fa-layer-group"></i> Catálogo de Equipos
+                        </span>
+                        <h3 class="filtro-titulo-dinamico">
+                            Mostrando: <span id="filtro-categoria-nombre">Todos los productos</span>
+                        </h3>
+                    </div>
+                    <div class="filtro-conteo-grupo">
+                        <span class="filtro-conteo-badge" id="filtro-conteo-badge">
+                            <i class="fa-solid fa-check"></i> <strong id="filtro-conteo-numero">{{ count($modelo) }}</strong> modelos disponibles
+                        </span>
+                    </div>
+                </div>
+
                 <!-- CARRUSEL DE PRODUCTOS -->
                 <div class="productos-carousel">
                     <button class="carousel-btn carousel-prev" aria-label="Anterior">
@@ -1357,6 +1541,14 @@
                     <button class="carousel-btn carousel-next" aria-label="Siguiente">
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
+
+                    <!-- ESTADO VACÍO SI LA CATEGORÍA NO TIENE MODELOS -->
+                    <div class="carousel-empty-state" id="carousel-empty-state" style="display: none;">
+                        <div class="empty-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <h4>No hay modelos disponibles en esta categoría en este momento</h4>
+                        <p>Estamos actualizando nuestro catálogo continuamente. Puedes restablecer el filtro para ver todos los productos disponibles.</p>
+                        <button type="button" class="btn-reset-filter" id="btn-reset-filter">Ver todos los productos</button>
+                    </div>
                 </div>
 
                 <div class="ofertas-heading">
@@ -1676,6 +1868,11 @@
             const carousel = container.querySelector('#carousel-track');
             const carouselPrev = container.querySelector('.carousel-prev');
             const carouselNext = container.querySelector('.carousel-next');
+            const filtroNombre = container.querySelector('#filtro-categoria-nombre');
+            const filtroConteo = container.querySelector('#filtro-conteo-numero');
+            const emptyState = container.querySelector('#carousel-empty-state');
+            const btnResetFilter = container.querySelector('#btn-reset-filter');
+            const carruselSection = container.querySelector('#seccion-catalogo-carrusel');
 
             const updateCarouselAlignment = () => {
                 if (!carousel) return;
@@ -1696,23 +1893,67 @@
                 });
             };
 
+            const applyCategoryFilter = (selectedCategory, categoryName, shouldScroll = true) => {
+                let visibleCount = 0;
+
+                productCards.forEach(card => {
+                    const isVisible = (selectedCategory === '*' || card.classList.contains(selectedCategory.substring(1)));
+                    if (isVisible) {
+                        card.style.display = 'flex';
+                        card.classList.remove('anim-filter');
+                        void card.offsetWidth;
+                        card.classList.add('anim-filter');
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.remove('anim-filter');
+                    }
+                });
+
+                if (filtroNombre) {
+                    filtroNombre.textContent = selectedCategory === '*' ? 'Todos los productos' : categoryName;
+                }
+                if (filtroConteo) {
+                    filtroConteo.textContent = visibleCount;
+                }
+                if (emptyState) {
+                    emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+                }
+
+                updateCarouselAlignment();
+
+                if (shouldScroll && carruselSection) {
+                    const header = document.querySelector('.site-header');
+                    const headerOffset = (header ? header.offsetHeight : 80) + 15;
+                    const rect = carruselSection.getBoundingClientRect();
+
+                    const isComfortablyVisible = (rect.top >= headerOffset - 20) && (rect.top <= headerOffset + 120);
+                    if (!isComfortablyVisible) {
+                        const targetY = window.pageYOffset + rect.top - headerOffset;
+                        window.scrollTo({
+                            top: Math.max(0, targetY),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            };
+
             categoryButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
                     categoryButtons.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
 
                     const selectedCategory = btn.getAttribute('data-category');
-                    productCards.forEach(card => {
-                        if (selectedCategory === '*') {
-                            card.style.display = 'flex';
-                        } else {
-                            const cardClass = selectedCategory.substring(1);
-                            card.style.display = card.classList.contains(cardClass) ? 'flex' : 'none';
-                        }
-                    });
-
-                    updateCarouselAlignment();
+                    const categoryName = btn.querySelector('.categoria-label')?.textContent?.trim() || 'Productos';
+                    applyCategoryFilter(selectedCategory, categoryName, true);
                 });
+            });
+
+            btnResetFilter?.addEventListener('click', () => {
+                const allBtn = Array.from(categoryButtons).find(b => b.getAttribute('data-category') === '*');
+                if (allBtn) {
+                    allBtn.click();
+                }
             });
 
             window.addEventListener('resize', updateCarouselAlignment);
