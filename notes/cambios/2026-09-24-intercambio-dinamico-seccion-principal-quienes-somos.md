@@ -39,11 +39,31 @@ En la vista `https://www.kenya.com.pe/quienes-somos`, la sección superior conti
 
 ---
 
-## 3. Archivos Modificados
+## 3. Rediseño Visual y Nivelación de Alturas en Grid (2026-09-24)
+
+### A. Eliminación de Sobreposición de Colores Naranja
+- **Diagnóstico:** Previamente, el div principal `.about-intro` combinaba fondo durazno (`#fffaf7`), borde lateral naranja de 4px, sombra con resplandor naranja e iconografía naranja, sumado a una línea vertical pseudo-elemento `::before` dentro de `.about-description`. Esto generaba saturación cromática y fatiga visual ("sobreposición de naranjas").
+- **Solución:**
+  - Fondo limpio blanco `#ffffff` con borde neutro `1px solid #e2e8f0` y acento superior sutil `border-top: 4px solid #f26522`.
+  - Se eliminó completamente la doble barra vertical `::before` de `.about-description`.
+  - Iconos jerarquizados dentro de contenedores badge redondeados (`.icon-title` con fondo `#fff7ed`, borde `#fed7aa` y color `#ea580c`).
+  - Sombra neutra corporativa (`box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05)`).
+
+### B. Corrección de Alturas Asimétricas en Grid Inferior
+- **Diagnóstico:** Al descender `#historia` a la cuadrícula `.values-grid`, sus 4 párrafos largos provocaban una altura desproporcionada (~600px) frente a Misión y Visión (1 párrafo de ~3 líneas), desfigurando la fila de tarjetas.
+- **Solución:**
+  - Regla quirúrgica CSS `#quienes-somos-page .value-card .about-description p:nth-of-type(n+2) { display: none !important; }`: Cuando `#historia` pasa a ser `.value-card`, solo muestra su primer párrafo introductorio (~3 líneas, longitud exacta a Misión y Visión). Al ascender a principal, se muestran los 4 párrafos en su totalidad.
+  - Flexbox `display: flex; flex-direction: column; justify-content: space-between; height: 100%;` en `.value-card` con `align-items: stretch;` en el grid para alinear matemáticamente la altura de las 3 tarjetas y anclar el indicador `Ver en sección principal ↑` al pie de cada tarjeta.
+  - Lista de valores compacta en chips (`.valores-list`) en la tarjeta y en cuadrícula con checkmarks en la sección principal.
+
+---
+
+## 4. Archivos Modificados
 - `resources/views/quienes-somos.blade.php`: Reestructuración CSS, marcado HTML con slots e implementación de script con intercambio dinámico de nodos.
 
 ---
 
-## 4. Verificación
+## 5. Verificación
 - Sintaxis PHP y Blade validada con `php -l resources/views/quienes-somos.blade.php` sin errores.
+- Alturas perfectamente homogéneas entre tarjetas en la cuadrícula inferior.
 - Comportamiento responsivo asegurado para vistas móviles y desktop.

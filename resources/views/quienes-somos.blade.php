@@ -88,55 +88,55 @@
 
         #quienes-somos-page .about-main-slot {
             width: 100%;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
+        /* ── Sección Principal Activa ── */
         #quienes-somos-page .about-intro {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 40px;
-            scroll-margin-top: 110px;
-            border-radius: 12px;
-            background-color: #fffaf7;
-            padding: 35px 35px 30px;
-            border-left: 4px solid #f26522;
-            box-shadow: 0 8px 24px rgba(242, 101, 34, 0.08);
+            background-color: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid #f26522;
+            padding: 38px 40px 34px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
             transition: all 0.35s ease;
+            scroll-margin-top: 110px;
         }
 
         #quienes-somos-page .about-intro .about-text {
-            flex: 1;
+            width: 100%;
         }
 
         #quienes-somos-page .about-intro .about-text h2 {
-            font-size: 2.2rem;
-            color: #111;
+            display: flex;
+            align-items: center;
+            font-size: 1.95rem;
+            color: #0f172a;
             margin-bottom: 22px;
             font-weight: 700;
+            letter-spacing: -0.01em;
         }
 
         #quienes-somos-page .about-intro .about-description {
             position: relative;
-            padding-left: 20px;
+            padding-left: 0;
             margin-bottom: 0;
         }
 
+        /* Eliminamos la barra naranja lateral duplicada */
         #quienes-somos-page .about-intro .about-description::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 4px;
-            bottom: 4px;
-            width: 3px;
-            background-color: #f26522;
+            display: none !important;
         }
 
         #quienes-somos-page .about-intro .about-description p {
-            color: #444;
-            font-size: 1.05rem;
-            line-height: 1.75;
-            margin-bottom: 12px;
+            color: #334155;
+            font-size: 1.03rem;
+            line-height: 1.8;
+            margin-bottom: 14px;
+        }
+
+        #quienes-somos-page .about-intro .about-description p strong {
+            color: #0f172a;
         }
 
         #quienes-somos-page .about-intro .about-description p:last-child {
@@ -150,35 +150,45 @@
         /* ── Estilos de Tarjetas en el Grid ── */
         #quienes-somos-page .values-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            align-items: stretch;
         }
 
         #quienes-somos-page .value-card {
-            background-color: #f8f8f8;
-            padding: 35px 30px;
+            background-color: #ffffff;
+            padding: 26px 24px 20px;
             text-align: left;
-            border-radius: 12px;
-            border: 2px solid #eeeeee;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             scroll-margin-top: 110px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            height: 100%;
         }
 
         #quienes-somos-page .value-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.08);
             border-color: #f26522;
-            background-color: #ffffff;
+        }
+
+        #quienes-somos-page .value-card .about-text {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+            flex-grow: 1;
         }
 
         #quienes-somos-page .value-card .about-text h2 {
-            font-size: 1.3rem;
-            color: #111;
-            margin-bottom: 16px;
+            font-size: 1.25rem;
+            color: #0f172a;
+            margin-bottom: 14px;
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -188,49 +198,150 @@
             padding-left: 0;
             margin-bottom: 0;
             position: relative;
+            flex-grow: 1;
         }
 
         #quienes-somos-page .value-card .about-description::before {
             display: none !important;
         }
 
-        #quienes-somos-page .value-card .about-description p {
-            color: #555;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 10px;
+        /* Si una sección con varios párrafos baja al grid, muestra solo el 1ro para nivelar altura */
+        #quienes-somos-page .value-card .about-description p:nth-of-type(n+2) {
+            display: none !important;
         }
 
-        #quienes-somos-page .value-card .about-description p:last-child {
+        #quienes-somos-page .value-card .about-description p {
+            color: #475569;
+            font-size: 0.93rem;
+            line-height: 1.65;
             margin-bottom: 0;
         }
 
+        /* ── Indicador de acción en la tarjeta inferior ── */
         #quienes-somos-page .value-card .card-swap-indicator {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             margin-top: 18px;
-            font-size: 0.85rem;
+            padding-top: 14px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 0.84rem;
             font-weight: 600;
-            color: #f26522;
+            color: #ea580c;
             transition: all 0.2s ease;
+            width: 100%;
         }
 
         #quienes-somos-page .value-card:hover .card-swap-indicator {
-            color: #d96b20;
-            transform: translateX(4px);
+            color: #c2410c;
         }
 
+        #quienes-somos-page .value-card .card-swap-indicator i {
+            transition: transform 0.2s ease;
+        }
+
+        #quienes-somos-page .value-card:hover .card-swap-indicator i {
+            transform: translateY(-2px);
+        }
+
+        /* ── Íconos en Títulos ── */
         #quienes-somos-page .icon-title {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
+
+        #quienes-somos-page .about-intro .icon-title {
+            width: 46px;
+            height: 46px;
+            background-color: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #ea580c;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            margin-right: 14px;
+        }
+
+        #quienes-somos-page .value-card .icon-title {
+            width: 38px;
+            height: 38px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
             color: #f26522;
+            border-radius: 10px;
+            font-size: 1.05rem;
             margin-right: 12px;
-            font-size: 1.5rem;
+        }
+
+        #quienes-somos-page .value-card:hover .icon-title {
+            background-color: #fff7ed;
+            border-color: #fed7aa;
+            color: #ea580c;
+        }
+
+        /* ── Lista de Valores ── */
+        #quienes-somos-page .valores-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        #quienes-somos-page .about-intro .valores-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        #quienes-somos-page .about-intro .valores-list li {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 3px solid #f26522;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #1e293b;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #quienes-somos-page .about-intro .valores-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #f26522;
+            font-size: 0.85rem;
+        }
+
+        #quienes-somos-page .value-card .valores-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        #quienes-somos-page .value-card .valores-list li {
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        #quienes-somos-page .value-card .valores-list li::before {
+            display: none !important;
         }
 
         @keyframes swapFadeIn {
             0% {
-                opacity: 0.3;
-                transform: translateY(-8px);
+                opacity: 0.4;
+                transform: translateY(-6px);
             }
             100% {
                 opacity: 1;
@@ -239,12 +350,15 @@
         }
 
         #quienes-somos-page .swap-animated {
-            animation: swapFadeIn 0.35s ease-out;
+            animation: swapFadeIn 0.3s ease-out;
         }
 
         @media (max-width: 992px) {
+            #quienes-somos-page .values-grid {
+                grid-template-columns: 1fr;
+            }
             #quienes-somos-page .about-intro {
-                flex-direction: column;
+                padding: 30px 24px;
             }
         }
 
@@ -252,8 +366,8 @@
             #quienes-somos-page .hero-banner { padding: 50px 20px; }
             #quienes-somos-page .hero-content h1 { font-size: 2.2rem; }
             #quienes-somos-page .hero-content p { font-size: 1.1rem; }
-            #quienes-somos-page .about-intro { padding: 25px 20px; }
-            #quienes-somos-page .about-intro .about-text h2 { font-size: 1.8rem; }
+            #quienes-somos-page .about-intro { padding: 24px 18px; }
+            #quienes-somos-page .about-intro .about-text h2 { font-size: 1.6rem; }
         }
     </style>
 
@@ -320,7 +434,7 @@
                             <h2><i class="fa-solid fa-hand-holding-heart icon-title"></i> Nuestros Valores</h2>
                             <div class="about-description">
                                 <p>Nuestros principios como marca Kenya Technology nos ayudan a conectarnos con la cultura de las empresas privadas y/o gubernamentales, siendo fundamentales para que podamos seguir creciendo dentro de nuestra gran familia, siempre basándonos en la:</p>
-                                <ul class="valores-list" style="margin: 12px 0 0 18px; padding: 0; color: #444; font-size: 0.95rem; line-height: 1.8;">
+                                <ul class="valores-list">
                                     <li><strong>Actitud.</strong></li>
                                     <li><strong>Ética.</strong></li>
                                     <li><strong>Transparencia.</strong></li>
