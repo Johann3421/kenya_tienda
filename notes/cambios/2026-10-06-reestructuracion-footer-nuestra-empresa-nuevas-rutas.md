@@ -35,10 +35,12 @@ El cliente solicitó sustituir por completo la primera columna del footer (`keny
 
 ### C. Nuevas Vistas Creadas
 1. `resources/views/codigo-conducta.blade.php`:
-   - Hero banner corporativo con título y descripción institucional.
-   - Bloque principal con compromiso ético y de cumplimiento normativo (aplicable a Convenio Marco / OSCE y sector corporativo).
-   - Cuadrícula con 4 pilares: Integridad y anticorrupción, Derechos laborales e inclusión, Confidencialidad y protección de datos (Ley N° 29733), Prácticas comerciales justas y garantía.
-   - Canal de integridad y consultas con correo y canales oficiales.
+   - Hero banner corporativo con badge de certificación `ISO 37001:2016` (Sistema de Gestión Antisoborno).
+   - Bloque superior en 2 columnas: Declaración institucional de integridad y panel de la norma ISO 37001 (debida diligencia, cero dádivas, controles financieros y protección).
+   - Implementación oficial de los **16 principios solicitados por el cliente**:
+     1. Objetivos, 2. Alcance, 3. Nuestros valores, 4. Cumplimiento de las leyes, 5. Integridad y prevención del soborno (ISO 37001), 6. Conflictos de interés, 7. Regalos y atenciones, 8. Relación con proveedores y clientes, 9. Relación con autoridades, 10. Protección de información y datos, 11. Uso de bienes y recursos, 12. Canal de consultas y denuncias, 13. Prohibición de represalias, 14. Incumplimientos y medidas disciplinarias, 15. Capacitación y actualización, 16. Declaración de compromiso.
+   - Barra de filtros interactivos en vanilla JS por ejes temáticos para exploración ágil y limpia.
+   - Bloque de Canal Ético y Denuncias con garantías de confidencialidad, no represalias y canales de comunicación directos.
 2. `resources/views/reciclaje.blade.php`:
    - Hero banner institucional de Sostenibilidad y Reciclaje.
    - Bloque principal con Sistema de Manejo y Gestión Ambiental de RAEE (D.S. N° 009-2019-MINAM).
