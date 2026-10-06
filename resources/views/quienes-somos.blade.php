@@ -86,12 +86,6 @@
             padding: 0 20px;
         }
 
-        #quienes-somos-page .about-main-slot {
-            width: 100%;
-            margin-bottom: 40px;
-        }
-
-        /* ── Sección Principal Activa ── */
         #quienes-somos-page .about-intro {
             background-color: #ffffff;
             border-radius: 16px;
@@ -99,7 +93,7 @@
             border-top: 4px solid #f26522;
             padding: 38px 40px 34px;
             box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
-            transition: all 0.35s ease;
+            margin-bottom: 35px;
             scroll-margin-top: 110px;
         }
 
@@ -123,11 +117,6 @@
             margin-bottom: 0;
         }
 
-        /* Eliminamos la barra naranja lateral duplicada */
-        #quienes-somos-page .about-intro .about-description::before {
-            display: none !important;
-        }
-
         #quienes-somos-page .about-intro .about-description p {
             color: #334155;
             font-size: 1.03rem;
@@ -143,10 +132,6 @@
             margin-bottom: 0;
         }
 
-        #quienes-somos-page .about-intro .card-swap-indicator {
-            display: none !important;
-        }
-
         /* ── Estilos de Tarjetas en el Grid ── */
         #quienes-somos-page .values-grid {
             display: grid;
@@ -157,17 +142,16 @@
 
         #quienes-somos-page .value-card {
             background-color: #ffffff;
-            padding: 26px 24px 20px;
+            padding: 28px 26px 24px;
             text-align: left;
             border-radius: 14px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
             transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
             scroll-margin-top: 110px;
-            cursor: pointer;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
             height: 100%;
         }
 
@@ -181,8 +165,6 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            justify-content: space-between;
-            flex-grow: 1;
         }
 
         #quienes-somos-page .value-card .about-text h2 {
@@ -201,47 +183,11 @@
             flex-grow: 1;
         }
 
-        #quienes-somos-page .value-card .about-description::before {
-            display: none !important;
-        }
-
-        /* Si una sección con varios párrafos baja al grid, muestra solo el 1ro para nivelar altura */
-        #quienes-somos-page .value-card .about-description p:nth-of-type(n+2) {
-            display: none !important;
-        }
-
         #quienes-somos-page .value-card .about-description p {
             color: #475569;
             font-size: 0.93rem;
             line-height: 1.65;
             margin-bottom: 0;
-        }
-
-        /* ── Indicador de acción en la tarjeta inferior ── */
-        #quienes-somos-page .value-card .card-swap-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 18px;
-            padding-top: 14px;
-            border-top: 1px solid #f1f5f9;
-            font-size: 0.84rem;
-            font-weight: 600;
-            color: #ea580c;
-            transition: all 0.2s ease;
-            width: 100%;
-        }
-
-        #quienes-somos-page .value-card:hover .card-swap-indicator {
-            color: #c2410c;
-        }
-
-        #quienes-somos-page .value-card .card-swap-indicator i {
-            transition: transform 0.2s ease;
-        }
-
-        #quienes-somos-page .value-card:hover .card-swap-indicator i {
-            transform: translateY(-2px);
         }
 
         /* ── Íconos en Títulos ── */
@@ -283,74 +229,23 @@
 
         /* ── Lista de Valores ── */
         #quienes-somos-page .valores-list {
-            margin: 0;
+            margin: 14px 0 0 0;
             padding: 0;
             list-style: none;
-        }
-
-        #quienes-somos-page .about-intro .valores-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-top: 22px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
         }
 
-        #quienes-somos-page .about-intro .valores-list li {
+        #quienes-somos-page .valores-list li {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
             border-left: 3px solid #f26522;
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
             color: #1e293b;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #quienes-somos-page .about-intro .valores-list li::before {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            color: #f26522;
-            font-size: 0.85rem;
-        }
-
-        #quienes-somos-page .value-card .valores-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-        }
-
-        #quienes-somos-page .value-card .valores-list li {
-            background-color: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            padding: 3px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #475569;
-            font-weight: 600;
-        }
-
-        #quienes-somos-page .value-card .valores-list li::before {
-            display: none !important;
-        }
-
-        @keyframes swapFadeIn {
-            0% {
-                opacity: 0.4;
-                transform: translateY(-6px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        #quienes-somos-page .swap-animated {
-            animation: swapFadeIn 0.3s ease-out;
         }
 
         @media (max-width: 992px) {
@@ -383,66 +278,52 @@
         </section>
         
         <!-- ==========================================
-             SECCIÓN INFORMACIÓN Y VALORES (SWAP DINÁMICO)
+             SECCIÓN INFORMACIÓN Y VALORES
              ========================================== -->
         <section class="about-section">
             <div class="about-container">
-                <!-- Contenedor del elemento principal -->
-                <div class="about-main-slot" id="about-main-slot">
-                    <div class="about-item about-intro" id="historia">
-                        <div class="about-text">
-                            <h2><i class="fa-solid fa-clock-rotate-left icon-title"></i> Nuestra Historia</h2>
-                            <div class="about-description">
-                                <p>Desde nuestros inicios, en <strong>KENYA TECHNOLOGY</strong> apostamos por crear computadoras de alto desempeño adaptadas a las necesidades Gubernamentales del mercado nacional en crecimiento.</p>
-                                <p>Con una trayectoria basada en innovación, calidad y compromiso, hemos acompañado a nuestros usuarios ofreciendo equipos Informáticos con la más avanzada tecnología, excelente rendimiento y altos estándares de calidad.</p>
-                                <p>Hoy continuamos creciendo como una marca orgullosamente peruana enfocada en desarrollar computadoras confiables, eficientes y preparadas para resolver los distintos retos geográficos de Costa, Sierra y Selva de nuestro Perú.</p>
-                                <p>Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de la más alta calidad y garantía, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo.</p>
-                            </div>
-                            <div class="card-swap-indicator">
-                                <span>Ver en sección principal <i class="fa-solid fa-arrow-up"></i></span>
-                            </div>
+                <!-- Parte superior: Nuestra Historia -->
+                <div class="about-intro" id="historia">
+                    <div class="about-text">
+                        <h2><i class="fa-solid fa-clock-rotate-left icon-title"></i> Nuestra Historia</h2>
+                        <div class="about-description">
+                            <p>Desde nuestros inicios, en <strong>KENYA TECHNOLOGY</strong> apostamos por crear computadoras de alto desempeño adaptadas a las necesidades Gubernamentales del mercado nacional en crecimiento.</p>
+                            <p>Con una trayectoria basada en innovación, calidad y compromiso, hemos acompañado a nuestros usuarios ofreciendo equipos Informáticos con la más avanzada tecnología, excelente rendimiento y altos estándares de calidad.</p>
+                            <p>Hoy continuamos creciendo como una marca orgullosamente peruana enfocada en desarrollar computadoras confiables, eficientes y preparadas para resolver los distintos retos geográficos de Costa, Sierra y Selva de nuestro Perú.</p>
+                            <p>Nos especializamos en la fabricación y comercialización de equipos de cómputo con componentes de la más alta calidad y garantía, diseño moderno y tecnología de última generación, ofreciendo una experiencia superior en cada equipo.</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Grid inferior de tarjetas -->
-                <div class="values-grid" id="about-values-grid">
-                    <div class="about-item value-card" id="mision">
+                <!-- Grid inferior: Misión, Visión y Valores -->
+                <div class="values-grid">
+                    <div class="value-card" id="mision">
                         <div class="about-text">
                             <h2><i class="fa-solid fa-bullseye icon-title"></i> Nuestra Misión</h2>
                             <div class="about-description">
                                 <p>Desarrollar computadoras de alto rendimiento que brinden potencia, eficiencia y confiabilidad, ofreciendo a nuestros clientes la mejor experiencia tecnológica en cada equipo KENYA TECHNOLOGY.</p>
                             </div>
-                            <div class="card-swap-indicator">
-                                <span>Ver en sección principal <i class="fa-solid fa-arrow-up"></i></span>
-                            </div>
                         </div>
                     </div>
-                    <div class="about-item value-card" id="vision">
+                    <div class="value-card" id="vision">
                         <div class="about-text">
                             <h2><i class="fa-solid fa-eye icon-title"></i> Nuestra Visión</h2>
                             <div class="about-description">
                                 <p>Ser la marca peruana de computadoras más reconocida y confiable a nivel nacional e internacional, destacando por nuestra innovación, calidad, rendimiento y compromiso con el medio ambiente.</p>
                             </div>
-                            <div class="card-swap-indicator">
-                                <span>Ver en sección principal <i class="fa-solid fa-arrow-up"></i></span>
-                            </div>
                         </div>
                     </div>
-                    <div class="about-item value-card" id="valores">
+                    <div class="value-card" id="valores">
                         <div class="about-text">
                             <h2><i class="fa-solid fa-hand-holding-heart icon-title"></i> Nuestros Valores</h2>
                             <div class="about-description">
-                                <p>Nuestros principios como marca Kenya Technology nos ayudan a conectarnos con la cultura de las empresas privadas y/o gubernamentales, siendo fundamentales para que podamos seguir creciendo dentro de nuestra gran familia, siempre basándonos en la:</p>
+                                <p>Nuestros principios como marca Kenya Technology nos ayudan a conectarnos con la cultura de las empresas privadas y gubernamentales, basándonos en la:</p>
                                 <ul class="valores-list">
-                                    <li><strong>Actitud.</strong></li>
-                                    <li><strong>Ética.</strong></li>
-                                    <li><strong>Transparencia.</strong></li>
-                                    <li><strong>Responsabilidad.</strong></li>
+                                    <li>Actitud</li>
+                                    <li>Ética</li>
+                                    <li>Transparencia</li>
+                                    <li>Responsabilidad</li>
                                 </ul>
-                            </div>
-                            <div class="card-swap-indicator">
-                                <span>Ver en sección principal <i class="fa-solid fa-arrow-up"></i></span>
                             </div>
                         </div>
                     </div>
@@ -450,81 +331,4 @@
             </div>
         </section>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const mainSlot = document.getElementById('about-main-slot');
-            const valuesGrid = document.getElementById('about-values-grid');
-
-            if (!mainSlot || !valuesGrid) return;
-
-            function activateSection(targetId, shouldScroll = true) {
-                if (!targetId) return;
-                const target = document.getElementById(targetId);
-                if (!target) return;
-
-                const currentMain = mainSlot.firstElementChild;
-                if (!currentMain) return;
-
-                if (target !== currentMain) {
-                    // Placeholder temporal en la posición exacta del grid
-                    const placeholder = document.createElement('div');
-                    valuesGrid.insertBefore(placeholder, target);
-
-                    // Mover target al slot principal
-                    mainSlot.appendChild(target);
-                    target.classList.remove('value-card');
-                    target.classList.add('about-intro', 'swap-animated');
-
-                    // Mover el elemento principal anterior a la posición que ocupaba el target
-                    valuesGrid.insertBefore(currentMain, placeholder);
-                    placeholder.remove();
-                    currentMain.classList.remove('about-intro', 'swap-animated');
-                    currentMain.classList.add('value-card');
-                } else {
-                    target.classList.remove('swap-animated');
-                    void target.offsetWidth;
-                    target.classList.add('swap-animated');
-                }
-
-                if (shouldScroll) {
-                    const header = document.querySelector('.site-header');
-                    const headerOffset = (header ? header.offsetHeight : 80) + 20;
-                    const rect = mainSlot.getBoundingClientRect();
-                    const targetY = window.pageYOffset + rect.top - headerOffset;
-                    window.scrollTo({
-                        top: Math.max(0, targetY),
-                        behavior: 'smooth'
-                    });
-                }
-            }
-
-            // Clic en tarjetas del grid para ascender a principal
-            valuesGrid.addEventListener('click', function(e) {
-                const card = e.target.closest('.about-item');
-                if (card && card.id) {
-                    activateSection(card.id, true);
-                    history.replaceState(null, '', '#' + card.id);
-                }
-            });
-
-            // Procesar hash de la URL
-            function checkHash(shouldScroll) {
-                const rawHash = window.location.hash ? window.location.hash.substring(1) : '';
-                if (rawHash && ['historia', 'mision', 'vision', 'valores'].includes(rawHash)) {
-                    activateSection(rawHash, shouldScroll);
-                }
-            }
-
-            if (window.location.hash) {
-                setTimeout(function() {
-                    checkHash(true);
-                }, 150);
-            }
-
-            window.addEventListener('hashchange', function() {
-                checkHash(true);
-            });
-        });
-    </script>
 @endsection

@@ -767,14 +767,13 @@ body {
     <footer class="kenya-final-footer">
         <div class="kenya-footer-fullwidth">
             <div class="kenya-footer-columns">
-                <!-- Columna 1: Quiénes somos -->
+                <!-- Columna 1: Nuestra Empresa -->
                 <div class="kenya-footer-col">
-                    <h3 class="kenya-footer-heading">Quiénes somos</h3>
+                    <h3 class="kenya-footer-heading">Nuestra Empresa</h3>
                     <ul class="kenya-footer-list">
-                        <li><a href="{{ route('quienes.somos') }}#historia">Historia</a></li>
-                        <li><a href="{{ route('quienes.somos') }}#mision">Misión</a></li>
-                        <li><a href="{{ route('quienes.somos') }}#vision">Visión</a></li>
-                        <li><a href="{{ route('quienes.somos') }}#valores">Valores</a></li>
+                        <li><a href="{{ route('quienes.somos') }}">Quienes Somos</a></li>
+                        <li><a href="{{ route('codigo.conducta') }}">Codigo Conducta</a></li>
+                        <li><a href="{{ route('reciclaje') }}">Reciclaje</a></li>
                     </ul>
                 </div>
 
