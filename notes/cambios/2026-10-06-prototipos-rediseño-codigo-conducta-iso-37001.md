@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-10-06
 - **Tipo:** UI / UX / Prototipado
-- **Estado:** En Evaluación por Usuario
+- **Estado:** Completado
 - **Rama:** feature/dokploy-postgres-sync
 
 ---
@@ -19,7 +19,7 @@ Para permitir que el usuario elija la mejor experiencia, se desarrollaron 3 prot
 
 ## 2. Prototipos Desarrollados y Verificados
 
-### Opción A — Editorial (`opcion-a-editorial.html`)
+### Opción A — Editorial (`opcion-a-editorial.html`) [SELECCIONADA]
 - **Estructura:** 2 columnas asimétricas.
 - **Columna izquierda:** Encabezado institucional, introducción oficial y acordeón interactivo de los 16 principios (con toggle "Mostrar todos los detalles").
 - **Columna derecha:** Tarjeta *sticky* con la imagen ISO 37001 y caja de acceso directo al Canal Ético de denuncias.
@@ -35,13 +35,12 @@ Para permitir que el usuario elija la mejor experiencia, se desarrollaron 3 prot
 
 ---
 
-## 3. Verificación Automatizada en Navegador
-- Se ejecutó servidor local en `http://127.0.0.1:8099/`.
-- El subagente de navegador recorrió las 3 opciones, probó el acordeón, el sticky TOC y capturó evidencias gráficas sin errores de consola ni recursos rotos.
-- Grabación de sesión guardada como `prototipos_conducta_1791328483388.webp`.
-
----
-
-## 4. Próximos Pasos
-- Selección por parte del usuario de la opción deseada (A, B o C).
-- Integración directa de la opción elegida en la vista de producción `resources/views/codigo-conducta.blade.php`.
+## 3. Implementación Definitiva en Producción
+El usuario seleccionó la **Opción A (Editorial)**. Se integró directamente en:
+- `resources/views/codigo-conducta.blade.php`:
+  - Hero banner con badge `ISO 37001:2016`.
+  - Migas de pan y cabecera de sección.
+  - Acordeón nativo accesible (`<details>` y `<summary>`) de los 16 lineamientos con botón toggle unificado.
+  - Resalte diferenciado para el lineamiento `05. Integridad y prevención del soborno`.
+  - Columna derecha con infografía oficial en `public/iso-37001.png` y caja de contacto con canales directos a acuerdos marco, soporte y teléfono.
+- `public/iso-37001.png`: Copia permanente del activo gráfico.
