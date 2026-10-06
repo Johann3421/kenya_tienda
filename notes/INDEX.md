@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-10-06-prototipos-rediseño-codigo-conducta-iso-37001|2026-10-06: Prototipos de Rediseño para Código de Conducta (ISO 37001-2016) y Verificación en Navegador]]
 - [[2026-10-06-reestructuracion-footer-nuestra-empresa-nuevas-rutas|2026-10-06: Reestructuración de Columna 1 del Footer a 'Nuestra Empresa', Creación de Nuevas Rutas y Vistas (Código de Conducta y Reciclaje)]]
 - [[2026-09-24-intercambio-dinamico-seccion-principal-quienes-somos|2026-09-24: Intercambio de Posición Dinámico entre Sección Principal y Tarjetas en Quiénes Somos]]
 - [[2026-09-24-guia-visual-scroll-filtro-categorias-welcome|2026-09-24: Scroll Guiado Inteligente y Feedback Visual al Filtrar Categorías en Home (Welcome)]]
