@@ -45,7 +45,7 @@
             padding: 64px 15px;
             border-bottom: 1px solid var(--rc-rule);
         }
-        #rc-page .rc-hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 10px; }
+        #rc-page .rc-hero-inner { max-width: 1400px; margin: 0 auto; padding: 0 10px; }
         #rc-page .rc-hero h1 {
             margin: 0 0 6px;
             font-size: 2.6rem;
@@ -57,7 +57,7 @@
         }
         #rc-page .rc-hero p { margin: 0; font-size: 1.1rem; color: var(--rc-muted); }
 
-        #rc-page .rc-wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        #rc-page .rc-wrap { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
 
         #rc-page .rc-crumbs { font-size: .85rem; color: var(--rc-muted); padding: 28px 0 44px; }
         #rc-page .rc-crumbs a { color: var(--rc-muted); text-decoration: none; }

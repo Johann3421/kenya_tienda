@@ -65,7 +65,7 @@
             padding: 64px 15px;
             border-bottom: 1px solid var(--cc-rule);
         }
-        #cc-page .cc-hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 10px; }
+        #cc-page .cc-hero-inner { max-width: 1400px; margin: 0 auto; padding: 0 10px; }
         #cc-page .cc-hero h1 {
             margin: 0 0 6px;
             font-size: 2.6rem;
@@ -77,7 +77,7 @@
         }
         #cc-page .cc-hero p { margin: 0; font-size: 1.1rem; color: var(--cc-muted); }
 
-        #cc-page .cc-wrap { max-width: 1200px; margin: 0 auto; padding: 28px 20px 96px; }
+        #cc-page .cc-wrap { max-width: 1400px; margin: 0 auto; padding: 28px 20px 96px; }
 
         #cc-page .cc-crumbs { font-size: .85rem; color: var(--cc-muted); margin-bottom: 36px; }
         #cc-page .cc-crumbs a { color: var(--cc-muted); text-decoration: none; }
