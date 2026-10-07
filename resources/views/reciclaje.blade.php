@@ -106,17 +106,75 @@
         /* 2. Banner: Reciclar de manera responsable */
         #rc-page .rc-banner {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            background: var(--rc-navy);
-            color: #e5e7eb;
+            grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
+            gap: 48px;
+            align-items: center;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid var(--rc-green-mid);
+            border-radius: 8px;
+            padding: 44px 48px;
             margin-bottom: 96px;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
         }
-        #rc-page .rc-banner img { display: block; width: 100%; height: 100%; min-height: 340px; object-fit: cover; }
-        #rc-page .rc-banner-body { padding: 56px 56px; align-self: center; }
-        #rc-page .rc-banner .rc-kicker { color: #86efac; }
-        #rc-page .rc-banner h2 { margin: 0 0 16px; font-size: 2rem; line-height: 1.2; font-weight: 800; color: #fff; letter-spacing: -.01em; }
-        #rc-page .rc-banner p { margin: 0 0 30px; font-size: 1.05rem; max-width: 46ch; color: #cbd5e1; }
-        #rc-page .rc-banner-actions { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+        #rc-page .rc-banner-media {
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e2e8f0;
+            aspect-ratio: 4 / 3;
+            width: 100%;
+            background: #e2e8f0;
+        }
+        #rc-page .rc-banner-media img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #rc-page .rc-banner-body { padding: 0; }
+        #rc-page .rc-banner .rc-kicker { color: var(--rc-green-mid); margin-bottom: 10px; }
+        #rc-page .rc-banner h2 {
+            margin: 0 0 14px;
+            font-size: 2.1rem;
+            line-height: 1.2;
+            font-weight: 800;
+            color: var(--rc-ink);
+            letter-spacing: -.02em;
+        }
+        #rc-page .rc-banner p {
+            margin: 0 0 20px;
+            font-size: 1.05rem;
+            line-height: 1.65;
+            max-width: 50ch;
+            color: #475569;
+        }
+        #rc-page .rc-banner-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            margin: 0 0 26px;
+            padding: 0;
+            list-style: none;
+        }
+        #rc-page .rc-banner-features li {
+            font-size: .88rem;
+            font-weight: 600;
+            color: #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #rc-page .rc-banner-features li span {
+            color: var(--rc-green-mid);
+            font-weight: 700;
+        }
+        #rc-page .rc-banner-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
         #rc-page .rc-btn {
             display: inline-block;
             background: var(--rc-accent);
@@ -125,11 +183,19 @@
             font-weight: 700;
             font-size: .95rem;
             text-decoration: none;
-            border-radius: 2px;
+            border-radius: 4px;
+            transition: background .15s ease, transform .15s ease;
         }
-        #rc-page .rc-btn:hover { background: #d9541a; color: #fff; }
-        #rc-page .rc-banner-tel { color: #cbd5e1; font-size: .92rem; text-decoration: none; border-bottom: 1px solid #475569; }
-        #rc-page .rc-banner-tel:hover { color: #fff; border-color: #fff; }
+        #rc-page .rc-btn:hover { background: #d9541a; color: #fff; transform: translateY(-1px); }
+        #rc-page .rc-banner-tel {
+            color: #475569;
+            font-size: .95rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid #cbd5e1;
+            transition: color .15s ease, border-color .15s ease;
+        }
+        #rc-page .rc-banner-tel:hover { color: var(--rc-ink); border-color: var(--rc-ink); }
 
         /* 3. Cómo funciona */
         #rc-page .rc-steps-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: 36px; }
@@ -221,24 +287,79 @@
         #rc-page .rc-faq details[open] summary::after { content: '−'; color: var(--rc-green-mid); }
         #rc-page .rc-faq details p { margin: 0 0 20px; max-width: 62ch; }
 
-        #rc-page .rc-points { border-top: 1px solid var(--rc-ink); padding-top: 18px; }
-        #rc-page .rc-points h3 { margin: 0 0 18px; font-size: 1.05rem; font-weight: 700; color: var(--rc-ink); }
-        #rc-page .rc-points dl { margin: 0 0 28px; }
-        #rc-page .rc-points dt { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--rc-muted); }
-        #rc-page .rc-points dd { margin: 2px 0 16px; color: var(--rc-ink); }
-        #rc-page .rc-points a { color: var(--rc-ink); text-decoration: underline; text-decoration-color: var(--rc-green-mid); text-underline-offset: 3px; }
-        #rc-page .rc-points a:hover { color: var(--rc-green-mid); }
-        #rc-page .rc-btn-dark { background: var(--rc-navy); }
-        #rc-page .rc-btn-dark:hover { background: var(--rc-green); }
+        #rc-page .rc-points {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-top: 3px solid var(--rc-accent);
+            border-radius: 8px;
+            padding: 28px 24px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        }
+        #rc-page .rc-points h3 {
+            margin: 0 0 18px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--rc-ink);
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        #rc-page .rc-points dl { margin: 0 0 24px; }
+        #rc-page .rc-points dt {
+            font-size: .74rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 3px;
+        }
+        #rc-page .rc-points dd {
+            margin: 0 0 16px;
+            color: #1e293b;
+            font-size: .95rem;
+            line-height: 1.45;
+        }
+        #rc-page .rc-points a {
+            color: #1e293b;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid #cbd5e1;
+            transition: color .15s ease, border-color .15s ease;
+        }
+        #rc-page .rc-points a:hover {
+            color: var(--rc-accent);
+            border-color: var(--rc-accent);
+        }
+        #rc-page .rc-btn-dark {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: var(--rc-accent);
+            color: #fff;
+            border: 1px solid var(--rc-accent);
+            border-radius: 4px;
+            padding: 13px 20px;
+            font-size: .92rem;
+            font-weight: 700;
+            letter-spacing: .01em;
+            text-decoration: none;
+            box-shadow: 0 2px 6px rgba(242, 101, 34, 0.2);
+            transition: background .15s ease, border-color .15s ease, transform .15s ease;
+        }
+        #rc-page .rc-btn-dark:hover {
+            background: #d9541a;
+            border-color: #d9541a;
+            color: #fff;
+            transform: translateY(-1px);
+        }
 
         @media (max-width: 991px) {
             #rc-page .rc-hero h1 { font-size: 2rem; }
             #rc-page .rc-intro, #rc-page .rc-help { grid-template-columns: 1fr; gap: 40px; }
             #rc-page .rc-intro .rc-h2 { font-size: 1.9rem; }
             #rc-page .rc-intro img { aspect-ratio: 16 / 10; }
-            #rc-page .rc-banner { grid-template-columns: 1fr; }
-            #rc-page .rc-banner img { min-height: 240px; }
-            #rc-page .rc-banner-body { padding: 36px 24px; }
+            #rc-page .rc-banner { grid-template-columns: 1fr; padding: 32px 24px; gap: 32px; }
+            #rc-page .rc-banner-media { aspect-ratio: 16 / 10; max-height: 320px; }
+            #rc-page .rc-banner-body { padding: 0; }
             #rc-page .rc-steps-head { display: block; }
             #rc-page .rc-steps-head p { margin-top: 8px; }
             #rc-page .rc-steps { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
@@ -290,17 +411,24 @@
         <!-- Banner: Reciclar de manera responsable -->
         <div class="rc-wrap">
             <section class="rc-banner" id="reciclar">
-                <img src="{{ asset('reciclaje-equipo-box.jpg') }}" alt="Técnico empacando equipos informáticos en desuso para su reciclaje" loading="lazy">
                 <div class="rc-banner-body">
-                    <span class="rc-kicker">Servicio gratuito</span>
+                    <span class="rc-kicker">Servicio institucional gratuito</span>
                     <h2>Reciclar de manera responsable</h2>
                     <p>
                         Recicla tu equipo de TI que ya no usas, de cualquier marca y en cualquier estado, de manera responsable y sin costo con KENYA TECHNOLOGY.
                     </p>
+                    <ul class="rc-banner-features">
+                        <li><span>✓</span> Recepción multimarca y cualquier estado</li>
+                        <li><span>✓</span> 100% gratuito sin costo oculto</li>
+                        <li><span>✓</span> Constancia oficial de disposición RAEE</li>
+                    </ul>
                     <div class="rc-banner-actions">
                         <a class="rc-btn" href="mailto:acuerdos.marco@kenya.com.pe?subject=Solicitud%20de%20reciclaje%20de%20equipos">Comenzar</a>
                         <a class="rc-banner-tel" href="tel:+51958021778">o llama al 958 021 778</a>
                     </div>
+                </div>
+                <div class="rc-banner-media">
+                    <img src="https://www.kenya.com.pe/reciclaje-equipo-box.jpg" alt="Técnico empacando equipos informáticos en desuso para su reciclaje" loading="lazy">
                 </div>
             </section>
 
