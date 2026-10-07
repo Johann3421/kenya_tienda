@@ -42,13 +42,13 @@ Asimismo, en `codigo-conducta.blade.php`, se solicitó devolver la imagen de la 
 - **Corrección de Distribución de Colores en Puntos de Acopio:**
   - Se estructuró `.rc-points` como una tarjeta formal (`background: #f8fafc`, `border-top: 3px solid var(--rc-accent)`).
   - Se corrigió el botón `.rc-btn-dark` eliminando el fondo azul marino que cambiaba bruscamente a verde oscuro; ahora se unifica en color de acción institucional Naranja Kenya (`var(--rc-accent)` #f26522, hover `#d9541a`), con ancho completo y jerarquía visual armónica con la página.
-- **Rediseño Tipográfico de la Cita (`.rc-quote`):**
-  - Se eliminó por completo el borde lateral verde (`border-left: 3px solid var(--rc-green-mid)`), típico de bloques de IA.
-  - Se reestructuró con un diseño editorial de pull-quote periodístico/institucional con filetes horizontales superior e inferior (`border-top` y `border-bottom: 1px solid #e2e8f0`), espaciado vertical armónico y tipografía sobria con autoría en em-dash (`— `).
+### D. Ajuste de Ancho Máximo a 1400px y Despliegue Git LFS
+- **Ampliación de Envoltorios:** Se ampliaron `#rc-page .rc-wrap`, `#rc-page .rc-hero-inner`, `#cc-page .cc-wrap` y `#cc-page .cc-hero-inner` de `1200px` a `1400px` para aprovechar pantallas de alta resolución.
+- **Resolución de Error Git LFS:** Se desactivó la verificación de locks del API de GitHub (`git config lfs.https://github.com/Johann3421/kenya_tienda.git/info/lfs.locksverify false`) permitiendo completar el push del commit `cb9e134`.
 
 ---
 
 ## 3. Archivos Modificados
-- `resources/views/codigo-conducta.blade.php`: Rediseño completo con barra lateral sticky prominente para `iso-37001.png` y navegación activa.
-- `resources/views/reciclaje.blade.php`: Maquetación editorial corporativa sin componentes cliché de IA, banner luminoso enmarcado con imagen oficial, distribución armónica de colores en puntos de acopio y cita editorial limpia.
+- `resources/views/codigo-conducta.blade.php`: Rediseño editorial, barra lateral sticky para `iso-37001.png` y ancho máximo ampliado a 1400px.
+- `resources/views/reciclaje.blade.php`: Maquetación editorial, banner luminoso enmarcado, cita sin borde verde y ancho ampliado a 1400px.
 - `notes/INDEX.md`: Enlazado en el índice de la bóveda.
