@@ -238,7 +238,7 @@
                                         @if(intval($novedadStock) > 0)
                                             <span style="color: #2e7d32; font-weight: 600;">≥ {{ $novedadStock }} unidades</span>
                                         @else
-                                            <span style="color: #2e7d32; font-weight: 600;">A cotizar</span>
+                                            <span style="color: #2e7d32; font-weight: 600;">A IMPORTAR</span>
                                         @endif
                                     </li>
                                 </ul>

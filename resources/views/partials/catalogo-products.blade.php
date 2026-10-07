@@ -144,7 +144,7 @@
             <div class="product-card-footer">
                 @if(empty($producto->precio_especial))
                     <div class="price-no-especial" style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 2px; margin-bottom: 12px; text-align: left;">
-                        (A cotizar)
+                        (A IMPORTAR)
                     </div>
                 @else
                     @if(Auth::guard('cliente')->check())
@@ -174,7 +174,7 @@
                         @endif
                     @else
                         <span class="stock-status-dot available"></span>
-                        <span class="stock-text" style="color:#2ecc71; font-weight:600;">A cotizar</span>
+                        <span class="stock-text" style="color:#2ecc71; font-weight:600;">A IMPORTAR</span>
                     @endif
                 </div>
 

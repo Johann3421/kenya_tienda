@@ -56,9 +56,20 @@ Asimismo, en `codigo-conducta.blade.php`, se solicitó devolver la imagen de la 
 - **Canal de Denuncias:** Se retiró el párrafo redundante bajo *"¿Viste una conducta indebida?"*, conectando el título directamente con la tabla de canales oficiales.
 - **Actualización de Norma:** Se actualizó en todas las etiquetas SEO, textos e imagen la referencia de `ISO 37001:2016` a la versión actual `ISO 37001:2025`.
 
+### G. Actualización Comercial: "A cotizar" por "A IMPORTAR"
+- **Sustitución en Catálogo y Portada:** Se reemplazó el texto `"A cotizar"` por `"A IMPORTAR"` para indicar el estado de stock bajo pedido internacional en:
+  - `resources/views/welcome.blade.php`: Tarjetas de novedades de la portada.
+  - `resources/views/partials/catalogo-products.blade.php`: Precio nulo `(A IMPORTAR)` y badge de stock agotado.
+  - `resources/views/Novedades.blade.php`: Listado de novedades.
+  - `resources/views/components/novedades.blade.php`: Componente carrusel de novedades.
+
 ---
 
 ## 3. Archivos Modificados
 - `resources/views/codigo-conducta.blade.php`: Listado limpio de títulos de artículos, metadatos simplificados, ISO 37001:2025 y remoción de textos redundantes.
 - `resources/views/reciclaje.blade.php`: Maquetación editorial, banner luminoso enmarcado, cita sin borde verde y ancho ampliado a 1400px.
+- `resources/views/welcome.blade.php`: Reemplazo de "A cotizar" por "A IMPORTAR".
+- `resources/views/partials/catalogo-products.blade.php`: Reemplazo de "(A cotizar)" y "A cotizar" por "A IMPORTAR".
+- `resources/views/Novedades.blade.php`: Reemplazo de "A cotizar" por "A IMPORTAR".
+- `resources/views/components/novedades.blade.php`: Reemplazo de "A cotizar" por "A IMPORTAR".
 - `notes/INDEX.md`: Enlazado en el índice de la bóveda.

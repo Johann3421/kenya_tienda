@@ -586,7 +586,7 @@
                                     <span class="stock-text">Disponible (≥ {{ $stock }})</span>
                                 @else
                                     <span class="stock-status-dot available"></span>
-                                    <span class="stock-text" style="color:#2ecc71; font-weight:600;">A cotizar</span>
+                                    <span class="stock-text" style="color:#2ecc71; font-weight:600;">A IMPORTAR</span>
                                 @endif
                             </div>
                             <button class="btn-details pill" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">Más información</button>
