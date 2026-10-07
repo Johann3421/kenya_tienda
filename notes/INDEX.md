@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-10-07-ampliacion-reciclaje-3-nuevos-apartados-opcion-a|2026-10-07: Ampliación de Reciclaje — 3 Nuevos Apartados Oficiales (Opción A Desplegada)]]
 - [[2026-10-06-prototipos-rediseño-reciclaje-raee|2026-10-06: Prototipos de Rediseño para Reciclaje Tecnológico (RAEE), Restauración de Imagen sin Marca de Agua y Verificación en Navegador]]
 - [[2026-10-06-prototipos-rediseño-codigo-conducta-iso-37001|2026-10-06: Prototipos de Rediseño para Código de Conducta (ISO 37001-2016) y Verificación en Navegador]]
 - [[2026-10-06-reestructuracion-footer-nuestra-empresa-nuevas-rutas|2026-10-06: Reestructuración de Columna 1 del Footer a 'Nuestra Empresa', Creación de Nuevas Rutas y Vistas (Código de Conducta y Reciclaje)]]

@@ -433,6 +433,186 @@
             font-size: 0.8rem;
         }
 
+        /* ── 3 NUEVOS APARTADOS SEGÚN MAQUETA OFICIAL (OPCIÓN A) ── */
+        .section-divider {
+            text-align: center;
+            margin: 64px 0 44px;
+            position: relative;
+        }
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--recicla-line);
+            z-index: 1;
+        }
+        .section-divider span {
+            position: relative;
+            z-index: 2;
+            background: #ffffff;
+            padding: 0 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--recicla-muted);
+        }
+
+        /* 1. Banner Verde Suave: Reciclar de manera responsable */
+        .banner-responsable {
+            background: #eef8ee;
+            border: 1px solid #d4edd4;
+            border-radius: 16px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 340px minmax(0, 1fr);
+            align-items: center;
+            box-shadow: 0 12px 30px -15px rgba(21, 128, 61, 0.15);
+            margin-bottom: 34px;
+        }
+        .banner-responsable-media {
+            height: 100%;
+            min-height: 240px;
+            background: #0f172a;
+        }
+        .banner-responsable-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .banner-responsable-body {
+            padding: 40px 44px;
+        }
+        .banner-responsable-body h2 {
+            font-size: 1.95rem;
+            color: var(--recicla-ink);
+            margin: 0 0 12px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        .banner-responsable-body p {
+            font-size: 1.02rem;
+            color: #334155;
+            line-height: 1.7;
+            margin: 0 0 24px;
+            max-width: 640px;
+        }
+        .banner-responsable-body .btn-comenzar {
+            background: #0284c7;
+            color: #ffffff;
+            font-weight: 700;
+            padding: 12px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+        }
+        .banner-responsable-body .btn-comenzar:hover {
+            background: #0369a1;
+            transform: translateY(-2px);
+            color: #ffffff;
+        }
+
+        /* 2 & 3. Dos Tarjetas Inferiores Simétricas */
+        .cards-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 20px;
+        }
+        .info-card {
+            background: #eef8ee;
+            border: 1px solid #d4edd4;
+            border-radius: 16px;
+            padding: 44px 36px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px -16px rgba(21, 128, 61, 0.2);
+        }
+        .info-card-icon {
+            font-size: 3.2rem;
+            color: #1e3a2f;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+        .info-card h3 {
+            font-size: 1.35rem;
+            color: var(--recicla-ink);
+            margin: 0 0 8px;
+            font-weight: 800;
+        }
+        .info-card p {
+            font-size: 1.05rem;
+            color: #334155;
+            margin: 0 0 24px;
+            line-height: 1.5;
+        }
+        .info-card .btn-card-action {
+            background: #ffffff;
+            color: #0284c7;
+            border: 1px solid #0284c7;
+            padding: 9px 28px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+        .info-card .btn-card-action:hover {
+            background: #0284c7;
+            color: #ffffff;
+        }
+
+        /* Paneles desplegables interactivos */
+        .expandable-panel {
+            display: none;
+            width: 100%;
+            text-align: left;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px dashed #bbf7d0;
+            animation: fadeInRecicla 0.25s ease-out;
+        }
+        .expandable-panel.active {
+            display: block;
+        }
+        .expandable-panel h4 {
+            font-size: 1.05rem;
+            color: var(--recicla-green-dark);
+            margin: 0 0 10px;
+            font-weight: 700;
+        }
+        .expandable-panel ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 0.92rem;
+            color: var(--recicla-text);
+            line-height: 1.7;
+        }
+        .expandable-panel li {
+            margin-bottom: 6px;
+        }
+
+        @keyframes fadeInRecicla {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* ── Responsive ── */
         @media (max-width: 991px) {
             .editorial-grid {
@@ -451,6 +631,19 @@
 
             .editorial-main h2.main-title {
                 font-size: 1.7rem;
+            }
+
+            .banner-responsable {
+                grid-template-columns: 1fr;
+            }
+            .banner-responsable-media {
+                min-height: 200px;
+            }
+            .banner-responsable-body {
+                padding: 30px 24px;
+            }
+            .cards-info-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -566,6 +759,80 @@
                     </div>
                 </aside>
             </div>
+
+            <!-- Divisor de Sección Informativa -->
+            <div class="section-divider" id="programas-reciclaje">
+                <span>Módulos de Información y Gestión para el Usuario</span>
+            </div>
+
+            <!-- 1. APARTADO: Banner Reciclar de Manera Responsable -->
+            <section class="banner-responsable">
+                <div class="banner-responsable-media">
+                    <img src="{{ asset('reciclaje-equipo-box.jpg') }}" alt="Entrega y empaque responsable de equipo de cómputo en caja" loading="lazy">
+                </div>
+                <div class="banner-responsable-body">
+                    <h2>Reciclar de manera responsable</h2>
+                    <p>
+                        Recicle su equipo de TI no deseado, de cualquier marca y en cualquier estado, de manera responsable con KENYA TECHNOLOGY de forma gratuita.
+                    </p>
+                    <a class="btn-comenzar" href="mailto:acuerdos.marco@kenya.com.pe?subject=Solicitud%20de%20Reciclaje%20Gratuito%20de%20Equipos">
+                        Comenzar <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </section>
+
+            <!-- 2 & 3. APARTADOS: Tarjetas Nuestras políticas sobre reciclaje & Sistema RAEE -->
+            <div class="cards-info-grid">
+                <!-- Tarjeta 2: Nuestras políticas -->
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </div>
+                    <h3>Nuestras políticas sobre reciclaje</h3>
+                    <p>Nuestras políticas y posturas sobre el reciclaje</p>
+                    <button type="button" class="btn-card-action" onclick="toggleReciclaPanel('panel-politicas', this)">Lectura</button>
+
+                    <div class="expandable-panel" id="panel-politicas">
+                        <h4><i class="fa-solid fa-shield-halved"></i> Compromisos y Posturas de KENYA:</h4>
+                        <ul>
+                            <li><strong>Cero Vertederos:</strong> 100% de los residuos recibidos son segregados y valorizados; ninguno se vierte en botaderos comunes.</li>
+                            <li><strong>Sustancias Seguras:</strong> Aislamiento de plomo, mercurio y cadmio de baterías y condensadores según directiva RoHS.</li>
+                            <li><strong>Borrado Seguro de Datos:</strong> Destrucción certificada y sobreescritura de unidades de almacenamiento para garantizar confidencialidad institucional.</li>
+                            <li><strong>Economía Circular:</strong> Reclasificación de metales y plásticos para su reincorporación en cadenas productivas seguras.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3: Sistema RAEE -->
+                <div class="info-card">
+                    <div class="info-card-icon">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Sistema Raee</h3>
+                    <p>Regulaciones de WEEE</p>
+                    <button type="button" class="btn-card-action" onclick="toggleReciclaPanel('panel-raee', this)">Acceso</button>
+
+                    <div class="expandable-panel" id="panel-raee">
+                        <h4><i class="fa-solid fa-scale-balanced"></i> Marco Legal y Certificaciones RAEE:</h4>
+                        <ul>
+                            <li><strong>Decreto Supremo N° 009-2019-MINAM:</strong> Régimen Especial de Gestión y Manejo de RAEE en el Perú.</li>
+                            <li><strong>Baja de Bienes Estatales (SBN):</strong> Procedimiento normado para entidades públicas que renuevan parques informáticos.</li>
+                            <li><strong>Constancia Oficial de Disposición:</strong> Documento oficial de descargo contable y auditorías ambientales ante el OEFA.</li>
+                            <li><strong>Categoría 3 de RAEE:</strong> Computadoras de escritorio, laptops, servidores, monitores, impresoras y periféricos.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
+
+    <script>
+        function toggleReciclaPanel(id, btn) {
+            var panel = document.getElementById(id);
+            if (!panel) return;
+            var isOpen = panel.classList.contains('active');
+            panel.classList.toggle('active');
+            btn.textContent = isOpen ? (id === 'panel-politicas' ? 'Lectura' : 'Acceso') : 'Cerrar detalle';
+        }
+    </script>
 @endsection
