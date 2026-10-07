@@ -433,183 +433,373 @@
             font-size: 0.8rem;
         }
 
-        /* ── 3 NUEVOS APARTADOS SEGÚN MAQUETA OFICIAL (OPCIÓN A) ── */
-        .section-divider {
+        /* ── 3 NUEVOS APARTADOS: DISEÑO AUTÉNTICO KENYA TECHNOLOGY ── */
+        .hub-divider {
             text-align: center;
             margin: 64px 0 44px;
             position: relative;
         }
-        .section-divider::before {
+        .hub-divider::before {
             content: '';
             position: absolute;
             top: 50%;
             left: 0;
             right: 0;
             height: 1px;
-            background: var(--recicla-line);
+            background: #e2e8f0;
             z-index: 1;
         }
-        .section-divider span {
+        .hub-divider-badge {
             position: relative;
             z-index: 2;
             background: #ffffff;
-            padding: 0 20px;
-            font-size: 0.85rem;
+            padding: 6px 22px;
+            border: 1px solid #e2e8f0;
+            border-radius: 999px;
+            font-size: 0.82rem;
             font-weight: 700;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: var(--recicla-muted);
+            color: #475569;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+        }
+        .hub-divider-badge i {
+            color: var(--recicla-green);
         }
 
-        /* 1. Banner Verde Suave: Reciclar de manera responsable */
-        .banner-responsable {
-            background: #eef8ee;
-            border: 1px solid #d4edd4;
+        /* 1. Hub de Recolección (Banner Corporativo Blanco con Acento Verde) */
+        .kenya-recoleccion-hub {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid var(--recicla-green);
             border-radius: 16px;
             overflow: hidden;
             display: grid;
-            grid-template-columns: 340px minmax(0, 1fr);
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            gap: 0;
+            box-shadow: 0 14px 34px -14px rgba(15, 23, 42, 0.1);
+            margin-bottom: 36px;
+        }
+
+        .hub-content {
+            padding: 44px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hub-status-pill {
+            display: inline-flex;
             align-items: center;
-            box-shadow: 0 12px 30px -15px rgba(21, 128, 61, 0.15);
-            margin-bottom: 34px;
+            gap: 8px;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            align-self: flex-start;
         }
-        .banner-responsable-media {
-            height: 100%;
-            min-height: 240px;
-            background: #0f172a;
+        .hub-status-pill .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            display: inline-block;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
         }
-        .banner-responsable-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .banner-responsable-body {
-            padding: 40px 44px;
-        }
-        .banner-responsable-body h2 {
+
+        .hub-content h2 {
             font-size: 1.95rem;
             color: var(--recicla-ink);
-            margin: 0 0 12px;
+            line-height: 1.25;
+            margin: 0 0 14px;
             font-weight: 800;
             letter-spacing: -0.02em;
         }
-        .banner-responsable-body p {
+
+        .hub-content p {
             font-size: 1.02rem;
-            color: #334155;
             line-height: 1.7;
-            margin: 0 0 24px;
-            max-width: 640px;
+            color: #475569;
+            margin: 0 0 22px;
         }
-        .banner-responsable-body .btn-comenzar {
-            background: #0284c7;
+
+        .hub-features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 18px;
+            margin-bottom: 28px;
+            background: #f8fafc;
+            padding: 16px 20px;
+            border-radius: 10px;
+            border: 1px solid #edf2f7;
+        }
+        .hub-feat-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .hub-feat-item i {
+            color: #16a34a;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .hub-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-kenya-solicitar {
+            background: var(--recicla-green);
             color: #ffffff;
             font-weight: 700;
-            padding: 12px 28px;
+            font-size: 0.95rem;
+            padding: 13px 26px;
             border-radius: 8px;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+            box-shadow: 0 4px 14px rgba(21, 128, 61, 0.25);
         }
-        .banner-responsable-body .btn-comenzar:hover {
-            background: #0369a1;
+        .btn-kenya-solicitar:hover {
+            background: var(--recicla-green-dark);
             transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(21, 128, 61, 0.35);
             color: #ffffff;
         }
 
-        /* 2 & 3. Dos Tarjetas Inferiores Simétricas */
-        .cards-info-grid {
+        .hub-contact-note {
+            font-size: 0.86rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .hub-contact-note strong {
+            color: #1e293b;
+        }
+
+        /* Fotografía de Hardware en Taller */
+        .hub-visual {
+            position: relative;
+            background: #0f172a;
+            overflow: hidden;
+            min-height: 380px;
+        }
+        .hub-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .kenya-recoleccion-hub:hover .hub-visual img {
+            transform: scale(1.02);
+        }
+        .hub-visual-badge {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            right: 18px;
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+            color: #f1f5f9;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.84rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .hub-visual-badge i {
+            color: #4ade80;
+            font-size: 1.2rem;
+        }
+        .hub-visual-badge span {
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* 2 & 3. Módulos de Cumplimiento (Tarjetas Blancas Elegantes) */
+        .kenya-cards-duo {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 28px;
-            margin-bottom: 20px;
-        }
-        .info-card {
-            background: #eef8ee;
-            border: 1px solid #d4edd4;
-            border-radius: 16px;
-            padding: 44px 36px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .info-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 16px 36px -16px rgba(21, 128, 61, 0.2);
-        }
-        .info-card-icon {
-            font-size: 3.2rem;
-            color: #1e3a2f;
-            margin-bottom: 20px;
-            line-height: 1;
-        }
-        .info-card h3 {
-            font-size: 1.35rem;
-            color: var(--recicla-ink);
-            margin: 0 0 8px;
-            font-weight: 800;
-        }
-        .info-card p {
-            font-size: 1.05rem;
-            color: #334155;
-            margin: 0 0 24px;
-            line-height: 1.5;
-        }
-        .info-card .btn-card-action {
-            background: #ffffff;
-            color: #0284c7;
-            border: 1px solid #0284c7;
-            padding: 9px 28px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            font-family: inherit;
-        }
-        .info-card .btn-card-action:hover {
-            background: #0284c7;
-            color: #ffffff;
+            margin-bottom: 24px;
         }
 
-        /* Paneles desplegables interactivos */
-        .expandable-panel {
-            display: none;
-            width: 100%;
-            text-align: left;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px dashed #bbf7d0;
-            animation: fadeInRecicla 0.25s ease-out;
+        .compliance-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 34px 32px;
+            box-shadow: 0 8px 24px -10px rgba(15, 23, 42, 0.06);
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            position: relative;
         }
-        .expandable-panel.active {
-            display: block;
+        .compliance-card:hover {
+            border-color: #cbd5e1;
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px -12px rgba(15, 23, 42, 0.1);
         }
-        .expandable-panel h4 {
-            font-size: 1.05rem;
-            color: var(--recicla-green-dark);
-            margin: 0 0 10px;
+
+        .compliance-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .compliance-icon-wrap {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: #f0fdf4;
+            color: var(--recicla-green);
+            border: 1px solid #dcfce7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .compliance-card.raee-card .compliance-icon-wrap {
+            background: #f8fafc;
+            color: #1e3a5f;
+            border-color: #e2e8f0;
+        }
+
+        .compliance-title-group h3 {
+            font-size: 1.25rem;
+            color: var(--recicla-ink);
+            margin: 0 0 4px;
+            font-weight: 800;
+        }
+        .compliance-title-group .sub-label {
+            font-size: 0.88rem;
+            color: #64748b;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .compliance-intro {
+            font-size: 0.94rem;
+            color: #475569;
+            line-height: 1.65;
+            margin: 0 0 20px;
+        }
+
+        .compliance-points {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .compliance-points li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-size: 0.91rem;
+            line-height: 1.55;
+            color: #334155;
+        }
+        .compliance-points .point-check {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: var(--recicla-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .compliance-points strong {
+            color: #0f172a;
             font-weight: 700;
         }
-        .expandable-panel ul {
-            margin: 0;
-            padding-left: 20px;
-            font-size: 0.92rem;
-            color: var(--recicla-text);
-            line-height: 1.7;
+
+        .btn-compliance-toggle {
+            margin-top: auto;
+            background: #f8fafc;
+            color: #1e293b;
+            border: 1px solid #cbd5e1;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            font-family: inherit;
         }
-        .expandable-panel li {
+        .btn-compliance-toggle:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: var(--recicla-green);
+        }
+        .btn-compliance-toggle i {
+            transition: transform 0.2s ease;
+        }
+
+        .compliance-drawer {
+            display: none;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid #e2e8f0;
+            animation: expandFade 0.25s ease-out;
+        }
+        .compliance-drawer.is-open {
+            display: block;
+        }
+        .compliance-drawer-inner {
+            background: #f8fafc;
+            padding: 16px 18px;
+            border-radius: 8px;
+            border: 1px solid #edf2f7;
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.65;
+        }
+        .compliance-drawer-inner h4 {
+            margin: 0 0 8px;
+            font-size: 0.92rem;
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .compliance-drawer-inner ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .compliance-drawer-inner li {
             margin-bottom: 6px;
         }
 
-        @keyframes fadeInRecicla {
-            from { opacity: 0; transform: translateY(6px); }
+        @keyframes expandFade {
+            from { opacity: 0; transform: translateY(-4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -633,17 +823,23 @@
                 font-size: 1.7rem;
             }
 
-            .banner-responsable {
+            .kenya-recoleccion-hub {
                 grid-template-columns: 1fr;
             }
-            .banner-responsable-media {
-                min-height: 200px;
+            .hub-content {
+                padding: 32px 24px;
             }
-            .banner-responsable-body {
-                padding: 30px 24px;
-            }
-            .cards-info-grid {
+            .hub-features-grid {
                 grid-template-columns: 1fr;
+            }
+            .hub-visual {
+                min-height: 260px;
+            }
+            .kenya-cards-duo {
+                grid-template-columns: 1fr;
+            }
+            .compliance-card {
+                padding: 28px 24px;
             }
         }
     </style>
@@ -760,79 +956,183 @@
                 </aside>
             </div>
 
-            <!-- Divisor de Sección Informativa -->
-            <div class="section-divider" id="programas-reciclaje">
-                <span>Módulos de Información y Gestión para el Usuario</span>
+            <!-- Divisor Institucional -->
+            <div class="hub-divider">
+                <span class="hub-divider-badge">
+                    <i class="fa-solid fa-arrows-rotate"></i> Programa Nacional de Gestión y Reciclaje de RAEE
+                </span>
             </div>
 
-            <!-- 1. APARTADO: Banner Reciclar de Manera Responsable -->
-            <section class="banner-responsable">
-                <div class="banner-responsable-media">
-                    <img src="{{ asset('reciclaje-equipo-box.jpg') }}" alt="Entrega y empaque responsable de equipo de cómputo en caja" loading="lazy">
-                </div>
-                <div class="banner-responsable-body">
-                    <h2>Reciclar de manera responsable</h2>
+            <!-- 1. APARTADO: BANNER AUTÉNTICO KENYA (IMAGEN STOCK NUEVA + FORMATO ORIGINAL) -->
+            <section class="kenya-recoleccion-hub">
+                <div class="hub-content">
+                    <span class="hub-status-pill">
+                        <span class="pulse-dot"></span> Servicio Gratuito Multimarca
+                    </span>
+                    <h2>Recicla tus equipos de TI de manera responsable</h2>
                     <p>
-                        Recicle su equipo de TI no deseado, de cualquier marca y en cualquier estado, de manera responsable con KENYA TECHNOLOGY de forma gratuita.
+                        Entrega tus computadoras, laptops o periféricos obsoletos de <strong>cualquier marca y en cualquier estado operativo</strong>. En KENYA TECHNOLOGY asumimos la recolección, segregación técnica y valorización final 100% libre de costo.
                     </p>
-                    <a class="btn-comenzar" href="mailto:acuerdos.marco@kenya.com.pe?subject=Solicitud%20de%20Reciclaje%20Gratuito%20de%20Equipos">
-                        Comenzar <i class="fa-solid fa-arrow-right"></i>
-                    </a>
+
+                    <div class="hub-features-grid">
+                        <div class="hub-feat-item">
+                            <i class="fa-solid fa-circle-check"></i> Recepción de cualquier marca
+                        </div>
+                        <div class="hub-feat-item">
+                            <i class="fa-solid fa-circle-check"></i> Cero costo de disposición
+                        </div>
+                        <div class="hub-feat-item">
+                            <i class="fa-solid fa-circle-check"></i> Retiro programado a empresas
+                        </div>
+                        <div class="hub-feat-item">
+                            <i class="fa-solid fa-circle-check"></i> Emisión de constancia de entrega
+                        </div>
+                    </div>
+
+                    <div class="hub-actions">
+                        <a class="btn-kenya-solicitar" href="mailto:acuerdos.marco@kenya.com.pe?subject=Solicitud%20de%20Recolecci%C3%B3n%20Gratuita%20de%20Equipos%20RAEE">
+                            <i class="fa-solid fa-box-archive"></i> Coordinar Entrega de Equipos <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <span class="hub-contact-note">
+                            <i class="fa-solid fa-phone"></i> Central: <strong>958 021 778</strong>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="hub-visual">
+                    <img src="{{ asset('reciclaje-equipo-box.jpg') }}" alt="Técnico especialista clasificando componentes de hardware informático para reciclaje electrónico responsable en taller tecnológico" loading="lazy">
+                    <div class="hub-visual-badge">
+                        <i class="fa-solid fa-recycle"></i>
+                        <span><strong>Gestión Integral de Residuos RAEE</strong><br>Acreditado conforme al D.S. N° 009-2019-MINAM</span>
+                    </div>
                 </div>
             </section>
 
-            <!-- 2 & 3. APARTADOS: Tarjetas Nuestras políticas sobre reciclaje & Sistema RAEE -->
-            <div class="cards-info-grid">
-                <!-- Tarjeta 2: Nuestras políticas -->
-                <div class="info-card">
-                    <div class="info-card-icon">
-                        <i class="fa-solid fa-arrows-rotate"></i>
+            <!-- 2 & 3. APARTADOS: TARJETAS DE CUMPLIMIENTO CORPORATIVO (POLÍTICAS & SISTEMA RAEE) -->
+            <div class="kenya-cards-duo">
+                <!-- Tarjeta 2: Nuestras Políticas de Sostenibilidad -->
+                <article class="compliance-card">
+                    <div class="compliance-header">
+                        <div class="compliance-icon-wrap">
+                            <i class="fa-solid fa-leaf"></i>
+                        </div>
+                        <div class="compliance-title-group">
+                            <h3>Nuestras políticas sobre reciclaje</h3>
+                            <p class="sub-label">Compromisos de circularidad y custodia de datos</p>
+                        </div>
                     </div>
-                    <h3>Nuestras políticas sobre reciclaje</h3>
-                    <p>Nuestras políticas y posturas sobre el reciclaje</p>
-                    <button type="button" class="btn-card-action" onclick="toggleReciclaPanel('panel-politicas', this)">Lectura</button>
 
-                    <div class="expandable-panel" id="panel-politicas">
-                        <h4><i class="fa-solid fa-shield-halved"></i> Compromisos y Posturas de KENYA:</h4>
-                        <ul>
-                            <li><strong>Cero Vertederos:</strong> 100% de los residuos recibidos son segregados y valorizados; ninguno se vierte en botaderos comunes.</li>
-                            <li><strong>Sustancias Seguras:</strong> Aislamiento de plomo, mercurio y cadmio de baterías y condensadores según directiva RoHS.</li>
-                            <li><strong>Borrado Seguro de Datos:</strong> Destrucción certificada y sobreescritura de unidades de almacenamiento para garantizar confidencialidad institucional.</li>
-                            <li><strong>Economía Circular:</strong> Reclasificación de metales y plásticos para su reincorporación en cadenas productivas seguras.</li>
-                        </ul>
-                    </div>
-                </div>
+                    <p class="compliance-intro">
+                        Lineamientos obligatorios para asegurar que cada dispositivo recibido sea procesado bajo estándares ambientales de cero impacto negativo.
+                    </p>
 
-                <!-- Tarjeta 3: Sistema RAEE -->
-                <div class="info-card">
-                    <div class="info-card-icon">
-                        <i class="fa-regular fa-file-lines"></i>
-                    </div>
-                    <h3>Sistema Raee</h3>
-                    <p>Regulaciones de WEEE</p>
-                    <button type="button" class="btn-card-action" onclick="toggleReciclaPanel('panel-raee', this)">Acceso</button>
+                    <ul class="compliance-points">
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>Cero Vertederos Comunes:</strong> El 100% de los residuos recibidos se clasifica y canaliza para valorización industrial.</div>
+                        </li>
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>Retiro Seguro de Tóxicos (RoHS):</strong> Aislamiento de plomo, mercurio y componentes químicos en plantas autorizadas.</div>
+                        </li>
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>Borrado Certificado de Datos:</strong> Destrucción y desmagnetización segura de discos rígidos para proteger la privacidad institucional.</div>
+                        </li>
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>Economía Circular de Materiales:</strong> Reincorporación de metales refinados (cobre, aluminio, estaño) y polímeros reciclables.</div>
+                        </li>
+                    </ul>
 
-                    <div class="expandable-panel" id="panel-raee">
-                        <h4><i class="fa-solid fa-scale-balanced"></i> Marco Legal y Certificaciones RAEE:</h4>
-                        <ul>
-                            <li><strong>Decreto Supremo N° 009-2019-MINAM:</strong> Régimen Especial de Gestión y Manejo de RAEE en el Perú.</li>
-                            <li><strong>Baja de Bienes Estatales (SBN):</strong> Procedimiento normado para entidades públicas que renuevan parques informáticos.</li>
-                            <li><strong>Constancia Oficial de Disposición:</strong> Documento oficial de descargo contable y auditorías ambientales ante el OEFA.</li>
-                            <li><strong>Categoría 3 de RAEE:</strong> Computadoras de escritorio, laptops, servidores, monitores, impresoras y periféricos.</li>
-                        </ul>
+                    <button type="button" class="btn-compliance-toggle" onclick="toggleComplianceDrawer('drawer-politicas', this)">
+                        <span>Conocer protocolo operativo</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+                    <div class="compliance-drawer" id="drawer-politicas">
+                        <div class="compliance-drawer-inner">
+                            <h4><i class="fa-solid fa-circle-info text-green"></i> Procedimiento de Recepción:</h4>
+                            <ul>
+                                <li><strong>Inspección inicial:</strong> Registro de número de serie y pesaje en nuestros puntos de acopio oficiales.</li>
+                                <li><strong>Desensamble técnico:</strong> Separación mecánica de chasis, fuentes, placas y cableado.</li>
+                                <li><strong>Certificado de disposición:</strong> Emisión de constancia formal que acredita la baja física y custodia de datos.</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                </article>
+
+                <!-- Tarjeta 3: Sistema RAEE y Normativa Vigente -->
+                <article class="compliance-card raee-card">
+                    <div class="compliance-header">
+                        <div class="compliance-icon-wrap">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div class="compliance-title-group">
+                            <h3>Sistema Raee</h3>
+                            <p class="sub-label">Marco regulatorio nacional e internacional WEEE</p>
+                        </div>
+                    </div>
+
+                    <p class="compliance-intro">
+                        Estructura legal y directivas vigentes en el Perú que regulan la entrega, baja patrimonial y fiscalización de residuos electrónicos.
+                    </p>
+
+                    <ul class="compliance-points">
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>D.S. N° 009-2019-MINAM:</strong> Régimen Especial de Gestión y Manejo de Residuos de Aparatos Eléctricos y Electrónicos.</div>
+                        </li>
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>Baja de Bienes Estatales (SBN):</strong> Cumplimiento de directivas para desincorporación contable de activos en entidades públicas.</div>
+                        </li>
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>Sustento ante Fiscalización OEFA:</strong> Constancia oficial que exime de responsabilidades ambientales sancionadoras.</div>
+                        </li>
+                        <li>
+                            <span class="point-check"><i class="fa-solid fa-check"></i></span>
+                            <div><strong>Categoría 3 de RAEE Cubierta:</strong> Equipos de cómputo, servidores, portátiles, monitores y unidades de impresión.</div>
+                        </li>
+                    </ul>
+
+                    <button type="button" class="btn-compliance-toggle" onclick="toggleComplianceDrawer('drawer-raee', this)">
+                        <span>Consultar directivas legales</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+
+                    <div class="compliance-drawer" id="drawer-raee">
+                        <div class="compliance-drawer-inner">
+                            <h4><i class="fa-solid fa-shield-halved text-green"></i> Acreditación Normativa:</h4>
+                            <ul>
+                                <li><strong>Entidades obligadas:</strong> Ministerios, Gobiernos Regionales, Municipalidades y empresas del régimen privado.</li>
+                                <li><strong>Trazabilidad de manifiestos:</strong> Registro documentario en el SIGERSOL del Ministerio del Ambiente.</li>
+                                <li><strong>Asesoría directa:</strong> Nuestro equipo legal te guía en la redacción del informe técnico de baja patrimonial.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
             </div>
         </main>
     </div>
 
     <script>
-        function toggleReciclaPanel(id, btn) {
-            var panel = document.getElementById(id);
-            if (!panel) return;
-            var isOpen = panel.classList.contains('active');
-            panel.classList.toggle('active');
-            btn.textContent = isOpen ? (id === 'panel-politicas' ? 'Lectura' : 'Acceso') : 'Cerrar detalle';
+        function toggleComplianceDrawer(id, btn) {
+            var drawer = document.getElementById(id);
+            if (!drawer) return;
+            var isOpen = drawer.classList.contains('is-open');
+            drawer.classList.toggle('is-open');
+            var icon = btn.querySelector('i');
+            if (icon) {
+                icon.className = isOpen ? 'fa-solid fa-chevron-down' : 'fa-solid fa-chevron-up';
+            }
+            var span = btn.querySelector('span');
+            if (span) {
+                span.textContent = isOpen 
+                    ? (id === 'drawer-politicas' ? 'Conocer protocolo operativo' : 'Consultar directivas legales')
+                    : 'Ocultar detalles';
+            }
         }
     </script>
 @endsection
