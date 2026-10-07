@@ -1,11 +1,11 @@
 @extends('layouts.landing')
 
-@section('title', 'Código de Conducta e Integridad · ISO 37001:2016 | KENYA Technology')
-@section('meta_description', 'Código de Conducta y Sistema de Gestión Antisoborno ISO 37001:2016 de KENYA Technology. Principios de integridad, transparencia y ética para clientes, proveedores, trabajadores y el Estado.')
-@section('meta_keywords', 'codigo de conducta kenya, iso 37001 2016 kenya technology, sistema gestion antisoborno, etica corporativa peru, integridad convenio marco')
+@section('title', 'Código de Conducta e Integridad · ISO 37001:2025 | KENYA Technology')
+@section('meta_description', 'Código de Conducta y Sistema de Gestión Antisoborno ISO 37001:2025 de KENYA Technology. Principios de integridad, transparencia y ética para clientes, proveedores, trabajadores y el Estado.')
+@section('meta_keywords', 'codigo de conducta kenya, iso 37001 2025 kenya technology, sistema gestion antisoborno, etica corporativa peru, integridad convenio marco')
 @section('canonical', route('codigo.conducta'))
-@section('og_title', 'Código de Conducta · ISO 37001:2016 | KENYA Technology Perú')
-@section('og_description', 'Conoce los 16 lineamientos éticos y la certificación ISO 37001:2016 de KENYA Technology.')
+@section('og_title', 'Código de Conducta · ISO 37001:2025 | KENYA Technology Perú')
+@section('og_description', 'Conoce los 16 lineamientos éticos y la certificación ISO 37001:2025 de KENYA Technology.')
 
 @section('menu')
     <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
@@ -117,12 +117,12 @@
         /* Ficha técnica del documento */
         #cc-page .cc-meta {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 320px));
             margin: 0 0 54px;
             border-bottom: 1px solid var(--cc-rule);
         }
-        #cc-page .cc-meta div { padding: 18px 20px 18px 0; }
-        #cc-page .cc-meta div + div { padding-left: 20px; border-left: 1px solid var(--cc-rule); }
+        #cc-page .cc-meta div { padding: 18px 28px 18px 0; }
+        #cc-page .cc-meta div + div { padding-left: 28px; border-left: 1px solid var(--cc-rule); }
         #cc-page .cc-meta dt {
             font-size: .72rem;
             font-weight: 700;
@@ -146,43 +146,43 @@
             min-width: 0;
         }
 
-        #cc-page .cc-art {
-            display: grid;
-            grid-template-columns: 60px minmax(0, 1fr);
-            gap: 0 8px;
-            padding: 28px 0;
-            border-bottom: 1px solid var(--cc-rule);
-            scroll-margin-top: 24px;
+        #cc-page .cc-art-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
-        #cc-page .cc-art:first-child { padding-top: 0; }
+        #cc-page .cc-art-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--cc-rule);
+        }
+        #cc-page .cc-art-item:first-child { padding-top: 0; }
         #cc-page .cc-art-num {
-            font-size: 1.6rem;
-            font-weight: 300;
-            line-height: 1.2;
+            font-size: 1.15rem;
+            font-weight: 700;
+            line-height: 1;
             color: #9ca3af;
             font-variant-numeric: tabular-nums;
+            min-width: 28px;
         }
-        #cc-page .cc-art h3 {
-            margin: 0 0 8px;
-            font-size: 1.18rem;
+        #cc-page .cc-art-title {
+            margin: 0;
+            font-size: 1.08rem;
             font-weight: 700;
             color: var(--cc-ink);
             line-height: 1.35;
         }
-        #cc-page .cc-art p { margin: 0; max-width: 68ch; }
-        #cc-page .cc-art ul { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0; }
-        #cc-page .cc-art ul li { font-weight: 600; color: var(--cc-ink); }
-        #cc-page .cc-art ul li + li::before { content: '·'; margin: 0 12px; color: var(--cc-accent); }
-
-        #cc-page .cc-art.is-key {
+        #cc-page .cc-art-item.is-key {
             background: var(--cc-paper);
-            margin: 0 -20px;
-            padding-left: 20px;
-            padding-right: 20px;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
             border-left: 3px solid var(--cc-accent);
         }
-        #cc-page .cc-art.is-key .cc-art-num { color: var(--cc-accent); }
-        #cc-page .cc-note { display: block; margin-top: 10px; font-size: .82rem; color: var(--cc-muted); }
+        #cc-page .cc-art-item.is-key .cc-art-num { color: var(--cc-accent); }
+        #cc-page .cc-art-item.is-key .cc-art-title { color: var(--cc-ink); }
 
         /* Canal de denuncias en bloque final */
         #cc-page .cc-report {
@@ -324,11 +324,8 @@
             #cc-page .cc-hero h1 { font-size: 2rem; }
             #cc-page .cc-head h2 { font-size: 1.9rem; }
             #cc-page .cc-meta { grid-template-columns: 1fr 1fr; }
-            #cc-page .cc-meta div:nth-child(3) { padding-left: 0; border-left: 0; }
             #cc-page .cc-body { grid-template-columns: 1fr; gap: 40px; }
             #cc-page .cc-sidebar { position: static; max-width: 480px; margin: 0 auto; width: 100%; }
-            #cc-page .cc-art { grid-template-columns: 48px minmax(0, 1fr); }
-            #cc-page .cc-art.is-key { margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
         }
         @media (max-width: 575px) {
             #cc-page .cc-table thead { display: none; }
@@ -359,40 +356,24 @@
             </header>
 
             <dl class="cc-meta">
-                <div><dt>Norma de referencia</dt><dd>ISO 37001:2016</dd></div>
-                <div><dt>Marco legal</dt><dd>Ley N° 30424</dd></div>
-                <div><dt>Aplica a</dt><dd>Colaboradores y aliados</dd></div>
+                <div><dt>Norma de referencia</dt><dd>ISO 37001:2025</dd></div>
                 <div><dt>Lineamientos</dt><dd>{{ count($articulos) }} artículos</dd></div>
             </dl>
 
             <div class="cc-body">
                 <!-- Columna Izquierda: Los 16 Artículos + Detalle del Canal -->
                 <div class="cc-content">
-                    @foreach ($articulos as $i => $art)
-                        <section class="cc-art {{ $i === 4 ? 'is-key' : '' }}" id="art-{{ $i + 1 }}">
-                            <span class="cc-art-num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                            <div>
-                                <h3>{{ $art[0] }}</h3>
-                                <p>{{ $art[1] }}</p>
-                                @isset($art[2])
-                                    <ul>
-                                        @foreach ($art[2] as $valor)
-                                            <li>{{ $valor }}</li>
-                                        @endforeach
-                                    </ul>
-                                @endisset
-                                @if ($i === 4)
-                                    <span class="cc-note">Eje central del Sistema de Gestión Antisoborno según ISO 37001:2016.</span>
-                                @endif
-                            </div>
-                        </section>
-                    @endforeach
+                    <ol class="cc-art-list">
+                        @foreach ($articulos as $i => $art)
+                            <li class="cc-art-item {{ $i === 4 ? 'is-key' : '' }}" id="art-{{ $i + 1 }}">
+                                <span class="cc-art-num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                                <h3 class="cc-art-title">{{ $art[0] }}</h3>
+                            </li>
+                        @endforeach
+                    </ol>
 
                     <section class="cc-report" id="canal-denuncias">
                         <h3>¿Viste una conducta indebida?</h3>
-                        <p>
-                            Reporta cualquier sospecha de soborno, fraude o incumplimiento de este código. La información se trata con reserva de identidad y nadie será perjudicado por denunciar de buena fe.
-                        </p>
 
                         <table class="cc-table">
                             <thead>
@@ -425,9 +406,9 @@
                 <!-- Columna Derecha: Sidebar Lateral Fija con la Imagen ISO 37001 Prominente -->
                 <aside class="cc-sidebar">
                     <figure class="cc-iso-card">
-                        <img src="{{ asset('iso-37001.png') }}" alt="Sistema de Gestión Antisoborno ISO 37001:2016 de KENYA TECHNOLOGY" loading="lazy">
+                        <img src="{{ asset('iso-37001.png') }}" alt="Sistema de Gestión Antisoborno ISO 37001:2025 de KENYA TECHNOLOGY" loading="lazy">
                         <figcaption>
-                            <strong>Acreditación ISO 37001:2016</strong>
+                            <strong>Acreditación ISO 37001:2025</strong>
                             <span>Sistema de Gestión Antisoborno</span>
                         </figcaption>
                     </figure>

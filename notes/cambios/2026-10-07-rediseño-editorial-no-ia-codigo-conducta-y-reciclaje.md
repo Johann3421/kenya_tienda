@@ -50,9 +50,15 @@ Asimismo, en `codigo-conducta.blade.php`, se solicitó devolver la imagen de la 
 - **Eliminación de `cc-toc`:** Se eliminó la caja de índice con scrollbar interno (`<nav class="cc-toc">`), sus estilos CSS y el observador JS (`IntersectionObserver`).
 - **Enfoque Institucional:** La barra lateral sticky queda ahora 100% limpia y enfocada en sus dos pilares clave: la certificación ISO 37001 prominente y la caja de canal ético confidencial con accesos directos de contacto.
 
+### F. Simplificación a Listado Limpio y Actualización ISO 37001:2025
+- **Artículos como Listado de Títulos:** Se eliminaron los párrafos explicativos, viñetas y notas de los 16 artículos, transformándolos en una lista limpia y concisa (`<ol class="cc-art-list">`) con número tabular y título.
+- **Depuración de Metadatos:** Se eliminaron los campos *"Marco legal"* y *"Aplica a"* de `<dl class="cc-meta">`, conservando únicamente *"Norma de referencia"* y *"Lineamientos"* en un grid simétrico de 2 columnas.
+- **Canal de Denuncias:** Se retiró el párrafo redundante bajo *"¿Viste una conducta indebida?"*, conectando el título directamente con la tabla de canales oficiales.
+- **Actualización de Norma:** Se actualizó en todas las etiquetas SEO, textos e imagen la referencia de `ISO 37001:2016` a la versión actual `ISO 37001:2025`.
+
 ---
 
 ## 3. Archivos Modificados
-- `resources/views/codigo-conducta.blade.php`: Rediseño editorial, barra lateral sticky limpia (sin `cc-toc`) enfocada en ISO 37001 y canal confidencial.
+- `resources/views/codigo-conducta.blade.php`: Listado limpio de títulos de artículos, metadatos simplificados, ISO 37001:2025 y remoción de textos redundantes.
 - `resources/views/reciclaje.blade.php`: Maquetación editorial, banner luminoso enmarcado, cita sin borde verde y ancho ampliado a 1400px.
 - `notes/INDEX.md`: Enlazado en el índice de la bóveda.
