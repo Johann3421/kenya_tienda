@@ -93,12 +93,31 @@
         #rc-page .rc-intro .rc-h2 { font-size: 2.4rem; max-width: 20ch; }
         #rc-page .rc-intro p { margin: 0 0 18px; font-size: 1.05rem; max-width: 60ch; }
         #rc-page .rc-quote {
-            margin: 30px 0;
-            padding: 0 0 0 22px;
-            border-left: 3px solid var(--rc-green-mid);
+            margin: 32px 0;
+            padding: 22px 0 24px;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+            border-left: none;
         }
-        #rc-page .rc-quote p { margin: 0 0 6px !important; font-size: 1.45rem !important; line-height: 1.35; font-weight: 700; color: var(--rc-ink); }
-        #rc-page .rc-quote cite { font-style: normal; font-size: .95rem; color: var(--rc-muted); }
+        #rc-page .rc-quote p {
+            margin: 0 0 8px !important;
+            font-size: 1.35rem !important;
+            line-height: 1.35;
+            font-weight: 700;
+            color: var(--rc-ink);
+            letter-spacing: -.01em;
+        }
+        #rc-page .rc-quote cite {
+            display: block;
+            font-style: normal;
+            font-size: .95rem;
+            line-height: 1.55;
+            color: #64748b;
+        }
+        #rc-page .rc-quote cite::before {
+            content: '— ';
+            color: #94a3b8;
+        }
         #rc-page .rc-intro figure { margin: 0; }
         #rc-page .rc-intro img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
         #rc-page .rc-intro figcaption { margin-top: 10px; font-size: .82rem; color: var(--rc-muted); }

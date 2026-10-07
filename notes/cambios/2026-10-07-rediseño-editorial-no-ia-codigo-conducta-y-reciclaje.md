@@ -36,16 +36,19 @@ Asimismo, en `codigo-conducta.blade.php`, se solicitó devolver la imagen de la 
 - **Banda Documental:** Tratamiento de *Nuestras Políticas* y *Sistema RAEE* como normativas corporativas con detalle desplegable nativo.
 - **FAQ y Sedes:** Preguntas frecuentes con `<details>` limpio y panel lateral de puntos de acopio oficiales (Huánuco y Lima).
 
-### C. Ajustes de Banner y Puntos de Acopio en Reciclaje
+### C. Ajustes de Banner, Puntos de Acopio y Cita Editorial en Reciclaje
 - **Reemplazo de Imagen Exacta:** Se integró la etiqueta exacta requerida por el usuario: `<img src="https://www.kenya.com.pe/reciclaje-equipo-box.jpg" alt="Técnico empacando equipos informáticos en desuso para su reciclaje" loading="lazy">`.
 - **Nueva Forma y Color del Banner (`#reciclar`):** Se eliminó el bloque 50/50 azul marino con verde neón (arquetipo de plantilla IA) y se rediseñó como una tarjeta institucional luminosa (`background: #f8fafc`, `border-top: 4px solid #15803d`), contenedor fotográfico enmarcado con relación 4:3 y sombra sutil, lista de garantías del servicio (`✓`) y botón de acción naranja Kenya.
 - **Corrección de Distribución de Colores en Puntos de Acopio:**
   - Se estructuró `.rc-points` como una tarjeta formal (`background: #f8fafc`, `border-top: 3px solid var(--rc-accent)`).
   - Se corrigió el botón `.rc-btn-dark` eliminando el fondo azul marino que cambiaba bruscamente a verde oscuro; ahora se unifica en color de acción institucional Naranja Kenya (`var(--rc-accent)` #f26522, hover `#d9541a`), con ancho completo y jerarquía visual armónica con la página.
+- **Rediseño Tipográfico de la Cita (`.rc-quote`):**
+  - Se eliminó por completo el borde lateral verde (`border-left: 3px solid var(--rc-green-mid)`), típico de bloques de IA.
+  - Se reestructuró con un diseño editorial de pull-quote periodístico/institucional con filetes horizontales superior e inferior (`border-top` y `border-bottom: 1px solid #e2e8f0`), espaciado vertical armónico y tipografía sobria con autoría en em-dash (`— `).
 
 ---
 
 ## 3. Archivos Modificados
 - `resources/views/codigo-conducta.blade.php`: Rediseño completo con barra lateral sticky prominente para `iso-37001.png` y navegación activa.
-- `resources/views/reciclaje.blade.php`: Maquetación editorial corporativa sin componentes cliché de IA, banner luminoso enmarcado con imagen oficial y distribución armónica de colores en puntos de acopio.
+- `resources/views/reciclaje.blade.php`: Maquetación editorial corporativa sin componentes cliché de IA, banner luminoso enmarcado con imagen oficial, distribución armónica de colores en puntos de acopio y cita editorial limpia.
 - `notes/INDEX.md`: Enlazado en el índice de la bóveda.
