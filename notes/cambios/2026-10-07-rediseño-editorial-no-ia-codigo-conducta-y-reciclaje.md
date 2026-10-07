@@ -63,13 +63,17 @@ Asimismo, en `codigo-conducta.blade.php`, se solicitó devolver la imagen de la 
   - `resources/views/Novedades.blade.php`: Listado de novedades.
   - `resources/views/components/novedades.blade.php`: Componente carrusel de novedades.
 
+### H. Unificación de Bloqueo de Precios B2B en Catálogo
+- **Consistencia Visual para No Autenticados:** Se modificó la condición en `resources/views/partials/catalogo-products.blade.php` para que **todas** las tarjetas de producto muestren la caja punteada `"Precios exclusivos B2B / Ingresa aquí para ver"` si el usuario no ha iniciado sesión, independientemente de si el producto tiene o no precio registrado.
+- **Visualización Condicional Post-Login:** Una vez que el cliente inicia sesión, si el producto tiene precio especial se le muestra el monto en dólares y soles; si no tiene precio registrado, recién en ese momento se visualiza `(A IMPORTAR)`, manteniendo la homogeneidad y estética del catálogo.
+
 ---
 
 ## 3. Archivos Modificados
 - `resources/views/codigo-conducta.blade.php`: Listado limpio de títulos de artículos, metadatos simplificados, ISO 37001:2025 y remoción de textos redundantes.
 - `resources/views/reciclaje.blade.php`: Maquetación editorial, banner luminoso enmarcado, cita sin borde verde y ancho ampliado a 1400px.
 - `resources/views/welcome.blade.php`: Reemplazo de "A cotizar" por "A IMPORTAR".
-- `resources/views/partials/catalogo-products.blade.php`: Reemplazo de "(A cotizar)" y "A cotizar" por "A IMPORTAR".
+- `resources/views/partials/catalogo-products.blade.php`: Reemplazo de "A cotizar" por "A IMPORTAR" y unificación de caja B2B bloqueada para todas las fichas sin login.
 - `resources/views/Novedades.blade.php`: Reemplazo de "A cotizar" por "A IMPORTAR".
 - `resources/views/components/novedades.blade.php`: Reemplazo de "A cotizar" por "A IMPORTAR".
 - `notes/INDEX.md`: Enlazado en el índice de la bóveda.

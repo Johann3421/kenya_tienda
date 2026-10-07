@@ -142,12 +142,8 @@
             @endif
 
             <div class="product-card-footer">
-                @if(empty($producto->precio_especial))
-                    <div class="price-no-especial" style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 2px; margin-bottom: 12px; text-align: left;">
-                        (A IMPORTAR)
-                    </div>
-                @else
-                    @if(Auth::guard('cliente')->check())
+                @if(Auth::guard('cliente')->check())
+                    @if(!empty($producto->precio_especial))
                         <div class="product-prices-wrapper" style="margin-bottom: 12px; text-align: left; width: 100%;">
                             <div class="price-especial" style="font-size: 1.25rem; font-weight: 700; color: #ee7c31; margin-bottom: 2px;">
                                 $ {{ number_format($producto->precio_especial, 2) }}
@@ -157,11 +153,15 @@
                             </div>
                         </div>
                     @else
-                        <div class="product-prices-locked" style="background: #f8f9fa; border: 1px dashed #ee7c31; border-radius: 6px; padding: 8px; margin-bottom: 12px; font-size: 0.8rem; color: #ee7c31; text-align: center; width: 100%; font-weight: 500;">
-                            <i class="fa fa-lock"></i> Precios exclusivos B2B <br>
-                            <a href="{{ url('/acceso-clientes') }}" style="color: #0056b3; text-decoration: underline; font-weight: 600;">Ingresa aquí</a> para ver
+                        <div class="price-no-especial" style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 2px; margin-bottom: 12px; text-align: left;">
+                            (A IMPORTAR)
                         </div>
                     @endif
+                @else
+                    <div class="product-prices-locked" style="background: #f8f9fa; border: 1px dashed #ee7c31; border-radius: 6px; padding: 8px; margin-bottom: 12px; font-size: 0.8rem; color: #ee7c31; text-align: center; width: 100%; font-weight: 500;">
+                        <i class="fa fa-lock"></i> Precios exclusivos B2B <br>
+                        <a href="{{ url('/acceso-clientes') }}" style="color: #0056b3; text-decoration: underline; font-weight: 600;">Ingresa aquí</a> para ver
+                    </div>
                 @endif
 
                 <div class="product-stock-wrapper">
