@@ -318,62 +318,6 @@
             box-sizing: border-box;
         }
 
-        /* Índice lateral desplegable / scrollable */
-        #cc-page .cc-toc {
-            border: 1px solid var(--cc-rule);
-            border-radius: 4px;
-            padding: 16px 18px;
-            background: #ffffff;
-            max-height: 320px;
-            overflow-y: auto;
-        }
-        #cc-page .cc-toc::-webkit-scrollbar {
-            width: 5px;
-        }
-        #cc-page .cc-toc::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 3px;
-        }
-        #cc-page .cc-toc-title {
-            font-size: .72rem;
-            font-weight: 700;
-            letter-spacing: .12em;
-            text-transform: uppercase;
-            color: var(--cc-muted);
-            margin: 0 0 10px;
-        }
-        #cc-page .cc-toc ol {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        #cc-page .cc-toc a {
-            display: flex;
-            gap: 8px;
-            padding: 5px 0;
-            font-size: .82rem;
-            line-height: 1.35;
-            color: var(--cc-muted);
-            text-decoration: none;
-            border-bottom: 1px solid #f9fafb;
-            transition: color .15s ease;
-        }
-        #cc-page .cc-toc a b {
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-            min-width: 20px;
-            color: #9ca3af;
-        }
-        #cc-page .cc-toc a:hover {
-            color: var(--cc-ink);
-        }
-        #cc-page .cc-toc a.is-active {
-            color: var(--cc-accent);
-            font-weight: 600;
-        }
-        #cc-page .cc-toc a.is-active b {
-            color: var(--cc-accent);
-        }
 
         /* ── Responsive ── */
         @media (max-width: 991px) {
@@ -499,45 +443,8 @@
                         </div>
                         <a class="cc-btn cc-btn-sm" href="mailto:acuerdos.marco@kenya.com.pe?subject=Reporte%20confidencial%20-%20C%C3%B3digo%20de%20Conducta">Enviar reporte confidencial</a>
                     </div>
-
-                    <nav class="cc-toc" aria-label="Índice del código">
-                        <p class="cc-toc-title">Índice de Artículos</p>
-                        <ol>
-                            @foreach ($articulos as $i => $art)
-                                <li><a href="#art-{{ $i + 1 }}"><b>{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</b><span>{{ $art[0] }}</span></a></li>
-                            @endforeach
-                            <li><a href="#canal-denuncias"><b>—</b><span>Cómo reportar</span></a></li>
-                        </ol>
-                    </nav>
                 </aside>
             </div>
         </main>
     </div>
-
-    <script>
-        (function () {
-            var links = document.querySelectorAll('#cc-page .cc-toc a');
-            if (!links.length || !('IntersectionObserver' in window)) return;
-            var map = {};
-            links.forEach(function (a) {
-                var href = a.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    map[href.slice(1)] = a;
-                }
-            });
-            var observer = new IntersectionObserver(function (entries) {
-                entries.forEach(function (e) {
-                    if (!e.isIntersecting) return;
-                    links.forEach(function (a) { a.classList.remove('is-active'); });
-                    if (map[e.target.id]) {
-                        map[e.target.id].classList.add('is-active');
-                    }
-                });
-            }, { rootMargin: '-15% 0px -75% 0px' });
-            Object.keys(map).forEach(function (id) {
-                var el = document.getElementById(id);
-                if (el) observer.observe(el);
-            });
-        })();
-    </script>
 @endsection

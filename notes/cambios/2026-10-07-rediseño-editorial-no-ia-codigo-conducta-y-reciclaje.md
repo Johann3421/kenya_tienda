@@ -46,9 +46,13 @@ Asimismo, en `codigo-conducta.blade.php`, se solicitó devolver la imagen de la 
 - **Ampliación de Envoltorios:** Se ampliaron `#rc-page .rc-wrap`, `#rc-page .rc-hero-inner`, `#cc-page .cc-wrap` y `#cc-page .cc-hero-inner` de `1200px` a `1400px` para aprovechar pantallas de alta resolución.
 - **Resolución de Error Git LFS:** Se desactivó la verificación de locks del API de GitHub (`git config lfs.https://github.com/Johann3421/kenya_tienda.git/info/lfs.locksverify false`) permitiendo completar el push del commit `cb9e134`.
 
+### E. Depuración de la Barra Lateral en Código de Conducta
+- **Eliminación de `cc-toc`:** Se eliminó la caja de índice con scrollbar interno (`<nav class="cc-toc">`), sus estilos CSS y el observador JS (`IntersectionObserver`).
+- **Enfoque Institucional:** La barra lateral sticky queda ahora 100% limpia y enfocada en sus dos pilares clave: la certificación ISO 37001 prominente y la caja de canal ético confidencial con accesos directos de contacto.
+
 ---
 
 ## 3. Archivos Modificados
-- `resources/views/codigo-conducta.blade.php`: Rediseño editorial, barra lateral sticky para `iso-37001.png` y ancho máximo ampliado a 1400px.
+- `resources/views/codigo-conducta.blade.php`: Rediseño editorial, barra lateral sticky limpia (sin `cc-toc`) enfocada en ISO 37001 y canal confidencial.
 - `resources/views/reciclaje.blade.php`: Maquetación editorial, banner luminoso enmarcado, cita sin borde verde y ancho ampliado a 1400px.
 - `notes/INDEX.md`: Enlazado en el índice de la bóveda.
