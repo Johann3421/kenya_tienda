@@ -20,856 +20,524 @@
     </nav>
 @endsection
 
+@php
+    $articulos = [
+        ['Objetivos', 'Definir las reglas de integridad que guían las decisiones de todas las personas que forman parte de KENYA TECHNOLOGY y prevenir cualquier conducta indebida en el desarrollo de nuestras operaciones.'],
+        ['Alcance', 'Aplica a accionistas, directivos y trabajadores, y se extiende a proveedores, distribuidores y terceros que actúan en nombre de la marca o representan a la empresa ante clientes y el Estado.'],
+        ['Nuestros valores', 'La base ética y operacional de cada relación con empresas privadas y entidades del Estado peruano:', ['Actitud', 'Ética', 'Transparencia', 'Responsabilidad']],
+        ['Cumplimiento de las leyes', 'Cumplimos estrictamente la legislación peruana, la Ley N° 30424 sobre responsabilidad administrativa de personas jurídicas y la normativa de contrataciones del Estado. Ninguna meta comercial o de ventas justifica actuar fuera de la ley.'],
+        ['Integridad y prevención del soborno', 'Está terminantemente prohibido ofrecer, prometer, entregar, solicitar o aceptar pagos indebidos, dádivas o ventajas de cualquier índole para obtener contratos, licitaciones o decisiones favorables en el sector público o privado.'],
+        ['Conflictos de interés', 'Toda situación en la que un interés personal, comercial o familiar pueda interferir con el juicio objetivo y las decisiones de trabajo debe declararse formalmente y por escrito antes de realizar cualquier gestión.'],
+        ['Regalos y atenciones', 'No se entregan ni aceptan regalos, viajes, agasajos o atenciones que puedan comprometer la imparcialidad o influir en una compra o adjudicación. Solo se permite material publicitario o promocional de valor simbólico e institucional.'],
+        ['Relación con proveedores y clientes', 'Elegimos a nuestros proveedores mediante criterios objetivos de calidad, precio y solvencia técnica. A nuestros clientes les brindamos información técnica veraz, asesoría honesta y cumplimos rigurosamente los términos de garantía ofrecidos.'],
+        ['Relación con autoridades', 'El trato con funcionarios públicos, inspectores y entidades del Estado es transparente, respetuoso, debidamente documentado por los canales formales y a cargo exclusivamente de personal expresamente autorizado por la empresa.'],
+        ['Protección de información y datos', 'Resguardamos la confidencialidad de la información estratégica de la empresa y los datos de nuestros clientes conforme a la Ley N° 29733 de Protección de Datos Personales y las mejores prácticas de seguridad de la información.'],
+        ['Uso de bienes y recursos de la empresa', 'Equipos de cómputo, vehículos, inventarios, instalaciones y software corporativo se destinan únicamente al desarrollo de labores profesionales autorizadas, asegurando su debido cuidado frente a pérdidas o mal uso.'],
+        ['Canal de consultas y denuncias', 'Cualquier colaborador, cliente o proveedor puede consultar dudas o reportar de forma confidencial posibles incumplimientos éticos a través de nuestros canales oficiales de ética y cumplimiento.'],
+        ['Prohibición de represalias', 'Garantizamos que ninguna persona que comunique una inquietud o denuncie una conducta indebida de buena fe será sometida a despidos, sanciones, hostigamiento ni perjuicio alguno en su relación con la empresa.'],
+        ['Incumplimientos y medidas disciplinarias', 'Las infracciones a este código son investigadas garantizando el debido proceso y son sancionadas con proporcionalidad a su gravedad, sin perjuicio de interponer las acciones civiles y penales que la ley determine.'],
+        ['Capacitación y actualización', 'Desarrollamos programas periódicos de capacitación y sensibilización en prevención del soborno y ética corporativa, revisando y actualizando continuamente nuestras políticas para asegurar su pertinencia.'],
+        ['Declaración de compromiso', 'Cada colaborador, directivo y aliado comercial suscribe formalmente su conocimiento, adhesión y compromiso de cumplimiento con este Código de Conducta al integrarse a KENYA TECHNOLOGY.'],
+    ];
+@endphp
+
 @section('content')
     <style>
-        :root {
-            --conducta-orange: #f26522;
-            --conducta-orange-dark: #d95315;
-            --conducta-orange-soft: #fff4ed;
-            --conducta-navy: #1b2633;
-            --conducta-ink: #0f172a;
-            --conducta-text: #334155;
-            --conducta-muted: #64748b;
-            --conducta-line: #e2e8f0;
-            --conducta-bg-card: #f8fafc;
+        #cc-page {
+            --cc-accent: #f26522;
+            --cc-accent-dark: #c9501a;
+            --cc-navy: #1b2633;
+            --cc-ink: #111827;
+            --cc-text: #374151;
+            --cc-muted: #6b7280;
+            --cc-rule: #e5e7eb;
+            --cc-paper: #fafaf9;
+            background: #fff;
+            color: var(--cc-text);
+            line-height: 1.7;
         }
 
-        #codigo-conducta-page {
-            background-color: #ffffff;
-            color: var(--conducta-text);
-            line-height: 1.6;
-            font-family: inherit;
-        }
-
-        /* ── Hero Banner ── */
-        #codigo-conducta-page .hero-banner {
-            position: relative;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.65)), url('{{ asset("banersomos.png?v=2") }}');
+        /* Hero (patrón unificado del sitio) */
+        #cc-page .cc-hero {
+            background-image: linear-gradient(rgba(255,255,255,.7), rgba(255,255,255,.7)), url('{{ asset("banersomos.png?v=2") }}');
             background-size: cover;
             background-position: right;
-            color: var(--conducta-ink);
-            text-align: left;
-            padding: 70px 15px;
-            margin-bottom: 0;
-            border-bottom: 1px solid var(--conducta-line);
+            padding: 64px 15px;
+            border-bottom: 1px solid var(--cc-rule);
         }
-
-        #codigo-conducta-page .hero-content {
-            position: relative;
-            z-index: 2; 
-            max-width: 1240px;
-            margin: 0 auto;
-            width: 100%;
-            padding: 0 10px;
-        }
-
-        #codigo-conducta-page .hero-iso-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--conducta-navy);
-            color: #ffffff;
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            padding: 6px 14px;
-            border-radius: 999px;
-            margin-bottom: 14px;
-        }
-
-        #codigo-conducta-page .hero-iso-tag i {
-            color: var(--conducta-orange);
-        }
-
-        #codigo-conducta-page .hero-content h1 {
-            font-size: 2.8rem;
-            margin: 0 0 8px;
+        #cc-page .cc-hero-inner { max-width: 1200px; margin: 0 auto; padding: 0 10px; }
+        #cc-page .cc-hero h1 {
+            margin: 0 0 6px;
+            font-size: 2.6rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
-            color: var(--conducta-ink);
+            letter-spacing: 1px;
+            color: var(--cc-ink);
             line-height: 1.15;
         }
+        #cc-page .cc-hero p { margin: 0; font-size: 1.1rem; color: var(--cc-muted); }
 
-        #codigo-conducta-page .hero-content p {
-            font-size: 1.15rem;
-            font-weight: 500;
+        #cc-page .cc-wrap { max-width: 1200px; margin: 0 auto; padding: 28px 20px 96px; }
+
+        #cc-page .cc-crumbs { font-size: .85rem; color: var(--cc-muted); margin-bottom: 36px; }
+        #cc-page .cc-crumbs a { color: var(--cc-muted); text-decoration: none; }
+        #cc-page .cc-crumbs a:hover { color: var(--cc-accent); }
+        #cc-page .cc-crumbs span { margin: 0 6px; color: #d1d5db; }
+
+        /* Cabecera del documento */
+        #cc-page .cc-head {
+            padding-bottom: 28px;
+            border-bottom: 2px solid var(--cc-ink);
+        }
+        #cc-page .cc-kicker {
+            display: block;
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--cc-accent);
+            margin-bottom: 12px;
+        }
+        #cc-page .cc-head h2 {
+            margin: 0 0 14px;
+            font-size: 2.3rem;
+            line-height: 1.2;
+            font-weight: 800;
+            color: var(--cc-ink);
+            letter-spacing: -.02em;
+        }
+        #cc-page .cc-head .cc-lead {
             margin: 0;
-            color: var(--conducta-muted);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            max-width: 72ch;
+            color: #4b5563;
         }
 
-        /* ── Contenedor Editorial ── */
-        .editorial-wrapper {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 34px 20px 80px;
-        }
-
-        /* Migas de pan */
-        .conducta-crumbs {
-            font-size: 0.88rem;
-            color: var(--conducta-muted);
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .conducta-crumbs a {
-            color: var(--conducta-muted);
-            text-decoration: none;
-            transition: color 0.15s ease;
-        }
-
-        .conducta-crumbs a:hover {
-            color: var(--conducta-orange);
-        }
-
-        .conducta-crumbs .sep {
-            color: #cbd5e1;
-        }
-
-        .conducta-crumbs .current {
-            color: var(--conducta-ink);
-            font-weight: 600;
-        }
-
-        /* Grid a 2 columnas */
-        .editorial-grid {
+        /* Ficha técnica del documento */
+        #cc-page .cc-meta {
             display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+            grid-template-columns: repeat(4, 1fr);
+            margin: 0 0 54px;
+            border-bottom: 1px solid var(--cc-rule);
+        }
+        #cc-page .cc-meta div { padding: 18px 20px 18px 0; }
+        #cc-page .cc-meta div + div { padding-left: 20px; border-left: 1px solid var(--cc-rule); }
+        #cc-page .cc-meta dt {
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--cc-muted);
+            margin-bottom: 4px;
+        }
+        #cc-page .cc-meta dd { margin: 0; font-weight: 600; color: var(--cc-ink); font-size: .95rem; }
+
+        /* Cuerpo principal a 2 columnas: Artículos (izquierda) + Sidebar con Imagen Lateral (derecha) */
+        #cc-page .cc-body {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 380px;
             gap: 56px;
             align-items: start;
         }
 
-        /* Columna Izquierda: Contenido y Lineamientos */
-        .editorial-main .conducta-eyebrow {
-            display: inline-block;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--conducta-orange);
-            margin-bottom: 8px;
+        /* Columna Izquierda: Artículos */
+        #cc-page .cc-content {
+            min-width: 0;
         }
 
-        .editorial-main h2.main-title {
-            font-size: 1.95rem;
-            line-height: 1.25;
-            color: var(--conducta-ink);
-            margin: 0 0 16px;
-            font-weight: 800;
+        #cc-page .cc-art {
+            display: grid;
+            grid-template-columns: 60px minmax(0, 1fr);
+            gap: 0 8px;
+            padding: 28px 0;
+            border-bottom: 1px solid var(--cc-rule);
+            scroll-margin-top: 24px;
         }
-
-        .editorial-main .lead-text {
-            color: var(--conducta-text);
-            font-size: 1.05rem;
-            line-height: 1.75;
-            margin: 0 0 26px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--conducta-line);
-        }
-
-        /* Cabecera de controles del acordeón */
-        .accordion-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-
-        .accordion-toolbar .count-tag {
-            font-size: 0.86rem;
-            font-weight: 600;
-            color: var(--conducta-muted);
-        }
-
-        .btn-toggle-all {
-            background: none;
-            border: 0;
-            color: var(--conducta-orange);
-            font-weight: 700;
-            cursor: pointer;
-            padding: 6px 0;
-            font-size: 0.88rem;
-            font-family: inherit;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: color 0.15s ease;
-        }
-
-        .btn-toggle-all:hover {
-            color: var(--conducta-orange-dark);
-            text-decoration: underline;
-        }
-
-        /* Lista Acordeón */
-        .conducta-accordion-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            border-top: 1px solid var(--conducta-line);
-        }
-
-        .conducta-accordion-item {
-            border-bottom: 1px solid var(--conducta-line);
-            transition: background-color 0.2s ease;
-        }
-
-        .conducta-accordion-item details {
-            width: 100%;
-        }
-
-        .conducta-accordion-item summary {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 8px;
-            cursor: pointer;
-            list-style: none;
-            user-select: none;
-        }
-
-        .conducta-accordion-item summary::-webkit-details-marker {
-            display: none;
-        }
-
-        .conducta-accordion-item .num-badge {
+        #cc-page .cc-art:first-child { padding-top: 0; }
+        #cc-page .cc-art-num {
+            font-size: 1.6rem;
+            font-weight: 300;
+            line-height: 1.2;
+            color: #9ca3af;
             font-variant-numeric: tabular-nums;
-            font-weight: 800;
-            color: var(--conducta-orange);
-            min-width: 28px;
-            font-size: 0.98rem;
-            letter-spacing: -0.5px;
         }
-
-        .conducta-accordion-item .item-title {
-            flex: 1;
+        #cc-page .cc-art h3 {
+            margin: 0 0 8px;
+            font-size: 1.18rem;
             font-weight: 700;
-            font-size: 1.02rem;
-            color: var(--conducta-ink);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: color 0.15s ease;
+            color: var(--cc-ink);
+            line-height: 1.35;
         }
+        #cc-page .cc-art p { margin: 0; max-width: 68ch; }
+        #cc-page .cc-art ul { margin: 12px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0; }
+        #cc-page .cc-art ul li { font-weight: 600; color: var(--cc-ink); }
+        #cc-page .cc-art ul li + li::before { content: '·'; margin: 0 12px; color: var(--cc-accent); }
 
-        .conducta-accordion-item .item-title i.item-icon {
-            font-size: 0.9rem;
-            color: var(--conducta-muted);
-            transition: color 0.15s ease;
-        }
-
-        .conducta-accordion-item summary i.chevron-icon {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.15s;
-        }
-
-        .conducta-accordion-item summary:hover .item-title {
-            color: var(--conducta-orange);
-        }
-
-        .conducta-accordion-item summary:hover .item-icon {
-            color: var(--conducta-orange);
-        }
-
-        .conducta-accordion-item details[open] {
-            background-color: var(--conducta-bg-card);
-        }
-
-        .conducta-accordion-item details[open] summary .item-title {
-            color: var(--conducta-orange-dark);
-        }
-
-        .conducta-accordion-item details[open] summary .item-icon {
-            color: var(--conducta-orange);
-        }
-
-        .conducta-accordion-item details[open] summary i.chevron-icon {
-            transform: rotate(180deg);
-            color: var(--conducta-orange);
-        }
-
-        /* Contenido interior del acordeón */
-        .conducta-accordion-item .accordion-body {
-            padding: 0 12px 20px 52px;
-            font-size: 0.96rem;
-            line-height: 1.75;
-            color: var(--conducta-text);
-        }
-
-        .conducta-accordion-item .accordion-body p {
-            margin: 0;
-        }
-
-        .conducta-accordion-item .valores-list {
-            margin: 10px 0 0;
+        #cc-page .cc-art.is-key {
+            background: var(--cc-paper);
+            margin: 0 -20px;
             padding-left: 20px;
-            list-style-type: square;
+            padding-right: 20px;
+            border-left: 3px solid var(--cc-accent);
         }
+        #cc-page .cc-art.is-key .cc-art-num { color: var(--cc-accent); }
+        #cc-page .cc-note { display: block; margin-top: 10px; font-size: .82rem; color: var(--cc-muted); }
 
-        .conducta-accordion-item .valores-list li {
-            margin-bottom: 4px;
-            font-weight: 600;
-            color: var(--conducta-ink);
+        /* Canal de denuncias en bloque final */
+        #cc-page .cc-report {
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 2px solid var(--cc-ink);
+            scroll-margin-top: 24px;
         }
-
-        /* Resalte para punto 05 (Prevención del soborno e ISO 37001) */
-        .conducta-accordion-item.iso-highlight {
-            border-left: 3px solid var(--conducta-orange);
-            padding-left: 6px;
-        }
-
-        .conducta-accordion-item.iso-highlight .badge-iso-chip {
-            display: inline-block;
-            background: var(--conducta-orange-soft);
-            color: var(--conducta-orange-dark);
-            font-size: 0.72rem;
+        #cc-page .cc-report h3 { margin: 0 0 10px; font-size: 1.55rem; font-weight: 800; color: var(--cc-ink); letter-spacing: -.01em; }
+        #cc-page .cc-report > p { margin: 0 0 24px; max-width: 66ch; }
+        #cc-page .cc-table { width: 100%; border-collapse: collapse; font-size: .95rem; margin-bottom: 24px; }
+        #cc-page .cc-table th {
+            text-align: left;
+            font-size: .72rem;
             font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-left: 6px;
+            letter-spacing: .1em;
             text-transform: uppercase;
+            color: var(--cc-muted);
+            padding: 0 16px 10px 0;
+            border-bottom: 1px solid var(--cc-ink);
         }
+        #cc-page .cc-table td { padding: 14px 16px 14px 0; border-bottom: 1px solid var(--cc-rule); vertical-align: top; }
+        #cc-page .cc-table td:first-child { font-weight: 600; color: var(--cc-ink); white-space: nowrap; }
+        #cc-page .cc-table a { color: var(--cc-ink); text-decoration: underline; text-decoration-color: var(--cc-accent); text-underline-offset: 3px; }
+        #cc-page .cc-table a:hover { color: var(--cc-accent); }
 
-        /* Columna Derecha: Sticky Sidebar */
-        .editorial-sidebar {
+        #cc-page .cc-btn {
+            display: inline-block;
+            background: var(--cc-navy);
+            color: #fff;
+            padding: 13px 24px;
+            font-weight: 600;
+            font-size: .95rem;
+            text-decoration: none;
+            border-radius: 2px;
+            transition: background .15s ease;
+        }
+        #cc-page .cc-btn:hover { background: var(--cc-accent); color: #fff; }
+        #cc-page .cc-fine { margin: 14px 0 0; font-size: .84rem; color: var(--cc-muted); }
+
+        /* Columna Derecha: Sidebar Lateral Fija (Sticky) con la Imagen ISO 37001 Prominente */
+        #cc-page .cc-sidebar {
             position: sticky;
-            top: 30px;
+            top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .iso-figure-card {
+        #cc-page .cc-iso-card {
             margin: 0;
             background: #ffffff;
-            border-radius: 14px;
+            border: 1px solid var(--cc-rule);
+            border-radius: 6px;
             overflow: hidden;
-            border: 1px solid var(--conducta-line);
-            box-shadow: 0 16px 36px -16px rgba(15, 23, 42, 0.15);
+            box-shadow: 0 10px 25px -10px rgba(17, 24, 39, 0.08);
         }
-
-        .iso-figure-card img {
+        #cc-page .cc-iso-card img {
             display: block;
             width: 100%;
             height: auto;
-            object-fit: cover;
-            background-color: #f1f5f9;
+            background: #fafaf9;
+            padding: 18px;
+            box-sizing: border-box;
         }
-
-        .iso-figure-caption {
-            background: var(--conducta-navy);
-            color: #e2e8f0;
-            font-size: 0.84rem;
+        #cc-page .cc-iso-card figcaption {
+            background: var(--cc-navy);
+            color: #f3f4f6;
             padding: 12px 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 500;
-        }
-
-        .iso-figure-caption i {
-            color: var(--conducta-orange);
-            font-size: 1rem;
-        }
-
-        /* Tarjeta de Denuncias / Canal Ético */
-        .canal-reporte-card {
-            margin-top: 22px;
-            padding: 24px;
-            border: 1px solid var(--conducta-line);
-            border-left: 4px solid var(--conducta-orange);
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: 0 8px 24px -12px rgba(15, 23, 42, 0.08);
-        }
-
-        .canal-reporte-card h3 {
-            margin: 0 0 8px;
-            font-size: 1.15rem;
-            color: var(--conducta-ink);
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .canal-reporte-card h3 i {
-            color: var(--conducta-orange);
-        }
-
-        .canal-reporte-card p {
-            margin: 0 0 18px;
-            font-size: 0.92rem;
-            color: var(--conducta-muted);
-            line-height: 1.6;
-        }
-
-        .canal-reporte-card .canal-actions {
+            font-size: .84rem;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 2px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        #cc-page .cc-iso-card figcaption strong {
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: .02em;
+        }
+        #cc-page .cc-iso-card figcaption span {
+            color: #9ca3af;
+            font-size: .8rem;
         }
 
-        .canal-btn {
+        #cc-page .cc-sidebar-box {
+            background: var(--cc-paper);
+            border: 1px solid var(--cc-rule);
+            border-left: 3px solid var(--cc-accent);
+            border-radius: 4px;
+            padding: 20px;
+        }
+        #cc-page .cc-sidebar-box-title {
+            margin: 0 0 6px;
+            font-size: .95rem;
+            font-weight: 700;
+            color: var(--cc-ink);
+        }
+        #cc-page .cc-sidebar-box-desc {
+            margin: 0 0 14px;
+            font-size: .85rem;
+            color: var(--cc-muted);
+            line-height: 1.5;
+        }
+        #cc-page .cc-sidebar-contacts {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        #cc-page .cc-sidebar-contacts a {
+            font-size: .84rem;
+            color: var(--cc-ink);
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 11px 18px;
-            font-size: 0.92rem;
-            font-weight: 700;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .canal-btn-primary {
-            background-color: var(--conducta-orange);
-            color: #ffffff;
-            border: 1px solid var(--conducta-orange);
-        }
-
-        .canal-btn-primary:hover {
-            background-color: var(--conducta-orange-dark);
-            border-color: var(--conducta-orange-dark);
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-
-        .canal-btn-outline {
-            background-color: transparent;
-            color: var(--conducta-navy);
-            border: 1px solid var(--conducta-line);
-        }
-
-        .canal-btn-outline:hover {
-            background-color: var(--conducta-bg-card);
-            border-color: var(--conducta-navy);
-            color: var(--conducta-ink);
-        }
-
-        .canal-seguridad-note {
-            display: flex;
-            align-items: center;
             gap: 8px;
-            margin-top: 14px;
-            font-size: 0.8rem;
-            color: var(--conducta-muted);
+        }
+        #cc-page .cc-sidebar-contacts a:hover {
+            color: var(--cc-accent);
+        }
+        #cc-page .cc-sidebar-contacts a i {
+            color: var(--cc-accent);
+            font-size: .8rem;
+            width: 14px;
+        }
+        #cc-page .cc-btn-sm {
+            display: block;
+            text-align: center;
+            padding: 10px 14px;
+            font-size: .86rem;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .canal-seguridad-note i {
-            color: #10b981;
+        /* Índice lateral desplegable / scrollable */
+        #cc-page .cc-toc {
+            border: 1px solid var(--cc-rule);
+            border-radius: 4px;
+            padding: 16px 18px;
+            background: #ffffff;
+            max-height: 320px;
+            overflow-y: auto;
+        }
+        #cc-page .cc-toc::-webkit-scrollbar {
+            width: 5px;
+        }
+        #cc-page .cc-toc::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+        #cc-page .cc-toc-title {
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--cc-muted);
+            margin: 0 0 10px;
+        }
+        #cc-page .cc-toc ol {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        #cc-page .cc-toc a {
+            display: flex;
+            gap: 8px;
+            padding: 5px 0;
+            font-size: .82rem;
+            line-height: 1.35;
+            color: var(--cc-muted);
+            text-decoration: none;
+            border-bottom: 1px solid #f9fafb;
+            transition: color .15s ease;
+        }
+        #cc-page .cc-toc a b {
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            min-width: 20px;
+            color: #9ca3af;
+        }
+        #cc-page .cc-toc a:hover {
+            color: var(--cc-ink);
+        }
+        #cc-page .cc-toc a.is-active {
+            color: var(--cc-accent);
+            font-weight: 600;
+        }
+        #cc-page .cc-toc a.is-active b {
+            color: var(--cc-accent);
         }
 
         /* ── Responsive ── */
         @media (max-width: 991px) {
-            .editorial-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-
-            .editorial-sidebar {
-                position: static;
-                order: -1;
-            }
-
-            #codigo-conducta-page .hero-content h1 {
-                font-size: 2.2rem;
-            }
-
-            .editorial-main h2.main-title {
-                font-size: 1.65rem;
-            }
-
-            .conducta-accordion-item .accordion-body {
-                padding-left: 20px;
-            }
+            #cc-page .cc-hero h1 { font-size: 2rem; }
+            #cc-page .cc-head h2 { font-size: 1.9rem; }
+            #cc-page .cc-meta { grid-template-columns: 1fr 1fr; }
+            #cc-page .cc-meta div:nth-child(3) { padding-left: 0; border-left: 0; }
+            #cc-page .cc-body { grid-template-columns: 1fr; gap: 40px; }
+            #cc-page .cc-sidebar { position: static; max-width: 480px; margin: 0 auto; width: 100%; }
+            #cc-page .cc-art { grid-template-columns: 48px minmax(0, 1fr); }
+            #cc-page .cc-art.is-key { margin: 0 -20px; padding-left: 20px; padding-right: 20px; }
+        }
+        @media (max-width: 575px) {
+            #cc-page .cc-table thead { display: none; }
+            #cc-page .cc-table td { display: block; padding: 2px 0; border: 0; }
+            #cc-page .cc-table tr { display: block; padding: 12px 0; border-bottom: 1px solid var(--cc-rule); }
         }
     </style>
 
-    <div id="codigo-conducta-page">
-        <!-- Hero Banner Oficial -->
-        <section class="hero-banner">
-            <div class="hero-content">
-                <span class="hero-iso-tag">
-                    <i class="fa-solid fa-award"></i> Certificación ISO 37001:2016
-                </span>
+    <div id="cc-page">
+        <section class="cc-hero">
+            <div class="cc-hero-inner">
                 <h1>Código de Conducta</h1>
                 <p>Sistema de Gestión Antisoborno y Principios de Integridad Empresarial</p>
             </div>
         </section>
 
-        <!-- Bloque Editorial Principal -->
-        <main class="editorial-wrapper">
-            <!-- Migas de pan -->
-            <nav class="conducta-crumbs" aria-label="Navegación">
-                <a href="{{ url('/') }}"><i class="fa-solid fa-house"></i> Inicio</a>
-                <span class="sep">/</span>
-                <span>Nuestra Empresa</span>
-                <span class="sep">/</span>
-                <span class="current">Código de Conducta</span>
+        <main class="cc-wrap">
+            <nav class="cc-crumbs" aria-label="Ruta de navegación">
+                <a href="{{ url('/') }}">Inicio</a><span>/</span>Nuestra Empresa<span>/</span><strong>Código de Conducta</strong>
             </nav>
 
-            <div class="editorial-grid">
-                <!-- Columna Izquierda: Introducción y 16 Principios -->
-                <section class="editorial-main">
-                    <span class="conducta-eyebrow">Nuestra Empresa</span>
-                    <h2 class="main-title">Código de Conducta de KENYA TECHNOLOGY</h2>
-                    <p class="lead-text">
-                        Prevenir conductas indebidas, promover la integridad y establecer reglas claras para las relaciones con clientes, proveedores, trabajadores, autoridades y otros grupos de interés, teniendo en cuenta:
-                    </p>
+            <header class="cc-head">
+                <span class="cc-kicker">Nuestra Empresa · Integridad Corporativa</span>
+                <h2>Código de Conducta de KENYA TECHNOLOGY</h2>
+                <p class="cc-lead">
+                    Prevenir conductas indebidas, promover la integridad y establecer reglas claras para las relaciones con clientes, proveedores, trabajadores, autoridades y otros grupos de interés, teniendo en cuenta los siguientes lineamientos institucionales.
+                </p>
+            </header>
 
-                    <div class="accordion-toolbar">
-                        <span class="count-tag"><i class="fa-solid fa-list-check"></i> 16 lineamientos institucionales</span>
-                        <button type="button" class="btn-toggle-all" id="btnToggleAll">
-                            <i class="fa-solid fa-up-down-left-right"></i> <span id="toggleText">Mostrar todos los detalles</span>
-                        </button>
-                    </div>
+            <dl class="cc-meta">
+                <div><dt>Norma de referencia</dt><dd>ISO 37001:2016</dd></div>
+                <div><dt>Marco legal</dt><dd>Ley N° 30424</dd></div>
+                <div><dt>Aplica a</dt><dd>Colaboradores y aliados</dd></div>
+                <div><dt>Lineamientos</dt><dd>{{ count($articulos) }} artículos</dd></div>
+            </dl>
 
-                    <ol class="conducta-accordion-list" id="conductaAccordionList">
-                        <!-- 01 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">01</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-bullseye item-icon"></i>
-                                        Objetivos
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Definir las reglas de integridad que guían las decisiones de todas las personas que forman parte de KENYA TECHNOLOGY y prevenir cualquier conducta indebida en el desarrollo de nuestras operaciones.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 02 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">02</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-users item-icon"></i>
-                                        Alcance
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Aplica a accionistas, directivos y trabajadores, y se extiende a proveedores, distribuidores y terceros que actúan en nombre de la marca o representan a la empresa ante clientes y el Estado.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 03 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">03</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-hand-holding-heart item-icon"></i>
-                                        Nuestros valores
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>La base ética y operacional de cada relación con empresas privadas y entidades del Estado peruano:</p>
-                                    <ul class="valores-list">
-                                        <li>Actitud</li>
-                                        <li>Ética</li>
-                                        <li>Transparencia</li>
-                                        <li>Responsabilidad</li>
+            <div class="cc-body">
+                <!-- Columna Izquierda: Los 16 Artículos + Detalle del Canal -->
+                <div class="cc-content">
+                    @foreach ($articulos as $i => $art)
+                        <section class="cc-art {{ $i === 4 ? 'is-key' : '' }}" id="art-{{ $i + 1 }}">
+                            <span class="cc-art-num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                            <div>
+                                <h3>{{ $art[0] }}</h3>
+                                <p>{{ $art[1] }}</p>
+                                @isset($art[2])
+                                    <ul>
+                                        @foreach ($art[2] as $valor)
+                                            <li>{{ $valor }}</li>
+                                        @endforeach
                                     </ul>
-                                </div>
-                            </details>
-                        </li>
+                                @endisset
+                                @if ($i === 4)
+                                    <span class="cc-note">Eje central del Sistema de Gestión Antisoborno según ISO 37001:2016.</span>
+                                @endif
+                            </div>
+                        </section>
+                    @endforeach
 
-                        <!-- 04 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">04</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-scale-balanced item-icon"></i>
-                                        Cumplimiento de las leyes
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Cumplimos estrictamente la legislación peruana, la Ley N° 30424 sobre responsabilidad administrativa de personas jurídicas y la normativa de contrataciones del Estado. Ninguna meta comercial o de ventas justifica actuar fuera de la ley.</p>
-                                </div>
-                            </details>
-                        </li>
+                    <section class="cc-report" id="canal-denuncias">
+                        <h3>¿Viste una conducta indebida?</h3>
+                        <p>
+                            Reporta cualquier sospecha de soborno, fraude o incumplimiento de este código. La información se trata con reserva de identidad y nadie será perjudicado por denunciar de buena fe.
+                        </p>
 
-                        <!-- 05 (Destacado ISO 37001) -->
-                        <li class="conducta-accordion-item iso-highlight">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">05</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-shield-halved item-icon" style="color: var(--conducta-orange);"></i>
-                                        Integridad y prevención del soborno
-                                        <span class="badge-iso-chip">ISO 37001</span>
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Está terminantemente prohibido ofrecer, prometer, entregar, solicitar o aceptar pagos indebidos, dádivas o ventajas de cualquier índole para obtener contratos, licitaciones o decisiones favorables en el sector público o privado.</p>
-                                </div>
-                            </details>
-                        </li>
+                        <table class="cc-table">
+                            <thead>
+                                <tr><th>Canal</th><th>Contacto</th><th>Úsalo para</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Correo de cumplimiento</td>
+                                    <td><a href="mailto:acuerdos.marco@kenya.com.pe">acuerdos.marco@kenya.com.pe</a></td>
+                                    <td>Denuncias y consultas sobre ética e integridad</td>
+                                </tr>
+                                <tr>
+                                    <td>Central telefónica</td>
+                                    <td><a href="tel:+51958021778">958 021 778</a></td>
+                                    <td>Orientación previa antes de presentar un reporte</td>
+                                </tr>
+                                <tr>
+                                    <td>Soporte</td>
+                                    <td><a href="mailto:soporte@kenya.com.pe">soporte@kenya.com.pe</a></td>
+                                    <td>Consultas generales sobre este documento</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                        <!-- 06 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">06</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-code-branch item-icon"></i>
-                                        Conflictos de interés
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Toda situación en la que un interés personal, comercial o familiar pueda interferir con el juicio objetivo y las decisiones de trabajo debe declararse formalmente y por escrito antes de realizar cualquier gestión.</p>
-                                </div>
-                            </details>
-                        </li>
+                        <a class="cc-btn" href="mailto:acuerdos.marco@kenya.com.pe?subject=Reporte%20confidencial%20-%20C%C3%B3digo%20de%20Conducta">Enviar un reporte confidencial</a>
+                        <p class="cc-fine">Indica, si puedes, fecha, lugar y personas involucradas. No es obligatorio identificarte.</p>
+                    </section>
+                </div>
 
-                        <!-- 07 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">07</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-gift item-icon"></i>
-                                        Regalos y atenciones
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>No se entregan ni aceptan regalos, viajes, agasajos o atenciones que puedan comprometer la imparcialidad o influir en una compra o adjudicación. Solo se permite material publicitario o promocional de valor simbólico e institucional.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 08 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">08</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-handshake item-icon"></i>
-                                        Relación con proveedores y clientes
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Elegimos a nuestros proveedores mediante criterios objetivos de calidad, precio y solvencia técnica. A nuestros clientes les brindamos información técnica veraz, asesoría honesta y cumplimos rigurosamente los términos de garantía ofrecidos.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 09 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">09</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-building-columns item-icon"></i>
-                                        Relación con autoridades
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>El trato con funcionarios públicos, inspectores y entidades del Estado es transparente, respetuoso, debidamente documentado por los canales formales y a cargo exclusivamente de personal expresamente autorizado por la empresa.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 10 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">10</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-lock item-icon"></i>
-                                        Protección de información y datos
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Resguardamos la confidencialidad de la información estratégica de la empresa y los datos de nuestros clientes conforme a la Ley N° 29733 de Protección de Datos Personales y las mejores prácticas de seguridad de la información.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 11 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">11</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-computer item-icon"></i>
-                                        Uso de bienes y recursos de la empresa
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Equipos de cómputo, vehículos, inventarios, instalaciones y software corporativo se destinan únicamente al desarrollo de labores profesionales autorizadas, asegurando su debido cuidado frente a pérdidas o mal uso.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 12 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">12</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-envelope-open-text item-icon"></i>
-                                        Canal de consultas y denuncias
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Cualquier colaborador, cliente o proveedor puede consultar dudas o reportar de forma confidencial posibles incumplimientos éticos a través de nuestros canales oficiales de ética y cumplimiento.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 13 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">13</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-user-shield item-icon"></i>
-                                        Prohibición de represalias
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Garantizamos que ninguna persona que comunique una inquietud o denuncie una conducta indebida de buena fe será sometida a despidos, sanciones, hostigamiento ni perjuicio alguno en su relación con la empresa.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 14 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">14</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-gavel item-icon"></i>
-                                        Incumplimientos y medidas disciplinarias
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Las infracciones a este código son investigadas garantizando el debido proceso y son sancionadas con proporcionalidad a su gravedad, sin perjuicio de interponer las acciones civiles y penales que la ley determine.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 15 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">15</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-graduation-cap item-icon"></i>
-                                        Capacitación y actualización
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Desarrollamos programas periódicos de capacitación y sensibilización en prevención del soborno y ética corporativa, revisando y actualizando continuamente nuestras políticas para asegurar su pertinencia.</p>
-                                </div>
-                            </details>
-                        </li>
-
-                        <!-- 16 -->
-                        <li class="conducta-accordion-item">
-                            <details>
-                                <summary>
-                                    <span class="num-badge">16</span>
-                                    <span class="item-title">
-                                        <i class="fa-solid fa-file-signature item-icon"></i>
-                                        Declaración de compromiso
-                                    </span>
-                                    <i class="fa-solid fa-chevron-down chevron-icon"></i>
-                                </summary>
-                                <div class="accordion-body">
-                                    <p>Cada colaborador, directivo y aliado comercial suscribe formalmente su conocimiento, adhesión y compromiso de cumplimiento con este Código de Conducta al integrarse a KENYA TECHNOLOGY.</p>
-                                </div>
-                            </details>
-                        </li>
-                    </ol>
-                </section>
-
-                <!-- Columna Derecha: Tarjeta Fija con Imagen ISO 37001 y Canal Ético -->
-                <aside class="editorial-sidebar">
-                    <figure class="iso-figure-card">
-                        <img src="{{ asset('iso-37001.png') }}" alt="Sistema de Gestión Antisoborno ISO 37001 de KENYA TECHNOLOGY" loading="lazy">
-                        <figcaption class="iso-figure-caption">
-                            <i class="fa-solid fa-shield-halved"></i>
-                            <span>Sistema Antisoborno alineado a la norma ISO 37001:2016</span>
+                <!-- Columna Derecha: Sidebar Lateral Fija con la Imagen ISO 37001 Prominente -->
+                <aside class="cc-sidebar">
+                    <figure class="cc-iso-card">
+                        <img src="{{ asset('iso-37001.png') }}" alt="Sistema de Gestión Antisoborno ISO 37001:2016 de KENYA TECHNOLOGY" loading="lazy">
+                        <figcaption>
+                            <strong>Acreditación ISO 37001:2016</strong>
+                            <span>Sistema de Gestión Antisoborno</span>
                         </figcaption>
                     </figure>
 
-                    <div class="canal-reporte-card">
-                        <h3><i class="fa-solid fa-bullhorn"></i> ¿Viste una conducta indebida?</h3>
-                        <p>
-                            Reporta cualquier sospecha de soborno, fraude o incumplimiento de forma confidencial. Nadie será perjudicado por denunciar de buena fe.
+                    <div class="cc-sidebar-box">
+                        <p class="cc-sidebar-box-title">Línea Ética y Confidencial</p>
+                        <p class="cc-sidebar-box-desc">
+                            Canal directo para reportar posibles incumplimientos con reserva de identidad garantizada.
                         </p>
-                        <div class="canal-actions">
-                            <a class="canal-btn canal-btn-primary" href="mailto:acuerdos.marco@kenya.com.pe">
-                                <i class="fa-solid fa-envelope"></i> acuerdos.marco@kenya.com.pe
-                            </a>
-                            <a class="canal-btn canal-btn-outline" href="tel:+51958021778">
-                                <i class="fa-solid fa-phone"></i> 958 021 778
-                            </a>
-                            <a class="canal-btn canal-btn-outline" href="mailto:soporte@kenya.com.pe">
-                                <i class="fa-solid fa-headset"></i> soporte@kenya.com.pe
-                            </a>
+                        <div class="cc-sidebar-contacts">
+                            <a href="mailto:acuerdos.marco@kenya.com.pe"><i class="fa-solid fa-envelope"></i> acuerdos.marco@kenya.com.pe</a>
+                            <a href="tel:+51958021778"><i class="fa-solid fa-phone"></i> 958 021 778</a>
                         </div>
-                        <div class="canal-seguridad-note">
-                            <i class="fa-solid fa-circle-check"></i>
-                            <span>Canal protegido con reserva de identidad</span>
-                        </div>
+                        <a class="cc-btn cc-btn-sm" href="mailto:acuerdos.marco@kenya.com.pe?subject=Reporte%20confidencial%20-%20C%C3%B3digo%20de%20Conducta">Enviar reporte confidencial</a>
                     </div>
+
+                    <nav class="cc-toc" aria-label="Índice del código">
+                        <p class="cc-toc-title">Índice de Artículos</p>
+                        <ol>
+                            @foreach ($articulos as $i => $art)
+                                <li><a href="#art-{{ $i + 1 }}"><b>{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</b><span>{{ $art[0] }}</span></a></li>
+                            @endforeach
+                            <li><a href="#canal-denuncias"><b>—</b><span>Cómo reportar</span></a></li>
+                        </ol>
+                    </nav>
                 </aside>
             </div>
         </main>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var btnToggle = document.getElementById('btnToggleAll');
-            var toggleText = document.getElementById('toggleText');
-            var list = document.getElementById('conductaAccordionList');
-
-            if (btnToggle && list) {
-                btnToggle.addEventListener('click', function () {
-                    var detailsList = list.querySelectorAll('details');
-                    var isCurrentlyOpen = btnToggle.getAttribute('data-open') === 'true';
-                    var newState = !isCurrentlyOpen;
-
-                    detailsList.forEach(function (det) {
-                        det.open = newState;
-                    });
-
-                    btnToggle.setAttribute('data-open', newState ? 'true' : 'false');
-                    toggleText.textContent = newState ? 'Ocultar detalles' : 'Mostrar todos los detalles';
+        (function () {
+            var links = document.querySelectorAll('#cc-page .cc-toc a');
+            if (!links.length || !('IntersectionObserver' in window)) return;
+            var map = {};
+            links.forEach(function (a) {
+                var href = a.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    map[href.slice(1)] = a;
+                }
+            });
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (!e.isIntersecting) return;
+                    links.forEach(function (a) { a.classList.remove('is-active'); });
+                    if (map[e.target.id]) {
+                        map[e.target.id].classList.add('is-active');
+                    }
                 });
-            }
-        });
+            }, { rootMargin: '-15% 0px -75% 0px' });
+            Object.keys(map).forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) observer.observe(el);
+            });
+        })();
     </script>
 @endsection
