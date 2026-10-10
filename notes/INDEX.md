@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-10-10-despliegue-produccion-pre-orden-y-rediseño|2026-10-10: Despliegue a Producción (Dokploy) — PRE ORDEN, Bloqueo B2B Unificado y Rediseño No-IA]]
 - [[2026-10-07-rediseño-editorial-no-ia-codigo-conducta-y-reciclaje|2026-10-07: Rediseño Editorial No-IA para Código de Conducta e Integridad ISO 37001 y Reciclaje]]
 - [[2026-10-07-ampliacion-reciclaje-3-nuevos-apartados-opcion-a|2026-10-07: Ampliación de Reciclaje — 3 Nuevos Apartados Oficiales (Opción A Desplegada)]]
 - [[2026-10-06-prototipos-rediseño-reciclaje-raee|2026-10-06: Prototipos de Rediseño para Reciclaje Tecnológico (RAEE), Restauración de Imagen sin Marca de Agua y Verificación en Navegador]]
