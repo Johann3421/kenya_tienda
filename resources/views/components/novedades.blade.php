@@ -217,7 +217,7 @@
                             }
                             $novedadUrl = $novedad->modelo ? route('detallemod', $novedad->modelo->id) : '#';
                             $novedadPartNumber = $realNroParte;
-                              
+
                               $novedadStock = $novedad->modelo->stock_vigente ?? $novedad->stock_inicial ?? 20;
                         @endphp
                         <div class="comp-novedad-card">
@@ -238,7 +238,7 @@
                                         @if(intval($novedadStock) > 0)
                                             <span style="color: #2e7d32; font-weight: 600;">≥ {{ $novedadStock }} unidades</span>
                                         @else
-                                            <span style="color: #2e7d32; font-weight: 600;">A IMPORTAR</span>
+                                            <span style="color: #2e7d32; font-weight: 600;">PRE ORDEN</span>
                                         @endif
                                     </li>
                                 </ul>

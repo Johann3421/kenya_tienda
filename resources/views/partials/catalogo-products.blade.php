@@ -28,7 +28,7 @@
                         } elseif (file_exists(public_path($producto->imagen_1))) {
                             $img = asset($producto->imagen_1);
                         }
-                    } 
+                    }
                     if ($img === $modelImg && !empty($producto->imagen)) {
                         if (file_exists(public_path('storage/' . $producto->imagen))) {
                             $img = asset('storage/' . $producto->imagen);
@@ -54,7 +54,7 @@
                 } else {
                     $cleanName = preg_replace('/\s*\([A-Z0-9\-\.\s]+\)\s*$/i', '', $rawName);
                 }
-                
+
                 // Normalizadores para consistencia con los filtros
                 $normalizarTV = function(string $v): string {
                     $v = preg_replace('/\b(dedicad[oa]s?|integrad[oa]s?)\b/i', '', trim($v));
@@ -84,23 +84,23 @@
                 };
 
                 $specs = [];
-                $isMonitor = (isset($producto->modelo_id) && $producto->modelo_id == 16) || 
+                $isMonitor = (isset($producto->modelo_id) && $producto->modelo_id == 16) ||
                              (isset($producto->modelo) && str_contains(strtoupper($producto->modelo->descripcion ?? ''), 'MONITOR'));
-                
+
                 if ($isMonitor) {
                     if (!$producto->relationLoaded('especificaciones')) {
                         $producto->load('especificaciones');
                     }
-                    
+
                     $especs = $producto->getRelation('especificaciones');
                     if ($especs) {
                         $pantalla = $especs->firstWhere('campo', 'Tamaño de Pantalla')->descripcion ?? null;
                         if ($pantalla) $specs[] = ['label' => 'PANTALLA', 'value' => trim($pantalla)];
-                        
+
                         $resolucion = $especs->firstWhere('campo', 'Resolución')->descripcion ?? null;
                         if ($resolucion) $specs[] = ['label' => 'RESOLUCIÓN', 'value' => trim($resolucion)];
                     }
-                    
+
                     if (!empty($producto->video_vga)) {
                         $specs[] = ['label' => 'VGA', 'value' => trim($producto->video_vga)];
                     }
@@ -117,7 +117,7 @@
             @endphp
 
             <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
-            
+
             <div class="product-sku" style="background-color: #f0f4f8; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 600; color: #0056b3; margin-bottom: 12px; font-size: 0.75rem; width: fit-content;">
                 SKU: {{ $realNroParte ?: ($producto->nro_parte ?? 'N/A') }}
             </div>
@@ -154,7 +154,7 @@
                         </div>
                     @else
                         <div class="price-no-especial" style="font-size: 1.1rem; font-weight: 600; color: #333; margin-top: 2px; margin-bottom: 12px; text-align: left;">
-                            (A IMPORTAR)
+                            (PRE ORDEN)
                         </div>
                     @endif
                 @else
@@ -174,7 +174,7 @@
                         @endif
                     @else
                         <span class="stock-status-dot available"></span>
-                        <span class="stock-text" style="color:#2ecc71; font-weight:600;">A IMPORTAR</span>
+                        <span class="stock-text" style="color:#2ecc71; font-weight:600;">PRE ORDEN</span>
                     @endif
                 </div>
 

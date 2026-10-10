@@ -82,11 +82,11 @@
 
         .hero-content {
             position: relative;
-            z-index: 2; 
-            padding-left: 0px; 
+            z-index: 2;
+            padding-left: 0px;
             display: flex;
             flex-direction: column;
-            align-items: flex-start; 
+            align-items: flex-start;
         }
 
         .hero-content h1 {
@@ -98,7 +98,7 @@
         .hero-content p {
             font-size: 1.3rem;
             font-weight: 300;
-            margin-bottom: 20px; 
+            margin-bottom: 20px;
         }
 
         /* ==========================================
@@ -296,7 +296,7 @@
             border: none;
             width: 100%;
             padding: 12px;
-            border-radius: 50px; 
+            border-radius: 50px;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
@@ -305,17 +305,17 @@
         }
 
         .btn-details.pill:hover {
-            background: #d66836; 
+            background: #d66836;
         }    }
 
         /* ==========================================
-           FOOTER 
+           FOOTER
            ========================================== */
         .site-footer {
-            background-color: #222; 
-            color: #ccc; 
+            background-color: #222;
+            color: #ccc;
             font-size: 0.9rem;
-            border-top: 0px solid #f26522; 
+            border-top: 0px solid #f26522;
         }
         .footer-grid {
             display: grid;
@@ -343,7 +343,7 @@
         .footer-col ul li { margin-bottom: 0.8rem; }
         .footer-col ul li a { color: #aaa; text-decoration: none; transition: color 0.3s ease; }
         .footer-col ul li a:hover { color: #f26522; }
-        
+
         .contact-info li { display: flex; align-items: flex-start; gap: 10px; color: #fff; }
         .contact-info i { color: #f26522; margin-top: 4px; }
 
@@ -388,7 +388,7 @@
             gap: 8px;
         }
 
-        .pagination li a, 
+        .pagination li a,
         .pagination li span {
             display: flex;
             justify-content: center;
@@ -433,11 +433,11 @@
         }
 
         @media (max-width: 992px) {
-            .header-content { 
-                flex-wrap: wrap; 
-                height: auto; 
-                padding-top: 15px; 
-                padding-bottom: 15px; 
+            .header-content {
+                flex-wrap: wrap;
+                height: auto;
+                padding-top: 15px;
+                padding-bottom: 15px;
                 gap: 15px;
             }
             .header-left { flex: none; width: 100%; justify-content: center; }
@@ -448,10 +448,10 @@
         }
 
         @media (max-width: 768px) {
-            .hero-banner { padding: 40px 5%; } 
+            .hero-banner { padding: 40px 5%; }
             .hero-content h1 { font-size: 1.8rem; line-height: 1.2; }
             .hero-content p { font-size: 1rem; }
-            
+
             .filter-form {
                 flex-direction: column;
                 align-items: stretch;
@@ -466,7 +466,7 @@
                 grid-template-columns: 1fr;
             }
         }
-    
+
     </style>
 
     <section class="hero-banner">
@@ -519,7 +519,7 @@
                         } elseif (file_exists(public_path($producto->imagen_1))) {
                             $img = asset($producto->imagen_1);
                         }
-                    } 
+                    }
                     if ($img === $modelImg && !empty($producto->imagen)) {
                         if (file_exists(public_path('storage/' . $producto->imagen))) {
                             $img = asset('storage/' . $producto->imagen);
@@ -533,7 +533,7 @@
                 @endphp
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="{{ $img }}" alt="{{ $producto->display_name ?? 'Producto' }}" 
+                        <img src="{{ $img }}" alt="{{ $producto->display_name ?? 'Producto' }}"
                             onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
                     </div>
                     <div class="product-info">
@@ -546,7 +546,7 @@
                             } else {
                                 $cleanName = preg_replace('/\s*\([A-Z0-9\-\.\s]+\)\s*$/i', '', $rawName);
                             }
-                            
+
                             $specs = [];
                             if (!empty($producto->procesador)) $specs[] = ['label' => 'PROCESADOR', 'value' => trim($producto->procesador)];
                             if (!empty($producto->ram)) $specs[] = ['label' => 'RAM', 'value' => trim($producto->ram)];
@@ -576,17 +576,17 @@
                                 @endforeach
                             </div>
                         @endif
-                        
+
                         <div class="product-card-footer">
                             <div class="product-price-placeholder" style="display:none;"></div>
-                            
+
                             <div class="product-stock-wrapper">
                                 @if($stock !== 0 && $stock !== '0')
                                     <span class="stock-status-dot available"></span>
                                     <span class="stock-text">Disponible (≥ {{ $stock }})</span>
                                 @else
                                     <span class="stock-status-dot available"></span>
-                                    <span class="stock-text" style="color:#2ecc71; font-weight:600;">A IMPORTAR</span>
+                                    <span class="stock-text" style="color:#2ecc71; font-weight:600;">PRE ORDEN</span>
                                 @endif
                             </div>
                             <button class="btn-details pill" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">Más información</button>
