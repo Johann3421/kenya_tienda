@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-10-13-desacoplamiento-modulo-reciclar-vista-independiente|2026-10-13: Desacoplamiento del Módulo de Reciclaje a Vista Independiente (/reciclar) en Nueva Pestaña]]
 - [[2026-10-13-modulo-interactivo-reciclaje-simple|2026-10-13: Módulo Interactivo de Reciclaje Simple (Ley de Tesler)]]
 - [[2026-10-13-investigacion-benchmarking-reciclaje-peru|2026-10-13: Investigación y Benchmarking de Secciones de Reciclaje Tecnológico (RAEE) en Perú]]
 - [[2026-10-13-enlace-verificacion-iaf-iso-37001-y-retiro-cc-report|2026-10-13: Integración de Enlace IAF CertSearch ISO 37001 y Retiro de Sección cc-report]]

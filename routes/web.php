@@ -195,6 +195,7 @@ Route::group(['middleware' => ['auth', 'can:productos']], function () {
 Route::view('/quienes-somos', 'quienes-somos')->name('quienes.somos');
 Route::view('/codigo-conducta', 'codigo-conducta')->name('codigo.conducta');
 Route::view('/reciclaje', 'reciclaje')->name('reciclaje');
+Route::view('/reciclar', 'reciclar')->name('reciclar');
 Route::view('/Catalogo', 'Catalogo')->name('catalogo.static');
 Route::view('/Novedades', 'Novedades')->name('novedades');
 Route::view('/Contactenos', 'Contactenos')->name('contactenos');
