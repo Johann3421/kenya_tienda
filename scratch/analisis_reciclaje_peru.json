@@ -1,0 +1,538 @@
+[
+  {
+    "id": "samsung_ecocanje",
+    "empresa": "Samsung Perú",
+    "programa": "Eco Canje (Trade-Up)",
+    "url": "https://www.samsung.com/pe/ecocanje/",
+    "tipo": "Fabricante OEM / E-Commerce con Incentivo Directo",
+    "titulo": "Samsung Trade-Up Ecocanje Home I TV & Línea blanca | Samsung Perú",
+    "meta_descripcion": "Actualice a un nuevo televisor o electrodoméstico Samsung con el programa Samsung Trade-Up. Traiga cualquier marca, en cualquier condición, y reciba un descuento junto con reciclaje gratuito.",
+    "h1": [
+      "Trade-Up: Ecocanje TV & Línea blanca"
+    ],
+    "h2": [
+      "global navigation bar",
+      "¿Cuánto descuento obtengo?",
+      "Cómo funciona",
+      "Mejores ofertas",
+      "Reciclar con Samsung",
+      "FAQs",
+      "¿Por qué comprar en Samsung.com?"
+    ],
+    "h3": [
+      "Reciclando cualquier equipo en desuso* obtén: Hasta 15% de dscto. adicional en tu compra",
+      "Paso 1 – Compra con descuento",
+      "Paso 2: prepárese su producto en desuso",
+      "Paso 3 – Entrega y recogida",
+      "1. ¿Qué es Ecocanje?",
+      "2. ¿Qué tipo de productos podré usar para Ecocanje?",
+      "3. ¿En qué condiciones debe estar el equipo que entregue?",
+      "4. ¿Dónde puedo conocer el porcentaje de descuento que obtengo por reciclar mi equipo antiguo?"
+    ],
+    "pasos_detectados": [
+      "Paso 1 – Compra con descuento",
+      "Paso 2",
+      "Paso 3 – Entrega y recogida"
+    ],
+    "formularios": [
+      {
+        "action": "",
+        "total_campos": 1,
+        "campos": [
+          "search (text)"
+        ]
+      }
+    ],
+    "ctas": [
+      {
+        "texto": "Plan Canje",
+        "enlace": "/pe/trade-in/"
+      },
+      {
+        "texto": "Iniciar sesión/Registrarse",
+        "enlace": "javascript:;"
+      },
+      {
+        "texto": "¿Por qué Ecocanje?",
+        "enlace": "#whysamsung"
+      },
+      {
+        "texto": "1. ¿Qué es Ecocanje?",
+        "enlace": "javascript:void(0)"
+      },
+      {
+        "texto": "2. ¿Qué tipo de productos podré usar para Ecocanje?",
+        "enlace": "javascript:void(0)"
+      },
+      {
+        "texto": "5. ¿Cómo obtengo el descuento por el equipo reciclado? *",
+        "enlace": "javascript:void(0)"
+      },
+      {
+        "texto": "6. ¿Cuándo es el recojo del producto que deseo reciclar?",
+        "enlace": "javascript:void(0)"
+      }
+    ],
+    "whatsapp": [],
+    "emails": [],
+    "telefonos": [],
+    "aparatos_aceptados": [
+      "monitor",
+      "smartphone",
+      "tablet",
+      "televisor"
+    ],
+    "incentivos": [
+      "Bono o descuento de compra",
+      "Programa de canje por equipo nuevo",
+      "Servicio de recojo a domicilio / oficina"
+    ]
+  },
+  {
+    "id": "samsung_weee",
+    "empresa": "Samsung Perú",
+    "programa": "Gestión RAEE y Centros de Acopio",
+    "url": "https://www.samsung.com/pe/support/weee/",
+    "tipo": "Fabricante OEM / Soporte & Compliance",
+    "titulo": "Residuos de Aparatos Eléctricos y Electrónicos (RAEE) | Samsung Perú",
+    "meta_descripcion": "Samsung cares about the environment and has implemented collection centers for electronic products.",
+    "h1": [],
+    "h2": [
+      "global navigation bar",
+      "PUNTOS DE ACOPIO",
+      "Samsung Smart CenterÓvalo Gutiérrez - Miraflores",
+      "Samsung Smart CenterLa Marina - San Miguel",
+      "Contáctanos"
+    ],
+    "h3": [
+      "RECICLAR PARA VIVIR MEJOR RECICLAR PARA VIVIR MEJOR",
+      "LIMA",
+      "PROVINCIA",
+      "1. GRANDES ELECTRODOMÉSTICOS",
+      "2. PEQUEÑOS ELECTRODOMÉSTICOS",
+      "3. TELECOMUNICACIONES",
+      "4. APARATOS ELECTRÓNICOS DE CONSUMO",
+      "LiveChat"
+    ],
+    "pasos_detectados": [
+      "2- Tocache Recuerda que",
+      "1. GRANDES ELECTRODOMÉSTICOS",
+      "2. PEQUE",
+      "3. TELECOMUNICACIONES",
+      "4. APARATOS ELECTRÓNICOS DE CONSUMO Ra",
+      "4-campana"
+    ],
+    "formularios": [
+      {
+        "action": "",
+        "total_campos": 1,
+        "campos": [
+          "search (text)"
+        ]
+      }
+    ],
+    "ctas": [
+      {
+        "texto": "Plan Canje",
+        "enlace": "/pe/trade-in/"
+      },
+      {
+        "texto": "Iniciar sesión/Registrarse",
+        "enlace": "javascript:;"
+      },
+      {
+        "texto": "Iniciar conversación",
+        "enlace": "#start-chat"
+      }
+    ],
+    "whatsapp": [],
+    "emails": [],
+    "telefonos": [],
+    "aparatos_aceptados": [
+      "celular",
+      "computadora",
+      "cpu",
+      "disco duro",
+      "electrodoméstico",
+      "impresora",
+      "laptop",
+      "monitor",
+      "mouse",
+      "router",
+      "smartphone",
+      "tablet",
+      "teclado",
+      "televisor"
+    ],
+    "incentivos": [
+      "Programa de canje por equipo nuevo"
+    ]
+  },
+  {
+    "id": "claro_yoreciclo",
+    "empresa": "Claro Perú",
+    "programa": "Yo reciclo, yo soy Claro",
+    "url": "https://www.claro.com.pe/institucional/sostenibilidad/yo-reciclo-yo-soy-claro/",
+    "tipo": "Operador Telecom / Campaña Nacional & Puntos de Acopio",
+    "titulo": "Yo reciclo, yo soy claro | Claro PerÃº",
+    "meta_descripcion": "En Claro estamos juntos por el reciclaje. Promovemos una cultura de segregaciÃ³n y reciclaje de Aparatos ElÃ©ctricos y ElectrÃ³nicos con el fin de reducir el impacto en nuestro planeta.",
+    "h1": [
+      "Te esperamos en nuestro Reciclafest"
+    ],
+    "h2": [
+      "LA RUTA DEL RECICLAJE",
+      "SÃºmate a nuestro programa ambiental: Yo reciclo, yo soy Claro",
+      "Conoce cÃ³mo funciona el proceso de reciclaje de residuos de aparatos elÃ©ctricos y electrÃ³nicos (RAEE)",
+      "En Claro tambiÃ©n tratamos responsablemente nuestras antenas",
+      "Nuestro compromiso con el reciclaje empieza por casa"
+    ],
+    "h3": [
+      "1. Acopio de residuos electrÃ³nicos",
+      "2. Transporte",
+      "3. SegregaciÃ³n y desmantelamiento",
+      "4. Reaprovechamiento",
+      "5. DisposiciÃ³n Final",
+      "Acopio de residuos electrÃ³nicos",
+      "Clientes Corporativos y Organizaciones",
+      "Sociedad y Cultura de Reciclaje"
+    ],
+    "pasos_detectados": [
+      "1. Acopio de residuos electr",
+      "2. TransporteLos residuos son trasladad",
+      "3. Segregaci",
+      "4. ReaprovechamientoSe aprovechan los c",
+      "5. Disposici"
+    ],
+    "formularios": [
+      {
+        "action": "/buscador/",
+        "total_campos": 1,
+        "campos": [
+          "q (text)"
+        ]
+      }
+    ],
+    "ctas": [
+      {
+        "texto": "Puntos de acopio para la comunidad",
+        "enlace": "https://www.claro.com.pe/assets/pdf/PUNTOS_DE_ACOPIO_MARZO_2026.pdf"
+      }
+    ],
+    "whatsapp": [
+      "https://api.whatsapp.com/send/?phone=51915020030&text=Hola%2C+tengo+una+consulta",
+      "https://api.whatsapp.com/send?phone=51954305555&text=Hola%20Claro%2C%20necesito%20ayuda%20con%20mi%20pedido/",
+      "https://api.whatsapp.com/send/?phone=51954305555&text=%C2%A1Hola%20TiendaBot!%20Deseo%20renovar%20mi%20equipo%20con%20ustedes%20por%20Whatsapp",
+      "https://api.whatsapp.com/send/?phone=51954305555&text=Hola%20Claro,%20quiero%20un%20plan%20Hogar",
+      "https://api.whatsapp.com/send/?phone=51954305555&text=%C2%A1Hola%20TiendaBot!%20Deseo%20adquirir%20mi%20Chip%20Postpago%20y%20Portar%20a%20Claro"
+    ],
+    "emails": [
+      "sostenibilidad@claro.com.pe"
+    ],
+    "telefonos": [
+      "+0800 00123",
+      "+0800 00200",
+      "0080000200"
+    ],
+    "aparatos_aceptados": [
+      "cable",
+      "cargador",
+      "celular",
+      "smartphone"
+    ],
+    "incentivos": []
+  },
+  {
+    "id": "entel_reciclemos",
+    "empresa": "Entel Perú",
+    "programa": "Reciclemos para Transformar",
+    "url": "https://entel.pe/sostenibilidad/reciclemos-para-transformar/",
+    "tipo": "Operador Telecom / B2C & Red de Aliados",
+    "titulo": "Reciclemos para transformar | Entel Perú",
+    "meta_descripcion": "",
+    "h1": [],
+    "h2": [],
+    "h3": [],
+    "pasos_detectados": [
+      "2. Al dar click en"
+    ],
+    "formularios": [],
+    "ctas": [],
+    "whatsapp": [],
+    "emails": [],
+    "telefonos": [],
+    "aparatos_aceptados": [],
+    "incentivos": []
+  },
+  {
+    "id": "recolecc_puntos",
+    "empresa": "Recolecc Perú",
+    "programa": "Línea de Puntos de Acopio (Sistema Colectivo)",
+    "url": "https://recolecc.com.pe/puntos-de-acopio/",
+    "tipo": "Sistema Colectivo Oficial / MINAM",
+    "titulo": "Puntos de acopio – Recolecc",
+    "meta_descripcion": "",
+    "h1": [],
+    "h2": [],
+    "h3": [],
+    "pasos_detectados": [
+      "1-ASan Isidro"
+    ],
+    "formularios": [],
+    "ctas": [
+      {
+        "texto": "Reciclamos para dejar huella",
+        "enlace": "https://recolecc.com.pe/reciclamos-para-dejar-huella/"
+      },
+      {
+        "texto": "Puntos de acopio",
+        "enlace": "https://recolecc.com.pe/puntos-de-acopio/"
+      },
+      {
+        "texto": "Linea de puntos de acopio",
+        "enlace": "https://recolecc.com.pe/puntos-de-acopio/"
+      }
+    ],
+    "whatsapp": [],
+    "emails": [
+      "marketing@recolecc.com.pe"
+    ],
+    "telefonos": [],
+    "aparatos_aceptados": [],
+    "incentivos": []
+  },
+  {
+    "id": "rlg_revo",
+    "empresa": "Reverse Logistics Group (RLG)",
+    "programa": "ReVo 360 Perú",
+    "url": "https://rev-log.com/pe/productos/revo/",
+    "tipo": "Sistema Colectivo Internacional / Minam",
+    "titulo": "ReVo - Reverse Logistics Group",
+    "meta_descripcion": "",
+    "h1": [
+      "ReVo"
+    ],
+    "h2": [
+      "¿Quiénes somos?",
+      "Nuestros logros",
+      "Servicios",
+      "Preguntas frecuentes",
+      "Si tienes alguna pregunta adicional sobre nuestros servicios ¡contáctanos!",
+      "Más información",
+      "Descubra todo el Comply Loop"
+    ],
+    "h3": [
+      "International",
+      "Austria",
+      "Denmark",
+      "Germany",
+      "Italy",
+      "Poland",
+      "Romania",
+      "Spain"
+    ],
+    "pasos_detectados": [
+      "9-MINAM",
+      "1-MINAM",
+      "0.com o al número",
+      "0.com o por nuestro formulario de soli",
+      "1. GRANDES ELECTRODOMÉSTICOS",
+      "2. PEQUE"
+    ],
+    "formularios": [
+      {
+        "action": "https://rev-log.com/pe/",
+        "total_campos": 1,
+        "campos": [
+          "s (search)"
+        ]
+      },
+      {
+        "action": "",
+        "total_campos": 8,
+        "campos": [
+          "item_7__fluent_sf (text)",
+          "names[first_name] (text)",
+          "names[last_name] (text)",
+          "email_1 (email)",
+          "numeric-field_1 (number)",
+          "input_text (text)",
+          "description (text)",
+          "terms-n-condition (checkbox)"
+        ]
+      }
+    ],
+    "ctas": [],
+    "whatsapp": [],
+    "emails": [
+      "info@revo360.com"
+    ],
+    "telefonos": [
+      "%20+57%20(4)%20604%2072%2000"
+    ],
+    "aparatos_aceptados": [
+      "batería",
+      "cable",
+      "cargador",
+      "celular",
+      "computadora",
+      "cpu",
+      "disco duro",
+      "electrodoméstico",
+      "impresora",
+      "laptop",
+      "monitor",
+      "mouse",
+      "router",
+      "tablet",
+      "teclado",
+      "televisor"
+    ],
+    "incentivos": [
+      "Certificado de reciclaje oficial"
+    ]
+  },
+  {
+    "id": "hippobox_raee",
+    "empresa": "Hippobox Perú",
+    "programa": "Reciclaje de Aparatos Electrónicos (RAEE)",
+    "url": "https://hippobox.com.pe/reciclaje-raee/",
+    "tipo": "Retailer Tecnológico Local / Solución Gratuita",
+    "titulo": "Reciclaje RAEE – Hippobox",
+    "meta_descripcion": "",
+    "h1": [
+      "RAEE"
+    ],
+    "h2": [
+      "Resolviendo el Problema de los Residuos Electrónicos en Perú",
+      "Iniciativas de Hippobox y Ecovalora",
+      "Impacto y Futuro.",
+      "Servicios gratuitos de recepción de dispositivos usados."
+    ],
+    "h3": [
+      "Reciclaje de Aparatos Electrónicos"
+    ],
+    "pasos_detectados": [
+      "9-MINAM"
+    ],
+    "formularios": [
+      {
+        "action": "https://hippobox.com.pe/",
+        "total_campos": 1,
+        "campos": [
+          "s (search)"
+        ]
+      },
+      {
+        "action": "https://hippobox.com.pe/",
+        "total_campos": 1,
+        "campos": [
+          "s (search)"
+        ]
+      }
+    ],
+    "ctas": [
+      {
+        "texto": "Reciclaje RAEE",
+        "enlace": "https://hippobox.com.pe/reciclaje-raee/"
+      }
+    ],
+    "whatsapp": [],
+    "emails": [],
+    "telefonos": [],
+    "aparatos_aceptados": [],
+    "incentivos": [
+      "Bono o descuento de compra",
+      "Servicio 100% gratuito"
+    ]
+  },
+  {
+    "id": "comimtel",
+    "empresa": "Comimtel Recycling",
+    "programa": "Operador y Planta de Valorización RAEE",
+    "url": "https://comimtel.com/",
+    "tipo": "Empresa Operadora de Residuos (EO-RS)",
+    "titulo": "Compramos chatarra industrial - Comimtel",
+    "meta_descripcion": "Somos pioneros en Minería Urbana desde hace más de 21 años. Especialistas y profesionales en la asesoría y respuesta inmediata a las necesidades de nuestros aliados, minimizando así el impacto ambiental en nuestro país y el Planeta",
+    "h1": [],
+    "h2": [
+      "Comercialización de chatarra Comercialización de chatarra",
+      "Desmantelamiento de planta y asesoría documentaria del plan de cierre Desmantelamiento de planta y asesoría documentaria",
+      "Minería Urbana | Valorización Minería Urbana | Valorización",
+      "Borrado lógico certificado y valorización de RAEE con LibreData Reuse R2v3 Borrado lógico certificado y valorización de RAEE",
+      "Nuestros Servicios",
+      "Promovemos la economía circular",
+      "¿Por qué gestionar tus residuos con Comimtel?",
+      "Industrias con las que trabajamos"
+    ],
+    "h3": [
+      "Valorización responsable de residuos",
+      "Asesoría integral",
+      "Cumplimiento normativo",
+      "Minería",
+      "Banca y servicios financieros",
+      "Cementera",
+      "Retail",
+      "Data center"
+    ],
+    "pasos_detectados": [],
+    "formularios": [],
+    "ctas": [
+      {
+        "texto": "Entregar residuos",
+        "enlace": "https://comimtel.com/nosotros/"
+      }
+    ],
+    "whatsapp": [],
+    "emails": [],
+    "telefonos": [],
+    "aparatos_aceptados": [],
+    "incentivos": [
+      "Certificado de reciclaje oficial"
+    ]
+  },
+  {
+    "id": "sar",
+    "empresa": "SAR (Sistemas Ambientales de Reciclaje)",
+    "programa": "Planta de Tratamiento RAEE Lurín",
+    "url": "https://sar.pe/",
+    "tipo": "Planta de Valorización Industrial",
+    "titulo": "",
+    "meta_descripcion": "",
+    "h1": [
+      "Profesionales en Gestión y Manejo de RAEE"
+    ],
+    "h2": [
+      "Responsabilidad ambiental y trazabilidad en el tratamiento de los RAEE",
+      "Empresa líder en el Perú en el tratamiento de RAEE",
+      "Somos la planta de valorización mas grande del país con mas 8,000m2 de capacidad instalada",
+      "Nuestro Servicio",
+      "Valorización de residuos de aparatos eléctricos y electrónicos (RAEE)",
+      "Aliados y clientes que confían en SAR",
+      "¿Quiénes somos?",
+      "Preguntas frecuentes"
+    ],
+    "h3": [
+      "Contacto:",
+      "Síguenos en:"
+    ],
+    "pasos_detectados": [],
+    "formularios": [],
+    "ctas": [
+      {
+        "texto": "Únete",
+        "enlace": "https://www.sar.pe/unete/"
+      }
+    ],
+    "whatsapp": [
+      "https://wa.me/998196245"
+    ],
+    "emails": [],
+    "telefonos": [],
+    "aparatos_aceptados": [
+      "tablet"
+    ],
+    "incentivos": [
+      "Certificado de reciclaje oficial"
+    ]
+  }
+]

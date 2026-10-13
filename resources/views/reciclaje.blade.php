@@ -371,6 +371,345 @@
             transform: translateY(-1px);
         }
 
+        /* 2.1 Módulo Interactivo: Reciclaje Simple */
+        #rc-page .rc-flow-box {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 44px 40px;
+            margin-bottom: 96px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+            scroll-margin-top: 40px;
+        }
+        #rc-page .rc-flow-header {
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        #rc-page .rc-flow-header h2 {
+            margin: 0 0 10px;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--rc-ink);
+            letter-spacing: -.02em;
+        }
+        #rc-page .rc-flow-header p {
+            margin: 0 auto 28px;
+            max-width: 62ch;
+            color: var(--rc-muted);
+            font-size: 1.02rem;
+        }
+
+        /* Tabs de Perfil */
+        #rc-page .rc-tabs {
+            display: inline-flex;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 8px;
+            gap: 6px;
+            max-width: 100%;
+        }
+        #rc-page .rc-tab {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 22px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            color: #475569;
+            transition: all .15s ease;
+            text-align: left;
+        }
+        #rc-page .rc-tab i {
+            font-size: 1.25rem;
+            color: #64748b;
+            transition: color .15s ease;
+        }
+        #rc-page .rc-tab-content {
+            display: flex;
+            flex-direction: column;
+        }
+        #rc-page .rc-tab-title {
+            font-size: .95rem;
+            font-weight: 700;
+            line-height: 1.25;
+            color: #1e293b;
+        }
+        #rc-page .rc-tab-subtitle {
+            font-size: .78rem;
+            color: #64748b;
+        }
+        #rc-page .rc-tab.active {
+            background: #ffffff;
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+        }
+        #rc-page .rc-tab.active i {
+            color: var(--rc-accent);
+        }
+        #rc-page .rc-tab.active .rc-tab-title {
+            color: var(--rc-ink);
+        }
+
+        /* Paneles */
+        #rc-page .rc-step-block {
+            margin-bottom: 32px;
+        }
+        #rc-page .rc-step-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--rc-ink);
+        }
+        #rc-page .rc-step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--rc-ink);
+            color: #ffffff;
+            font-size: .84rem;
+            font-weight: 700;
+        }
+
+        /* Grid de Dispositivos */
+        #rc-page .rc-device-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        #rc-page .rc-dev-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 24px 18px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all .15s ease;
+            font-family: inherit;
+        }
+        #rc-page .rc-dev-card:hover {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+        #rc-page .rc-dev-card.active {
+            background: #ffffff;
+            border-color: var(--rc-accent);
+            box-shadow: 0 4px 12px rgba(242, 101, 34, 0.12);
+        }
+        #rc-page .rc-dev-card i {
+            font-size: 2rem;
+            color: #64748b;
+            margin-bottom: 12px;
+            transition: color .15s ease;
+        }
+        #rc-page .rc-dev-card.active i {
+            color: var(--rc-accent);
+        }
+        #rc-page .rc-dev-card strong {
+            font-size: .95rem;
+            color: var(--rc-ink);
+            margin-bottom: 4px;
+        }
+        #rc-page .rc-dev-card span {
+            font-size: .78rem;
+            color: var(--rc-muted);
+            line-height: 1.35;
+        }
+
+        /* Grid de Sedes / Lugares */
+        #rc-page .rc-location-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        #rc-page .rc-loc-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 18px 20px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all .15s ease;
+            font-family: inherit;
+        }
+        #rc-page .rc-loc-card:hover {
+            border-color: #cbd5e1;
+            background: #f1f5f9;
+        }
+        #rc-page .rc-loc-card.active {
+            background: #ffffff;
+            border-color: var(--rc-green-mid);
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.1);
+        }
+        #rc-page .rc-loc-card i {
+            font-size: 1.3rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        #rc-page .rc-loc-card.active i {
+            color: var(--rc-green-mid);
+        }
+        #rc-page .rc-loc-card strong {
+            display: block;
+            font-size: .95rem;
+            color: var(--rc-ink);
+            margin-bottom: 2px;
+        }
+        #rc-page .rc-loc-card span {
+            font-size: .8rem;
+            color: var(--rc-muted);
+            line-height: 1.35;
+        }
+
+        /* Caja de Acción y WhatsApp */
+        #rc-page .rc-flow-action {
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        #rc-page .rc-summary-preview {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: .9rem;
+            margin-bottom: 18px;
+        }
+        #rc-page .rc-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: #15803d;
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 16px 36px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.25);
+            transition: all .15s ease;
+            font-family: inherit;
+        }
+        #rc-page .rc-cta-btn:hover {
+            background: #166534;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(21, 128, 61, 0.35);
+        }
+        #rc-page .rc-cta-btn i {
+            font-size: 1.35rem;
+        }
+        #rc-page .rc-action-hint {
+            margin: 12px 0 0;
+            font-size: .82rem;
+            color: #64748b;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Formulario Empresa B2B */
+        #rc-page .rc-b2b-intro {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid var(--rc-accent);
+            padding: 20px 24px;
+            border-radius: 6px;
+            margin-bottom: 28px;
+        }
+        #rc-page .rc-b2b-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: var(--rc-ink);
+            font-size: .92rem;
+            margin-bottom: 6px;
+        }
+        #rc-page .rc-b2b-badge i {
+            color: var(--rc-accent);
+        }
+        #rc-page .rc-b2b-intro p {
+            margin: 0;
+            font-size: .92rem;
+            color: #475569;
+            line-height: 1.55;
+        }
+        #rc-page .rc-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        #rc-page .rc-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+        }
+        #rc-page .rc-field label {
+            font-size: .84rem;
+            font-weight: 700;
+            color: var(--rc-ink);
+        }
+        #rc-page .rc-field input,
+        #rc-page .rc-field select {
+            padding: 12px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: .95rem;
+            font-family: inherit;
+            color: var(--rc-ink);
+            background: #ffffff;
+            transition: border-color .15s ease, box-shadow .15s ease;
+        }
+        #rc-page .rc-field input:focus,
+        #rc-page .rc-field select:focus {
+            outline: none;
+            border-color: var(--rc-accent);
+            box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.15);
+        }
+        #rc-page .rc-or-divider {
+            margin-top: 14px;
+            font-size: .88rem;
+            color: #64748b;
+        }
+        #rc-page .rc-or-divider a {
+            color: var(--rc-ink);
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        #rc-page .rc-or-divider a:hover {
+            color: var(--rc-accent);
+        }
+
         @media (max-width: 991px) {
             #rc-page .rc-hero h1 { font-size: 2rem; }
             #rc-page .rc-intro, #rc-page .rc-help { grid-template-columns: 1fr; gap: 40px; }
@@ -379,6 +718,11 @@
             #rc-page .rc-banner { grid-template-columns: 1fr; padding: 32px 24px; gap: 32px; }
             #rc-page .rc-banner-media { aspect-ratio: 16 / 10; max-height: 320px; }
             #rc-page .rc-banner-body { padding: 0; }
+            #rc-page .rc-device-grid { grid-template-columns: repeat(2, 1fr); }
+            #rc-page .rc-location-grid { grid-template-columns: 1fr; }
+            #rc-page .rc-form-grid { grid-template-columns: 1fr; }
+            #rc-page .rc-flow-box { padding: 32px 20px; }
+            #rc-page .rc-tabs { flex-direction: column; width: 100%; }
             #rc-page .rc-steps-head { display: block; }
             #rc-page .rc-steps-head p { margin-top: 8px; }
             #rc-page .rc-steps { grid-template-columns: 1fr 1fr; gap: 28px 24px; }
@@ -388,6 +732,8 @@
         }
         @media (max-width: 575px) {
             #rc-page .rc-steps { grid-template-columns: 1fr; }
+            #rc-page .rc-device-grid { grid-template-columns: 1fr; }
+            #rc-page .rc-cta-btn { width: 100%; padding: 14px 20px; font-size: .95rem; }
         }
     </style>
 
@@ -442,12 +788,166 @@
                         <li><span>✓</span> Constancia oficial de disposición RAEE</li>
                     </ul>
                     <div class="rc-banner-actions">
-                        <a class="rc-btn" href="mailto:acuerdos.marco@kenya.com.pe?subject=Solicitud%20de%20reciclaje%20de%20equipos">Comenzar</a>
+                        <a class="rc-btn" href="#iniciar-reciclaje">Comenzar ahora</a>
                         <a class="rc-banner-tel" href="tel:+51958021778">o llama al 958 021 778</a>
                     </div>
                 </div>
                 <div class="rc-banner-media">
                     <img src="https://www.kenya.com.pe/reciclaje-equipo-box.jpg" alt="Técnico empacando equipos informáticos en desuso para su reciclaje" loading="lazy">
+                </div>
+            </section>
+
+            <!-- Módulo Interactivo: Reciclaje Simple -->
+            <section class="rc-flow-box" id="iniciar-reciclaje">
+                <div class="rc-flow-header">
+                    <span class="rc-kicker">Autoservicio express</span>
+                    <h2>¿Qué deseas reciclar hoy?</h2>
+                    <p>Elige tu perfil para coordinar la entrega o recojo en menos de 1 minuto, sin registros complicados.</p>
+                    
+                    <div class="rc-tabs" role="tablist">
+                        <button type="button" class="rc-tab active" id="tab-btn-persona" onclick="switchRecycleTab('persona')">
+                            <i class="fa-solid fa-user"></i>
+                            <div class="rc-tab-content">
+                                <span class="rc-tab-title">Personas y Hogar</span>
+                                <span class="rc-tab-subtitle">1 a 3 equipos · Gratuito</span>
+                            </div>
+                        </button>
+                        <button type="button" class="rc-tab" id="tab-btn-empresa" onclick="switchRecycleTab('empresa')">
+                            <i class="fa-solid fa-building"></i>
+                            <div class="rc-tab-content">
+                                <span class="rc-tab-title">Empresas e Instituciones</span>
+                                <span class="rc-tab-subtitle">Lotes · Con Constancia RAEE</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Pestaña 1: Personas y Hogar -->
+                <div class="rc-tab-panel" id="panel-persona">
+                    <div class="rc-step-block">
+                        <label class="rc-step-label">
+                            <span class="rc-step-badge">1</span>
+                            <span>Selecciona el tipo de equipo:</span>
+                        </label>
+                        <div class="rc-device-grid">
+                            <button type="button" class="rc-dev-card active" data-type="Laptop / Computadora" onclick="selectDevice(this)">
+                                <i class="fa-solid fa-laptop"></i>
+                                <strong>Laptop / PC</strong>
+                                <span>CPUs, portátiles, todo en uno</span>
+                            </button>
+                            <button type="button" class="rc-dev-card" data-type="Monitor / Pantalla" onclick="selectDevice(this)">
+                                <i class="fa-solid fa-desktop"></i>
+                                <strong>Monitor / Pantalla</strong>
+                                <span>LED, LCD o CRT en desuso</span>
+                            </button>
+                            <button type="button" class="rc-dev-card" data-type="Celular / Tablet" onclick="selectDevice(this)">
+                                <i class="fa-solid fa-mobile-screen"></i>
+                                <strong>Celular / Tablet</strong>
+                                <span>Móviles, baterías y cargadores</span>
+                            </button>
+                            <button type="button" class="rc-dev-card" data-type="Impresora / Accesorios" onclick="selectDevice(this)">
+                                <i class="fa-solid fa-print"></i>
+                                <strong>Impresora / Partes</strong>
+                                <span>Teclados, fuentes, cables</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="rc-step-block">
+                        <label class="rc-step-label">
+                            <span class="rc-step-badge">2</span>
+                            <span>¿Dónde deseas entregarlo?</span>
+                        </label>
+                        <div class="rc-location-grid">
+                            <button type="button" class="rc-loc-card active" data-location="Sede Huánuco (Jr. Crespo y Castillo 480)" onclick="selectLocation(this)">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <div>
+                                    <strong>Sede Huánuco</strong>
+                                    <span>Jr. Crespo y Castillo 480 · Lun a Sáb</span>
+                                </div>
+                            </button>
+                            <button type="button" class="rc-loc-card" data-location="Sede Lima (San Isidro)" onclick="selectLocation(this)">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <div>
+                                    <strong>Sede Lima</strong>
+                                    <span>San Isidro · Coordinación directa</span>
+                                </div>
+                            </button>
+                            <button type="button" class="rc-loc-card" data-location="Consulta de recojo a domicilio" onclick="selectLocation(this)">
+                                <i class="fa-solid fa-truck"></i>
+                                <div>
+                                    <strong>Consulta de Recojo</strong>
+                                    <span>Para casos especiales o cercanos</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="rc-flow-action">
+                        <div class="rc-summary-preview">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span id="persona-summary-text">Reciclar <strong>Laptop / Computadora</strong> en <strong>Sede Huánuco</strong></span>
+                        </div>
+                        <a href="#" id="btn-whatsapp-persona" target="_blank" rel="noopener noreferrer" class="rc-cta-btn">
+                            <i class="fa-brands fa-whatsapp"></i>
+                            <span>Coordinar entrega por WhatsApp</span>
+                        </a>
+                        <p class="rc-action-hint">
+                            <i class="fa-solid fa-shield-halved"></i> Servicio 100% gratuito. Borrado seguro de datos antes de la valorización.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pestaña 2: Empresas e Instituciones -->
+                <div class="rc-tab-panel" id="panel-empresa" style="display: none;">
+                    <div class="rc-b2b-intro">
+                        <div class="rc-b2b-badge">
+                            <i class="fa-solid fa-file-contract"></i>
+                            <span>Baja Patrimonial Oficial · Ley D.S. N° 009-2019-MINAM</span>
+                        </div>
+                        <p>
+                            Para empresas privadas, colegios y entidades públicas. Recogemos en tus instalaciones y emitimos la <strong>Constancia Oficial de Disposición RAEE</strong> con valor probatorio para auditorías ambientales y contables.
+                        </p>
+                    </div>
+
+                    <form id="form-reciclaje-empresa" onsubmit="submitEmpresaRecycling(event)" class="rc-b2b-form">
+                        <div class="rc-form-grid">
+                            <div class="rc-field">
+                                <label for="empresa_nombre">Empresa o Institución *</label>
+                                <input type="text" id="empresa_nombre" name="empresa" placeholder="Ej. Minera Los Andes SAC / Municipalidad" required>
+                            </div>
+                            <div class="rc-field">
+                                <label for="empresa_ruc">RUC (para la constancia oficial)</label>
+                                <input type="text" id="empresa_ruc" name="ruc" maxlength="11" placeholder="Ej. 20601234567">
+                            </div>
+                            <div class="rc-field">
+                                <label for="empresa_cantidad">Volumen estimado de equipos *</label>
+                                <select id="empresa_cantidad" name="cantidad" required>
+                                    <option value="5 a 15 equipos">5 a 15 equipos (Lote pequeño)</option>
+                                    <option value="16 a 50 equipos">16 a 50 equipos (Lote mediano)</option>
+                                    <option value="Más de 50 equipos">Más de 50 equipos (Baja patrimonial masiva)</option>
+                                </select>
+                            </div>
+                            <div class="rc-field">
+                                <label for="empresa_ciudad">Ciudad / Ubicación *</label>
+                                <select id="empresa_ciudad" name="ciudad" required>
+                                    <option value="Huánuco y alrededores">Huánuco y alrededores</option>
+                                    <option value="Lima Metropolitana">Lima Metropolitana</option>
+                                    <option value="Otra región del Perú">Otra región del Perú</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="rc-flow-action">
+                            <button type="submit" class="rc-cta-btn">
+                                <i class="fa-brands fa-whatsapp"></i>
+                                <span>Solicitar Recojo y Constancia RAEE</span>
+                            </button>
+                            <div class="rc-or-divider">
+                                o envía un correo oficial a <a href="mailto:acuerdos.marco@kenya.com.pe?subject=Solicitud%20de%20Recojo%20Institucional%20RAEE">acuerdos.marco@kenya.com.pe</a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </section>
 
@@ -569,4 +1069,77 @@
             </section>
         </div>
     </div>
+
+    <script>
+        (function() {
+            var currentDevice = 'Laptop / Computadora';
+            var currentLocation = 'Sede Huánuco (Jr. Crespo y Castillo 480)';
+            var phone = '51958021778';
+
+            function updatePersonaWhatsapp() {
+                var summary = document.getElementById('persona-summary-text');
+                var btn = document.getElementById('btn-whatsapp-persona');
+                if (!summary || !btn) return;
+
+                summary.innerHTML = 'Reciclar <strong>' + currentDevice + '</strong> en <strong>' + currentLocation + '</strong>';
+
+                var msg = 'Hola KENYA TECHNOLOGY, deseo reciclar ' + currentDevice + ' en ' + currentLocation + '. ¿En qué horario puedo entregar el equipo?';
+                btn.href = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+            }
+
+            window.switchRecycleTab = function(tab) {
+                var tabPersona = document.getElementById('tab-btn-persona');
+                var tabEmpresa = document.getElementById('tab-btn-empresa');
+                var panelPersona = document.getElementById('panel-persona');
+                var panelEmpresa = document.getElementById('panel-empresa');
+                if (!tabPersona || !tabEmpresa || !panelPersona || !panelEmpresa) return;
+
+                if (tab === 'persona') {
+                    tabPersona.classList.add('active');
+                    tabEmpresa.classList.remove('active');
+                    panelPersona.style.display = 'block';
+                    panelEmpresa.style.display = 'none';
+                } else {
+                    tabEmpresa.classList.add('active');
+                    tabPersona.classList.remove('active');
+                    panelPersona.style.display = 'none';
+                    panelEmpresa.style.display = 'block';
+                }
+            };
+
+            window.selectDevice = function(btn) {
+                var cards = document.querySelectorAll('.rc-dev-card');
+                cards.forEach(function(c) { c.classList.remove('active'); });
+                btn.classList.add('active');
+                currentDevice = btn.getAttribute('data-type') || 'Equipo informático';
+                updatePersonaWhatsapp();
+            };
+
+            window.selectLocation = function(btn) {
+                var cards = document.querySelectorAll('.rc-loc-card');
+                cards.forEach(function(c) { c.classList.remove('active'); });
+                btn.classList.add('active');
+                currentLocation = btn.getAttribute('data-location') || 'Sede Huánuco';
+                updatePersonaWhatsapp();
+            };
+
+            window.submitEmpresaRecycling = function(e) {
+                e.preventDefault();
+                var emp = document.getElementById('empresa_nombre').value.trim();
+                var ruc = document.getElementById('empresa_ruc').value.trim();
+                var cant = document.getElementById('empresa_cantidad').value;
+                var ciu = document.getElementById('empresa_ciudad').value;
+
+                var rucText = ruc ? ' (RUC: ' + ruc + ')' : '';
+                var msg = 'Hola KENYA TECHNOLOGY, represento a ' + emp + rucText + '. Requerimos coordinar el recojo institucional de ' + cant + ' en ' + ciu + ' y la emisión de la Constancia Oficial de Disposición RAEE.';
+
+                var url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(msg);
+                window.open(url, '_blank');
+            };
+
+            document.addEventListener('DOMContentLoaded', function() {
+                updatePersonaWhatsapp();
+            });
+        })();
+    </script>
 @endsection

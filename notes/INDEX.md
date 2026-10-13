@@ -1,6 +1,8 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-10-13-modulo-interactivo-reciclaje-simple|2026-10-13: Módulo Interactivo de Reciclaje Simple (Ley de Tesler)]]
+- [[2026-10-13-investigacion-benchmarking-reciclaje-peru|2026-10-13: Investigación y Benchmarking de Secciones de Reciclaje Tecnológico (RAEE) en Perú]]
 - [[2026-10-13-enlace-verificacion-iaf-iso-37001-y-retiro-cc-report|2026-10-13: Integración de Enlace IAF CertSearch ISO 37001 y Retiro de Sección cc-report]]
 - [[2026-10-10-despliegue-produccion-pre-orden-y-rediseño|2026-10-10: Despliegue a Producción (Dokploy) — PRE ORDEN, Bloqueo B2B Unificado y Rediseño No-IA]]
 - [[2026-10-07-rediseño-editorial-no-ia-codigo-conducta-y-reciclaje|2026-10-07: Rediseño Editorial No-IA para Código de Conducta e Integridad ISO 37001 y Reciclaje]]
