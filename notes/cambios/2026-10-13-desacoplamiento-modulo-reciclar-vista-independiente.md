@@ -39,4 +39,5 @@ El objetivo fue desacoplar limpiamente el módulo a una ruta y vista propia (`/r
 
 ## 4. Verificación y Resultados
 - Sintaxis PHP validada con `php -l`: Cero errores en `routes/web.php`, `reciclaje.blade.php` y `reciclar.blade.php`.
-- `git status` y `git diff` quirúrgico y limpio.
+- Commit de producción: `af92ce4` pusheado a rama `feature/dokploy-postgres-sync`.
+
