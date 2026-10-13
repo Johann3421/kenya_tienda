@@ -2,8 +2,8 @@
 
 - **Fecha:** 2026-10-13
 - **Tipo:** UI / UX / Frontend / Flujo de Usuario
-- **Estado:** Implementado Localmente
-- **Rama:** feature/dokploy-postgres-sync
+- **Estado:** Completado y Desplegado en Vivo
+- **Rama:** feature/dokploy-postgres-sync (Commit `da9c690`)
 
 ---
 
