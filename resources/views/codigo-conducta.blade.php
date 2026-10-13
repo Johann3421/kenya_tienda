@@ -132,6 +132,39 @@
             margin-bottom: 4px;
         }
         #cc-page .cc-meta dd { margin: 0; font-weight: 600; color: var(--cc-ink); font-size: .95rem; }
+        #cc-page .cc-meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--cc-ink);
+            transition: color .15s ease;
+        }
+        #cc-page .cc-meta-badge:hover {
+            color: var(--cc-accent);
+        }
+        #cc-page .cc-verified-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: .74rem;
+            font-weight: 600;
+            color: #0f766e;
+            background: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: .02em;
+        }
+        #cc-page .cc-meta-ext {
+            font-size: .72rem;
+            color: var(--cc-muted);
+            transition: transform .15s ease, color .15s ease;
+        }
+        #cc-page .cc-meta-badge:hover .cc-meta-ext {
+            color: var(--cc-accent);
+            transform: translate(1px, -1px);
+        }
 
         /* Cuerpo principal a 2 columnas: Artículos (izquierda) + Sidebar con Imagen Lateral (derecha) */
         #cc-page .cc-body {
@@ -184,31 +217,6 @@
         #cc-page .cc-art-item.is-key .cc-art-num { color: var(--cc-accent); }
         #cc-page .cc-art-item.is-key .cc-art-title { color: var(--cc-ink); }
 
-        /* Canal de denuncias en bloque final */
-        #cc-page .cc-report {
-            margin-top: 64px;
-            padding-top: 32px;
-            border-top: 2px solid var(--cc-ink);
-            scroll-margin-top: 24px;
-        }
-        #cc-page .cc-report h3 { margin: 0 0 10px; font-size: 1.55rem; font-weight: 800; color: var(--cc-ink); letter-spacing: -.01em; }
-        #cc-page .cc-report > p { margin: 0 0 24px; max-width: 66ch; }
-        #cc-page .cc-table { width: 100%; border-collapse: collapse; font-size: .95rem; margin-bottom: 24px; }
-        #cc-page .cc-table th {
-            text-align: left;
-            font-size: .72rem;
-            font-weight: 700;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: var(--cc-muted);
-            padding: 0 16px 10px 0;
-            border-bottom: 1px solid var(--cc-ink);
-        }
-        #cc-page .cc-table td { padding: 14px 16px 14px 0; border-bottom: 1px solid var(--cc-rule); vertical-align: top; }
-        #cc-page .cc-table td:first-child { font-weight: 600; color: var(--cc-ink); white-space: nowrap; }
-        #cc-page .cc-table a { color: var(--cc-ink); text-decoration: underline; text-decoration-color: var(--cc-accent); text-underline-offset: 3px; }
-        #cc-page .cc-table a:hover { color: var(--cc-accent); }
-
         #cc-page .cc-btn {
             display: inline-block;
             background: var(--cc-navy);
@@ -221,7 +229,6 @@
             transition: background .15s ease;
         }
         #cc-page .cc-btn:hover { background: var(--cc-accent); color: #fff; }
-        #cc-page .cc-fine { margin: 14px 0 0; font-size: .84rem; color: var(--cc-muted); }
 
         /* Columna Derecha: Sidebar Lateral Fija (Sticky) con la Imagen ISO 37001 Prominente */
         #cc-page .cc-sidebar {
@@ -240,32 +247,68 @@
             overflow: hidden;
             box-shadow: 0 10px 25px -10px rgba(17, 24, 39, 0.08);
         }
-        #cc-page .cc-iso-card img {
+        #cc-page .cc-iso-link {
+            display: block;
+            background: #fafaf9;
+            text-decoration: none;
+        }
+        #cc-page .cc-iso-link img {
             display: block;
             width: 100%;
             height: auto;
-            background: #fafaf9;
             padding: 18px;
             box-sizing: border-box;
+            transition: opacity .15s ease;
+        }
+        #cc-page .cc-iso-link:hover img {
+            opacity: .92;
         }
         #cc-page .cc-iso-card figcaption {
             background: var(--cc-navy);
             color: #f3f4f6;
-            padding: 12px 18px;
+            padding: 14px 18px;
             font-size: .84rem;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
         #cc-page .cc-iso-card figcaption strong {
             color: #fff;
             font-weight: 700;
             letter-spacing: .02em;
+            font-size: .92rem;
         }
-        #cc-page .cc-iso-card figcaption span {
+        #cc-page .cc-iso-card figcaption span.cc-iso-subtitle {
             color: #9ca3af;
             font-size: .8rem;
+            margin-bottom: 8px;
+        }
+        #cc-page .cc-iso-verify-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: .8rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .15s ease, border-color .15s ease, color .15s ease;
+        }
+        #cc-page .cc-iso-verify-btn:hover {
+            background: var(--cc-accent);
+            border-color: var(--cc-accent);
+            color: #ffffff;
+        }
+        #cc-page .cc-iso-verify-btn i.fa-circle-check {
+            color: #34d399;
+        }
+        #cc-page .cc-iso-verify-btn:hover i.fa-circle-check {
+            color: #ffffff;
         }
 
         #cc-page .cc-sidebar-box {
@@ -327,11 +370,7 @@
             #cc-page .cc-body { grid-template-columns: 1fr; gap: 40px; }
             #cc-page .cc-sidebar { position: static; max-width: 480px; margin: 0 auto; width: 100%; }
         }
-        @media (max-width: 575px) {
-            #cc-page .cc-table thead { display: none; }
-            #cc-page .cc-table td { display: block; padding: 2px 0; border: 0; }
-            #cc-page .cc-table tr { display: block; padding: 12px 0; border-bottom: 1px solid var(--cc-rule); }
-        }
+
     </style>
 
     <div id="cc-page">
@@ -356,7 +395,16 @@
             </header>
 
             <dl class="cc-meta">
-                <div><dt>Norma de referencia</dt><dd>ISO 37001:2025</dd></div>
+                <div>
+                    <dt>Certificado Oficial</dt>
+                    <dd>
+                        <a href="https://www.iafcertsearch.org/certification/coab4xBQ2sckoPhoTI1foD8G" target="_blank" rel="noopener noreferrer" class="cc-meta-badge" title="Validar certificación en IAF CertSearch">
+                            <span>ISO 37001:2025</span>
+                            <span class="cc-verified-tag"><i class="fa-solid fa-shield-halved"></i> Verificado</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square cc-meta-ext"></i>
+                        </a>
+                    </dd>
+                </div>
                 <div><dt>Lineamientos</dt><dd>{{ count($articulos) }} artículos</dd></div>
             </dl>
 
@@ -372,44 +420,22 @@
                         @endforeach
                     </ol>
 
-                    <section class="cc-report" id="canal-denuncias">
-                        <h3>¿Viste una conducta indebida?</h3>
 
-                        <table class="cc-table">
-                            <thead>
-                                <tr><th>Canal</th><th>Contacto</th><th>Úsalo para</th></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Correo de cumplimiento</td>
-                                    <td><a href="mailto:acuerdos.marco@kenya.com.pe">acuerdos.marco@kenya.com.pe</a></td>
-                                    <td>Denuncias y consultas sobre ética e integridad</td>
-                                </tr>
-                                <tr>
-                                    <td>Central telefónica</td>
-                                    <td><a href="tel:+51958021778">958 021 778</a></td>
-                                    <td>Orientación previa antes de presentar un reporte</td>
-                                </tr>
-                                <tr>
-                                    <td>Soporte</td>
-                                    <td><a href="mailto:soporte@kenya.com.pe">soporte@kenya.com.pe</a></td>
-                                    <td>Consultas generales sobre este documento</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <a class="cc-btn" href="mailto:acuerdos.marco@kenya.com.pe?subject=Reporte%20confidencial%20-%20C%C3%B3digo%20de%20Conducta">Enviar un reporte confidencial</a>
-                        <p class="cc-fine">Indica, si puedes, fecha, lugar y personas involucradas. No es obligatorio identificarte.</p>
-                    </section>
                 </div>
 
                 <!-- Columna Derecha: Sidebar Lateral Fija con la Imagen ISO 37001 Prominente -->
                 <aside class="cc-sidebar">
                     <figure class="cc-iso-card">
-                        <img src="{{ asset('iso-37001.png') }}" alt="Sistema de Gestión Antisoborno ISO 37001:2025 de KENYA TECHNOLOGY" loading="lazy">
+                        <a href="https://www.iafcertsearch.org/certification/coab4xBQ2sckoPhoTI1foD8G" target="_blank" rel="noopener noreferrer" class="cc-iso-link" title="Validar certificación oficial en IAF CertSearch">
+                            <img src="{{ asset('iso-37001.png') }}" alt="Sistema de Gestión Antisoborno ISO 37001:2025 de KENYA TECHNOLOGY" loading="lazy">
+                        </a>
                         <figcaption>
                             <strong>Acreditación ISO 37001:2025</strong>
-                            <span>Sistema de Gestión Antisoborno</span>
+                            <span class="cc-iso-subtitle">Sistema de Gestión Antisoborno</span>
+                            <a href="https://www.iafcertsearch.org/certification/coab4xBQ2sckoPhoTI1foD8G" target="_blank" rel="noopener noreferrer" class="cc-iso-verify-btn">
+                                <span><i class="fa-solid fa-circle-check"></i> Verificado en IAF CertSearch</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
                         </figcaption>
                     </figure>
 
