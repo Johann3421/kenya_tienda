@@ -38,4 +38,5 @@ El objetivo es reforzar la presencia institucional de los acuerdos marco y catá
 
 ## 4. Verificación y Resultados
 - Sintaxis PHP validada con `php -l` en todas las vistas modificadas: Cero errores.
-- Despliegue listo para Dokploy en rama `feature/dokploy-postgres-sync`.
+- Commit de producción: `334b551` desplegado en Dokploy (`feature/dokploy-postgres-sync`).
+
