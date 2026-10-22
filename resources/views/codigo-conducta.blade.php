@@ -7,18 +7,7 @@
 @section('og_title', 'Código de Conducta · ISO 37001:2025 | KENYA Technology Perú')
 @section('og_description', 'Conoce los 16 lineamientos éticos y la certificación ISO 37001:2025 de KENYA Technology.')
 
-@section('menu')
-    <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
-        <ul class="kenya-nav-list">
-            <li><a href="{{ url('/') }}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
-            <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
-            <li><a href="{{ route('catalogo') }}" class="kenya-nav-link">Catálogo</a></li>
-            <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
-            <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</a></li>
-            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Contáctenos</a></li>
-        </ul>
-    </nav>
-@endsection
+
 
 @php
     $articulos = [

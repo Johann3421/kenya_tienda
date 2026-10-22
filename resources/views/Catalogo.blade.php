@@ -9,19 +9,7 @@
 @section('og_description', 'Encuentra las mejores opciones en computadoras de escritorio, laptops y suministros corporativos con garantía de 36 meses On-Site.')
 @section('og_image', asset('theme/images/kenya.png'))
 @section('og_url', route('catalogo'))
-@section('menu')
-    <nav class="kenya-main-nav kenya-float-right kenya-d-none kenya-d-lg-block">
-        <ul class="kenya-nav-list">
-            <li><a href="{{ url('/') }}" class="kenya-nav-link"><i class="bx bx-home kenya-nav-icon"></i> Inicio</a></li>
-            <li><a href="{{ route('quienes.somos') }}" class="kenya-nav-link">Quienes Somos</a></li>
-            <li class="kenya-active"><a href="{{ route('catalogo') }}" class="kenya-nav-link">Cat&aacute;logo</a></li>
-            <li><a href="{{ route('novedades') }}" class="kenya-nav-link">Novedades</a></li>
-            <li><a href="{{ route('consultar.garantia') }}" class="kenya-nav-link">Soporte</            {{-- Sorteo temporalmente oculto en producción --}}
-            {{-- <li><a href="{{ route('serial.draw') }}" class="kenya-nav-link">🎁  Sorteo</a></li> --}}
-            <li><a href="{{ route('contactenos') }}" class="kenya-nav-link">Cont&aacute;ctenos</a></li>
-        </ul>
-    </nav>
-@endsection
+
 
 @section('content')
     <?php

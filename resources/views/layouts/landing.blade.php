@@ -384,6 +384,33 @@ body {
     width: 100%;
 }
 
+/* Logo Perú Compras en Header Desktop */
+.site-header .kenya-nav-perucompras {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 0 4px 0 !important;
+    line-height: 1;
+}
+
+.site-header .kenya-perucompras-logo {
+    height: 32px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.site-header .kenya-nav-perucompras:hover .kenya-perucompras-logo {
+    transform: translateY(-1px);
+    opacity: 0.92;
+}
+
+.site-header .kenya-active .kenya-nav-perucompras::after,
+.site-header .kenya-nav-perucompras:hover::after {
+    width: 100%;
+}
+
 /* Ocultar ícono de home dentro del texto del nav */
 .site-header .kenya-nav-icon {
     display: none;
@@ -462,6 +489,9 @@ body {
     .site-header .kenya-nav-link,
     .site-header .kenya-nav-list > li > a {
         font-size: 0.78rem;
+    }
+    .site-header .kenya-perucompras-logo {
+        height: 28px;
     }
 }
 
@@ -674,7 +704,7 @@ body {
                 </div>
             </div>
 
-            @yield('menu')
+            @include('partials.header-menu')
 
             <!-- User Auth Dropdown -->
             <div class="kenya-user-dropdown" style="position: relative; margin-left: 15px; display: flex; align-items: center;">
@@ -733,7 +763,12 @@ body {
             <ul>
                 <li><a href="{{ url('/') }}"><i class="bx bx-home"></i> Inicio</a></li>
                 <li><a href="{{ route('quienes.somos') }}">Quienes Somos</a></li>
-                <li><a href="{{ route('catalogo') }}">Catalogo</a></li>
+                <li>
+                    <a href="{{ route('catalogo') }}" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="{{ asset('logo_PeruCompras.svg') }}" alt="Perú Compras" style="height: 22px; width: auto; object-fit: contain;">
+                        <span>Catálogo Perú Compras</span>
+                    </a>
+                </li>
                 <li><a href="{{ route('novedades') }}">Novedades</a></li>
                 <li><a href="{{ route('consultar.garantia') }}">Soporte</a></li>
                 {{-- Sorteo temporalmente oculto en producción --}}

@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-10-22-reemplazo-header-catalogo-por-logo-perucompras|2026-10-22: Reemplazo del Ítem 'Catálogo' en Header por Logo de Perú Compras y Centralización de Navegación]]
 - [[2026-10-13-desacoplamiento-modulo-reciclar-vista-independiente|2026-10-13: Desacoplamiento del Módulo de Reciclaje a Vista Independiente (/reciclar) en Nueva Pestaña]]
 - [[2026-10-13-modulo-interactivo-reciclaje-simple|2026-10-13: Módulo Interactivo de Reciclaje Simple (Ley de Tesler)]]
 - [[2026-10-13-investigacion-benchmarking-reciclaje-peru|2026-10-13: Investigación y Benchmarking de Secciones de Reciclaje Tecnológico (RAEE) en Perú]]
