@@ -753,11 +753,11 @@
                             }
                             
                             $label = $m->descripcion;
-                            if (str_contains($desc, 'EZENT')) $label .= ' (PC ESCRITORIO)';
-                            elseif (str_contains($desc, 'GENWORK')) $label .= ' (PC ESCRITORIO PRO)';
-                            elseif (str_contains($desc, 'OFISZU')) $label .= ' (ESCRITORIO)';
-                            elseif (str_contains($desc, 'PROWORK')) $label .= ' (PC WORKSTATION)';
-                            elseif (str_contains($desc, 'RAITO')) $label .= ' (Monitor)';
+                            if (str_contains($desc, 'EZENT')) $label = 'PC MEDIA TORRE/ SFF (EZENT) (368)';
+                            elseif (str_contains($desc, 'GENWORK')) $label = 'PC TORRE PRO (GENWORK) (43)';
+                            elseif (str_contains($desc, 'OFISZU')) $label = 'PC SFF (OFISZU) (52)';
+                            elseif (str_contains($desc, 'PROWORK')) $label = 'PC WORSTATION (PROWORK) (625)';
+                            elseif (str_contains($desc, 'RAITO')) $label = 'MONITOR IPS/ LED (RAITO) (49)';
                         @endphp
                         <option value="{{ $m->id }}" {{ ($selModelo == $m->id) ? 'selected' : '' }}>{{ $label }}</option>
                     @endforeach
