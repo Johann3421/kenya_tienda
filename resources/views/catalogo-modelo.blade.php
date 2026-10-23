@@ -262,16 +262,40 @@
             }
 
             function fetchFilters(modeloId){
-                const url = modeloId ? `${filtersUrlBase}/${modeloId}` : filtersUrlBase;
+                const params = new URLSearchParams(window.location.search);
+                const mId = (modeloId !== undefined && modeloId !== null) ? modeloId : (modeloSelect ? modeloSelect.value : '');
+                if (mId) params.set('modelo', mId); else params.delete('modelo');
+                const url = (mId ? `${filtersUrlBase}/${mId}` : filtersUrlBase) + '?' + params.toString();
+
+                const openSections = new Set();
+                filtersContainer.querySelectorAll('.seccion_filtro').forEach(sec => {
+                    const list = sec.querySelector('.lista');
+                    const campo = sec.dataset.campo || (list ? list.id.replace('list_', '') : null);
+                    if (campo && list && list.style.display !== 'none') {
+                        openSections.add(campo);
+                    }
+                });
+
                 fetch(url, { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     filtersContainer.innerHTML = html;
                     executeScripts(filtersContainer);
+
+                    openSections.forEach(campo => {
+                        const list = document.getElementById('list_' + campo);
+                        const icon = document.getElementById('icon_' + campo);
+                        const searchWrap = document.getElementById('search_wrap_' + campo);
+                        if (list) {
+                            list.style.display = 'block';
+                            if (icon) { icon.classList.remove('fa-plus'); icon.classList.add('fa-minus'); }
+                            if (searchWrap) searchWrap.style.display = 'block';
+                        }
+                    });
                 }).catch(err => console.error(err));
             }
 
             function fetchProducts(page){
                 const params = new URLSearchParams(window.location.search);
-                const modelo = modeloSelect.value;
+                const modelo = modeloSelect ? modeloSelect.value : '';
                 if (modelo) params.set('modelo', modelo); else params.delete('modelo');
                 if (page) params.set('page', page);
                 fetch(productsUrl + '?' + params.toString(), { credentials: 'same-origin' }).then(r => r.text()).then(html => {
@@ -280,8 +304,11 @@
                 }).catch(err => console.error(err));
             }
 
-            // Listen for filter changes from aside-detallemod
-            window.addEventListener('filterchange', function(){ fetchProducts(); });
+            // Listen for filter changes from aside-detallemod (actualiza productos y cascada de filtros)
+            window.addEventListener('filterchange', function(){
+                fetchProducts();
+                fetchFilters();
+            });
 
             const searchInput = document.getElementById('preview-search');
             const suggestionsBox = document.getElementById('preview-suggestions');
@@ -321,6 +348,7 @@
                 history.replaceState({}, '', window.location.pathname + '?' + params.toString());
                 hideSuggestions();
                 fetchProducts();
+                fetchFilters();
             }
 
             if (searchInput) {

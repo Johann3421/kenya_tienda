@@ -840,16 +840,40 @@
             }
 
             function fetchFilters(modeloId){
-                const url = modeloId ? `${filtersUrlBase}/${modeloId}` : filtersUrlBase;
+                const params = new URLSearchParams(window.location.search);
+                const mId = (modeloId !== undefined && modeloId !== null) ? modeloId : (modeloSelect ? modeloSelect.value : '');
+                if (mId) params.set('modelo', mId); else params.delete('modelo');
+                const url = (mId ? `${filtersUrlBase}/${mId}` : filtersUrlBase) + '?' + params.toString();
+
+                const openSections = new Set();
+                filtersContainer.querySelectorAll('.seccion_filtro').forEach(sec => {
+                    const list = sec.querySelector('.lista');
+                    const campo = sec.dataset.campo || (list ? list.id.replace('list_', '') : null);
+                    if (campo && list && list.style.display !== 'none') {
+                        openSections.add(campo);
+                    }
+                });
+
                 fetch(url, { credentials: 'same-origin' }).then(r => r.text()).then(html => {
                     filtersContainer.innerHTML = html;
                     executeScripts(filtersContainer);
+
+                    openSections.forEach(campo => {
+                        const list = document.getElementById('list_' + campo);
+                        const icon = document.getElementById('icon_' + campo);
+                        const searchWrap = document.getElementById('search_wrap_' + campo);
+                        if (list) {
+                            list.style.display = 'block';
+                            if (icon) { icon.classList.remove('fa-plus'); icon.classList.add('fa-minus'); }
+                            if (searchWrap) searchWrap.style.display = 'block';
+                        }
+                    });
                 }).catch(err => console.error(err));
             }
 
             function fetchProducts(page){
                 const params = new URLSearchParams(window.location.search);
-                const modelo = modeloSelect.value;
+                const modelo = modeloSelect ? modeloSelect.value : '';
                 const ordenSelect = document.getElementById('preview-orden');
                 const perPageSelect = document.getElementById('preview-per-page');
                 const orden = ordenSelect ? ordenSelect.value : 'newest';
@@ -864,9 +888,11 @@
                 }).catch(err => console.error(err));
             }
 
-
-            // Listen for filter changes from aside-detallemod
-            window.addEventListener('filterchange', function(){ fetchProducts(); });
+            // Listen for filter changes from aside-detallemod (actualiza productos y cascada de filtros)
+            window.addEventListener('filterchange', function(){
+                fetchProducts();
+                fetchFilters();
+            });
 
             // Intelligent search (typeahead)
             const searchInput = document.getElementById('preview-search');
@@ -908,6 +934,7 @@
                 history.replaceState({}, '', window.location.pathname + '?' + params.toString());
                 hideSuggestions();
                 fetchProducts();
+                fetchFilters();
             }
 
             if (searchInput) {
@@ -946,17 +973,21 @@
 
             if (modeloSelect){
                 modeloSelect.addEventListener('change', () => {
-                    const params = new URLSearchParams(window.location.search);
+                    const currentParams = new URLSearchParams(window.location.search);
+                    const params = new URLSearchParams();
+                    if (currentParams.get('orden')) params.set('orden', currentParams.get('orden'));
+                    if (currentParams.get('per_page')) params.set('per_page', currentParams.get('per_page'));
+                    if (currentParams.get('busqueda')) params.set('busqueda', currentParams.get('busqueda'));
+
                     if (modeloSelect.value) {
                         params.set('modelo', modeloSelect.value);
+                        history.replaceState({}, '', window.location.pathname + '?' + params.toString());
                         fetchFilters(modeloSelect.value);
                     } else {
                         params.delete('modelo');
-                        filtersContainer.innerHTML =
-                            '<p style="padding:15px;color:#666;font-size:14px;">Seleccione un modelo para ver los filtros disponibles.</p>';
+                        history.replaceState({}, '', window.location.pathname + (params.toString() ? '?' + params.toString() : ''));
+                        fetchFilters('');
                     }
-                    params.delete('page');
-                    history.replaceState({}, '', window.location.pathname + '?' + params.toString());
                     fetchProducts();
                 });
             }

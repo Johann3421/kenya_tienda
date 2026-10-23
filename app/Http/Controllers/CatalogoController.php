@@ -315,10 +315,7 @@ class CatalogoController extends Controller
     // Return the aside filters partial for a given modelo (used by preview AJAX)
     public function previewFilters($id = null)
     {
-        if (!$id) {
-            return response('<p style="padding:15px;color:#666;font-size:14px;">Seleccione un modelo para ver los filtros disponibles.</p>')
-                ->header('Content-Type', 'text/html; charset=utf-8');
-        }
+        $id = $id ?: request('modelo');
         return view('partials.aside-detallemod', ['id' => $id]);
     }
 

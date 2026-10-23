@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-10-23-filtros-facetados-dinamicos-ceam-perucompras|2026-10-23: Filtros Facetados Dinámicos en Cascada con Conteos Reales (Estilo CEAM Perú Compras)]]
 - [[2026-10-22-conteo-fichas-categorias-modelos-catalogo|2026-10-22: Actualización de Etiquetas y Conteo de Fichas Técnicas por Categoría de Modelos en Selector de Catálogo]]
 - [[2026-10-22-reemplazo-header-catalogo-por-logo-perucompras|2026-10-22: Reemplazo del Ítem 'Catálogo' en Header por Logo de Perú Compras y Centralización de Navegación]]
 - [[2026-10-13-desacoplamiento-modulo-reciclar-vista-independiente|2026-10-13: Desacoplamiento del Módulo de Reciclaje a Vista Independiente (/reciclar) en Nueva Pestaña]]

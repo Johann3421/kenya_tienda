@@ -2,20 +2,230 @@
     use App\Producto;
     use App\Modelo;
 
-    $modId = $id ?? (request()->route('id') ?? request()->route('modelo'));
+    $modId = $id ?? (request()->route('id') ?? (request('modelo') ?? request()->route('modelo')));
 
     $isTonerModel = isset($isTonerModel) ? (bool) $isTonerModel : false;
-    if (!$isTonerModel && $modId) {
+    $isMonitorModel = false;
+    if ($modId) {
         $modeloTmp = Modelo::find($modId);
         $modeloDesc = mb_strtolower((string) ($modeloTmp->descripcion ?? ''));
         $isTonerModel = ((int) ($modeloTmp->id ?? 0) === 10)
             || str_contains($modeloDesc, 'toner')
             || str_contains($modeloDesc, 'tonner');
+        $isMonitorModel = ((int) ($modeloTmp->id ?? 0) === 16)
+            || str_contains($modeloDesc, 'raito')
+            || str_contains($modeloDesc, 'monitor');
     }
 
     $specs = [];
 
-    if ($isTonerModel) {
+    /**
+     * Normalizadores canónicos compartidos
+     */
+    $normalizarTV = function(string $v): string {
+        $v = trim($v);
+        $v = preg_replace('/\b(dedicad[oa]s?|integrad[oa]s?)\b/i', '', $v);
+        $v = trim($v);
+        $v = preg_replace('/\s+/', ' ', $v);
+        $v = trim($v);
+        $v = preg_replace('/\s*-\s*/', '-', $v);
+        $v = trim($v);
+        $v = preg_replace('/\bConectividadº?\b/i', '', $v);
+        $v = trim($v);
+
+        if (preg_match('/^(.*?\d+\s*GB(?:\s*G?DDR\d[X]?)?)/i', $v, $m)) {
+            $v = trim($m[1]);
+        } else {
+            $v = preg_replace(
+                '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
+                . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
+                . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
+                '',
+                $v
+            );
+        }
+        $v = preg_replace('/(\d+)\s*GB/i', '$1 GB', $v);
+        $v = preg_replace('/GB\s*(G?DDR\d[X]?)/i', 'GB $1', $v);
+        $v = ltrim($v, '- ');
+        return trim($v);
+    };
+
+    $normalizarCPU = function(string $v): string {
+        $v = trim($v);
+        $v = preg_replace('/\s+\d+(\.\d+)?\s*GHZ$/i', '', $v);
+        return trim($v);
+    };
+
+    $normalizarRAM = function(string $v): string {
+        $v = trim($v);
+        if (preg_match('/^(\d+\s*GB\s+DDR\d\s+\d{3,4})/i', $v, $m)) {
+            return trim(strtoupper($m[1])) . ' MHz';
+        }
+        $v = preg_replace('/\s+/', ' ', $v);
+        return strtoupper(trim($v));
+    };
+
+    $normalizarAlmacenamiento = function(string $v): string {
+        $v = trim($v);
+        if ($v === '') return '';
+        $v = preg_replace('/\s+/', ' ', $v);
+
+        if (str_contains($v, '/')) {
+            $partes = explode('/', $v);
+            $partesNorm = array_map(function($p) {
+                $p = trim($p);
+                $p = preg_replace('/(\d+)\s*(TB|GB)/i', '$1 $2', $p);
+                $p = preg_replace_callback('/\b(ssd|hdd|nvme|rpm|m\.2)\b/i', fn($m) => strtoupper($m[1]), $p);
+                $p = preg_replace('/\s+/', ' ', $p);
+                return trim($p);
+            }, $partes);
+
+            return implode(' / ', $partesNorm);
+        }
+
+        $v = preg_replace('/(\d+)\s*(TB|GB)/i', '$1 $2', $v);
+
+        if (preg_match('/^(\d+)\s*[xX]\s*(\d+)\s*(TB|GB)/i', $v, $m)) {
+            $qty = (int)$m[1];
+            $size = (int)$m[2];
+            $unit = strtoupper($m[3]);
+            $total = $qty * $size;
+            $capacidad = "$total $unit";
+        } elseif (preg_match('/(\d+(?:\.\d+)?)\s*(TB|GB)/i', $v, $m)) {
+            $capacidad = $m[1] . ' ' . strtoupper($m[2]);
+        } else {
+            return $v;
+        }
+
+        if (preg_match('/\b(SSD|M\.2|NVME)\b/i', $v)) {
+            return "$capacidad (SSD/ M.2/ NVME)";
+        }
+
+        if (preg_match('/\bHDD\b/i', $v)) {
+            return "$capacidad HDD";
+        }
+
+        return $v;
+    };
+
+    $normalizarGarantia = function(string $v): ?string {
+        $v = strtoupper(trim($v));
+        if (!preg_match('/(\d+)\s*MESES/i', $v, $m)) return null;
+        $meses = $m[1] . ' MESES';
+        if (str_contains($v, 'ON-SITE') || str_contains($v, 'ON SITE')) $tipo = 'ON-SITE';
+        elseif (str_contains($v, 'CARRY-IN') || str_contains($v, 'CARRY IN')) $tipo = 'CARRY-IN';
+        else $tipo = 'ESTÁNDAR';
+        return "$meses $tipo";
+    };
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // CASO 1: MONITORES (RAITO)
+    // ─────────────────────────────────────────────────────────────────────────────
+    if ($isMonitorModel) {
+        $monitorSpecMap = [
+            'espec_tamano'      => 'Tamaño de Pantalla',
+            'espec_panel'       => 'Panel',
+            'espec_hdmi'        => 'HDMI',
+            'espec_displayport' => 'DisplayPort',
+            'espec_garantia'    => 'Garantía de Fábrica',
+        ];
+
+        $monitorQuery = Producto::query()
+            ->where('modelo_id', $modId)
+            ->where('pagina_web', 'SI')
+            ->noSuspendido()
+            ->with('especificaciones');
+
+        if (request()->filled('busqueda')) {
+            $monitorQuery->intelligentSearch(request('busqueda'));
+        }
+
+        $monitorProducts = $monitorQuery->get();
+
+        $preparedMonitors = [];
+        foreach ($monitorProducts as $p) {
+            $row = [];
+            foreach ($p->especificaciones as $esp) {
+                $campo = trim($esp->campo);
+                $desc = trim($esp->descripcion);
+                if ($desc === '' || strtolower($desc) === 'no' || in_array(strtoupper($desc), ['NULL', 'NONE', 'N/A', 'NO APLICA', 'N.A.'], true)) {
+                    continue;
+                }
+                if ($campo === 'Garantía de Fábrica') {
+                    $normG = $normalizarGarantia($desc);
+                    if ($normG) $row['espec_garantia'] = $normG;
+                } else {
+                    foreach ($monitorSpecMap as $paramKey => $cName) {
+                        if ($cName === $campo) {
+                            $row[$paramKey] = $desc;
+                        }
+                    }
+                }
+            }
+            $preparedMonitors[] = $row;
+        }
+
+        $activeMonitorFilters = [];
+        foreach ($monitorSpecMap as $paramKey => $campo) {
+            if (request()->filled($paramKey)) {
+                $vals = array_filter(array_map('trim', explode(',', (string)request($paramKey))), fn($v) => $v !== '');
+                if (!empty($vals)) {
+                    $activeMonitorFilters[$paramKey] = $vals;
+                }
+            }
+        }
+
+        foreach ($monitorSpecMap as $paramKey => $campo) {
+            $counts = [];
+            foreach ($preparedMonitors as $p) {
+                $matchesOthers = true;
+                foreach ($activeMonitorFilters as $otherKey => $allowedValues) {
+                    if ($otherKey === $paramKey) continue;
+                    $pVal = $p[$otherKey] ?? null;
+                    if ($pVal === null || !in_array($pVal, $allowedValues, true)) {
+                        $matchesOthers = false;
+                        break;
+                    }
+                }
+                if ($matchesOthers) {
+                    $val = $p[$paramKey] ?? null;
+                    if ($val !== null) {
+                        $counts[$val] = ($counts[$val] ?? 0) + 1;
+                    }
+                }
+            }
+
+            $activeForParam = $activeMonitorFilters[$paramKey] ?? [];
+            $options = [];
+            foreach ($counts as $val => $cnt) {
+                $options[] = [
+                    'value' => $val,
+                    'count' => $cnt,
+                ];
+            }
+            $existingValues = array_column($options, 'value');
+            foreach ($activeForParam as $checkedVal) {
+                if (!in_array($checkedVal, $existingValues, true)) {
+                    $options[] = [
+                        'value' => $checkedVal,
+                        'count' => 0,
+                    ];
+                }
+            }
+
+            if (!empty($options)) {
+                usort($options, fn($a, $b) => strnatcasecmp($a['value'], $b['value']));
+                $specs[$paramKey] = [
+                    'label' => $campo,
+                    'options' => $options,
+                ];
+            }
+        }
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
+    // CASO 2: TÓNER (HENKO)
+    // ─────────────────────────────────────────────────────────────────────────────
+    elseif ($isTonerModel) {
         $tonerSpecMap = [
             'tipo_suministro'       => 'Tipo de suministro',
             'modelo_toner'          => 'Modelo',
@@ -29,68 +239,108 @@
             'dimensiones_toner'     => 'Dimensiones',
         ];
 
-        foreach ($tonerSpecMap as $paramKey => $campo) {
-            $values = \DB::table('especificaciones')
-                ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
-                ->where('productos.modelo_id', $modId)
-                ->where('productos.pagina_web', 'SI')
-                ->where(function ($q) {
-                    $q->whereNull('productos.vigencia')
-                      ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
-                })
-                ->where('especificaciones.campo', $campo)
-                ->whereRaw("TRIM(especificaciones.descripcion) NOT IN ('', 'null', 'NULL', 'none', 'NONE', 'N/A', 'n/a', '-', 'NO APLICA', 'N.A.')")
-                ->distinct()
-                ->orderBy('especificaciones.descripcion')
-                ->pluck('especificaciones.descripcion')
-                ->map(fn($v) => trim((string) $v))
-                ->filter(fn($v) => $v !== '')
-                ->unique()
-                ->values();
-
-            if ($values->isNotEmpty()) {
-                $specs[$paramKey] = ['label' => $campo, 'options' => $values];
-            }
-        }
-
-        $numeroParte = Producto::query()
+        $tonerQuery = Producto::query()
             ->where('modelo_id', $modId)
             ->where('pagina_web', 'SI')
             ->noSuspendido()
-            ->whereNotNull('nro_parte')
-            ->whereRaw("TRIM(nro_parte) != ''")
-            ->distinct()
-            ->orderBy('nro_parte')
-            ->pluck('nro_parte')
-            ->map(fn($v) => trim((string) $v))
-            ->filter(fn($v) => $v !== '')
-            ->unique()
-            ->values();
+            ->with('especificaciones');
 
-        if ($numeroParte->isNotEmpty()) {
-            $specs['numero_parte_toner'] = ['label' => 'Número de parte', 'options' => $numeroParte];
+        if (request()->filled('busqueda')) {
+            $tonerQuery->intelligentSearch(request('busqueda'));
         }
 
-        // Garantía de Fábrica (toner): normalizar para agrupar por meses + tipo
-        if (isset($specs['garantia_toner'])) {
-            $normalizarGarantia = function(string $v): ?string {
-                $v = strtoupper(trim($v));
-                if (!preg_match('/(\d+)\s*MESES/i', $v, $m)) return null;
-                $meses = $m[1] . ' MESES';
-                if (str_contains($v, 'ON-SITE') || str_contains($v, 'ON SITE')) $tipo = 'ON-SITE';
-                elseif (str_contains($v, 'CARRY-IN') || str_contains($v, 'CARRY IN')) $tipo = 'CARRY-IN';
-                else $tipo = 'ESTÁNDAR';
-                return "$meses $tipo";
-            };
-            $garantiasNorm = $specs['garantia_toner']['options']
-                ->map(fn($v) => $normalizarGarantia((string) $v))
-                ->filter()
-                ->unique()
-                ->sort()
-                ->values();
-            $specs['garantia_toner']['options'] = $garantiasNorm;
+        $tonerProducts = $tonerQuery->get();
+
+        $preparedToner = [];
+        foreach ($tonerProducts as $p) {
+            $row = [];
+            if (!empty($p->nro_parte)) {
+                $row['numero_parte_toner'] = trim((string)$p->nro_parte);
+            }
+            foreach ($p->especificaciones as $esp) {
+                $campo = trim($esp->campo);
+                $desc = trim($esp->descripcion);
+                if ($desc === '' || in_array(strtoupper($desc), ['NULL', 'NONE', 'N/A', '-', 'NO APLICA', 'N.A.'], true)) {
+                    continue;
+                }
+                if ($campo === 'Garantía de Fábrica') {
+                    $normG = $normalizarGarantia($desc);
+                    if ($normG) $row['garantia_toner'] = $normG;
+                } else {
+                    foreach ($tonerSpecMap as $paramKey => $cName) {
+                        if ($cName === $campo) {
+                            $row[$paramKey] = $desc;
+                        }
+                    }
+                }
+            }
+            $preparedToner[] = $row;
         }
-    } else {
+
+        $allTonerFields = $tonerSpecMap;
+        $allTonerFields['numero_parte_toner'] = 'Número de parte';
+
+        $activeTonerFilters = [];
+        foreach ($allTonerFields as $paramKey => $campo) {
+            if (request()->filled($paramKey)) {
+                $vals = array_filter(array_map('trim', explode(',', (string)request($paramKey))), fn($v) => $v !== '');
+                if (!empty($vals)) {
+                    $activeTonerFilters[$paramKey] = $vals;
+                }
+            }
+        }
+
+        foreach ($allTonerFields as $paramKey => $campo) {
+            $counts = [];
+            foreach ($preparedToner as $p) {
+                $matchesOthers = true;
+                foreach ($activeTonerFilters as $otherKey => $allowedValues) {
+                    if ($otherKey === $paramKey) continue;
+                    $pVal = $p[$otherKey] ?? null;
+                    if ($pVal === null || !in_array($pVal, $allowedValues, true)) {
+                        $matchesOthers = false;
+                        break;
+                    }
+                }
+                if ($matchesOthers) {
+                    $val = $p[$paramKey] ?? null;
+                    if ($val !== null) {
+                        $counts[$val] = ($counts[$val] ?? 0) + 1;
+                    }
+                }
+            }
+
+            $activeForParam = $activeTonerFilters[$paramKey] ?? [];
+            $options = [];
+            foreach ($counts as $val => $cnt) {
+                $options[] = [
+                    'value' => $val,
+                    'count' => $cnt,
+                ];
+            }
+            $existingValues = array_column($options, 'value');
+            foreach ($activeForParam as $checkedVal) {
+                if (!in_array($checkedVal, $existingValues, true)) {
+                    $options[] = [
+                        'value' => $checkedVal,
+                        'count' => 0,
+                    ];
+                }
+            }
+
+            if (!empty($options)) {
+                usort($options, fn($a, $b) => strnatcasecmp($a['value'], $b['value']));
+                $specs[$paramKey] = [
+                    'label' => $campo,
+                    'options' => $options,
+                ];
+            }
+        }
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
+    // CASO 3: PCs DE ESCRITORIO / WORKSTATIONS (EZENT, GENWORK, OFISZU, PROWORK)
+    // ─────────────────────────────────────────────────────────────────────────────
+    else {
         $specFields = [
             'procesador'       => 'Procesador',
             'ram'              => 'Memoria RAM',
@@ -104,232 +354,131 @@
             'suite_ofimatica'  => 'Ofimática',
         ];
 
-        /**
-         * Normaliza el nombre de una tarjeta de video extrayendo su forma canónica:
-         * conserva marca + modelo + VRAM y elimina sufijos de marketing como
-         * OC, Gaming, Edition, Windforce, TUF, etc.
-         *
-         * Ejemplos:
-         *   "NVIDIA RTX 4060 8GB OC Edition" → "NVIDIA RTX 4060 8GB"
-         *   "AMD RX 6600 XT 8GB Gaming X"    → "AMD RX 6600 XT 8GB"
-         *   "Intel UHD 770"                  → "Intel UHD 770"  (sin cambio)
-         */
-        $normalizarTV = function(string $v): string {
-            $v = trim($v);
-            // Quitar palabras "dedicado", "integrado" y similares
-            $v = preg_replace('/\b(dedicad[oa]s?|integrad[oa]s?)\b/i', '', $v);
-            $v = trim($v);
-            
-            // Consolidar espacios múltiples (incluye tabs) a un solo espacio
-            $v = preg_replace('/\s+/', ' ', $v);
-            $v = trim($v);
-            
-            // Normalizar guiones sueltos: "- 8GB" → "-8GB"
-            $v = preg_replace('/\s*-\s*/', '-', $v);
-            $v = trim($v);
+        $prodQuery = Producto::query()
+            ->where('pagina_web', 'SI')
+            ->noSuspendido();
 
-            // Quitar la palabra "Conectividad" (y variante con º) que aparece como sufijo espurio
-            $v = preg_replace('/\bConectividadº?\b/i', '', $v);
-            $v = trim($v);
+        if ($modId) {
+            $prodQuery->where('modelo_id', $modId);
+        }
+        if (request()->filled('busqueda')) {
+            $prodQuery->intelligentSearch(request('busqueda'));
+        }
 
-            // Caso 1: si tiene VRAM (ej. "12 GB GDDR6") conservar hasta ahí
-            if (preg_match('/^(.*?\d+\s*GB(?:\s*G?DDR\d[X]?)?)/i', $v, $m)) {
-                $v = trim($m[1]);
-            } else {
-                // Caso 2: sin VRAM → eliminar sufijos de marketing conocidos
-                $v = preg_replace(
-                    '/\s+(OC|GAMING|EDITION|PLUS|SUPER|BOOST|EX|AERO|EAGLE|VISION|'
-                    . 'WINDFORCE|PULSE|MECH|TWIN|TUF|ROG|STRIX|NITRO|PHANTOM|'
-                    . 'REBEL|TRIPLE|DUAL|FAN|GDDR\d+|DDR\d+|V\d+|VR|READY)\b.*/i',
-                    '',
-                    $v
-                );
+        $allProducts = $prodQuery->select(array_merge(['id', 'modelo_id'], array_keys($specFields)))->get();
+
+        $preparedProducts = [];
+        foreach ($allProducts as $p) {
+            $row = [];
+            foreach ($specFields as $col => $lbl) {
+                $raw = (string)($p->$col ?? '');
+                $rawTrim = trim($raw);
+                if ($rawTrim === '' || in_array(strtoupper($rawTrim), ['', 'NULL', 'NONE', 'N/A', 'NO APLICA', 'N.A.'], true)) {
+                    $row[$col] = null;
+                    continue;
+                }
+                if ($col === 'tarjetavideo') $norm = $normalizarTV($rawTrim);
+                elseif ($col === 'procesador') $norm = $normalizarCPU($rawTrim);
+                elseif ($col === 'ram') $norm = $normalizarRAM($rawTrim);
+                elseif ($col === 'almacenamiento') $norm = $normalizarAlmacenamiento($rawTrim);
+                else $norm = $rawTrim;
+
+                $row[$col] = ($norm !== '') ? $norm : null;
             }
-            // Forzar formato "12 GB" (con espacio)
-            $v = preg_replace('/(\d+)\s*GB/i', '$1 GB', $v);
-            // Forzar formato "GB GDDR6" (asegurar espacio si está pegado)
-            $v = preg_replace('/GB\s*(G?DDR\d[X]?)/i', 'GB $1', $v);
-            
-            // Remover guión o espacio inicial si quedaron "huérfanos" (ej: "-12 GB" o "-Intel")
-            $v = ltrim($v, '- ');
-            
-            return trim($v);
-        };
+            $preparedProducts[] = $row;
+        }
 
-        $normalizarCPU = function(string $v): string {
-            $v = trim($v);
-            // Remover frecuencias al final, ej: " 2.10 GHZ" o " 3.20 GHZ"
-            $v = preg_replace('/\s+\d+(\.\d+)?\s*GHZ$/i', '', $v);
-            return trim($v);
-        };
-
-        $normalizarRAM = function(string $v): string {
-            $v = trim($v);
-            // Capturar la estructura principal: Capacidad + Tipo + Frecuencia Principal
-            // Ej: "16 GB DDR5 4800"
-            if (preg_match('/^(\d+\s*GB\s+DDR\d\s+\d{3,4})/i', $v, $m)) {
-                return trim(strtoupper($m[1])) . ' MHz';
+        $activeFilters = [];
+        foreach ($specFields as $col => $lbl) {
+            if (request()->filled($col)) {
+                $vals = array_filter(array_map('trim', explode(',', (string)request($col))), fn($v) => $v !== '');
+                if (!empty($vals)) {
+                    $activeFilters[$col] = $vals;
+                }
             }
-            // Si no coincide con el patrón exacto, solo normalizar espacios
-            $v = preg_replace('/\s+/', ' ', $v);
-            return strtoupper(trim($v));
-        };
-
-        $normalizarAlmacenamiento = function(string $v): string {
-            $v = trim($v);
-            if ($v === '') return '';
-            $v = preg_replace('/\s+/', ' ', $v);
-
-            // Si es dual/mixto con separador '/'
-            if (str_contains($v, '/')) {
-                $partes = explode('/', $v);
-                $partesNorm = array_map(function($p) {
-                    $p = trim($p);
-                    $p = preg_replace('/(\d+)\s*(TB|GB)/i', '$1 $2', $p);
-                    $p = preg_replace_callback('/\b(ssd|hdd|nvme|rpm|m\.2)\b/i', fn($m) => strtoupper($m[1]), $p);
-                    $p = preg_replace('/\s+/', ' ', $p);
-                    return trim($p);
-                }, $partes);
-
-                return implode(' / ', $partesNorm);
-            }
-
-            // Normalizar espacio número y unidad (ej: "1TB" -> "1 TB")
-            $v = preg_replace('/(\d+)\s*(TB|GB)/i', '$1 $2', $v);
-
-            // Múltiples unidades, ej: "2 X 1 TB", "2x 1TB"
-            if (preg_match('/^(\d+)\s*[xX]\s*(\d+)\s*(TB|GB)/i', $v, $m)) {
-                $qty = (int)$m[1];
-                $size = (int)$m[2];
-                $unit = strtoupper($m[3]);
-                $total = $qty * $size;
-                $capacidad = "$total $unit";
-            } elseif (preg_match('/(\d+(?:\.\d+)?)\s*(TB|GB)/i', $v, $m)) {
-                $capacidad = $m[1] . ' ' . strtoupper($m[2]);
-            } else {
-                return $v;
-            }
-
-            // Si es disco de estado sólido (SSD, M.2, NVMe)
-            if (preg_match('/\b(SSD|M\.2|NVME)\b/i', $v)) {
-                return "$capacidad (SSD/ M.2/ NVME)";
-            }
-
-            // Si es solo disco mecánico HDD
-            if (preg_match('/\bHDD\b/i', $v)) {
-                return "$capacidad HDD";
-            }
-
-            return $v;
-        };
+        }
 
         foreach ($specFields as $col => $label) {
-            $rawValues = Producto::select($col)
-                ->where('modelo_id', $modId)
-                ->where('pagina_web', 'SI')
-                ->noSuspendido()
-                ->distinct()
-                ->whereNotNull($col)
-                ->whereRaw("TRIM($col) NOT IN ('', 'null', 'NULL', 'none', 'NONE', 'N/A', 'n/a', 'NO APLICA', 'N.A.')")
-                ->orderBy($col)
-                ->pluck($col)
-                ->map(fn($v) => trim($v))
-                ->filter(fn($v) => $v !== '')
-                ->unique()
-                ->values();
-
-            if ($rawValues->isEmpty()) {
-                continue;
-            }
-
-            // Normalizar y deduplicar por forma canónica
-            if (in_array($col, ['tarjetavideo', 'procesador', 'ram', 'almacenamiento'])) {
-                $normSet = [];
-                foreach ($rawValues as $raw) {
-                    if ($col === 'tarjetavideo') {
-                        $norm = $normalizarTV($raw);
-                    } elseif ($col === 'procesador') {
-                        $norm = $normalizarCPU($raw);
-                    } elseif ($col === 'ram') {
-                        $norm = $normalizarRAM($raw);
-                    } elseif ($col === 'almacenamiento') {
-                        $norm = $normalizarAlmacenamiento($raw);
-                    }
-                    if (!isset($normSet[$norm])) {
-                        $normSet[$norm] = true;
+            $counts = [];
+            foreach ($preparedProducts as $p) {
+                $matchesOthers = true;
+                foreach ($activeFilters as $otherCol => $allowedValues) {
+                    if ($otherCol === $col) continue; // Multi-select facet rule: excluir campo actual
+                    $pVal = $p[$otherCol] ?? null;
+                    if ($pVal === null || !in_array($pVal, $allowedValues, true)) {
+                        $matchesOthers = false;
+                        break;
                     }
                 }
-                ksort($normSet); // orden alfabético
-                $values = collect(array_keys($normSet))->values();
-            } else {
-                $values = $rawValues;
+
+                if ($matchesOthers) {
+                    $val = $p[$col] ?? null;
+                    if ($val !== null) {
+                        $counts[$val] = ($counts[$val] ?? 0) + 1;
+                    }
+                }
             }
 
-            $specs[$col] = ['label' => $label, 'options' => $values];
-        }
+            $activeForCol = $activeFilters[$col] ?? [];
 
-        // Filtros para monitores: specs almacenadas en tabla especificaciones
-        $monitorSpecMap = [
-            'espec_tamano'      => 'Tamaño de Pantalla',
-            'espec_panel'       => 'Panel',
-            'espec_hdmi'        => 'HDMI',
-            'espec_displayport' => 'DisplayPort',
-            'espec_garantia'    => 'Garantía de Fábrica',
-        ];
-        foreach ($monitorSpecMap as $paramKey => $campo) {
-            $values = \DB::table('especificaciones')
-                ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
-                ->where('productos.modelo_id', $modId)
-                ->where('productos.pagina_web', 'SI')
-                ->where(function ($q) {
-                    $q->whereNull('productos.vigencia')
-                      ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
-                })
-                ->where('especificaciones.campo', $campo)
-                ->whereRaw("LOWER(TRIM(especificaciones.descripcion)) != 'no'")
-                ->whereRaw("TRIM(especificaciones.descripcion) != ''")
-                ->distinct()
-                ->orderBy('especificaciones.descripcion')
-                ->pluck('especificaciones.descripcion')
-                ->filter(fn($v) => trim($v) !== '')
-                ->values();
-            if ($values->isNotEmpty()) {
-                $specs[$paramKey] = ['label' => $campo, 'options' => $values];
+            $options = [];
+            foreach ($counts as $val => $cnt) {
+                $options[] = [
+                    'value' => $val,
+                    'count' => $cnt,
+                ];
             }
-        }
 
-        // Garantía de Fábrica (monitores): normalizar para agrupar por meses + tipo
-        if (isset($specs['espec_garantia'])) {
-            $normalizarGarantia = function(string $v): ?string {
-                $v = strtoupper(trim($v));
-                if (!preg_match('/(\d+)\s*MESES/i', $v, $m)) return null;
-                $meses = $m[1] . ' MESES';
-                if (str_contains($v, 'ON-SITE') || str_contains($v, 'ON SITE')) $tipo = 'ON-SITE';
-                elseif (str_contains($v, 'CARRY-IN') || str_contains($v, 'CARRY IN')) $tipo = 'CARRY-IN';
-                else $tipo = 'ESTÁNDAR';
-                return "$meses $tipo";
-            };
-            $garantiasNorm = $specs['espec_garantia']['options']
-                ->map(fn($v) => $normalizarGarantia((string) $v))
-                ->filter()
-                ->unique()
-                ->sort()
-                ->values();
-            $specs['espec_garantia']['options'] = $garantiasNorm;
+            $existingValues = array_column($options, 'value');
+            foreach ($activeForCol as $checkedVal) {
+                if (!in_array($checkedVal, $existingValues, true)) {
+                    $options[] = [
+                        'value' => $checkedVal,
+                        'count' => 0,
+                    ];
+                }
+            }
+
+            if (!empty($options)) {
+                usort($options, fn($a, $b) => strnatcasecmp($a['value'], $b['value']));
+                $specs[$col] = [
+                    'label' => $label,
+                    'options' => $options,
+                ];
+            }
         }
     }
 @endphp
 
 <div class="aside-catalogo-container">
-    <h4 class="aside-title-custom">Filtros por Especificaciones</h4>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #ee7c31; padding-bottom: 6px;">
+        <h4 class="aside-title-custom" style="margin: 0; border: none; padding: 0;">Filtros por Especificaciones</h4>
+        @php
+            $hasAnyFilter = false;
+            $allCheckKeys = array_merge(
+                array_keys($specFields ?? []),
+                array_keys($monitorSpecMap ?? []),
+                array_keys($tonerSpecMap ?? []),
+                ['numero_parte_toner']
+            );
+            foreach ($allCheckKeys as $k) {
+                if (request()->filled($k)) { $hasAnyFilter = true; break; }
+            }
+        @endphp
+        @if($hasAnyFilter)
+            <button type="button" onclick="clearAllFilters(event)" style="background: none; border: none; color: #ee7c31; font-size: 12px; font-weight: 700; cursor: pointer; padding: 2px 6px; text-decoration: underline;" title="Restablecer filtros">
+                Limpiar todo
+            </button>
+        @endif
+    </div>
 
     <aside>
-        @foreach($specs as $campo => $spec)
+        @forelse($specs as $campo => $spec)
             @php
-                $activeValues = request($campo) ? explode(',', request($campo)) : [];
+                $activeValues = request($campo) ? explode(',', (string)request($campo)) : [];
                 $isOpen = !empty($activeValues);
             @endphp
-            <div class="seccion_filtro">
+            <div class="seccion_filtro" data-campo="{{ $campo }}">
                 <div class="boton_filtros" style="font-size: 13.5px;" onclick="toggleFilter('{{ $campo }}')">
                     <button type="button" style="text-align: left; background: none; border: none; width: 100%; font-weight: 600; font-size: 13.5px; color: #000; padding: 0; outline: none; cursor: pointer;">
                         {{ $spec['label'] }}
@@ -339,13 +488,17 @@
                     </div>
                 </div>
 
-                <div class="filter-search-wrap" id="search_wrap_{{ $campo }}" style="display: {{ $isOpen ? 'block' : 'none' }};">
-                    <input type="text" class="filter-search-input" data-campo="{{ $campo }}" placeholder="Buscar {{ $spec['label'] }}..." style="width:100%; padding:4px 8px; font-size:12px; border:1px solid #ddd; border-radius:4px; outline:none; box-sizing:border-box;">
-                </div>
+                @if(count($spec['options']) > 4)
+                    <div class="filter-search-wrap" id="search_wrap_{{ $campo }}" style="display: {{ $isOpen ? 'block' : 'none' }};">
+                        <input type="text" class="filter-search-input" data-campo="{{ $campo }}" placeholder="Buscar {{ $spec['label'] }}..." style="width:100%; padding:4px 8px; font-size:12px; border:1px solid #ddd; border-radius:4px; outline:none; box-sizing:border-box;">
+                    </div>
+                @endif
 
                 <ul id="list_{{ $campo }}" class="lista" style="{{ $isOpen ? 'display: block;' : 'display: none;' }}">
-                    @foreach($spec['options'] as $opt)
+                    @foreach($spec['options'] as $optItem)
                         @php
+                            $opt = is_array($optItem) ? $optItem['value'] : $optItem;
+                            $cnt = is_array($optItem) ? $optItem['count'] : null;
                             $isChecked = in_array($opt, $activeValues);
                         @endphp
                         <li class="item_producto" style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
@@ -354,21 +507,28 @@
                                    value="{{ $opt }}"
                                    {{ $isChecked ? 'checked' : '' }}
                                    onchange="submitFilter('{{ $campo }}', '{{ $opt }}', this.checked)"
-                                   style="cursor: pointer; width: 16px; height: 16px; margin: 0;">
-                            <label for="chk_{{ $campo }}_{{ $loop->index }}" style="font-size: 14px; margin-bottom: 0; cursor: pointer; font-weight: bold; color: #444;">
-                                {{ $opt }}
+                                   style="cursor: pointer; width: 16px; height: 16px; margin: 0; flex-shrink: 0;">
+                            <label for="chk_{{ $campo }}_{{ $loop->index }}" style="font-size: 13px; line-height: 1.3; margin-bottom: 0; cursor: pointer; font-weight: 600; color: #444; flex: 1; display: flex; justify-content: space-between; align-items: baseline; gap: 6px;">
+                                <span style="word-break: break-word;">{{ $opt }}</span>
+                                @if($cnt !== null)
+                                    <span class="filter-count" style="font-weight: 600; color: {{ $cnt > 0 ? '#ee7c31' : '#aaa' }}; font-size: 12px; white-space: nowrap; flex-shrink: 0;">({{ $cnt }})</span>
+                                @endif
                             </label>
                         </li>
                     @endforeach
                 </ul>
             </div>
-        @endforeach
+        @empty
+            <div style="padding: 15px; color: #777; font-size: 13.5px; text-align: center;">
+                No hay especificaciones disponibles para la selección actual.
+            </div>
+        @endforelse
 
-        <!-- Limpiar Filtros -->
+        <!-- Botón Limpiar Filtros inferior -->
         <div style="margin-top: 15px; padding: 0 10px;">
-            <a href="{{ url('catalogo/' . $modId . '/detallemod') }}" class="btn btn-secondary btn-sm w-100" style="background-color: #6c757d; border-color: #6c757d; color: white; display: block; text-align: center; padding: 8px; border-radius: 4px; font-weight: bold; text-decoration: none;">
+            <button type="button" onclick="clearAllFilters(event)" class="btn btn-secondary btn-sm w-100" style="background-color: #6c757d; border-color: #6c757d; color: white; display: block; text-align: center; padding: 8px; border-radius: 4px; font-weight: bold; text-decoration: none; cursor: pointer; width: 100%;">
                 <i class="fas fa-times-circle"></i> Limpiar Filtros
-            </a>
+            </button>
         </div>
     </aside>
 </div>
@@ -378,16 +538,15 @@
         const list = document.getElementById('list_' + campo);
         const icon = document.getElementById('icon_' + campo);
         const searchWrap = document.getElementById('search_wrap_' + campo);
+        if (!list) return;
         if (list.style.display === 'none') {
             list.style.display = 'block';
-            icon.classList.remove('fa-plus');
-            icon.classList.add('fa-minus');
+            if (icon) { icon.classList.remove('fa-plus'); icon.classList.add('fa-minus'); }
             if (searchWrap) searchWrap.style.display = 'block';
         } else {
             list.style.display = 'none';
-            icon.classList.remove('fa-minus');
-            icon.classList.add('fa-plus');
-            if (searchWrap) { searchWrap.style.display = 'none'; }
+            if (icon) { icon.classList.remove('fa-minus'); icon.classList.add('fa-plus'); }
+            if (searchWrap) searchWrap.style.display = 'none';
         }
     }
 
@@ -396,7 +555,7 @@
             const campo = this.dataset.campo;
             const text = this.value.toLowerCase().trim();
             document.querySelectorAll('#list_' + campo + ' .item_producto').forEach(function(li) {
-                const label = li.querySelector('label');
+                const label = li.querySelector('label span');
                 li.style.display = (!text || (label && label.textContent.toLowerCase().includes(text))) ? '' : 'none';
             });
         });
@@ -422,7 +581,18 @@
 
         params.delete('page');
 
-        const newUrl = window.location.pathname + '?' + params.toString();
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        history.replaceState({}, '', newUrl);
+        window.dispatchEvent(new CustomEvent('filterchange'));
+    }
+
+    function clearAllFilters(e) {
+        if (e) e.preventDefault();
+        const modeloSelect = document.getElementById('preview-modelo');
+        const mVal = modeloSelect ? modeloSelect.value : '';
+        const params = new URLSearchParams();
+        if (mVal) params.set('modelo', mVal);
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
         history.replaceState({}, '', newUrl);
         window.dispatchEvent(new CustomEvent('filterchange'));
     }
@@ -469,6 +639,9 @@
 }
 .item_producto:last-child {
     border-bottom: none;
+}
+.item_producto:hover {
+    background-color: #fcfcfc;
 }
 .filter-search-wrap {
     padding: 4px 8px;
