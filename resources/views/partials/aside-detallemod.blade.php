@@ -130,22 +130,31 @@
             'espec_garantia'    => 'Garantía de Fábrica',
         ];
 
-        $monitorQuery = Producto::query()
-            ->where('modelo_id', $modId)
-            ->where('pagina_web', 'SI')
-            ->noSuspendido()
-            ->with('especificaciones');
+        $monitorQuery = \DB::table('especificaciones')
+            ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
+            ->where('productos.modelo_id', $modId)
+            ->where('productos.pagina_web', 'SI')
+            ->where(function ($q) {
+                $q->whereNull('productos.vigencia')
+                  ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
+            })
+            ->select('especificaciones.producto_id', 'especificaciones.campo', 'especificaciones.descripcion');
 
         if (request()->filled('busqueda')) {
-            $monitorQuery->intelligentSearch(request('busqueda'));
+            $search = trim(request('busqueda'));
+            $monitorQuery->where(function($q) use ($search) {
+                $q->where('productos.nombre', 'LIKE', "%$search%")
+                  ->orWhere('productos.nro_parte', 'LIKE', "%$search%")
+                  ->orWhere('productos.descripcion', 'LIKE', "%$search%");
+            });
         }
 
-        $monitorProducts = $monitorQuery->get();
+        $rawSpecs = $monitorQuery->get();
 
         $preparedMonitors = [];
-        foreach ($monitorProducts as $p) {
+        foreach ($rawSpecs->groupBy('producto_id') as $pId => $espList) {
             $row = [];
-            foreach ($p->especificaciones as $esp) {
+            foreach ($espList as $esp) {
                 $campo = trim($esp->campo);
                 $desc = trim($esp->descripcion);
                 if ($desc === '' || strtolower($desc) === 'no' || in_array(strtoupper($desc), ['NULL', 'NONE', 'N/A', 'NO APLICA', 'N.A.'], true)) {
@@ -239,25 +248,35 @@
             'dimensiones_toner'     => 'Dimensiones',
         ];
 
-        $tonerQuery = Producto::query()
-            ->where('modelo_id', $modId)
-            ->where('pagina_web', 'SI')
-            ->noSuspendido()
-            ->with('especificaciones');
+        $tonerQuery = \DB::table('especificaciones')
+            ->join('productos', 'especificaciones.producto_id', '=', 'productos.id')
+            ->where('productos.modelo_id', $modId)
+            ->where('productos.pagina_web', 'SI')
+            ->where(function ($q) {
+                $q->whereNull('productos.vigencia')
+                  ->orWhereNotIn('productos.vigencia', ['SUSPENDIDA', 'INACTIVA', 'ANULADA']);
+            })
+            ->select('especificaciones.producto_id', 'especificaciones.campo', 'especificaciones.descripcion', 'productos.nro_parte');
 
         if (request()->filled('busqueda')) {
-            $tonerQuery->intelligentSearch(request('busqueda'));
+            $search = trim(request('busqueda'));
+            $tonerQuery->where(function($q) use ($search) {
+                $q->where('productos.nombre', 'LIKE', "%$search%")
+                  ->orWhere('productos.nro_parte', 'LIKE', "%$search%")
+                  ->orWhere('productos.descripcion', 'LIKE', "%$search%");
+            });
         }
 
-        $tonerProducts = $tonerQuery->get();
+        $rawTonerSpecs = $tonerQuery->get();
 
         $preparedToner = [];
-        foreach ($tonerProducts as $p) {
+        foreach ($rawTonerSpecs->groupBy('producto_id') as $pId => $espList) {
             $row = [];
-            if (!empty($p->nro_parte)) {
-                $row['numero_parte_toner'] = trim((string)$p->nro_parte);
+            $first = $espList->first();
+            if (!empty($first->nro_parte)) {
+                $row['numero_parte_toner'] = trim((string)$first->nro_parte);
             }
-            foreach ($p->especificaciones as $esp) {
+            foreach ($espList as $esp) {
                 $campo = trim($esp->campo);
                 $desc = trim($esp->descripcion);
                 if ($desc === '' || in_array(strtoupper($desc), ['NULL', 'NONE', 'N/A', '-', 'NO APLICA', 'N.A.'], true)) {

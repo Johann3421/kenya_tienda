@@ -42,6 +42,9 @@ El cliente solicitó dotar a los filtros de especificaciones técnicas del catá
 
 ---
 
-## 4. Verificación
-- Verificación de sintaxis PHP con `php -l`: Cero errores en los 4 archivos modificados.
-- Verificación del compilador Blade con `php artisan view:cache`: Compilación exitosa ("INFO Blade templates cached successfully").
+## 4. Verificación y Corrección de Error 500
+- **Diagnóstico Error 500 (`/catalogo/16/detallemod`):**
+  - Causa raíz: En el modelo `App\Producto`, el campo `especificaciones` existe como columna en la base de datos (y en `$fillable`) además del método de relación `public function especificaciones()`. Al invocar `$p->especificaciones`, Eloquent prioriza el valor del atributo en la tabla (que era `null`) en lugar de la relación, disparando `ErrorException: foreach() argument must be of type array|object, null given`.
+  - Solución quirúrgica (Ponytail Ultra): Se reescribió la extracción de especificaciones para Monitores y Tóner mediante consulta directa con `\DB::table('especificaciones')->join('productos', ...)` agrupada por `producto_id`. Esto elimina por completo la colisión de atributos en Eloquent y optimiza la velocidad al consultar directamente la tabla relacional.
+- Sintaxis PHP validada con `php -l`: Cero errores.
+- Compilación de plantillas validada con `php artisan view:cache`: Exitoso.
