@@ -1517,7 +1517,7 @@
                     <table class="table table-borderless mb-0" style="width:100%;">
                         <tbody>
                             @if($isMonitor)
-                                @forelse($especificacionesResumen as $espec)
+                                @forelse(($especificacionesResumen ?? []) as $espec)
                                 <tr>
                                     <td style="min-width:180px; font-weight:600; color:#444; padding:10px 16px 10px 0; vertical-align:top; width:35%;">{{ $espec->campo }}</td>
                                     <td style="padding:10px 0; color:#1a1a1a; vertical-align:top;">: {{ $espec->descripcion }}</td>

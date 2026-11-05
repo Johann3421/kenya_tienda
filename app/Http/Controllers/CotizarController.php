@@ -52,6 +52,24 @@ class CotizarController extends Controller
             ->filter(fn($e) => strtolower(trim($e->descripcion ?? '')) !== 'no')
             ->values();
 
-        return view('sistema.productos.detalle', compact('producto', 'especificaciones'));
+        $isMonitor = $especificaciones->firstWhere('campo', 'Tamaño de Pantalla') !== null;
+        if ($isMonitor) {
+            $resumen = collect();
+            foreach (['Tamaño de Pantalla', 'Panel'] as $campo) {
+                $f = $especificaciones->firstWhere('campo', $campo);
+                if ($f) $resumen->push($f);
+            }
+            foreach (['HDMI', 'DisplayPort', 'Salida HDMI', 'Salida VGA'] as $campo) {
+                $f = $especificaciones->firstWhere('campo', $campo);
+                if ($f) $resumen->push($f);
+            }
+            $f = $especificaciones->firstWhere('campo', 'Garantía de Fábrica');
+            if ($f) $resumen->push($f);
+            $especificacionesResumen = $resumen->unique('campo')->take(4);
+        } else {
+            $especificacionesResumen = $especificaciones->take(4);
+        }
+
+        return view('sistema.productos.detalle', compact('producto', 'especificaciones', 'especificacionesResumen'));
     }
 }

@@ -55,3 +55,4 @@ A partir de la extracción de logs de producción (`production.INFO`, Apache/Ngi
 
 - `php -l` ejecutado sin errores sintácticos.
 - Commit `2085316` empujado a `origin/feature/dokploy-postgres-sync`.
+
