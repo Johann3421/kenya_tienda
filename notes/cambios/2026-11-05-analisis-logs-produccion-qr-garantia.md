@@ -41,6 +41,10 @@ A partir de la extracción de logs de producción (`production.INFO`, Apache/Ngi
   - Se blindó `$isDescriptive` para rechazar explícitamente textos de accesorios.
 - `app/Http/Controllers/ConsultarController.php`:
   - Filtro defensivo tanto en `garantia_buscar` como en `buscar_serie`: si un registro existente en la base de datos contiene texto de accesorios dentro del campo `mouse`, se reasigna a `$productoArray['accesorios']` y se normaliza `mouse` a `'SI'`.
+- `app/Http/Controllers/CotizarController.php`:
+  - Generación de `$especificacionesResumen` para monitores y PCs antes de renderizar `sistema.productos.detalle`.
+- `resources/views/sistema/productos/detalle.blade.php`:
+  - Blindaje defensivo en línea 1520 con `($especificacionesResumen ?? [])` para evitar errores 500 por variable no definida.
 
 ---
 
@@ -55,4 +59,5 @@ A partir de la extracción de logs de producción (`production.INFO`, Apache/Ngi
 
 - `php -l` ejecutado sin errores sintácticos.
 - Commit `2085316` empujado a `origin/feature/dokploy-postgres-sync`.
+- Commit `c81c3d5` empujado a `origin/feature/dokploy-postgres-sync` (Fix Error 500 en `/cotizar/producto/{id}` para monitores).
 
