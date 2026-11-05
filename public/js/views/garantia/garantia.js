@@ -194,7 +194,8 @@ new Vue({
                 }
             );
         },
-        Buscar(page) {
+        Buscar(page = 1) {
+            page = page && page !== 'undefined' ? page : 1;
             this.page = page;
             this.active = 0;
             urlBuscar = "../garantias/buscar?page=" + page;

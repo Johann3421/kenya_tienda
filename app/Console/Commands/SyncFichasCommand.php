@@ -778,9 +778,21 @@ class SyncFichasCommand extends Command
                 $specs['otros'] = 'Manuales, Drivers, Certificado de Garantía';
             }
         } elseif ($modelGroup === 'PROWORK') {
+            // Si el campo mouse absorbió texto de accesorios (ej. "Cable de Poder, Manuales..."), reencaminarlo
+            if (!empty($specs['mouse']) && preg_match('/(?:cable\s+de\s+poder|manuales|drivers|t[eé]rminos\s+de\s+garant[ií]a)/iu', (string)$specs['mouse'])) {
+                if (empty($specs['accesorios'])) {
+                    $specs['accesorios'] = 'Teclado, Mouse, ' . trim((string)$specs['mouse']);
+                    $specs['accesorios_otros'] = $specs['accesorios'];
+                }
+                unset($specs['mouse']);
+            }
+
             $isDescriptive = function($v) {
                 if (empty($v)) return false;
                 $t = strtoupper(trim((string)$v));
+                if (preg_match('/(?:cable\s+de\s+poder|manuales|drivers|t[eé]rminos\s+de\s+garant[ií]a)/iu', $t)) {
+                    return false;
+                }
                 return !in_array($t, ['SI', 'SÍ', 'NO', 'TRUE', 'FALSE', '1', '0', 'N/A', '-', 'NULL', ''], true) && mb_strlen($t) > 5;
             };
 
@@ -1441,6 +1453,9 @@ class SyncFichasCommand extends Command
                         'SLOT DE EXPANSIÓN'              => 'slot_expansion',
                         'TECLADO'                        => 'teclado',
                         'MOUSE'                          => 'mouse',
+                        'ACCESORIOS Y OTROS'             => 'accesorios_otros',
+                        'ACCESORIOSY OTROS'              => 'accesorios_otros',
+                        'ACCESORIOS'                     => 'accesorios',
                         'DISIPACIÓN DE CALOR'            => 'disipacion',
                         'DISIPACION DE CALOR'            => 'disipacion',
                         'OTROS'                          => 'otros',

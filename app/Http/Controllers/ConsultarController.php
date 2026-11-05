@@ -149,7 +149,12 @@ class ConsultarController extends Controller {
                                     : strtolower(str_replace(' ', '_', $esp->campo));
 
                                 \Log::info('Especificación original: "' . $esp->campo . '" → Mapeado a: "' . $nombreCampo . '" = ' . $esp->descripcion);
-                                $productoArray[$nombreCampo] = $esp->descripcion;
+                                if ($nombreCampo === 'mouse' && preg_match('/(?:cable\s+de\s+poder|manuales|drivers|t[eé]rminos)/iu', $esp->descripcion)) {
+                                    $productoArray['accesorios'] = $esp->descripcion;
+                                    $productoArray['mouse'] = 'SI';
+                                } else {
+                                    $productoArray[$nombreCampo] = $esp->descripcion;
+                                }
                             }
                         } else {
                             \Log::warning('NO hay especificaciones para producto_id: ' . $producto->id);
@@ -257,7 +262,12 @@ class ConsultarController extends Controller {
                                     : strtolower(str_replace(' ', '_', $esp->campo));
 
                                 \Log::info('QR - Especificación original: "' . $esp->campo . '" → Mapeado a: "' . $nombreCampo . '" = ' . $esp->descripcion);
-                                $productoArray[$nombreCampo] = $esp->descripcion;
+                                if ($nombreCampo === 'mouse' && preg_match('/(?:cable\s+de\s+poder|manuales|drivers|t[eé]rminos)/iu', $esp->descripcion)) {
+                                    $productoArray['accesorios'] = $esp->descripcion;
+                                    $productoArray['mouse'] = 'SI';
+                                } else {
+                                    $productoArray[$nombreCampo] = $esp->descripcion;
+                                }
                             }
                         }
 
