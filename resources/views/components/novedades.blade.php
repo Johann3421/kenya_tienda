@@ -227,7 +227,7 @@
                             </div>
                             <div class="comp-novedad-info">
                                 <h5 class="comp-novedad-titulo">
-                                    <a href="{{ $novedadUrl }}"><strong>{{ $cleanName }}</strong></a>
+                                    <a href="{{ $novedadUrl }}" target="_blank" rel="noopener noreferrer"><strong>{{ $cleanName }}</strong></a>
                                 </h5>
                                 <ul style="list-style-type: none; padding-left: 0; margin: 10px 0; width: 100%;">
                                     <li style="font-size: 0.85rem; color: #555; margin-bottom: 6px; line-height: 1.4;">
@@ -242,7 +242,7 @@
                                         @endif
                                     </li>
                                 </ul>
-                                <a href="{{ $novedadUrl }}" class="comp-novedad-btn-detalle" style="margin-top: auto;">Ver detalles</a>
+                                <a href="{{ $novedadUrl }}" target="_blank" rel="noopener noreferrer" class="comp-novedad-btn-detalle" style="margin-top: auto;">Ver detalles</a>
                             </div>
                         </div>
                     @endforeach

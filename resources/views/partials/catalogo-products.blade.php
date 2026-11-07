@@ -38,11 +38,14 @@
                     }
                     $imgFb  = $modelImg;
                     $imgFb2 = asset('producto.jpg');
+                    $prodDetalleUrl = url('producto/' . $producto->id . '/detalle');
                 @endphp
 
-                <img src="{{ $img }}" alt="{{ $producto->display_name ?? $producto->nombre ?? 'Producto' }}"
-                     loading="lazy" decoding="async"
-                     onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
+                <a href="{{ $prodDetalleUrl }}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; text-decoration:none;">
+                    <img src="{{ $img }}" alt="{{ $producto->display_name ?? $producto->nombre ?? 'Producto' }}"
+                         loading="lazy" decoding="async"
+                         onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
+                </a>
             </div>
 
             @php
@@ -116,7 +119,9 @@
                 }
             @endphp
 
-            <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
+            <a href="{{ $prodDetalleUrl }}" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit; display:block;">
+                <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
+            </a>
 
             <div class="product-sku" style="background-color: #f0f4f8; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 600; color: #0056b3; margin-bottom: 12px; font-size: 0.75rem; width: fit-content;">
                 SKU: {{ $realNroParte ?: ($producto->nro_parte ?? 'N/A') }}
@@ -178,9 +183,9 @@
                     @endif
                 </div>
 
-                <button class="btn-details pill" onclick="window.location.href='{{ url('producto/'.$producto->id.'/detalle') }}'">
+                <a href="{{ $prodDetalleUrl }}" target="_blank" rel="noopener noreferrer" class="btn-details pill" style="display:flex; justify-content:center; align-items:center; text-decoration:none;">
                     Más información
-                </button>
+                </a>
             </div>
         </div>
     @empty

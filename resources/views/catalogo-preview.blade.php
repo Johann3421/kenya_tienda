@@ -456,7 +456,7 @@
         .btn-details {
             width: 100%;
             background-color: #f07b3f; 
-            color: #fff;
+            color: #fff !important;
             border: none;
             padding: 12px;
             border-radius: 100px;
@@ -465,14 +465,32 @@
             cursor: pointer;
             text-transform: uppercase;
             transition: background-color 0.3s, transform 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none !important;
+            box-sizing: border-box;
+            text-align: center;
         }
 
-        .btn-details:hover {
+        .btn-details:hover,
+        .btn-details:focus {
             background-color: #d96225;
+            color: #fff !important;
+            text-decoration: none !important;
         }
         
         .btn-details:active {
             transform: scale(0.98);
+            color: #fff !important;
+            text-decoration: none !important;
+        }
+
+        .product-title {
+            transition: color 0.2s ease;
+        }
+        .product-title:hover {
+            color: #ee7c31;
         }
 
         /* ==========================================
@@ -905,13 +923,13 @@
             function renderSuggestions(items){
                 if (!items || items.length === 0) { hideSuggestions(); return; }
                 suggestionsBox.innerHTML = items.map((it, idx) => `\
-                    <div class="preview-suggestion-item" data-index="${idx}" data-url="${it.url}" style="display:flex;gap:8px;padding:8px;align-items:center;cursor:pointer;border-bottom:1px solid #f1f1f1;">\
+                    <a href="${it.url}" target="_blank" rel="noopener noreferrer" class="preview-suggestion-item" data-index="${idx}" data-url="${it.url}" style="display:flex;gap:8px;padding:8px;align-items:center;cursor:pointer;border-bottom:1px solid #f1f1f1;text-decoration:none;color:inherit;">\
                         <img src="${it.img}" width="48" height="48" style="object-fit:cover;border-radius:4px;">\
                         <div style="flex:1;">\
                             <div style="font-weight:700;color:#222;">${it.nombre}</div>\
                             <div style="font-size:12px;color:#666;margin-top:3px;">${it.modelo} &middot; <small>${it.nro_parte}</small></div>\
                         </div>\
-                    </div>`).join('');
+                    </a>`).join('');
 
                 suggestionsBox.style.display = 'block';
             }
@@ -956,7 +974,7 @@
                     else if (e.key === 'Enter') {
                         e.preventDefault();
                         if (activeIndex >= 0 && items[activeIndex]) {
-                            window.location.href = items[activeIndex].dataset.url;
+                            window.open(items[activeIndex].dataset.url, '_blank');
                         } else {
                             const q = (e.target.value || '').trim();
                             applySearchQuery(q);
@@ -967,7 +985,7 @@
                 // click on suggestion
                 suggestionsBox.addEventListener('click', (e) => {
                     const item = e.target.closest('.preview-suggestion-item');
-                    if (item) window.location.href = item.dataset.url;
+                    if (item && item.tagName !== 'A') window.open(item.dataset.url, '_blank');
                 });
             }
 

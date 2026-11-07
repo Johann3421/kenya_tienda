@@ -281,7 +281,7 @@
 
         .btn-details.pill {
             background: linear-gradient(90deg, #ff6200, #ff7d00);
-            color: #ffffff;
+            color: #ffffff !important;
             border: none;
             width: 100%;
             padding: 12px;
@@ -291,10 +291,19 @@
             cursor: pointer;
             margin-top: auto;
             transition: background 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none !important;
+            box-sizing: border-box;
+            text-align: center;
         }
 
-        .btn-details.pill:hover {
+        .btn-details.pill:hover,
+        .btn-details.pill:focus {
             background: #d66836;
+            color: #ffffff !important;
+            text-decoration: none !important;
         }    }
 
         /* ==========================================
@@ -519,11 +528,14 @@
                     $imgFb  = $modelImg;
                     $imgFb2 = asset('producto.jpg');
                     $stock = $producto->modelo->stock_vigente ?? $producto->stock_inicial ?? 20;
+                    $prodDetalleUrl = url('/producto/' . $producto->id . '/detalle');
                 @endphp
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="{{ $img }}" alt="{{ $producto->display_name ?? 'Producto' }}"
-                            onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
+                        <a href="{{ $prodDetalleUrl }}" target="_blank" rel="noopener noreferrer" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; text-decoration:none;">
+                            <img src="{{ $img }}" alt="{{ $producto->display_name ?? 'Producto' }}"
+                                onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='{{ $imgFb }}';}else if(this.dataset.fb=='1'){this.dataset.fb=2;this.src='{{ $imgFb2 }}';}else{this.onerror=null;}">
+                        </a>
                     </div>
                     <div class="product-info">
                         @php
@@ -544,7 +556,9 @@
                             if (!empty($producto->tarjetavideo)) $specs[] = ['label' => 'GRAFICOS', 'value' => trim($producto->tarjetavideo)];
                         @endphp
 
-                        <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
+                        <a href="{{ $prodDetalleUrl }}" target="_blank" rel="noopener noreferrer" style="text-decoration:none; color:inherit; display:block;">
+                            <h3 class="product-title" title="{{ trim($cleanName) }}">{{ trim($cleanName) }}</h3>
+                        </a>
                         <div class="product-sku" style="background-color: #f0f4f8; padding: 4px 8px; border-radius: 4px; display: inline-block; font-weight: 600; color: #0056b3; margin-bottom: 12px; font-size: 0.75rem; width: fit-content;">SKU: {{ $realNroParte ?: ($producto->nro_parte ?? 'N/A') }}</div>
 
                         @if(count($specs) > 0)
@@ -578,7 +592,7 @@
                                     <span class="stock-text" style="color:#2ecc71; font-weight:600;">PRE ORDEN</span>
                                 @endif
                             </div>
-                            <button class="btn-details pill" onclick="window.location.href='{{ url('/producto/' . $producto->id . '/detalle') }}'">Más información</button>
+                            <a href="{{ $prodDetalleUrl }}" target="_blank" rel="noopener noreferrer" class="btn-details pill" style="display:flex; justify-content:center; align-items:center; text-decoration:none;">Más información</a>
                         </div>
                     </div>
                 </div>
