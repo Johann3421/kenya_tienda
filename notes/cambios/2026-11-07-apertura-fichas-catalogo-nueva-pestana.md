@@ -47,3 +47,4 @@ El usuario reportó que al navegar y filtrar fichas en el catálogo (`/catalogo/
 - `php -l` ejecutado sin errores sintácticos en todas las vistas afectadas.
 - `php artisan view:clear` ejecutado exitosamente.
 - Git commit y push a `origin/feature/dokploy-postgres-sync`.
+

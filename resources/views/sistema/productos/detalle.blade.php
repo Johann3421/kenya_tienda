@@ -456,27 +456,17 @@
                 $modelo360Id = $producto->modelo_id ?? null;
                 $url360Prefix = '';
                 
-                // Allow disabling 3D via URL parameter ?3d=0
-                if (request('3d') !== '0') {
-                    // 1. Check if it's a dynamic 360 model uploaded via admin
-                    if ($modelo360Id && \Illuminate\Support\Facades\Storage::exists('public/modelos_360/' . $modelo360Id)) {
-                        $files = \Illuminate\Support\Facades\Storage::files('public/modelos_360/' . $modelo360Id);
+                // La vista 360 solo se activa si fue configurada/subida desde el apartado administrador
+                if (request('3d') !== '0' && $modelo360Id) {
+                    $storagePath = 'public/modelos_360/' . $modelo360Id;
+                    if (\Illuminate\Support\Facades\Storage::exists($storagePath) || \Illuminate\Support\Facades\Storage::disk('public')->exists('modelos_360/' . $modelo360Id)) {
+                        $files = \Illuminate\Support\Facades\Storage::exists($storagePath)
+                            ? \Illuminate\Support\Facades\Storage::files($storagePath)
+                            : \Illuminate\Support\Facades\Storage::disk('public')->files('modelos_360/' . $modelo360Id);
                         $totalFrames = count($files);
                         if ($totalFrames > 0) {
                             $has360 = true;
                             $url360Prefix = asset('storage/modelos_360/' . $modelo360Id . '/');
-                        }
-                    }
-                    
-                    // 2. Fallback to static "genwork" directory we pushed earlier if no dynamic model exists
-                    if (!$has360) {
-                        $isGenwork = stripos($producto->display_name ?? $producto->nombre, 'genwork') !== false 
-                                  || stripos(optional($producto->modelo)->descripcion, 'genwork') !== false;
-                        
-                        if ($isGenwork) {
-                            $has360 = true;
-                            $totalFrames = 36;
-                            $url360Prefix = asset('Diseño_3d_case/XTQ-209_'); // Base without the number
                         }
                     }
                 }
@@ -486,8 +476,7 @@
                 <div id="container-3d-view">
                     <div class="product-image-container 3d-viewer" id="viewer-3d" style="cursor: ew-resize; user-select: none; position: relative;">
                         @php
-                            // First image load depends on if it's dynamic or static
-                            $firstImage = stripos($url360Prefix, 'Diseño_3d_case') !== false ? $url360Prefix . '1.jpg' : $url360Prefix . '/1.jpg';
+                            $firstImage = rtrim($url360Prefix, '/') . '/1.jpg';
                         @endphp
                         <img id="img-3d" src="{{ $firstImage }}" class="img-fluid w-100" alt="Vista 3D 360°" style="border-radius:8px;">
                         
@@ -548,9 +537,7 @@
                         let startX = 0;
                         let playInterval = null;
 
-                        // Check if it's dynamic storage or static genwork
-                        const isStaticGenwork = {{ stripos($url360Prefix, 'Diseño_3d_case') !== false ? 'true' : 'false' }};
-                        const baseUrl = isStaticGenwork ? `{{ $url360Prefix }}` : `{{ $url360Prefix }}/`;
+                        const baseUrl = `{{ rtrim($url360Prefix, '/') }}/`;
 
                         const setFrame = (frame) => {
                             currentFrame = frame;
