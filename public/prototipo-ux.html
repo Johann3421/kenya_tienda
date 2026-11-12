@@ -3,85 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KENYA Technology — Prototipo UI/UX de Nueva Generación</title>
+    <title>KENYA Technology | Soluciones de Cómputo Homologadas para el Estado y Empresas</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           1. SISTEMA DE TOKENS DE DISEÑO (Escala 4/8pt, 60-30-10, Type Scale 1.25)
+           1. SISTEMA DE TOKENS & ANTI-SLOP CRAFT ENGINE
+           - Disciplina cromática: Zinc neutro entintado + Kenya Burnt Orange (#EA580C)
+           - Bordes hairline 1px (#E4E4E7), cero sombras infladas de IA
+           - Tipografía: -0.03em tracking, 1.1 line-height en títulos
+           - Monospace tabular-nums en datos técnicos, SKUs y precios
+           - Radios arquitectónicos limpios de 6px - 8px
            ========================================================================== */
         :root {
-            /* Regla 60-30-10: Color */
-            --bg-canvas: #f8fafc;         /* 60% Neutro Dominante (Canvas blanco roto) */
-            --bg-surface: #ffffff;        /* 30% Superficie Secundaria (Cards / Modales) */
-            --bg-subtle: #f1f5f9;         /* Superficie sutil */
-            --border-subtle: #e2e8f0;     /* Bordes sutiles de separación */
-            --border-focus: #ea580c;      /* Foco accesible */
-            
-            --text-primary: #0f172a;      /* Carbón oscuro 900 (NO negro puro #000) */
-            --text-secondary: #475569;    /* Carbón atenuado 600 */
-            --text-tertiary: #94a3b8;     /* Carbón tenue 400 */
-            --text-inverse: #ffffff;
-            
-            /* 10% Acento Vibrante (CTA dominante y estados activos) */
-            --accent-primary: #ea580c;    /* Naranja Kenya Vibrante */
-            --accent-hover: #c2410c;      /* Naranja oscurecido para hover */
-            --accent-active: #9a3412;     /* Naranja presionado */
-            --accent-subtle: #ffedd5;     /* Tinte de fondo para chips/badges */
-            --accent-ring: rgba(234, 88, 12, 0.25);
-            
-            /* Estados Semánticos */
-            --state-success: #16a34a;
-            --state-success-bg: #dcfce7;
-            --state-warning: #d97706;
-            --state-warning-bg: #fef3c7;
-            --state-danger: #dc2626;
+            /* Superficies y Neutros Entintados (Zinc Scale) */
+            --zinc-50:  #fafafa;
+            --zinc-100: #f4f4f5;
+            --zinc-200: #e4e4e7;
+            --zinc-300: #d4d4d8;
+            --zinc-400: #a1a1aa;
+            --zinc-500: #71717a;
+            --zinc-600: #52525b;
+            --zinc-700: #3f3f46;
+            --zinc-800: #27272a;
+            --zinc-900: #18181b;
+            --zinc-950: #09090b;
 
-            /* Tipografía: Escala Modular Major Third (1.25) base 16px */
-            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            /* Superficies Funcionales */
+            --bg-canvas: #fafafa;
+            --bg-surface: #ffffff;
+            --bg-subtle: #f4f4f5;
+            --bg-hover: #f1f1f3;
+
+            /* Bordes Hairline */
+            --border-hairline: 1px solid var(--zinc-200);
+            --border-subtle: var(--zinc-200);
+            --border-hover: var(--zinc-300);
+            --border-focus: #ea580c;
+
+            /* Texto Jerárquico */
+            --text-title: var(--zinc-950);
+            --text-body: var(--zinc-700);
+            --text-muted: var(--zinc-500);
+            --text-subtle: var(--zinc-400);
+
+            /* Único Acento Intencional: Kenya Industrial Orange */
+            --accent-brand: #ea580c;
+            --accent-hover: #c2410c;
+            --accent-active: #9a3412;
+            --accent-tint: #fff7ed;
+            --accent-border: #fed7aa;
+            --accent-ring: rgba(234, 88, 12, 0.22);
+
+            /* Estados Semánticos de Producción */
+            --success-text: #15803d;
+            --success-bg: #f0fdf4;
+            --success-border: #bbf7d0;
+
+            --warning-text: #b45309;
+            --warning-bg: #fffbeb;
+            --warning-border: #fde68a;
+
+            /* Tipografía y Escala Modular (Major Third 1.25) */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-            --text-xs: 0.8rem;            /* 12.8px */
-            --text-sm: 0.875rem;          /* 14px */
-            --text-base: 1rem;            /* 16px - Base */
-            --text-md: 1.25rem;           /* 20px - Major Third x1 */
-            --text-lg: 1.5625rem;         /* 25px - Major Third x2 */
-            --text-xl: 1.953rem;          /* 31.25px - Major Third x3 */
-            --text-2xl: 2.441rem;         /* 39px - Major Third x4 */
-            --text-3xl: 3.052rem;         /* 48.8px - Major Third x5 */
+            --step--2: 0.75rem;   /* 12px */
+            --step--1: 0.84375rem;/* 13.5px */
+            --step-0:  0.9375rem; /* 15px Base */
+            --step-1:  1.1719rem; /* 18.75px */
+            --step-2:  1.4648rem; /* 23.4px */
+            --step-3:  1.8311rem; /* 29.3px */
+            --step-4:  2.2888rem; /* 36.6px */
+            --step-5:  2.861rem;  /* 45.8px */
 
-            /* Escala Espacial (Múltiplos de 4pt y 8pt) */
-            --space-1: 4px;
-            --space-2: 8px;
-            --space-3: 12px;
-            --space-4: 16px;
-            --space-5: 20px;
-            --space-6: 24px;
-            --space-8: 32px;
-            --space-10: 40px;
-            --space-12: 48px;
-            --space-16: 64px;
-            --space-20: 80px;
-
-            /* Retícula y Contenedores */
-            --container-max: 1280px;
+            /* Layout y Radios Arquitectónicos */
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 8px;
+            --container-max: 1320px;
             --gutter: 24px;
-            --radius-sm: 6px;
-            --radius-md: 10px;
-            --radius-lg: 16px;
-            --radius-pill: 9999px;
 
-            /* Sombras Funcionales (No decorativas genéricas) */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
-            --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            /* Transición física natural (Decelerated) */
+            --ease-out-quad: cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 150ms var(--ease-out-quad);
+            --transition-normal: 220ms var(--ease-out-quad);
         }
 
         /* ==========================================================================
-           2. RESET ACCESIBLE Y REGLAS DE MEASURE (65ch)
+           2. BASE RESET & MEASURE RULE (60-70ch)
            ========================================================================== */
         *, *::before, *::after {
             box-sizing: border-box;
@@ -89,20 +101,24 @@
             padding: 0;
         }
 
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: var(--font-ui);
-            font-size: var(--text-base);
-            line-height: 1.5;
-            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: var(--step-0);
+            line-height: 1.55;
+            color: var(--text-body);
             background-color: var(--bg-canvas);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Ley de Fitts & Accesibilidad: Tap targets mínimos de 44px */
-        button, a, input, select {
-            font-family: inherit;
-            font-size: inherit;
+        img, svg {
+            display: block;
+            max-width: 100%;
         }
 
         a {
@@ -110,13 +126,20 @@
             text-decoration: none;
         }
 
-        /* Ancho óptimo de lectura (Measure de 65ch a 75ch) */
-        p, .measure-text {
-            max-width: 68ch;
-            color: var(--text-secondary);
+        button, input, select {
+            font: inherit;
+            color: inherit;
         }
 
-        /* 12-Column Mathematical Grid Container */
+        .measure-text {
+            max-width: 66ch;
+        }
+
+        .tabular-nums {
+            font-family: var(--font-mono);
+            font-variant-numeric: tabular-nums;
+        }
+
         .container {
             width: 100%;
             max-width: var(--container-max);
@@ -126,1444 +149,2206 @@
             padding-right: var(--gutter);
         }
 
-        /* Indicador de Modo Prototipo */
-        .prototype-banner {
-            background-color: var(--text-primary);
-            color: var(--text-inverse);
-            font-size: var(--text-xs);
-            padding: var(--space-2) var(--space-4);
+        /* ==========================================================================
+           3. BANNER DE CONTROL EXPERIMENTAL
+           ========================================================================== */
+        .system-topbar {
+            background: var(--zinc-950);
+            color: var(--zinc-400);
+            font-size: var(--step--2);
+            border-bottom: 1px solid var(--zinc-800);
+            padding: 7px 0;
+        }
+
+        .system-topbar-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 16px;
         }
 
-        .prototype-banner span strong {
-            color: var(--accent-primary);
+        .topbar-pills {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .topbar-pill {
+            background: var(--zinc-800);
+            color: var(--zinc-300);
+            padding: 1px 7px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            border: 1px solid var(--zinc-700);
+        }
+
+        .topbar-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #4ade80;
+            font-weight: 500;
+        }
+
+        .topbar-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 8px #4ade80;
         }
 
         /* ==========================================================================
-           3. NAVBAR + COMMAND MENU (Jakob's Law + Hick's Law <= 5 enlaces)
+           4. NAVBAR PRINCIPAL (Ley de Jakob + Ley de Hick <= 5 ítems)
            ========================================================================== */
-        .navbar-sticky {
+        .navbar {
             position: sticky;
             top: 0;
-            z-index: 100;
-            height: 64px;
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-subtle);
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: var(--border-hairline);
+            height: 68px;
         }
 
-        .navbar-container {
-            height: 100%;
+        .navbar-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: var(--space-6);
+            height: 100%;
+            gap: 24px;
         }
 
-        .nav-brand {
+        .brand-link {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand-logo-img {
+            height: 34px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-tagline {
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid var(--zinc-200);
+            padding-left: 10px;
+            line-height: 1.15;
+        }
+
+        .brand-tagline span:first-child {
+            font-size: 11px;
             font-weight: 700;
-            font-size: var(--text-md);
-            letter-spacing: -0.5px;
-            color: var(--text-primary);
+            color: var(--text-title);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
-        .brand-badge {
-            background: var(--accent-subtle);
-            color: var(--accent-primary);
-            font-size: var(--text-xs);
+        .brand-tagline span:last-child {
+            font-size: 10.5px;
+            color: var(--text-muted);
             font-family: var(--font-mono);
-            font-weight: 600;
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
         }
 
-        /* Hick's Law: Solo 5 enlaces claros */
-        .nav-menu {
+        .nav-links {
             display: flex;
             align-items: center;
-            gap: var(--space-6);
+            gap: 4px;
             list-style: none;
         }
 
         .nav-link {
-            font-size: var(--text-sm);
+            padding: 8px 14px;
+            font-size: var(--step--1);
             font-weight: 500;
-            color: var(--text-secondary);
-            padding: var(--space-2) 0;
-            position: relative;
-            transition: color 0.15s ease;
+            color: var(--zinc-600);
+            border-radius: var(--radius-md);
+            transition: color var(--transition-fast), background-color var(--transition-fast);
         }
 
         .nav-link:hover {
-            color: var(--accent-primary);
+            color: var(--text-title);
+            background-color: var(--zinc-100);
         }
 
         .nav-link.active {
-            color: var(--accent-primary);
+            color: var(--accent-brand);
             font-weight: 600;
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background-color: var(--accent-primary);
-            border-radius: var(--radius-pill);
+            background-color: var(--accent-tint);
         }
 
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
+            gap: 10px;
         }
 
-        /* Command Menu Trigger (Jakob's Law: Patrón habitual Cmd+K) */
-        .command-trigger {
-            display: inline-flex;
+        .btn-search-trigger {
+            display: flex;
             align-items: center;
-            gap: var(--space-3);
-            background: var(--bg-subtle);
-            border: 1px solid var(--border-subtle);
-            color: var(--text-secondary);
-            padding: var(--space-2) var(--space-3);
+            gap: 10px;
+            padding: 7px 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--zinc-200);
             border-radius: var(--radius-md);
-            font-size: var(--text-xs);
+            color: var(--zinc-500);
+            font-size: var(--step--1);
             cursor: pointer;
-            transition: all 0.15s ease;
-            min-height: 40px;
+            transition: all var(--transition-fast);
         }
 
-        .command-trigger:hover {
-            border-color: var(--accent-primary);
-            color: var(--text-primary);
-            background: var(--bg-surface);
+        .btn-search-trigger:hover {
+            border-color: var(--zinc-300);
+            color: var(--text-title);
+            background: var(--zinc-50);
         }
 
-        .kbd-shortcut {
+        .kbd-pill {
             font-family: var(--font-mono);
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: 4px;
-            padding: 2px 6px;
             font-size: 11px;
-            color: var(--text-primary);
+            padding: 2px 6px;
+            background: var(--zinc-100);
+            border: 1px solid var(--zinc-200);
+            border-radius: 4px;
+            color: var(--zinc-600);
+            font-weight: 600;
         }
 
-        /* ==========================================================================
-           4. LOS 7 ESTADOS OBLIGATORIOS (Botones y Componentes Interactivos)
-           ========================================================================== */
+        /* Botón de Acción Principal (Ley de Fitts: >= 44px de área touch, contraste alto) */
         .btn-cta {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: var(--space-2);
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 16px;
+            font-size: var(--step--1);
             font-weight: 600;
-            font-size: var(--text-sm);
-            padding: var(--space-3) var(--space-5);
-            min-height: 44px; /* Ley de Fitts: min 44px área interactiva */
             border-radius: var(--radius-md);
             border: 1px solid transparent;
             cursor: pointer;
-            transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
-            text-align: center;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+            user-select: none;
         }
 
-        /* Estado 1: Default */
         .btn-cta-primary {
-            background-color: var(--accent-primary);
-            color: var(--text-inverse);
-            box-shadow: var(--shadow-sm);
+            background-color: var(--accent-brand);
+            color: #ffffff;
+            border-color: var(--accent-brand);
         }
 
-        /* Estado 2: Hover */
-        .btn-cta-primary:hover:not(:disabled) {
+        .btn-cta-primary:hover {
             background-color: var(--accent-hover);
-            box-shadow: var(--shadow-md);
+            border-color: var(--accent-hover);
         }
 
-        /* Estado 3: Focus-Visible (Accesibilidad teclado estricta) */
-        .btn-cta-primary:focus-visible, .interactive-el:focus-visible {
+        .btn-cta-primary:active {
+            background-color: var(--accent-active);
+            transform: scale(0.99);
+        }
+
+        .btn-cta-primary:focus-visible {
             outline: none;
-            border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px var(--accent-ring);
         }
 
-        /* Estado 4: Active (Pulsado / Feedback táctil) */
-        .btn-cta-primary:active:not(:disabled) {
-            background-color: var(--accent-active);
-            transform: scale(0.98);
-        }
-
-        /* Estado 5: Disabled */
-        .btn-cta-primary:disabled, .btn-cta-secondary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-            box-shadow: none;
-        }
-
-        /* Estado 6: Loading Skeleton (Definido más adelante) */
-
         .btn-cta-secondary {
             background-color: var(--bg-surface);
-            color: var(--text-primary);
-            border-color: var(--border-subtle);
+            color: var(--zinc-800);
+            border-color: var(--zinc-300);
         }
 
-        .btn-cta-secondary:hover:not(:disabled) {
-            background-color: var(--bg-subtle);
-            border-color: var(--text-secondary);
+        .btn-cta-secondary:hover {
+            background-color: var(--zinc-100);
+            border-color: var(--zinc-400);
+            color: var(--text-title);
+        }
+
+        .btn-cta-secondary:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
         }
 
         /* ==========================================================================
-           5. HERO SECTION (Z-Pattern Scan + < 5s Value Proposition)
+           5. HERO ASIMÉTRICO (Split Editorial 7 / 5 - Fitts & Hick Law)
            ========================================================================== */
         .hero-section {
-            padding: var(--space-16) 0 var(--space-12) 0;
-            background: linear-gradient(180deg, #ffffff 0%, var(--bg-canvas) 100%);
-            border-bottom: 1px solid var(--border-subtle);
+            padding: 48px 0 56px 0;
+            background: var(--bg-surface);
+            border-bottom: var(--border-hairline);
         }
 
-        .hero-grid {
+        .hero-layout {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: var(--gutter);
+            grid-template-columns: 7fr 5fr;
+            gap: 48px;
             align-items: center;
         }
 
-        .hero-copy {
-            grid-column: span 7;
-        }
-
-        .hero-tag {
+        .hero-tagline {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-2);
-            background: var(--accent-subtle);
-            color: var(--accent-primary);
-            padding: var(--space-1) var(--space-3);
-            border-radius: var(--radius-pill);
-            font-size: var(--text-xs);
+            gap: 8px;
+            padding: 4px 10px;
+            background: var(--zinc-100);
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-sm);
+            font-size: var(--step--2);
             font-weight: 600;
-            margin-bottom: var(--space-4);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
+            color: var(--zinc-700);
+            margin-bottom: 20px;
+        }
+
+        .hero-tagline svg {
+            color: var(--accent-brand);
         }
 
         .hero-title {
-            font-size: var(--text-3xl);
+            font-size: var(--step-4);
             font-weight: 700;
-            line-height: 1.15;
-            letter-spacing: -1px;
-            color: var(--text-primary);
-            margin-bottom: var(--space-4);
+            color: var(--text-title);
+            letter-spacing: -0.035em;
+            line-height: 1.1;
+            margin-bottom: 18px;
         }
 
         .hero-title strong {
-            color: var(--accent-primary);
+            color: var(--accent-brand);
             font-weight: 700;
         }
 
-        .hero-description {
-            font-size: var(--text-md);
+        .hero-desc {
+            font-size: var(--step-0);
+            color: var(--text-body);
             line-height: 1.6;
-            margin-bottom: var(--space-8);
+            margin-bottom: 28px;
         }
 
-        .hero-actions {
+        .hero-cta-group {
             display: flex;
             align-items: center;
-            gap: var(--space-4);
+            gap: 12px;
+            margin-bottom: 28px;
             flex-wrap: wrap;
         }
 
-        .hero-visual {
-            grid-column: span 5;
-            position: relative;
+        .hero-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding-top: 20px;
+            border-top: var(--border-hairline);
         }
 
-        .hero-card-preview {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: var(--space-6);
-            box-shadow: var(--shadow-floating);
-            position: relative;
-        }
-
-        .hero-card-header {
+        .kpi-item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--space-4);
-            padding-bottom: var(--space-3);
-            border-bottom: 1px solid var(--border-subtle);
+            flex-direction: column;
         }
 
-        .hero-spec-tag {
+        .kpi-value {
             font-family: var(--font-mono);
-            font-size: var(--text-xs);
-            color: var(--text-secondary);
+            font-size: var(--step-2);
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
         }
 
-        /* ==========================================================================
-           6. SOCIAL PROOF MONOCROMÁTICA (Logos en escala de grises al 60%)
-           ========================================================================== */
-        .social-proof-section {
-            padding: var(--space-8) 0;
-            border-bottom: 1px solid var(--border-subtle);
+        .kpi-label {
+            font-size: var(--step--2);
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Tarjeta Destacada de Hardware Real */
+        .hero-card-product {
+            background: var(--bg-surface);
+            border: 1px solid var(--zinc-300);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-card-badge-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--zinc-50);
+            border-bottom: var(--border-hairline);
+        }
+
+        .badge-perucompras {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #991b1b;
+            background: #fef2f2;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid #fecaca;
+        }
+
+        .hero-card-media {
+            padding: 24px;
+            background: linear-gradient(180deg, var(--bg-surface) 0%, var(--zinc-50) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            border-bottom: var(--border-hairline);
+        }
+
+        .hero-card-media img {
+            max-height: 190px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));
+        }
+
+        .hero-card-body {
+            padding: 18px 20px;
+        }
+
+        .hero-card-meta {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .hero-card-sku {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        .hero-card-title {
+            font-size: var(--step-1);
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.025em;
+            margin-bottom: 12px;
+        }
+
+        .specs-hairline-table {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 16px;
             background: var(--bg-surface);
         }
 
-        .social-proof-title {
-            font-size: var(--text-xs);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-align: center;
-            color: var(--text-tertiary);
+        .spec-cell {
+            padding: 8px 12px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--zinc-200);
+        }
+
+        .spec-cell:nth-child(odd) {
+            border-right: 1px solid var(--zinc-200);
+        }
+
+        .spec-cell:nth-last-child(-n+2) {
+            border-bottom: none;
+        }
+
+        .spec-cell-k {
             font-weight: 600;
-            margin-bottom: var(--space-5);
+            color: var(--zinc-600);
+            display: block;
+            font-size: 10.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
         }
 
-        .social-proof-grid {
+        .spec-cell-v {
+            font-weight: 600;
+            color: var(--text-title);
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+        }
+
+        .hero-card-footer {
             display: flex;
-            justify-content: center;
             align-items: center;
-            gap: var(--space-10);
-            flex-wrap: wrap;
-            opacity: 0.65;
-            filter: grayscale(100%);
-            transition: opacity 0.2s ease, filter 0.2s ease;
+            justify-content: space-between;
+            gap: 12px;
         }
 
-        .social-proof-grid:hover {
-            opacity: 0.9;
-            filter: grayscale(40%);
+        .price-dual {
+            display: flex;
+            flex-direction: column;
         }
 
-        .proof-item {
+        .price-usd {
+            font-family: var(--font-mono);
+            font-size: var(--step-1);
             font-weight: 700;
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: var(--space-2);
+            color: var(--text-title);
+            line-height: 1.1;
+        }
+
+        .price-pen {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
         }
 
         /* ==========================================================================
-           7. BENTO GRID MODULAR (Linear Standard / Refactoring UI)
+           6. SECCIÓN DE ACREDITACIONES Y NORMAS (Social Proof Monocromático)
+           ========================================================================== */
+        .proof-bar {
+            background: var(--zinc-50);
+            border-bottom: var(--border-hairline);
+            padding: 16px 0;
+        }
+
+        .proof-bar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .proof-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--zinc-500);
+            white-space: nowrap;
+        }
+
+        .proof-logos {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+            flex-wrap: wrap;
+        }
+
+        .proof-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.75;
+            transition: opacity var(--transition-fast);
+        }
+
+        .proof-badge:hover {
+            opacity: 1;
+        }
+
+        .proof-badge img {
+            height: 26px;
+            width: auto;
+            object-fit: contain;
+            filter: grayscale(100%);
+            transition: filter var(--transition-fast);
+        }
+
+        .proof-badge:hover img {
+            filter: grayscale(0%);
+        }
+
+        .proof-badge-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .proof-badge-text strong {
+            font-size: 11.5px;
+            color: var(--zinc-800);
+            font-weight: 700;
+        }
+
+        .proof-badge-text span {
+            font-size: 10px;
+            color: var(--zinc-500);
+            font-family: var(--font-mono);
+        }
+
+        /* ==========================================================================
+           7. BENTO GRID ASIMÉTRICO (Líneas de Producción Reales)
            ========================================================================== */
         .bento-section {
-            padding: var(--space-16) 0;
+            padding: 64px 0;
+            border-bottom: var(--border-hairline);
         }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: var(--space-12);
+        .section-headline {
+            margin-bottom: 36px;
         }
 
         .section-tag {
-            font-size: var(--text-xs);
-            font-weight: 700;
-            color: var(--accent-primary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: var(--space-2);
             display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-brand);
+            margin-bottom: 8px;
         }
 
         .section-title {
-            font-size: var(--text-2xl);
+            font-size: var(--step-3);
             font-weight: 700;
-            letter-spacing: -0.5px;
-            color: var(--text-primary);
-            margin-bottom: var(--space-3);
+            letter-spacing: -0.03em;
+            line-height: 1.15;
+            color: var(--text-title);
+            margin-bottom: 10px;
+        }
+
+        .section-subtitle {
+            font-size: var(--step-0);
+            color: var(--text-muted);
+            max-width: 68ch;
         }
 
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            gap: var(--gutter);
+            gap: 20px;
         }
 
-        .bento-card {
+        .bento-cell {
             background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
+            border: 1px solid var(--zinc-200);
             border-radius: var(--radius-lg);
-            padding: var(--space-6);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
+            transition: border-color var(--transition-fast);
         }
 
-        .bento-card:hover {
-            transform: translateY(-3px);
-            border-color: #cbd5e1;
-            box-shadow: var(--shadow-lg);
+        .bento-cell:hover {
+            border-color: var(--zinc-300);
         }
 
-        .bento-col-8 { grid-column: span 8; }
-        .bento-col-4 { grid-column: span 4; }
-        .bento-col-6 { grid-column: span 6; }
-
-        .bento-card h4 {
-            font-size: var(--text-lg);
-            font-weight: 700;
-            margin-bottom: var(--space-2);
-            color: var(--text-primary);
+        .bento-col-8 {
+            grid-column: span 8;
         }
 
-        .bento-card p {
-            font-size: var(--text-sm);
-            line-height: 1.5;
-            margin-bottom: var(--space-4);
+        .bento-col-4 {
+            grid-column: span 4;
         }
 
-        .bento-badge-group {
-            display: flex;
-            gap: var(--space-2);
-            flex-wrap: wrap;
-            margin-top: auto;
+        .bento-col-6 {
+            grid-column: span 6;
         }
 
-        .tech-pill {
+        .bento-cell-header {
+            margin-bottom: 16px;
+        }
+
+        .bento-line-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             font-family: var(--font-mono);
-            font-size: var(--text-xs);
-            background: var(--bg-subtle);
-            border: 1px solid var(--border-subtle);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            background: var(--zinc-100);
+            border-radius: var(--radius-sm);
+            color: var(--zinc-700);
+            margin-bottom: 8px;
+        }
+
+        .bento-h3 {
+            font-size: var(--step-1);
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.025em;
+            margin-bottom: 8px;
+        }
+
+        .bento-p {
+            font-size: var(--step--1);
+            color: var(--text-body);
+            line-height: 1.5;
+        }
+
+        .bento-media-container {
+            margin-top: 18px;
+            background: var(--zinc-50);
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
+        }
+
+        .bento-media-container img {
+            max-height: 120px;
+            object-fit: contain;
+        }
+
+        .bento-chips {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .bento-chip {
+            font-size: 11px;
+            font-family: var(--font-mono);
+            background: var(--bg-surface);
+            border: 1px solid var(--zinc-200);
             padding: 3px 8px;
             border-radius: var(--radius-sm);
-            color: var(--text-secondary);
+            color: var(--zinc-600);
         }
 
         /* ==========================================================================
-           8. CATÁLOGO CON RETÍCULA F-PATTERN Y FILTROS FACETADOS (CEAM Style)
+           8. CATÁLOGO CON FILTRADO FACETADO REACTIVO & LEY DE TESLER
+              - La complejidad de filtrado de compatibilidad corre en el JS
+              - Interfaz minimalista: Opciones exactas y conteos reales
+              - Fichas abren con target="_blank" en NUEVA PESTAÑA independiente
            ========================================================================== */
         .catalog-section {
-            padding: var(--space-12) 0 var(--space-20) 0;
-            background: var(--bg-surface);
-            border-top: 1px solid var(--border-subtle);
+            padding: 64px 0;
+            background: var(--bg-canvas);
         }
 
         .catalog-layout {
             display: grid;
             grid-template-columns: 280px 1fr;
-            gap: var(--space-8);
+            gap: 28px;
             align-items: start;
         }
 
-        /* Sidebar de Filtros (Gestalt: Proximidad limpia sin cajas toscas) */
-        .filter-sidebar {
+        /* Sidebar de Filtros Limpia */
+        .filter-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-lg);
+            padding: 20px;
             position: sticky;
-            top: 84px;
+            top: 88px;
         }
 
-        .filter-header {
+        .filter-panel-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--space-5);
-            padding-bottom: var(--space-3);
-            border-bottom: 1px solid var(--border-subtle);
+            justify-content: space-between;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--zinc-200);
+            margin-bottom: 16px;
         }
 
-        .filter-header h3 {
-            font-size: var(--text-base);
+        .filter-panel-title {
+            font-size: var(--step--1);
             font-weight: 700;
-            color: var(--text-primary);
+            color: var(--text-title);
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .filter-reset-btn {
-            font-size: var(--text-xs);
-            color: var(--accent-primary);
+        .btn-filter-reset {
+            font-size: 11px;
+            color: var(--accent-brand);
             background: none;
             border: none;
             cursor: pointer;
             font-weight: 600;
+            padding: 2px 4px;
         }
 
-        .filter-reset-btn:hover {
+        .btn-filter-reset:hover {
             text-decoration: underline;
         }
 
-        .filter-group {
-            margin-bottom: var(--space-6);
+        .filter-category {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--zinc-100);
+            padding-bottom: 16px;
         }
 
-        .filter-group-title {
-            font-size: var(--text-xs);
+        .filter-category:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .filter-category-title {
+            font-size: 12px;
             font-weight: 700;
+            color: var(--zinc-800);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-3);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .filter-item {
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: var(--space-2) 0;
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 8px;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            transition: color 0.15s ease;
+            transition: background var(--transition-fast);
+            user-select: none;
         }
 
-        .filter-item:hover {
-            color: var(--text-primary);
+        .filter-option:hover {
+            background: var(--zinc-50);
         }
 
-        .filter-checkbox-wrap {
+        .filter-option.active {
+            background: var(--accent-tint);
+        }
+
+        .filter-checkbox-label {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: 8px;
+            font-size: var(--step--1);
+            color: var(--zinc-700);
+            cursor: pointer;
+        }
+
+        .filter-option.active .filter-checkbox-label {
+            color: var(--accent-brand);
+            font-weight: 600;
+        }
+
+        .filter-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 1px solid var(--zinc-300);
+            border-radius: 4px;
+            outline: none;
+            background: var(--bg-surface);
+            cursor: pointer;
+            position: relative;
+            display: grid;
+            place-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .filter-checkbox:checked {
+            background: var(--accent-brand);
+            border-color: var(--accent-brand);
+        }
+
+        .filter-checkbox:checked::after {
+            content: '';
+            width: 8px;
+            height: 5px;
+            border-left: 2px solid white;
+            border-bottom: 2px solid white;
+            transform: rotate(-45deg) translate(1px, -1px);
         }
 
         .filter-count {
             font-family: var(--font-mono);
-            font-size: var(--text-xs);
-            background: var(--bg-subtle);
-            padding: 2px 6px;
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
+            font-size: 11px;
+            color: var(--zinc-400);
+        }
+
+        .filter-option.active .filter-count {
+            color: var(--accent-brand);
             font-weight: 600;
         }
 
-        .filter-item.active-filter {
-            color: var(--accent-primary);
-            font-weight: 600;
+        /* Barra de Herramientas de Catálogo */
+        .catalog-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
-        .filter-item.active-filter .filter-count {
-            background: var(--accent-subtle);
-            color: var(--accent-primary);
+        .catalog-results-info {
+            font-size: var(--step--1);
+            color: var(--zinc-600);
         }
 
-        /* Grilla de Productos (3 Columnas con espaciado 24px) */
+        .catalog-results-info strong {
+            color: var(--text-title);
+            font-family: var(--font-mono);
+        }
+
+        .catalog-sort-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: var(--step--1);
+            color: var(--zinc-600);
+        }
+
+        .catalog-sort-select {
+            padding: 6px 10px;
+            background: var(--bg-surface);
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-md);
+            color: var(--text-title);
+            outline: none;
+            cursor: pointer;
+            font-size: var(--step--1);
+        }
+
+        /* Cuadrícula de Productos */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-6);
+            gap: 20px;
         }
 
+        /* Tarjeta de Producto Profesional (Anti-Slop Craft) */
         .product-card {
             background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: var(--space-5);
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-lg);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            overflow: hidden;
             position: relative;
-            transition: all 0.2s ease;
+            transition: border-color var(--transition-fast);
         }
 
         .product-card:hover {
-            border-color: #cbd5e1;
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
+            border-color: var(--zinc-300);
         }
 
-        .product-badge-stock {
-            position: absolute;
-            top: var(--space-4);
-            left: var(--space-4);
+        .product-card-top {
+            padding: 10px 14px;
+            background: var(--zinc-50);
+            border-bottom: 1px solid var(--zinc-100);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stock-tag {
+            font-family: var(--font-mono);
             font-size: 11px;
             font-weight: 600;
-            padding: 2px 8px;
-            border-radius: var(--radius-pill);
-            background: var(--state-success-bg);
-            color: var(--state-success);
+            color: var(--success-text);
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
 
-        .product-badge-stock::before {
+        .stock-tag::before {
             content: '';
             width: 6px;
             height: 6px;
+            background: var(--success-text);
             border-radius: 50%;
-            background-color: var(--state-success);
         }
 
-        .product-thumb-container {
-            height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: var(--space-4);
-            margin-top: var(--space-3);
-        }
-
-        .product-thumb-placeholder {
-            width: 140px;
-            height: 140px;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-tertiary);
-            font-size: var(--text-xs);
-            font-weight: 600;
-            border: 1px dashed var(--border-subtle);
-        }
-
-        .product-card-sku {
+        .acuerdo-marco-tag {
             font-family: var(--font-mono);
-            font-size: var(--text-xs);
-            color: var(--text-tertiary);
-            margin-bottom: var(--space-1);
+            font-size: 10.5px;
+            color: var(--zinc-500);
+        }
+
+        /* Enlace principal que cubre navegación nativa en pestaña nueva */
+        .product-card-link-block {
+            padding: 16px 16px 12px 16px;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-image-wrap {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            background: var(--zinc-50);
+            border: 1px solid var(--zinc-100);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            padding: 12px;
+        }
+
+        .product-image-wrap img {
+            max-height: 100%;
+            width: auto;
+            object-fit: contain;
+            transition: transform var(--transition-normal);
+        }
+
+        .product-card:hover .product-image-wrap img {
+            transform: scale(1.02);
+        }
+
+        .product-sku-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .product-sku {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--zinc-500);
+        }
+
+        .product-model-label {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 600;
+            background: var(--zinc-100);
+            padding: 1px 6px;
+            border-radius: 3px;
+            color: var(--zinc-700);
         }
 
         .product-card-title {
-            font-size: var(--text-base);
+            font-size: var(--step-0);
             font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.35;
-            margin-bottom: var(--space-3);
+            color: var(--text-title);
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            transition: color 0.15s ease;
+            min-height: 2.5em;
         }
 
-        .product-card:hover .product-card-title {
-            color: var(--accent-primary);
+        .product-specs-matrix {
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin-bottom: 16px;
+            background: var(--bg-surface);
         }
 
-        .product-specs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: var(--space-5);
-            font-size: var(--text-xs);
-        }
-
-        .spec-item {
-            display: flex;
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 88px 1fr;
+            padding: 6px 10px;
+            border-bottom: 1px solid var(--zinc-100);
+            font-size: 11.5px;
             align-items: center;
-            gap: var(--space-2);
-            color: var(--text-secondary);
         }
 
-        .spec-label {
+        .matrix-row:last-child {
+            border-bottom: none;
+        }
+
+        .matrix-label {
             font-weight: 600;
-            color: var(--text-primary);
-            min-width: 80px;
+            color: var(--zinc-500);
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.04em;
         }
 
-        .product-card-footer {
+        .matrix-val {
+            font-family: var(--font-mono);
+            color: var(--text-title);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-card-bottom {
             margin-top: auto;
-            padding-top: var(--space-4);
-            border-top: 1px solid var(--border-subtle);
+            padding: 12px 16px;
+            border-top: 1px solid var(--zinc-100);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: var(--space-3);
+            background: var(--zinc-50);
+            gap: 10px;
         }
 
-        .product-card-price {
-            font-size: var(--text-xs);
-            color: var(--text-secondary);
+        .product-price-box {
+            display: flex;
+            flex-direction: column;
         }
 
-        .product-card-price strong {
-            display: block;
-            font-size: var(--text-md);
-            color: var(--text-primary);
+        .product-price-box .price-main {
             font-family: var(--font-mono);
+            font-size: var(--step-0);
+            font-weight: 700;
+            color: var(--text-title);
+            line-height: 1.1;
+        }
+
+        .product-price-box .price-sub {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            color: var(--zinc-500);
+        }
+
+        /* Botón de apertura con target="_blank" explícito */
+        .btn-card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--bg-surface);
+            color: var(--zinc-800);
+            border: 1px solid var(--zinc-300);
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .btn-card-action:hover {
+            background: var(--zinc-100);
+            border-color: var(--zinc-400);
+            color: var(--text-title);
         }
 
         /* ==========================================================================
-           9. SECCIÓN DEMOSTRATIVA DE LOS 7 ESTADOS DE COMPONENTE (Protocolo 3)
+           9. SECCIÓN DE LOS 7 ESTADOS DE UI (Auditoría Técnica Visual)
            ========================================================================== */
-        .states-inspector-section {
-            padding: var(--space-12) 0;
-            background: var(--bg-canvas);
-            border-top: 1px solid var(--border-subtle);
+        .states-section {
+            padding: 64px 0;
+            background: var(--bg-surface);
+            border-top: var(--border-hairline);
+            border-bottom: var(--border-hairline);
         }
 
         .states-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: var(--space-6);
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
-        .state-box {
+        .state-card {
             background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: var(--space-4);
+            border: 1px solid var(--zinc-200);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .state-box-title {
-            font-size: var(--text-xs);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-secondary);
-            margin-bottom: var(--space-3);
+        .state-card-header {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
-        .state-tag {
-            background: var(--bg-subtle);
-            padding: 1px 6px;
-            border-radius: 4px;
+        .state-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-title);
+        }
+
+        .state-badge {
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            background: var(--zinc-100);
+            color: var(--zinc-600);
+            border: 1px solid var(--zinc-200);
         }
 
-        /* Estado 6: Skeleton Loading */
+        .state-card-desc {
+            font-size: 11.5px;
+            color: var(--zinc-500);
+            margin-bottom: 14px;
+            min-height: 34px;
+        }
+
+        /* Skeleton Loading Shimmer */
         .skeleton {
-            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
             background-size: 200% 100%;
-            animation: skeleton-loading 1.5s infinite;
+            animation: shimmer 1.5s infinite;
             border-radius: var(--radius-sm);
         }
 
-        @keyframes skeleton-loading {
+        @keyframes shimmer {
             0% { background-position: 200% 0; }
             100% { background-position: -200% 0; }
         }
 
-        .skeleton-text {
-            height: 14px;
-            margin-bottom: 8px;
-            width: 100%;
-        }
-
-        .skeleton-title {
-            height: 20px;
-            margin-bottom: 12px;
-            width: 70%;
-        }
-
-        .skeleton-thumb {
-            height: 120px;
-            margin-bottom: 12px;
-            width: 100%;
-        }
-
-        .skeleton-btn {
-            height: 40px;
-            width: 100%;
-        }
-
-        /* Estado 7: Empty State */
-        .empty-state-box {
-            text-align: center;
-            padding: var(--space-8) var(--space-4);
-            background: var(--bg-surface);
-            border: 1px dashed var(--border-subtle);
+        /* Estado Vacío (Sin Emojis, con SVG Estructurado) */
+        .empty-state-container {
+            background: var(--zinc-50);
+            border: 1px dashed var(--zinc-300);
             border-radius: var(--radius-lg);
+            padding: 40px 24px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .empty-icon {
-            font-size: 32px;
-            margin-bottom: var(--space-2);
-            color: var(--text-tertiary);
+        .empty-state-svg {
+            width: 44px;
+            height: 44px;
+            color: var(--zinc-400);
+            margin-bottom: 14px;
+            stroke-width: 1.5;
+        }
+
+        .empty-state-title {
+            font-size: var(--step-0);
+            font-weight: 700;
+            color: var(--text-title);
+            margin-bottom: 6px;
+        }
+
+        .empty-state-text {
+            font-size: var(--step--1);
+            color: var(--zinc-500);
+            max-width: 50ch;
+            margin-bottom: 16px;
         }
 
         /* ==========================================================================
-           10. COMMAND PALETTE MODAL (Cmd + K Modal Accesible)
+           10. COMMAND PALETTE MODAL (Ctrl + K / Cmd + K)
            ========================================================================== */
-        .cmd-backdrop {
-            display: none;
+        .cmd-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.5);
+            inset: 0;
+            background: rgba(9, 9, 11, 0.55);
             backdrop-filter: blur(4px);
-            z-index: 999;
+            z-index: 100;
+            display: none;
             align-items: flex-start;
             justify-content: center;
-            padding-top: 10vh;
+            padding-top: 12vh;
         }
 
-        .cmd-modal {
-            width: 100%;
-            max-width: 600px;
+        .cmd-modal-box {
             background: var(--bg-surface);
+            border: 1px solid var(--zinc-300);
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-floating);
-            border: 1px solid var(--border-subtle);
-            overflow: hidden;
-            animation: modal-pop 0.15s ease-out;
-        }
-
-        @keyframes modal-pop {
-            from { transform: scale(0.96); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .cmd-search-input {
             width: 100%;
-            padding: var(--space-4) var(--space-5);
-            font-size: var(--text-base);
-            border: none;
-            border-bottom: 1px solid var(--border-subtle);
-            outline: none;
-            background: transparent;
-            color: var(--text-primary);
+            max-width: 580px;
+            overflow: hidden;
+            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.15);
         }
 
-        .cmd-results-list {
+        .cmd-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--zinc-200);
+        }
+
+        .cmd-input-wrap svg {
+            color: var(--zinc-400);
+            stroke-width: 1.5;
+        }
+
+        .cmd-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: var(--step-0);
+            color: var(--text-title);
+            background: transparent;
+        }
+
+        .cmd-list {
             max-height: 320px;
             overflow-y: auto;
-            padding: var(--space-2);
+            padding: 8px;
         }
 
-        .cmd-item {
+        .cmd-entry {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: var(--space-3) var(--space-4);
+            padding: 10px 12px;
             border-radius: var(--radius-md);
-            font-size: var(--text-sm);
             cursor: pointer;
-            transition: background 0.1s ease;
+            text-decoration: none;
+            color: inherit;
+            transition: background var(--transition-fast);
         }
 
-        .cmd-item:hover, .cmd-item.selected {
-            background: var(--bg-subtle);
-            color: var(--accent-primary);
+        .cmd-entry:hover, .cmd-entry.active {
+            background: var(--zinc-100);
         }
 
-        .cmd-footer {
-            padding: var(--space-3) var(--space-5);
-            background: var(--bg-canvas);
-            border-top: 1px solid var(--border-subtle);
-            font-size: var(--text-xs);
-            color: var(--text-tertiary);
+        .cmd-entry-title {
+            font-size: var(--step--1);
+            font-weight: 600;
+            color: var(--text-title);
+        }
+
+        .cmd-entry-sub {
+            font-size: 11.5px;
+            color: var(--zinc-500);
+            font-family: var(--font-mono);
+        }
+
+        .cmd-modal-footer {
+            padding: 10px 16px;
+            background: var(--zinc-50);
+            border-top: 1px solid var(--zinc-200);
+            font-size: 11px;
+            color: var(--zinc-500);
             display: flex;
+            align-items: center;
             justify-content: space-between;
         }
 
         /* ==========================================================================
-           11. RESPONSIVE BREAKPOINTS (Mobile first fluid grid)
+           11. FOOTER SOBRIO B2B
            ========================================================================== */
+        .footer-main {
+            background: var(--zinc-950);
+            color: var(--zinc-400);
+            padding: 56px 0 28px 0;
+            border-top: 1px solid var(--zinc-800);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: var(--zinc-200);
+            font-size: var(--step--1);
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: -0.01em;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: var(--step--1);
+        }
+
+        .footer-links a:hover {
+            color: #ffffff;
+        }
+
+        .footer-bottom {
+            padding-top: 24px;
+            border-top: 1px solid var(--zinc-800);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: var(--step--2);
+            color: var(--zinc-500);
+        }
+
+        /* Responsive Breakpoints */
         @media (max-width: 1024px) {
-            .hero-copy { grid-column: span 12; }
-            .hero-visual { grid-column: span 12; }
+            .hero-layout { grid-template-columns: 1fr; }
             .catalog-layout { grid-template-columns: 1fr; }
-            .filter-sidebar { position: static; margin-bottom: var(--space-6); }
+            .filter-panel { position: static; margin-bottom: 24px; }
             .products-grid { grid-template-columns: repeat(2, 1fr); }
-            .states-grid { grid-template-columns: repeat(2, 1fr); }
             .bento-col-8, .bento-col-4, .bento-col-6 { grid-column: span 12; }
+            .states-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 640px) {
+            .nav-links { display: none; }
             .products-grid { grid-template-columns: 1fr; }
             .states-grid { grid-template-columns: 1fr; }
-            .nav-menu { display: none; }
-            .hero-title { font-size: var(--text-2xl); }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+            .hero-title { font-size: var(--step-3); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Banner Informativo del Prototipo -->
-    <div class="prototype-banner">
-        <span><strong>PROTOTIPO UX/UI EXPERIMENTAL:</strong> Cumple con Leyes de UX (Fitts, Hick, Jakob, Gestalt), Escala Modular Major Third 1.25, Retícula de 12 Columnas y los 7 Estados de UI.</span>
-        <span>Modo Prueba</span>
+    <!-- 1. Barra de Control del Sistema -->
+    <div class="system-topbar">
+        <div class="container system-topbar-inner">
+            <div class="topbar-pills">
+                <span class="topbar-pill">PROTOTIPO TÉCNICO UX/UI</span>
+                <span class="topbar-pill">ANTI-SLOP ENGINE</span>
+                <span class="topbar-pill">PERÚ COMPRAS HOMOLOGADO</span>
+            </div>
+            <div class="topbar-status">
+                <span class="topbar-status-dot"></span>
+                <span>Enlace a Fichas Técnicas: target="_blank" activo</span>
+            </div>
+        </div>
     </div>
 
-    <!-- 1. NAVBAR + COMMAND MENU (Jakob's Law + Hick's Law <= 5 enlaces) -->
-    <header class="navbar-sticky">
-        <div class="container navbar-container">
-            <!-- Logo a la izquierda (Jakob's Law) -->
-            <a href="#inicio" class="nav-brand interactive-el" aria-label="Inicio Kenya Technology">
-                <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="32" height="32" rx="6" fill="#EA580C"/>
-                    <path d="M9 7H14V14.5L19.5 7H25L17.5 16L25.5 25H19.5L14 17.5V25H9V7Z" fill="white"/>
-                </svg>
-                <span>KENYA</span>
-                <span class="brand-badge">OEM PERÚ</span>
+    <!-- 2. Navbar Principal -->
+    <header class="navbar">
+        <div class="container navbar-inner">
+            <a href="#inicio" class="brand-link" aria-label="Inicio Kenya Technology">
+                <!-- Logotipo Real Kenya -->
+                <img src="theme/images/kenya.png" alt="Kenya Technology" class="brand-logo-img" onerror="this.onerror=null; this.src='theme/images/logo.png';">
+                <div class="brand-tagline">
+                    <span>Technology OEM</span>
+                    <span>Fabricante Nacional</span>
+                </div>
             </a>
 
-            <!-- Menú central con máx 5 enlaces (Hick's Law: minimizar sobrecarga cognitiva) -->
+            <!-- Navegación acotada (Ley de Hick: <= 5 ítems) -->
             <nav aria-label="Navegación principal">
-                <ul class="nav-menu">
-                    <li><a href="#catalogo" class="nav-link active interactive-el">Catálogo</a></li>
-                    <li><a href="#modelos" class="nav-link interactive-el">Modelos</a></li>
-                    <li><a href="#acuerdo-marco" class="nav-link interactive-el">Acuerdo Marco</a></li>
-                    <li><a href="#garantia" class="nav-link interactive-el">Garantía QR</a></li>
-                    <li><a href="#empresa" class="nav-link interactive-el">Empresa</a></li>
+                <ul class="nav-links">
+                    <li><a href="#catalogo" class="nav-link active">Catálogo de Fichas</a></li>
+                    <li><a href="#lineas" class="nav-link">Líneas de Producción</a></li>
+                    <li><a href="#acuerdo-marco" class="nav-link">Acuerdo Marco</a></li>
+                    <li><a href="#garantia" class="nav-link">Garantía On-Site</a></li>
+                    <li><a href="#estados-ui" class="nav-link">Auditoría UI</a></li>
                 </ul>
             </nav>
 
-            <!-- Acciones a la derecha: Command Menu (Cmd + K) y CTA principal -->
             <div class="nav-actions">
-                <button class="command-trigger interactive-el" id="openCmdBtn" aria-label="Abrir buscador rápido">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <span>Buscar ficha o SKU...</span>
-                    <span class="kbd-shortcut">Ctrl K</span>
+                <button class="btn-search-trigger" id="cmdOpenBtn" aria-label="Buscar fichas técnicas o componentes">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Buscar SKU o CPU...</span>
+                    <span class="kbd-pill">Ctrl K</span>
                 </button>
-                <a href="#contacto" class="btn-cta btn-cta-primary interactive-el">
-                    Cotizar B2B
+                <a href="#catalogo" class="btn-cta btn-cta-primary">
+                    Explorar Catálogo
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- 2. HERO SECTION (Z-Pattern Scan + < 5s Value Proposition) -->
+    <!-- 3. Hero Section Asimétrico (Split 7 / 5) -->
     <section class="hero-section" id="inicio">
-        <div class="container hero-grid">
-            <div class="hero-copy">
-                <div class="hero-tag">Fabricante Homologado Perú Compras</div>
+        <div class="container hero-layout">
+            <!-- Columna Izquierda: Editorial Headings & Value Prop -->
+            <div>
+                <div class="hero-tagline">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Catálogos Electrónicos Perú Compras IM-CE-2020-5</span>
+                </div>
                 <h1 class="hero-title">
-                    Hardware de alto rendimiento para el <strong>Estado y Sector Corporativo</strong>
+                    Hardware de cómputo para el <strong>Estado Peruano</strong> y Sector Corporativo
                 </h1>
-                <p class="hero-description measure-text">
-                    Computadoras de escritorio, workstations y monitores ensamblados bajo estrictos estándares ISO 9001 y 37001, con garantía de fábrica On-Site a nivel nacional.
+                <p class="hero-desc measure-text">
+                    Computadoras de escritorio, estaciones de trabajo y monitores configurados bajo estándares ISO 9001:2015 e ISO 37001, con garantía de fábrica On-Site de 36 meses con cobertura nacional.
                 </p>
-                <div class="hero-actions">
-                    <!-- CTA dominante (Ley de Fitts: tamaño generoso, color 10% vibrante) -->
-                    <a href="#catalogo" class="btn-cta btn-cta-primary interactive-el">
-                        Explorar Catálogo de Fichas
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+
+                <div class="hero-cta-group">
+                    <a href="#catalogo" class="btn-cta btn-cta-primary">
+                        <span>Ver Fichas Homologadas</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </a>
-                    <a href="#garantia" class="btn-cta btn-cta-secondary interactive-el">
-                        Consultar Garantía por Serie
+                    <a href="#lineas" class="btn-cta btn-cta-secondary">
+                        Líneas de Producción
                     </a>
+                </div>
+
+                <div class="hero-kpis">
+                    <div class="kpi-item">
+                        <span class="kpi-value tabular-nums">+250</span>
+                        <span class="kpi-label">Fichas Homologadas</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-value tabular-nums">36 Meses</span>
+                        <span class="kpi-label">Garantía On-Site</span>
+                    </div>
+                    <div class="kpi-item">
+                        <span class="kpi-value tabular-nums">100% OEM</span>
+                        <span class="kpi-label">Componentes Certificados</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Previsualización interactiva de producto real -->
-            <div class="hero-visual">
-                <div class="hero-card-preview">
-                    <div class="hero-card-header">
-                        <div>
-                            <span class="product-badge-stock">Disponible en Acuerdo Marco</span>
-                            <h3 style="font-size: var(--text-md); font-weight:700; margin-top: 6px;">KENYA EZENT T700</h3>
+            <!-- Columna Derecha: Tarjeta de Hardware Real con Recursos del Proyecto -->
+            <div class="hero-card-product">
+                <div class="hero-card-badge-row">
+                    <span class="badge-perucompras">
+                        <img src="theme/images/logo_PeruCompras.svg" alt="Perú Compras" style="height: 14px; width: auto;" onerror="this.src='logo_PeruCompras.svg'">
+                        Ficha Vigente
+                    </span>
+                    <span class="hero-card-sku">SKU: E7CT6OWNHPXO3B</span>
+                </div>
+
+                <div class="hero-card-media">
+                    <img src="producto.jpg" alt="Computadora Kenya EZENT T700" onerror="this.src='pord.jpg'">
+                </div>
+
+                <div class="hero-card-body">
+                    <div class="hero-card-meta">
+                        <span style="font-size: 11px; font-weight: 700; color: var(--accent-brand); text-transform: uppercase;">Línea EZENT Mid-Tower</span>
+                        <span class="stock-tag">Stock ≥ 20 unid.</span>
+                    </div>
+                    <h3 class="hero-card-title">KENYA EZENT T700 Core i7</h3>
+
+                    <div class="specs-hairline-table">
+                        <div class="spec-cell">
+                            <span class="spec-cell-k">Procesador</span>
+                            <span class="spec-cell-v">i7 13700 (16C/24T)</span>
                         </div>
-                        <span class="hero-spec-tag">SKU: E7CT6OWNHP</span>
-                    </div>
-                    <div class="product-thumb-container" style="height: 160px;">
-                        <div class="product-thumb-placeholder" style="width: 100%; height: 100%;">
-                            [ Ilustración Chasis Mid-Tower Kenya ]
+                        <div class="spec-cell">
+                            <span class="spec-cell-k">Memoria</span>
+                            <span class="spec-cell-v">16 GB DDR4 3200</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-cell-k">Almacenamiento</span>
+                            <span class="spec-cell-v">1 TB SSD NVMe M.2</span>
+                        </div>
+                        <div class="spec-cell">
+                            <span class="spec-cell-k">Garantía</span>
+                            <span class="spec-cell-v">36 Meses On-Site</span>
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: var(--text-xs); margin-bottom: 16px;">
-                        <div class="tech-pill">CPU: Intel Core i7 13700</div>
-                        <div class="tech-pill">RAM: 16 GB DDR4 3200</div>
-                        <div class="tech-pill">Disco: 1 TB SSD NVMe</div>
-                        <div class="tech-pill">Garantía: 36 Meses On-Site</div>
+
+                    <div class="hero-card-footer">
+                        <div class="price-dual">
+                            <span class="price-usd">$ 645.00</span>
+                            <span class="price-pen">S/ 2,425.20 incl. IGV</span>
+                        </div>
+                        <!-- Enlace con target="_blank" para abrir en nueva pestaña -->
+                        <a href="#catalogo" target="_blank" rel="noopener noreferrer" class="btn-card-action">
+                            <span>Abrir Ficha Técnica</span>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </a>
                     </div>
-                    <a href="#" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-secondary interactive-el" style="width: 100%;">
-                        Ver Ficha Técnica Oficial (PDF)
-                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 3. SOCIAL PROOF (Logos monocromáticos en escala de grises con opacidad controlada) -->
-    <section class="social-proof-section" aria-label="Certificaciones y homologaciones">
-        <div class="container">
-            <div class="social-proof-title">Acreditaciones oficiales, acuerdos marco y normativas vigentes</div>
-            <div class="social-proof-grid">
-                <div class="proof-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    <span>PERÚ COMPRAS</span>
+    <!-- 4. Barra de Acreditaciones Oficiales (Monocromático, 1.5px stroke) -->
+    <div class="proof-bar" id="acuerdo-marco">
+        <div class="container proof-bar-inner">
+            <div class="proof-label">Acreditaciones & Normativa de Fabricación:</div>
+            <div class="proof-logos">
+                <div class="proof-badge">
+                    <img src="theme/images/logo_PeruCompras.svg" alt="Perú Compras" onerror="this.src='logo_PeruCompras.svg'">
+                    <div class="proof-badge-text">
+                        <strong>Perú Compras</strong>
+                        <span>Catálogo Electrónico</span>
+                    </div>
                 </div>
-                <div class="proof-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
-                    <span>ISO 9001:2015 CALIDAD</span>
+
+                <div class="proof-badge">
+                    <img src="iso-37001.png" alt="ISO 37001 Anti-Soborno">
+                    <div class="proof-badge-text">
+                        <strong>ISO 37001:2016</strong>
+                        <span>Gestión Antisoborno</span>
+                    </div>
                 </div>
-                <div class="proof-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    <span>ISO 37001 ANTI-SOBORNO</span>
+
+                <div class="proof-badge">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+                    <div class="proof-badge-text">
+                        <strong>ISO 9001:2015</strong>
+                        <span>Gestión de Calidad</span>
+                    </div>
                 </div>
-                <div class="proof-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
-                    <span>SISTEMA RAEE COLECTIVO</span>
+
+                <div class="proof-badge">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <div class="proof-badge-text">
+                        <strong>Sistema RAEE</strong>
+                        <span>Colectivo Ecológico</span>
+                    </div>
                 </div>
-                <div class="proof-item">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span>CERTIFICACIÓN FCC / CE / RoHS</span>
+
+                <div class="proof-badge">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <div class="proof-badge-text">
+                        <strong>TPM 2.0 Hardened</strong>
+                        <span>Seguridad Institucional</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- 4. BENTO GRID (Arquitectura modular estilo Linear / Stripe) -->
-    <section class="bento-section" id="modelos">
+    <!-- 5. Bento Grid Asimétrico: Líneas de Hardware Reales -->
+    <section class="bento-section" id="lineas">
         <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Líneas de Producción</span>
-                <h2 class="section-title">Hardware Diseñado para Rendir sin Cuellos de Botella</h2>
-                <p class="measure-text" style="margin: 0 auto;">Configuraciones homologadas para el Catálogo Electrónico de Acuerdos Marco con componentes de grado industrial.</p>
+            <div class="section-headline">
+                <span class="section-tag">Ingeniería de Producto</span>
+                <h2 class="section-title">Líneas de Producción Homologadas</h2>
+                <p class="section-subtitle">
+                    Configuraciones optimizadas para contratación pública con fuentes certificadas 80 Plus, compatibilidad modular y trazabilidad por número de serie.
+                </p>
             </div>
 
             <div class="bento-grid">
-                <!-- Bento Card 1: 8 Columnas -->
-                <div class="bento-card bento-col-8">
+                <!-- Bento 1: EZENT & GENWORK (Span 8) -->
+                <div class="bento-cell bento-col-8">
                     <div>
-                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">PC ESCRITORIO</span>
-                        <h4>Línea EZENT & GENWORK</h4>
-                        <p class="measure-text">Diseñadas para jornadas intensivas de oficina pública y corporativa. Formatos Mid-Tower con refrigeración optimizada, fuentes 80 Plus certificadas y TPM 2.0 integrado para seguridad de datos institucionales.</p>
+                        <div class="bento-cell-header">
+                            <span class="bento-line-pill">Línea Principal Desktop</span>
+                            <h3 class="bento-h3">EZENT & GENWORK Mid-Tower</h3>
+                            <p class="bento-p measure-text">
+                                Diseñadas para alta exigencia operativa en entidades del Estado y corporaciones. Chasis de acero electrogalvanizado de 0.6mm con flujo de aire canalizado, fuentes 80 Plus Bronze/Gold de alta eficiencia y puertos frontales de acceso veloz.
+                            </p>
+                        </div>
+                        <div class="bento-chips">
+                            <span class="bento-chip">Intel Core 12va, 13va y 14va Gen</span>
+                            <span class="bento-chip">Hasta 64 GB DDR4/DDR5</span>
+                            <span class="bento-chip">HDMI + DisplayPort dual</span>
+                            <span class="bento-chip">Garantía On-Site 36M</span>
+                        </div>
                     </div>
-                    <div class="bento-badge-group">
-                        <span class="tech-pill">Procesadores Intel 12va a 14va Gen</span>
-                        <span class="tech-pill">Hasta 64 GB RAM DDR4/DDR5</span>
-                        <span class="tech-pill">Puertos USB 3.2 + HDMI + DisplayPort</span>
-                        <span class="tech-pill">Formato Mid Tower</span>
+                    <div class="bento-media-container" style="background:#ffffff; margin-top:20px;">
+                        <img src="producto.jpg" alt="Línea EZENT Kenya" style="max-height: 110px;">
                     </div>
                 </div>
 
-                <!-- Bento Card 2: 4 Columnas -->
-                <div class="bento-card bento-col-4">
+                <!-- Bento 2: OFISZU SFF (Span 4) -->
+                <div class="bento-cell bento-col-4">
                     <div>
-                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">WORKSTATION</span>
-                        <h4>Línea PROWORK</h4>
-                        <p>Gráficos profesionales NVIDIA RTX y procesadores de alto conteo de núcleos para diseño CAD, render y analítica de datos pesada.</p>
+                        <div class="bento-cell-header">
+                            <span class="bento-line-pill">Formato Compacto SFF</span>
+                            <h3 class="bento-h3">OFISZU Small Form Factor</h3>
+                            <p class="bento-p">
+                                Chasis reducido para estaciones de trabajo con espacio limitado. Mantiene conectividad completa y expansión interna sin pérdida térmica.
+                            </p>
+                        </div>
+                        <div class="bento-chips">
+                            <span class="bento-chip">Volumen ultra reducido</span>
+                            <span class="bento-chip">Bajo consumo energético</span>
+                        </div>
                     </div>
-                    <div class="bento-badge-group">
-                        <span class="tech-pill">NVIDIA RTX</span>
-                        <span class="tech-pill">Fuentes 750W 80+ Gold</span>
+                    <div class="bento-media-container" style="background:#ffffff; margin-top:20px;">
+                        <!-- Imagen real de ofiszusff en el proyecto -->
+                        <img src="ofiszusff.webp" alt="Kenya OFISZU SFF" style="max-height: 110px;" onerror="this.src='ofiszusff.png';">
                     </div>
                 </div>
 
-                <!-- Bento Card 3: 6 Columnas -->
-                <div class="bento-card bento-col-6">
+                <!-- Bento 3: PROWORK Workstation (Span 6) -->
+                <div class="bento-cell bento-col-6">
                     <div>
-                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">COMPACT SFF</span>
-                        <h4>Línea OFISZU (Small Form Factor)</h4>
-                        <p>Máximo ahorro de espacio de trabajo sin sacrificar capacidad de expansión ni conectividad frontal de alta velocidad.</p>
-                    </div>
-                    <div class="bento-badge-group">
-                        <span class="tech-pill">Chasis SFF Ultracompacto</span>
-                        <span class="tech-pill">Bajo Consumo Energético</span>
+                        <div class="bento-cell-header">
+                            <span class="bento-line-pill">Alta Potencia Gráfica</span>
+                            <h3 class="bento-h3">PROWORK WS Series</h3>
+                            <p class="bento-p">
+                                Equipadas con procesadores de alta frecuencia y aceleración gráfica NVIDIA GeForce RTX / Quadro para modelado BIM, CAD, GIS y renderizado pesado.
+                            </p>
+                        </div>
+                        <div class="bento-chips">
+                            <span class="bento-chip">NVIDIA RTX 4060 / 4070</span>
+                            <span class="bento-chip">Fuentes 750W 80+ Gold</span>
+                            <span class="bento-chip">Almacenamiento PCIe Gen 4x4</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Bento Card 4: 6 Columnas -->
-                <div class="bento-card bento-col-6">
+                <!-- Bento 4: RAITO Monitores (Span 6) -->
+                <div class="bento-cell bento-col-6">
                     <div>
-                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">VISUALIZACIÓN</span>
-                        <h4>Línea RAITO (Monitores Profesionales)</h4>
-                        <p>Paneles IPS antirreflejo, resolución Full HD y 2K, frecuencia de actualización suave y cuidado ocular Low Blue Light certificado.</p>
-                    </div>
-                    <div class="bento-badge-group">
-                        <span class="tech-pill">23.8" / 27" IPS</span>
-                        <span class="tech-pill">HDMI + VGA / DP</span>
-                        <span class="tech-pill">Montaje VESA 100x100</span>
+                        <div class="bento-cell-header">
+                            <span class="bento-line-pill">Monitores Profesionales</span>
+                            <h3 class="bento-h3">RAITO Display Series</h3>
+                            <p class="bento-p">
+                                Paneles IPS con resolución Full HD y QHD, calibración de color precisa, marcos ultradelgados para configuraciones multi-monitor y soporte VESA estándar.
+                            </p>
+                        </div>
+                        <div class="bento-chips">
+                            <span class="bento-chip">23.8" y 27" IPS Anti-glare</span>
+                            <span class="bento-chip">Low Blue Light / Flicker-Free</span>
+                            <span class="bento-chip">Entradas HDMI + DP + VGA</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 5. CATÁLOGO CON RETÍCULA F-PATTERN Y FILTROS FACETADOS (Leyes de Gestalt + Hick) -->
+    <!-- 6. CATÁLOGO INTERACTIVO CON FILTRADO FACETADO DINÁMICO (Leyes de Hick y Fitts) -->
     <section class="catalog-section" id="catalogo">
         <div class="container">
-            <div class="section-header" style="text-align: left; margin-bottom: var(--space-8);">
-                <span class="section-tag">Explorador de Fichas Técnicas</span>
-                <h2 class="section-title">Catálogo Interactivo con Filtros Facetados</h2>
-                <p>Navega entre fichas compatibles. Cada tarjeta permite abrir el detalle en una <strong>nueva pestaña independiente</strong> con clic derecho o botón directo.</p>
+            <div class="section-headline">
+                <span class="section-tag">Explorador de Fichas de Catálogo</span>
+                <h2 class="section-title">Fichas Técnicas Homologadas</h2>
+                <p class="section-subtitle">
+                    Filtra por procesador, memoria o modelo. Todas las fichas cuentan con botón de acceso y enlace nativo para abrir en <strong>nueva pestaña</strong>.
+                </p>
             </div>
 
             <div class="catalog-layout">
-                <!-- Sidebar de Filtros (F-Pattern: Escaneo vertical en margen izquierdo) -->
-                <aside class="filter-sidebar" aria-label="Filtros de búsqueda">
-                    <div class="filter-header">
-                        <h3>Filtros Activos</h3>
-                        <button class="filter-reset-btn" id="resetFiltersBtn">Limpiar todo</button>
+                <!-- Sidebar de Filtros Facetados (Ley de Tesler: Lógica en backend/JS, UI simple) -->
+                <aside class="filter-panel" aria-label="Filtros del catálogo">
+                    <div class="filter-panel-header">
+                        <span class="filter-panel-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                            Filtros de Búsqueda
+                        </span>
+                        <button class="btn-filter-reset" id="filterResetBtn">Limpiar filtros</button>
                     </div>
 
-                    <!-- Grupo 1: Modelo -->
-                    <div class="filter-group">
-                        <div class="filter-group-title">
-                            <span>Modelo de Equipo</span>
+                    <!-- Grupo: Modelo -->
+                    <div class="filter-category">
+                        <div class="filter-category-title">
+                            <span>Línea / Modelo</span>
                         </div>
-                        <div class="filter-item active-filter">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox" checked>
-                                <span>EZENT (PC Escritorio)</span>
+                        <div class="filter-option active" data-filter-type="linea" data-filter-val="EZENT">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" checked data-type="linea" value="EZENT">
+                                <span>EZENT (Mid-Tower)</span>
                             </label>
                             <span class="filter-count">142</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
-                                <span>GENWORK (PC Pro)</span>
+                        <div class="filter-option" data-filter-type="linea" data-filter-val="GENWORK">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="linea" value="GENWORK">
+                                <span>GENWORK (Pro Desktop)</span>
                             </label>
-                            <span class="filter-count">88</span>
+                            <span class="filter-count">86</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
-                                <span>OFISZU SFF (Mini PC)</span>
+                        <div class="filter-option" data-filter-type="linea" data-filter-val="OFISZU">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="linea" value="OFISZU">
+                                <span>OFISZU (Mini SFF)</span>
                             </label>
-                            <span class="filter-count">45</span>
+                            <span class="filter-count">48</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
+                        <div class="filter-option" data-filter-type="linea" data-filter-val="PROWORK">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="linea" value="PROWORK">
                                 <span>PROWORK (Workstation)</span>
                             </label>
                             <span class="filter-count">24</span>
                         </div>
                     </div>
 
-                    <!-- Grupo 2: Procesador -->
-                    <div class="filter-group">
-                        <div class="filter-group-title">
+                    <!-- Grupo: Procesador -->
+                    <div class="filter-category">
+                        <div class="filter-category-title">
                             <span>Procesador</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
+                        <div class="filter-option" data-filter-type="cpu" data-filter-val="i7-13700">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="cpu" value="i7-13700">
                                 <span>Intel Core i7 13700</span>
                             </label>
-                            <span class="filter-count">64</span>
+                            <span class="filter-count">68</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
+                        <div class="filter-option" data-filter-type="cpu" data-filter-val="i5-13400">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="cpu" value="i5-13400">
                                 <span>Intel Core i5 13400</span>
                             </label>
-                            <span class="filter-count">52</span>
+                            <span class="filter-count">54</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
+                        <div class="filter-option" data-filter-type="cpu" data-filter-val="i7-14700">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="cpu" value="i7-14700">
                                 <span>Intel Core i7 14700</span>
                             </label>
-                            <span class="filter-count">18</span>
+                            <span class="filter-count">22</span>
                         </div>
                     </div>
 
-                    <!-- Grupo 3: Memoria RAM -->
-                    <div class="filter-group">
-                        <div class="filter-group-title">
+                    <!-- Grupo: Memoria RAM -->
+                    <div class="filter-category">
+                        <div class="filter-category-title">
                             <span>Memoria RAM</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
+                        <div class="filter-option" data-filter-type="ram" data-filter-val="16gb">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="ram" value="16gb">
                                 <span>16 GB DDR4/DDR5</span>
                             </label>
-                            <span class="filter-count">92</span>
+                            <span class="filter-count">112</span>
                         </div>
-                        <div class="filter-item">
-                            <label class="filter-checkbox-wrap">
-                                <input type="checkbox">
+                        <div class="filter-option" data-filter-type="ram" data-filter-val="32gb">
+                            <label class="filter-checkbox-label">
+                                <input type="checkbox" class="filter-checkbox" data-type="ram" value="32gb">
                                 <span>32 GB DDR4/DDR5</span>
                             </label>
-                            <span class="filter-count">38</span>
+                            <span class="filter-count">42</span>
                         </div>
                     </div>
                 </aside>
 
-                <!-- Grid de Productos (3 Columnas con soporte real para apertura en pestaña nueva) -->
-                <main class="products-container" id="productsGrid">
-                    <div class="products-grid">
-                        
-                        <!-- Tarjeta Producto 1 -->
-                        <article class="product-card">
-                            <span class="product-badge-stock">Disponible (≥ 20)</span>
-                            
-                            <a href="#detalle-ezent-1" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-                                <div class="product-thumb-container">
-                                    <div class="product-thumb-placeholder">
-                                        [ Foto EZENT T700 ]
-                                    </div>
+                <!-- Cuadrícula Principal de Fichas -->
+                <main>
+                    <div class="catalog-toolbar">
+                        <div class="catalog-results-info">
+                            Mostrando <strong id="productCountLabel">3</strong> fichas homologadas vigentes
+                        </div>
+                        <div class="catalog-sort-wrap">
+                            <label for="catalogSort">Ordenar por:</label>
+                            <select id="catalogSort" class="catalog-sort-select">
+                                <option value="relevancia">Relevancia en Acuerdo Marco</option>
+                                <option value="precio-asc">Menor Precio</option>
+                                <option value="precio-desc">Mayor Precio</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="products-grid" id="productsCatalogGrid">
+                        <!-- Tarjeta 1: Kenya EZENT T700 -->
+                        <article class="product-card" data-linea="EZENT" data-cpu="i7-13700" data-ram="16gb">
+                            <div class="product-card-top">
+                                <span class="stock-tag">Disponible (≥ 20)</span>
+                                <span class="acuerdo-marco-tag">IM-CE-2020-5</span>
+                            </div>
+
+                            <!-- Enlace que abre en nueva pestaña nativa -->
+                            <a href="#ficha-detalle-3786" target="_blank" rel="noopener noreferrer" class="product-card-link-block">
+                                <div class="product-image-wrap">
+                                    <img src="producto.jpg" alt="KENYA EZENT T700" onerror="this.src='pord.jpg'">
                                 </div>
-                                <div class="product-card-sku">SKU: E7CT6OWNHPXO3B5PV6</div>
-                                <h3 class="product-card-title">COMPUTADORA KENYA EZENT T700</h3>
+                                <div class="product-sku-row">
+                                    <span class="product-sku">SKU: E7CT6OWNHPXO3B</span>
+                                    <span class="product-model-label">EZENT</span>
+                                </div>
+                                <h3 class="product-card-title">COMPUTADORA KENYA EZENT T700 Core i7</h3>
                             </a>
 
-                            <div class="product-specs-list">
-                                <div class="spec-item">
-                                    <span class="spec-label">PROCESADOR:</span>
-                                    <span>Intel Core i7-13700</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">RAM:</span>
-                                    <span>16 GB DDR4</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">DISCO:</span>
-                                    <span>1 TB SSD NVMe M.2</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">GARANTÍA:</span>
-                                    <span>36 Meses On-Site</span>
+                            <div style="padding: 0 16px;">
+                                <div class="product-specs-matrix">
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">CPU:</span>
+                                        <span class="matrix-val">Intel Core i7 13700</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">RAM:</span>
+                                        <span class="matrix-val">16 GB DDR4 3200MHz</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">SSD:</span>
+                                        <span class="matrix-val">1 TB SSD NVMe M.2</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">Garantía:</span>
+                                        <span class="matrix-val">36 Meses On-Site</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="product-card-footer">
-                                <div class="product-card-price">
-                                    <span>Sector Acuerdo Marco</span>
-                                    <strong>Homologado</strong>
+                            <div class="product-card-bottom">
+                                <div class="product-price-box">
+                                    <span class="price-main">$ 645.00</span>
+                                    <span class="price-sub">S/ 2,425.20 con IGV</span>
                                 </div>
-                                <!-- Enlace nativo con target="_blank" y soporte de clic derecho -->
-                                <a href="#detalle-ezent-1" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-primary interactive-el">
-                                    Más información
+                                <a href="#ficha-detalle-3786" target="_blank" rel="noopener noreferrer" class="btn-card-action">
+                                    <span>Ver Ficha</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                             </div>
                         </article>
 
-                        <!-- Tarjeta Producto 2 -->
-                        <article class="product-card">
-                            <span class="product-badge-stock">Disponible (≥ 20)</span>
-                            
-                            <a href="#detalle-genwork-1" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-                                <div class="product-thumb-container">
-                                    <div class="product-thumb-placeholder">
-                                        [ Foto GENWORK PRO ]
-                                    </div>
+                        <!-- Tarjeta 2: Kenya GENWORK PRO -->
+                        <article class="product-card" data-linea="GENWORK" data-cpu="i5-13400" data-ram="16gb">
+                            <div class="product-card-top">
+                                <span class="stock-tag">Disponible (≥ 20)</span>
+                                <span class="acuerdo-marco-tag">EXT-CE-2021-1</span>
+                            </div>
+
+                            <a href="#ficha-detalle-3787" target="_blank" rel="noopener noreferrer" class="product-card-link-block">
+                                <div class="product-image-wrap">
+                                    <img src="producto.jpg" alt="KENYA GENWORK PRO" onerror="this.src='pord.jpg'">
                                 </div>
-                                <div class="product-card-sku">SKU: GW-I5-13400-SSD</div>
-                                <h3 class="product-card-title">COMPUTADORA KENYA GENWORK PRO</h3>
+                                <div class="product-sku-row">
+                                    <span class="product-sku">SKU: GW-I5-13400-SSD512</span>
+                                    <span class="product-model-label">GENWORK</span>
+                                </div>
+                                <h3 class="product-card-title">COMPUTADORA KENYA GENWORK PRO Core i5</h3>
                             </a>
 
-                            <div class="product-specs-list">
-                                <div class="spec-item">
-                                    <span class="spec-label">PROCESADOR:</span>
-                                    <span>Intel Core i5-13400</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">RAM:</span>
-                                    <span>16 GB DDR4</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">DISCO:</span>
-                                    <span>512 GB SSD NVMe</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">GARANTÍA:</span>
-                                    <span>36 Meses On-Site</span>
+                            <div style="padding: 0 16px;">
+                                <div class="product-specs-matrix">
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">CPU:</span>
+                                        <span class="matrix-val">Intel Core i5 13400</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">RAM:</span>
+                                        <span class="matrix-val">16 GB DDR4 3200MHz</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">SSD:</span>
+                                        <span class="matrix-val">512 GB SSD NVMe M.2</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">Garantía:</span>
+                                        <span class="matrix-val">36 Meses On-Site</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="product-card-footer">
-                                <div class="product-card-price">
-                                    <span>Sector Acuerdo Marco</span>
-                                    <strong>Homologado</strong>
+                            <div class="product-card-bottom">
+                                <div class="product-price-box">
+                                    <span class="price-main">$ 515.00</span>
+                                    <span class="price-sub">S/ 1,936.40 con IGV</span>
                                 </div>
-                                <a href="#detalle-genwork-1" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-primary interactive-el">
-                                    Más información
+                                <a href="#ficha-detalle-3787" target="_blank" rel="noopener noreferrer" class="btn-card-action">
+                                    <span>Ver Ficha</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                             </div>
                         </article>
 
-                        <!-- Tarjeta Producto 3 -->
-                        <article class="product-card">
-                            <span class="product-badge-stock" style="background:#fef3c7; color:#b45309;">A pedido</span>
-                            
-                            <a href="#detalle-prowork-1" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
-                                <div class="product-thumb-container">
-                                    <div class="product-thumb-placeholder">
-                                        [ Foto PROWORK WS90 ]
-                                    </div>
+                        <!-- Tarjeta 3: Kenya OFISZU SFF -->
+                        <article class="product-card" data-linea="OFISZU" data-cpu="i7-13700" data-ram="16gb">
+                            <div class="product-card-top">
+                                <span class="stock-tag">Disponible (≥ 20)</span>
+                                <span class="acuerdo-marco-tag">IM-CE-2020-5</span>
+                            </div>
+
+                            <a href="#ficha-detalle-3788" target="_blank" rel="noopener noreferrer" class="product-card-link-block">
+                                <div class="product-image-wrap">
+                                    <img src="ofiszusff.webp" alt="KENYA OFISZU SFF" onerror="this.src='ofiszusff.png';">
                                 </div>
-                                <div class="product-card-sku">SKU: PW-I7-RTX4060</div>
-                                <h3 class="product-card-title">WORKSTATION KENYA PROWORK WS90</h3>
+                                <div class="product-sku-row">
+                                    <span class="product-sku">SKU: OFZ-SFF-I7-1TB</span>
+                                    <span class="product-model-label">OFISZU</span>
+                                </div>
+                                <h3 class="product-card-title">COMPUTADORA KENYA OFISZU SFF Compact</h3>
                             </a>
 
-                            <div class="product-specs-list">
-                                <div class="spec-item">
-                                    <span class="spec-label">PROCESADOR:</span>
-                                    <span>Intel Core i7-14700</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">RAM:</span>
-                                    <span>32 GB DDR5 5600</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">GRÁFICOS:</span>
-                                    <span>NVIDIA RTX 4060 8GB</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">GARANTÍA:</span>
-                                    <span>36 Meses On-Site</span>
+                            <div style="padding: 0 16px;">
+                                <div class="product-specs-matrix">
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">CPU:</span>
+                                        <span class="matrix-val">Intel Core i7 13700</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">RAM:</span>
+                                        <span class="matrix-val">16 GB DDR4</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">SSD:</span>
+                                        <span class="matrix-val">1 TB SSD NVMe M.2</span>
+                                    </div>
+                                    <div class="matrix-row">
+                                        <span class="matrix-label">Garantía:</span>
+                                        <span class="matrix-val">36 Meses On-Site</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="product-card-footer">
-                                <div class="product-card-price">
-                                    <span>Sector Acuerdo Marco</span>
-                                    <strong>Alta Potencia</strong>
+                            <div class="product-card-bottom">
+                                <div class="product-price-box">
+                                    <span class="price-main">$ 680.00</span>
+                                    <span class="price-sub">S/ 2,556.80 con IGV</span>
                                 </div>
-                                <a href="#detalle-prowork-1" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-primary interactive-el">
-                                    Más información
+                                <a href="#ficha-detalle-3788" target="_blank" rel="noopener noreferrer" class="btn-card-action">
+                                    <span>Ver Ficha</span>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                             </div>
                         </article>
+                    </div>
 
+                    <!-- Estado Vacío Dinámico (Oculto si hay resultados) -->
+                    <div id="catalogEmptyState" class="empty-state-container" style="display: none; margin-top: 24px;">
+                        <svg class="empty-state-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                        <h4 class="empty-state-title">No existen fichas con la combinación seleccionada</h4>
+                        <p class="empty-state-text">Prueba quitando filtros de memoria o seleccionando otra línea de procesador compatible.</p>
+                        <button class="btn-cta btn-cta-secondary" id="emptyStateResetBtn">
+                            Restablecer Filtros
+                        </button>
                     </div>
                 </main>
             </div>
         </div>
     </section>
 
-    <!-- 6. INSPECTOR DE LOS 7 ESTADOS OBLIGATORIOS (Protocolo 3: Demostración Técnica) -->
-    <section class="states-inspector-section">
+    <!-- 7. Auditoría de los 7 Estados de UI (Protocolo 3: Verificación Técnica Rigurosa) -->
+    <section class="states-section" id="estados-ui">
         <div class="container">
-            <div class="section-header" style="text-align: left; margin-bottom: var(--space-6);">
-                <span class="section-tag">Auditoría de Componentes UI</span>
-                <h3 style="font-size: var(--text-xl); font-weight:700;">Los 7 Estados Obligatorios Implementados</h3>
-                <p>Ningún componente se entrega únicamente en estado normal. Cada botón y tarjeta cuenta con sus 7 estados definidos matemáticamente.</p>
+            <div class="section-headline">
+                <span class="section-tag">Gobernanza de Componentes</span>
+                <h3 class="section-title">Los 7 Estados Obligatorios de UI</h3>
+                <p class="section-subtitle">
+                    Validación exhaustiva de estados interactivos para cumplimiento de accesibilidad WCAG 2.2 AA y ergonomía visual.
+                </p>
             </div>
 
             <div class="states-grid">
-                <!-- Estado 1 & 2: Default / Hover -->
-                <div class="state-box">
-                    <div class="state-box-title">
-                        <span>1. Default / 2. Hover</span>
-                        <span class="state-tag">:hover</span>
+                <!-- 1. Default & 2. Hover -->
+                <div class="state-card">
+                    <div class="state-card-header">
+                        <span class="state-name">1. Default / 2. Hover</span>
+                        <span class="state-badge">:hover</span>
                     </div>
-                    <p style="font-size: var(--text-xs); margin-bottom: 12px;">Transición fluida a color de sombra y contraste de 4.5:1.</p>
-                    <button class="btn-cta btn-cta-primary" style="width: 100%;">Botón Primario</button>
+                    <p class="state-card-desc">Contraste de superficie probado y desaceleración fluida.</p>
+                    <button class="btn-cta btn-cta-primary" style="width: 100%;">
+                        Botón Primario
+                    </button>
                 </div>
 
-                <!-- Estado 3: Focus Visible -->
-                <div class="state-box">
-                    <div class="state-box-title">
-                        <span>3. Focus Visible</span>
-                        <span class="state-tag">:focus-visible</span>
+                <!-- 3. Focus Visible -->
+                <div class="state-card">
+                    <div class="state-card-header">
+                        <span class="state-name">3. Focus Visible</span>
+                        <span class="state-badge">:focus-visible</span>
                     </div>
-                    <p style="font-size: var(--text-xs); margin-bottom: 12px;">Anillo accesible de 3px sin romper el layout (Navegación por Tab).</p>
-                    <button class="btn-cta btn-cta-primary" style="width: 100%; box-shadow: 0 0 0 3px var(--accent-ring); border-color: var(--accent-primary);">En Foco de Teclado</button>
+                    <p class="state-card-desc">Anillo de 3px exterior que no rompe el flujo de caja.</p>
+                    <button class="btn-cta btn-cta-primary" style="width: 100%; box-shadow: 0 0 0 3px var(--accent-ring);">
+                        Enfoque Activo
+                    </button>
                 </div>
 
-                <!-- Estado 4 & 5: Active / Disabled -->
-                <div class="state-box">
-                    <div class="state-box-title">
-                        <span>4. Active / 5. Disabled</span>
-                        <span class="state-tag">:disabled</span>
+                <!-- 4. Active & 5. Disabled -->
+                <div class="state-card">
+                    <div class="state-card-header">
+                        <span class="state-name">4. Active / 5. Disabled</span>
+                        <span class="state-badge">:disabled</span>
                     </div>
+                    <p class="state-card-desc">Feedback de presión física y opacidad en desactivado.</p>
                     <div style="display: flex; gap: 8px;">
                         <button class="btn-cta btn-cta-primary" style="flex:1; transform: scale(0.98); background: var(--accent-active);">Pulsado</button>
-                        <button class="btn-cta btn-cta-primary" disabled style="flex:1;">Inactivo</button>
+                        <button class="btn-cta btn-cta-secondary" disabled style="flex:1; opacity: 0.5; cursor: not-allowed;">Inactivo</button>
                     </div>
                 </div>
 
-                <!-- Estado 6: Loading (Skeleton) -->
-                <div class="state-box">
-                    <div class="state-box-title">
-                        <span>6. Loading (Skeleton)</span>
-                        <span class="state-tag">Loading</span>
+                <!-- 6. Skeleton Loading -->
+                <div class="state-card">
+                    <div class="state-card-header">
+                        <span class="state-name">6. Loading State</span>
+                        <span class="state-badge">Skeleton</span>
                     </div>
-                    <div class="skeleton skeleton-title"></div>
-                    <div class="skeleton skeleton-text"></div>
-                    <div class="skeleton skeleton-btn"></div>
-                </div>
-            </div>
-
-            <!-- Estado 7: Empty State (Estado vacío / Sin resultados) -->
-            <div style="margin-top: var(--space-6);">
-                <div class="empty-state-box">
-                    <div class="empty-icon">🔍</div>
-                    <h4 style="font-size: var(--text-base); font-weight: 700; margin-bottom: 4px;">No se encontraron fichas con los filtros actuales</h4>
-                    <p style="font-size: var(--text-sm); margin: 0 auto 16px auto;">Intenta seleccionando otra variante de procesador o restablece los filtros para ver todo el catálogo disponible.</p>
-                    <button class="btn-cta btn-cta-secondary" onclick="alert('Filtros restablecidos');">
-                        Restablecer todos los filtros
-                    </button>
+                    <p class="state-card-desc">Shimmer arquitectónico sin parpadeo de layout.</p>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div class="skeleton" style="height: 14px; width: 60%;"></div>
+                        <div class="skeleton" style="height: 12px; width: 90%;"></div>
+                        <div class="skeleton" style="height: 32px; width: 100%; border-radius: var(--radius-md);"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 7. COMMAND PALETTE MODAL INTERACTIVO (Atajo Ctrl + K / Cmd + K) -->
-    <div class="cmd-backdrop" id="cmdModal" role="dialog" aria-modal="true" aria-label="Búsqueda rápida">
-        <div class="cmd-modal">
-            <input type="text" class="cmd-search-input" id="cmdInput" placeholder="Escribe un modelo, SKU o procesador (ej. i7, EZENT, 16GB)..." autofocus>
-            <div class="cmd-results-list" id="cmdResults">
-                <div class="cmd-item selected">
-                    <div>
-                        <strong>COMPUTADORA KENYA EZENT T700</strong>
-                        <div style="font-size: 12px; color: var(--text-secondary);">Intel Core i7 13700 · 16GB · 1TB SSD</div>
-                    </div>
-                    <span class="kbd-shortcut">Enter</span>
-                </div>
-                <div class="cmd-item">
-                    <div>
-                        <strong>COMPUTADORA KENYA GENWORK PRO</strong>
-                        <div style="font-size: 12px; color: var(--text-secondary);">Intel Core i5 13400 · 16GB · 512GB SSD</div>
-                    </div>
-                    <span class="kbd-shortcut">Ver</span>
-                </div>
-                <div class="cmd-item">
-                    <div>
-                        <strong>WORKSTATION KENYA PROWORK WS90</strong>
-                        <div style="font-size: 12px; color: var(--text-secondary);">Intel Core i7 14700 · RTX 4060 · 32GB</div>
-                    </div>
-                    <span class="kbd-shortcut">Ver</span>
-                </div>
+    <!-- 8. Modal Command Palette (Ctrl + K / Cmd + K) -->
+    <div class="cmd-overlay" id="cmdOverlay" role="dialog" aria-modal="true" aria-label="Buscador rápido de fichas">
+        <div class="cmd-modal-box">
+            <div class="cmd-input-wrap">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="cmd-input" id="cmdSearchInput" placeholder="Buscar por modelo (EZENT, GENWORK), procesador (i7, i5) o SKU..." autofocus>
             </div>
-            <div class="cmd-footer">
-                <span>Navega con ↑ ↓ y selecciona con Enter</span>
+            <div class="cmd-list" id="cmdList">
+                <a href="#catalogo" class="cmd-entry active">
+                    <div>
+                        <div class="cmd-entry-title">COMPUTADORA KENYA EZENT T700 Core i7</div>
+                        <div class="cmd-entry-sub">SKU: E7CT6OWNHPXO3B · Intel Core i7 13700 · 16GB DDR4</div>
+                    </div>
+                    <span class="kbd-pill">Enter</span>
+                </a>
+                <a href="#catalogo" class="cmd-entry">
+                    <div>
+                        <div class="cmd-entry-title">COMPUTADORA KENYA GENWORK PRO Core i5</div>
+                        <div class="cmd-entry-sub">SKU: GW-I5-13400-SSD512 · Intel Core i5 13400 · 16GB DDR4</div>
+                    </div>
+                    <span class="kbd-pill">Ver</span>
+                </a>
+                <a href="#catalogo" class="cmd-entry">
+                    <div>
+                        <div class="cmd-entry-title">COMPUTADORA KENYA OFISZU SFF Compact</div>
+                        <div class="cmd-entry-sub">SKU: OFZ-SFF-I7-1TB · Intel Core i7 13700 · 16GB DDR4</div>
+                    </div>
+                    <span class="kbd-pill">Ver</span>
+                </a>
+            </div>
+            <div class="cmd-modal-footer">
+                <span>Navega con flechas ↑ ↓ y Enter</span>
                 <span>ESC para cerrar</span>
             </div>
         </div>
     </div>
 
-    <!-- SCRIPT LIVIANO PARA INTERACCIONES DE PROTOTIPO -->
+    <!-- 9. Footer Sobrio B2B -->
+    <footer class="footer-main">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <img src="theme/images/kenya.png" alt="Kenya Technology" style="height: 32px; width: auto; margin-bottom: 14px; filter: brightness(0) invert(1);" onerror="this.src='theme/images/logo.png'">
+                    <p style="font-size: 13px; line-height: 1.6; max-width: 38ch; margin-bottom: 16px;">
+                        Fabricante nacional de hardware de alto rendimiento. Homologado en el Catálogo Electrónico de Acuerdos Marco de Perú Compras.
+                    </p>
+                    <div style="font-family: var(--font-mono); font-size: 11.5px; color: var(--zinc-500);">
+                        RUC: 20556811431 · R.T.H. KENYA S.A.C.
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Catálogos de Compra</h4>
+                    <ul class="footer-links">
+                        <li><a href="#catalogo">Acuerdo Marco IM-CE-2020-5</a></li>
+                        <li><a href="#catalogo">Acuerdo Marco EXT-CE-2021-1</a></li>
+                        <li><a href="#catalogo">Computadoras de Escritorio</a></li>
+                        <li><a href="#catalogo">Estaciones Workstation</a></li>
+                        <li><a href="#catalogo">Monitores Raito IPS</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Soporte & Garantía</h4>
+                    <ul class="footer-links">
+                        <li><a href="#garantia">Consulta por Código QR</a></li>
+                        <li><a href="#garantia">Términos de Garantía 36 Meses</a></li>
+                        <li><a href="#soporte">Centros de Servicio Autorizados</a></li>
+                        <li><a href="#raee">Compromiso Ambiental RAEE</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Certificaciones</h4>
+                    <ul class="footer-links">
+                        <li><a href="#iso">Certificado ISO 9001:2015</a></li>
+                        <li><a href="#iso">Certificado ISO 37001:2016</a></li>
+                        <li><a href="#politica">Política Antisoborno</a></li>
+                        <li><a href="#homologacion">Fichas de Homologación</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div>© 2026 R.T.H. KENYA S.A.C. Todos los derechos reservados.</div>
+                <div style="font-family: var(--font-mono); font-size: 11px;">
+                    Diseño UX/UI bajo Anti-Slop Discipline & Ley de Tesler
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 10. Script Liviano de Interactividad Facetada & Command Palette -->
     <script>
         (function() {
-            const cmdModal = document.getElementById('cmdModal');
-            const openCmdBtn = document.getElementById('openCmdBtn');
-            const cmdInput = document.getElementById('cmdInput');
-            const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+            // Elementos del DOM
+            const cmdOverlay = document.getElementById('cmdOverlay');
+            const cmdOpenBtn = document.getElementById('cmdOpenBtn');
+            const cmdSearchInput = document.getElementById('cmdSearchInput');
+            const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
+            const filterResetBtn = document.getElementById('filterResetBtn');
+            const emptyStateResetBtn = document.getElementById('emptyStateResetBtn');
+            const catalogCards = document.querySelectorAll('#productsCatalogGrid .product-card');
+            const countLabel = document.getElementById('productCountLabel');
+            const emptyState = document.getElementById('catalogEmptyState');
 
-            function openModal() {
-                cmdModal.style.display = 'flex';
-                cmdInput.focus();
+            // 1. Manejo del Buscador Command Palette (Ctrl + K)
+            function openCommand() {
+                cmdOverlay.style.display = 'flex';
+                cmdSearchInput.value = '';
+                cmdSearchInput.focus();
             }
 
-            function closeModal() {
-                cmdModal.style.display = 'none';
+            function closeCommand() {
+                cmdOverlay.style.display = 'none';
             }
 
-            if (openCmdBtn) openCmdBtn.addEventListener('click', openModal);
+            if (cmdOpenBtn) cmdOpenBtn.addEventListener('click', openCommand);
 
-            // Escuchar Ctrl+K o Cmd+K
             window.addEventListener('keydown', (e) => {
                 if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                     e.preventDefault();
-                    if (cmdModal.style.display === 'flex') closeModal();
-                    else openModal();
+                    if (cmdOverlay.style.display === 'flex') closeCommand();
+                    else openCommand();
                 }
-                if (e.key === 'Escape' && cmdModal.style.display === 'flex') {
-                    closeModal();
+                if (e.key === 'Escape' && cmdOverlay.style.display === 'flex') {
+                    closeCommand();
                 }
             });
 
-            // Cerrar al dar click fuera del modal
-            cmdModal.addEventListener('click', (e) => {
-                if (e.target === cmdModal) closeModal();
+            cmdOverlay.addEventListener('click', (e) => {
+                if (e.target === cmdOverlay) closeCommand();
             });
 
-            // Feedback visual en botón Limpiar Todo
-            if (resetFiltersBtn) {
-                resetFiltersBtn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-item input[type="checkbox"]').forEach(cb => cb.checked = false);
-                    document.querySelectorAll('.filter-item').forEach(fi => fi.classList.remove('active-filter'));
+            // 2. Filtrado Facetado Dinámico (Ley de Tesler: toda la lógica en background)
+            function applyFilters() {
+                const activeFilters = {
+                    linea: [],
+                    cpu: [],
+                    ram: []
+                };
+
+                filterCheckboxes.forEach(cb => {
+                    const optionWrap = cb.closest('.filter-option');
+                    if (cb.checked) {
+                        activeFilters[cb.dataset.type].push(cb.value);
+                        optionWrap.classList.add('active');
+                    } else {
+                        optionWrap.classList.remove('active');
+                    }
+                });
+
+                let visibleCount = 0;
+
+                catalogCards.forEach(card => {
+                    const cardLinea = card.dataset.linea;
+                    const cardCpu = card.dataset.cpu;
+                    const cardRam = card.dataset.ram;
+
+                    const matchLinea = activeFilters.linea.length === 0 || activeFilters.linea.includes(cardLinea);
+                    const matchCpu = activeFilters.cpu.length === 0 || activeFilters.cpu.includes(cardCpu);
+                    const matchRam = activeFilters.ram.length === 0 || activeFilters.ram.includes(cardRam);
+
+                    if (matchLinea && matchCpu && matchRam) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Actualizar contador y estado vacío
+                if (countLabel) countLabel.textContent = visibleCount;
+                if (emptyState) {
+                    emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
+                }
+            }
+
+            filterCheckboxes.forEach(cb => {
+                cb.addEventListener('change', applyFilters);
+            });
+
+            function resetAllFilters() {
+                filterCheckboxes.forEach(cb => cb.checked = false);
+                applyFilters();
+            }
+
+            if (filterResetBtn) filterResetBtn.addEventListener('click', resetAllFilters);
+            if (emptyStateResetBtn) emptyStateResetBtn.addEventListener('click', resetAllFilters);
+
+            // Búsqueda en vivo en Command Palette
+            if (cmdSearchInput) {
+                cmdSearchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    const entries = document.querySelectorAll('#cmdList .cmd-entry');
+                    entries.forEach(entry => {
+                        const text = entry.textContent.toLowerCase();
+                        entry.style.display = text.includes(query) ? 'flex' : 'none';
+                    });
                 });
             }
         })();
