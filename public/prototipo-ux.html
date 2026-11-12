@@ -3,117 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KENYA Technology | Soluciones de Cómputo Homologadas para el Estado y Empresas</title>
+    <title>KENYA Technology | Venta de Computadoras y Fichas de Acuerdo Marco Perú Compras</title>
+    
+    <!-- Tipografía del sistema: Inter para UI limpia y JetBrains Mono para metadatos técnicos -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           1. SISTEMA DE TOKENS & ANTI-SLOP CRAFT ENGINE
-           - Disciplina cromática: Zinc neutro entintado + Kenya Burnt Orange (#EA580C)
-           - Bordes hairline 1px (#E4E4E7), cero sombras infladas de IA
-           - Tipografía: -0.03em tracking, 1.1 line-height en títulos
-           - Monospace tabular-nums en datos técnicos, SKUs y precios
-           - Radios arquitectónicos limpios de 6px - 8px
+           1. SISTEMA DE DISEÑO REAL DE KENYA TECHNOLOGY (Sin patrones cliché de IA)
+           - Naranja corporativo Kenya: #f26522 (primario), #ee7c31 (acento), #d44d0f (activo)
+           - Neutros reales de e-commerce B2B: #ffffff, #f8f9fa, #f1f3f5, #e9ecef
+           - Textos de alta legibilidad: #1e293b (títulos), #334155 (cuerpo), #64748b (metadatos)
+           - Verde de stock/garantía institucional: #16a34a, fondo #ecfdf5
+           - Bordes sutiles y reales: 1px solid #e2e8f0
            ========================================================================== */
         :root {
-            /* Superficies y Neutros Entintados (Zinc Scale) */
-            --zinc-50:  #fafafa;
-            --zinc-100: #f4f4f5;
-            --zinc-200: #e4e4e7;
-            --zinc-300: #d4d4d8;
-            --zinc-400: #a1a1aa;
-            --zinc-500: #71717a;
-            --zinc-600: #52525b;
-            --zinc-700: #3f3f46;
-            --zinc-800: #27272a;
-            --zinc-900: #18181b;
-            --zinc-950: #09090b;
+            --brand-primary: #f26522;
+            --brand-primary-hover: #d44d0f;
+            --brand-primary-active: #b83e09;
+            --brand-light: #fff7ed;
+            --brand-ring: rgba(242, 101, 34, 0.18);
 
-            /* Superficies Funcionales */
-            --bg-canvas: #fafafa;
-            --bg-surface: #ffffff;
-            --bg-subtle: #f4f4f5;
-            --bg-hover: #f1f1f3;
+            --bg-page: #f8f9fa;
+            --bg-white: #ffffff;
+            --bg-muted: #f1f3f5;
+            --bg-card: #ffffff;
 
-            /* Bordes Hairline */
-            --border-hairline: 1px solid var(--zinc-200);
-            --border-subtle: var(--zinc-200);
-            --border-hover: var(--zinc-300);
-            --border-focus: #ea580c;
+            --border-color: #e2e8f0;
+            --border-subtle: #eaeaea;
+            --border-dark: #cbd5e1;
 
-            /* Texto Jerárquico */
-            --text-title: var(--zinc-950);
-            --text-body: var(--zinc-700);
-            --text-muted: var(--zinc-500);
-            --text-subtle: var(--zinc-400);
+            --text-heading: #1e293b;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --text-light: #94a3b8;
 
-            /* Único Acento Intencional: Kenya Industrial Orange */
-            --accent-brand: #ea580c;
-            --accent-hover: #c2410c;
-            --accent-active: #9a3412;
-            --accent-tint: #fff7ed;
-            --accent-border: #fed7aa;
-            --accent-ring: rgba(234, 88, 12, 0.22);
+            --badge-stock-text: #15803d;
+            --badge-stock-bg: #ecfdf5;
+            --badge-stock-border: #a7f3d0;
 
-            /* Estados Semánticos de Producción */
-            --success-text: #15803d;
-            --success-bg: #f0fdf4;
-            --success-border: #bbf7d0;
-
-            --warning-text: #b45309;
-            --warning-bg: #fffbeb;
-            --warning-border: #fde68a;
-
-            /* Tipografía y Escala Modular (Major Third 1.25) */
-            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-            --step--2: 0.75rem;   /* 12px */
-            --step--1: 0.84375rem;/* 13.5px */
-            --step-0:  0.9375rem; /* 15px Base */
-            --step-1:  1.1719rem; /* 18.75px */
-            --step-2:  1.4648rem; /* 23.4px */
-            --step-3:  1.8311rem; /* 29.3px */
-            --step-4:  2.2888rem; /* 36.6px */
-            --step-5:  2.861rem;  /* 45.8px */
-
-            /* Layout y Radios Arquitectónicos */
             --radius-sm: 4px;
             --radius-md: 6px;
             --radius-lg: 8px;
-            --container-max: 1320px;
-            --gutter: 24px;
+            --radius-full: 9999px;
 
-            /* Transición física natural (Decelerated) */
-            --ease-out-quad: cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-fast: 150ms var(--ease-out-quad);
-            --transition-normal: 220ms var(--ease-out-quad);
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-card: 0 2px 6px -1px rgba(0, 0, 0, 0.06), 0 1px 3px -1px rgba(0, 0, 0, 0.04);
+            --shadow-dropdown: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+            --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* ==========================================================================
-           2. BASE RESET & MEASURE RULE (60-70ch)
-           ========================================================================== */
+        /* Reset accesible */
         *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        html {
-            font-size: 16px;
-            scroll-behavior: smooth;
-        }
-
         body {
             font-family: var(--font-sans);
-            font-size: var(--step-0);
-            line-height: 1.55;
+            font-size: 15px;
+            line-height: 1.5;
             color: var(--text-body);
-            background-color: var(--bg-canvas);
+            background-color: var(--bg-page);
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         img, svg {
@@ -124,6 +83,7 @@
         a {
             color: inherit;
             text-decoration: none;
+            transition: var(--transition);
         }
 
         button, input, select {
@@ -131,8 +91,11 @@
             color: inherit;
         }
 
-        .measure-text {
-            max-width: 66ch;
+        .container {
+            width: 100%;
+            max-width: 1360px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .tabular-nums {
@@ -140,1507 +103,1455 @@
             font-variant-numeric: tabular-nums;
         }
 
-        .container {
-            width: 100%;
-            max-width: var(--container-max);
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: var(--gutter);
-            padding-right: var(--gutter);
-        }
-
         /* ==========================================================================
-           3. BANNER DE CONTROL EXPERIMENTAL
+           2. HEADER CORPORATIVO B2B (Estructura real en 3 capas organizadas)
+           Capa 1: Top Utility Bar (Atención, Soporte QR, Selector Moneda y Registro)
+           Capa 2: Main Brand Bar (Logo 45px, Buscador Central con Dropdown, Cotizaciones)
+           Capa 3: Navigation Bar (Categorías y Catálogo Perú Compras)
            ========================================================================== */
-        .system-topbar {
-            background: var(--zinc-950);
-            color: var(--zinc-400);
-            font-size: var(--step--2);
-            border-bottom: 1px solid var(--zinc-800);
-            padding: 7px 0;
+        
+        /* Capa 1: Top Utility Bar */
+        .top-utility-bar {
+            background-color: #0f172a;
+            color: #94a3b8;
+            font-size: 12.5px;
+            border-bottom: 1px solid #1e293b;
+            padding: 6px 0;
         }
 
-        .system-topbar-inner {
+        .top-utility-inner {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             gap: 16px;
         }
 
-        .topbar-pills {
+        .utility-left, .utility-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 20px;
         }
 
-        .topbar-pill {
-            background: var(--zinc-800);
-            color: var(--zinc-300);
-            padding: 1px 7px;
-            border-radius: var(--radius-sm);
-            font-family: var(--font-mono);
-            font-size: 11px;
-            border: 1px solid var(--zinc-700);
-        }
-
-        .topbar-status {
+        .utility-item {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: #4ade80;
-            font-weight: 500;
+            color: #cbd5e1;
         }
 
-        .topbar-status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #4ade80;
-            box-shadow: 0 0 8px #4ade80;
+        .utility-item a:hover {
+            color: #ffffff;
+            text-decoration: underline;
         }
 
-        /* ==========================================================================
-           4. NAVBAR PRINCIPAL (Ley de Jakob + Ley de Hick <= 5 ítems)
-           ========================================================================== */
-        .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-bottom: var(--border-hairline);
-            height: 68px;
+        .utility-item svg {
+            color: var(--brand-primary);
+            flex-shrink: 0;
         }
 
-        .navbar-inner {
+        .currency-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #1e293b;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-family: var(--font-mono);
+            color: #cbd5e1;
+            border: 1px solid #334155;
+        }
+
+        /* Capa 2: Main Brand Bar */
+        .main-header {
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 0;
+            position: relative;
+            z-index: 40;
+        }
+
+        .main-header-inner {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 100%;
-            gap: 24px;
+            gap: 28px;
         }
 
-        .brand-link {
+        .brand-logo-wrap {
             display: flex;
             align-items: center;
             gap: 12px;
+            flex-shrink: 0;
             text-decoration: none;
         }
 
         .brand-logo-img {
-            height: 34px;
+            height: 44px;
             width: auto;
             object-fit: contain;
         }
 
-        .brand-tagline {
+        /* Buscador Central Prominente (Diseño Real de Producción) */
+        .header-search-container {
+            flex: 1;
+            max-width: 620px;
+            position: relative;
+        }
+
+        .header-search-form {
+            position: relative;
             display: flex;
-            flex-direction: column;
-            border-left: 1px solid var(--zinc-200);
-            padding-left: 10px;
-            line-height: 1.15;
+            align-items: center;
+            width: 100%;
         }
 
-        .brand-tagline span:first-child {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
+        .header-search-input {
+            width: 100%;
+            height: 44px;
+            padding: 0 46px 0 16px;
+            background-color: #f8fafc;
+            border: 1.5px solid #cbd5e1;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            color: var(--text-heading);
+            outline: none;
+            transition: var(--transition);
         }
 
-        .brand-tagline span:last-child {
-            font-size: 10.5px;
+        .header-search-input:focus {
+            border-color: var(--brand-primary);
+            background-color: var(--bg-white);
+            box-shadow: 0 0 0 3px var(--brand-ring);
+        }
+
+        .header-search-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 44px;
+            width: 44px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .header-search-input:focus ~ .header-search-btn {
+            color: var(--brand-primary);
+        }
+
+        /* Dropdown predictivo de resultados */
+        .search-results-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-dropdown);
+            z-index: 100;
+            display: none;
+            overflow: hidden;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.15s;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .search-result-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-heading);
+        }
+
+        .search-result-meta {
+            font-size: 11.5px;
             color: var(--text-muted);
             font-family: var(--font-mono);
         }
 
-        .nav-links {
+        .search-result-price {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--brand-primary);
+            white-space: nowrap;
+        }
+
+        /* Acciones de la derecha: Cotizaciones y Acceso Cliente */
+        .header-actions-group {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .btn-cotizaciones-cart {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px;
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-heading);
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-cotizaciones-cart:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background-color: var(--brand-light);
+        }
+
+        .cart-count-badge {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+            font-size: 11px;
+            font-family: var(--font-mono);
+            padding: 1px 7px;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+        }
+
+        .user-auth-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: none;
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            color: var(--text-heading);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .user-auth-btn:hover {
+            background-color: #f1f5f9;
+        }
+
+        .user-avatar-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-body);
+        }
+
+        /* Capa 3: Navigation Bar (Categorías y Perú Compras) */
+        .navigation-bar {
+            background-color: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .nav-list {
+            display: flex;
+            align-items: center;
             list-style: none;
+            gap: 24px;
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            position: relative;
+            flex-shrink: 0;
         }
 
         .nav-link {
-            padding: 8px 14px;
-            font-size: var(--step--1);
-            font-weight: 500;
-            color: var(--zinc-600);
-            border-radius: var(--radius-md);
-            transition: color var(--transition-fast), background-color var(--transition-fast);
-        }
-
-        .nav-link:hover {
-            color: var(--text-title);
-            background-color: var(--zinc-100);
-        }
-
-        .nav-link.active {
-            color: var(--accent-brand);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 2px;
+            font-size: 13px;
             font-weight: 600;
-            background-color: var(--accent-tint);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: #334155;
+            position: relative;
+            white-space: nowrap;
+            transition: color 0.2s ease;
         }
 
-        .nav-actions {
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2.5px;
+            background-color: var(--brand-primary);
+            transition: width 0.25s ease;
+        }
+
+        .nav-link:hover, .nav-item.active .nav-link {
+            color: var(--brand-primary);
+        }
+
+        .nav-link:hover::after, .nav-item.active .nav-link::after {
+            width: 100%;
+        }
+
+        /* Estilo especial para el acceso a Perú Compras dentro del Menú */
+        .nav-link-perucompras {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            margin: 6px 0;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            color: #991b1b !important;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 12.5px;
+        }
+
+        .nav-link-perucompras::after {
+            display: none !important;
+        }
+
+        .nav-link-perucompras:hover {
+            background-color: #fee2e2;
+            border-color: #fca5a5;
+        }
+
+        .nav-perucompras-logo {
+            height: 20px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* ==========================================================================
+           3. HERO BANNER COMERCIAL B2B (Inspirado en la producción real)
+           - Imagen corporativa, valor institucional y accesos directos por modelo
+           ========================================================================== */
+        .hero-banner-section {
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            padding: 40px 0 44px 0;
+        }
+
+        .hero-banner-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .hero-badge-convenio {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #fff7ed;
+            border: 1px solid #ffedd5;
+            padding: 5px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--brand-primary);
+            margin-bottom: 16px;
+        }
+
+        .hero-main-title {
+            font-size: 34px;
+            font-weight: 800;
+            line-height: 1.18;
+            color: var(--text-heading);
+            letter-spacing: -0.025em;
+            margin-bottom: 14px;
+        }
+
+        .hero-main-title span {
+            color: var(--brand-primary);
+        }
+
+        .hero-main-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-body);
+            max-width: 58ch;
+            margin-bottom: 24px;
+        }
+
+        .hero-cta-row {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
         }
 
-        .btn-search-trigger {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 7px 12px;
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-md);
-            color: var(--zinc-500);
-            font-size: var(--step--1);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-
-        .btn-search-trigger:hover {
-            border-color: var(--zinc-300);
-            color: var(--text-title);
-            background: var(--zinc-50);
-        }
-
-        .kbd-pill {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            padding: 2px 6px;
-            background: var(--zinc-100);
-            border: 1px solid var(--zinc-200);
-            border-radius: 4px;
-            color: var(--zinc-600);
-            font-weight: 600;
-        }
-
-        /* Botón de Acción Principal (Ley de Fitts: >= 44px de área touch, contraste alto) */
-        .btn-cta {
+        .btn-primary {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            min-height: 40px;
-            padding: 0 16px;
-            font-size: var(--step--1);
+            height: 42px;
+            padding: 0 20px;
+            background-color: var(--brand-primary);
+            color: #ffffff;
+            font-size: 14px;
             font-weight: 600;
             border-radius: var(--radius-md);
-            border: 1px solid transparent;
+            border: 1px solid var(--brand-primary);
             cursor: pointer;
-            transition: all var(--transition-fast);
-            white-space: nowrap;
-            user-select: none;
+            transition: var(--transition);
         }
 
-        .btn-cta-primary {
-            background-color: var(--accent-brand);
-            color: #ffffff;
-            border-color: var(--accent-brand);
+        .btn-primary:hover {
+            background-color: var(--brand-primary-hover);
+            border-color: var(--brand-primary-hover);
         }
 
-        .btn-cta-primary:hover {
-            background-color: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        .btn-cta-primary:active {
-            background-color: var(--accent-active);
+        .btn-primary:active {
+            background-color: var(--brand-primary-active);
             transform: scale(0.99);
         }
 
-        .btn-cta-primary:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 3px var(--accent-ring);
-        }
-
-        .btn-cta-secondary {
-            background-color: var(--bg-surface);
-            color: var(--zinc-800);
-            border-color: var(--zinc-300);
-        }
-
-        .btn-cta-secondary:hover {
-            background-color: var(--zinc-100);
-            border-color: var(--zinc-400);
-            color: var(--text-title);
-        }
-
-        .btn-cta-secondary:focus-visible {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
-        }
-
-        /* ==========================================================================
-           5. HERO ASIMÉTRICO (Split Editorial 7 / 5 - Fitts & Hick Law)
-           ========================================================================== */
-        .hero-section {
-            padding: 48px 0 56px 0;
-            background: var(--bg-surface);
-            border-bottom: var(--border-hairline);
-        }
-
-        .hero-layout {
-            display: grid;
-            grid-template-columns: 7fr 5fr;
-            gap: 48px;
-            align-items: center;
-        }
-
-        .hero-tagline {
+        .btn-secondary {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            padding: 4px 10px;
-            background: var(--zinc-100);
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-sm);
-            font-size: var(--step--2);
+            height: 42px;
+            padding: 0 18px;
+            background-color: #ffffff;
+            color: var(--text-heading);
+            font-size: 14px;
             font-weight: 600;
-            color: var(--zinc-700);
-            margin-bottom: 20px;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border-dark);
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .hero-tagline svg {
-            color: var(--accent-brand);
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            border-color: var(--text-heading);
         }
 
-        .hero-title {
-            font-size: var(--step-4);
-            font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: -0.035em;
-            line-height: 1.1;
-            margin-bottom: 18px;
-        }
-
-        .hero-title strong {
-            color: var(--accent-brand);
-            font-weight: 700;
-        }
-
-        .hero-desc {
-            font-size: var(--step-0);
-            color: var(--text-body);
-            line-height: 1.6;
-            margin-bottom: 28px;
-        }
-
-        .hero-cta-group {
+        .hero-trust-badges {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 28px;
+            gap: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
             flex-wrap: wrap;
         }
 
-        .hero-kpis {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            padding-top: 20px;
-            border-top: var(--border-hairline);
-        }
-
-        .kpi-item {
+        .trust-badge-item {
             display: flex;
-            flex-direction: column;
-        }
-
-        .kpi-value {
-            font-family: var(--font-mono);
-            font-size: var(--step-2);
-            font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-        }
-
-        .kpi-label {
-            font-size: var(--step--2);
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
             color: var(--text-muted);
-            margin-top: 4px;
+            font-weight: 500;
         }
 
-        /* Tarjeta Destacada de Hardware Real */
-        .hero-card-product {
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-300);
+        .trust-badge-item svg {
+            color: var(--brand-primary);
+        }
+
+        /* Tarjeta Hero de Hardware Destacado */
+        .hero-hardware-card {
+            background: #ffffff;
+            border: 1.5px solid var(--border-color);
             border-radius: var(--radius-lg);
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            box-shadow: var(--shadow-card);
         }
 
-        .hero-card-badge-row {
+        .hardware-card-header {
+            padding: 12px 16px;
+            background-color: #f8fafc;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
-            background: var(--zinc-50);
-            border-bottom: var(--border-hairline);
         }
 
-        .badge-perucompras {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11.5px;
+        .convenio-tag {
+            font-size: 11px;
+            font-family: var(--font-mono);
             font-weight: 600;
-            color: #991b1b;
             background: #fef2f2;
-            padding: 3px 8px;
+            color: #991b1b;
+            padding: 2px 8px;
             border-radius: var(--radius-sm);
             border: 1px solid #fecaca;
         }
 
-        .hero-card-media {
-            padding: 24px;
-            background: linear-gradient(180deg, var(--bg-surface) 0%, var(--zinc-50) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 220px;
-            border-bottom: var(--border-hairline);
-        }
-
-        .hero-card-media img {
-            max-height: 190px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06));
-        }
-
-        .hero-card-body {
-            padding: 18px 20px;
-        }
-
-        .hero-card-meta {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .hero-card-sku {
+        .hardware-sku {
             font-family: var(--font-mono);
-            font-size: 11.5px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
-        .hero-card-title {
-            font-size: var(--step-1);
+        .hardware-visual {
+            padding: 20px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hardware-visual img {
+            max-height: 175px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .hardware-info {
+            padding: 18px 20px;
+        }
+
+        .hardware-title {
+            font-size: 17px;
             font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: -0.025em;
+            color: var(--text-heading);
             margin-bottom: 12px;
         }
 
-        .specs-hairline-table {
+        .hardware-specs-list {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-md);
-            overflow: hidden;
+            gap: 8px;
             margin-bottom: 16px;
-            background: var(--bg-surface);
+            background: #f8fafc;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
         }
 
-        .spec-cell {
-            padding: 8px 12px;
+        .hw-spec-row {
             font-size: 12px;
-            border-bottom: 1px solid var(--zinc-200);
         }
 
-        .spec-cell:nth-child(odd) {
-            border-right: 1px solid var(--zinc-200);
-        }
-
-        .spec-cell:nth-last-child(-n+2) {
-            border-bottom: none;
-        }
-
-        .spec-cell-k {
-            font-weight: 600;
-            color: var(--zinc-600);
-            display: block;
+        .hw-spec-label {
             font-size: 10.5px;
+            font-weight: 700;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            display: block;
         }
 
-        .spec-cell-v {
+        .hw-spec-val {
             font-weight: 600;
-            color: var(--text-title);
             font-family: var(--font-mono);
-            font-size: 11.5px;
+            color: var(--text-heading);
         }
 
-        .hero-card-footer {
+        .hardware-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
         }
 
-        .price-dual {
+        .hw-price-box {
             display: flex;
             flex-direction: column;
         }
 
-        .price-usd {
+        .hw-price-usd {
             font-family: var(--font-mono);
-            font-size: var(--step-1);
-            font-weight: 700;
-            color: var(--text-title);
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--brand-primary);
             line-height: 1.1;
         }
 
-        .price-pen {
+        .hw-price-pen {
             font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
         /* ==========================================================================
-           6. SECCIÓN DE ACREDITACIONES Y NORMAS (Social Proof Monocromático)
+           4. LÍNEAS DE COMPUTADORAS KENYA (Gamas de Producto Reales)
+           - EZENT (Mid-Tower)
+           - GENWORK (Corporativo)
+           - OFISZU (Small Form Factor)
+           - PROWORK (Workstation)
+           - RAITO (Monitores IPS)
            ========================================================================== */
-        .proof-bar {
-            background: var(--zinc-50);
-            border-bottom: var(--border-hairline);
-            padding: 16px 0;
+        .gamas-section {
+            padding: 36px 0;
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .proof-bar-inner {
+        .section-header-row {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: space-between;
-            gap: 32px;
-            flex-wrap: wrap;
+            margin-bottom: 24px;
         }
 
-        .proof-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--zinc-500);
-            white-space: nowrap;
+        .section-title-clean {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-heading);
+            letter-spacing: -0.02em;
         }
 
-        .proof-logos {
-            display: flex;
-            align-items: center;
-            gap: 36px;
-            flex-wrap: wrap;
+        .section-title-clean span {
+            color: var(--brand-primary);
         }
 
-        .proof-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0.75;
-            transition: opacity var(--transition-fast);
-        }
-
-        .proof-badge:hover {
-            opacity: 1;
-        }
-
-        .proof-badge img {
-            height: 26px;
-            width: auto;
-            object-fit: contain;
-            filter: grayscale(100%);
-            transition: filter var(--transition-fast);
-        }
-
-        .proof-badge:hover img {
-            filter: grayscale(0%);
-        }
-
-        .proof-badge-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .proof-badge-text strong {
-            font-size: 11.5px;
-            color: var(--zinc-800);
-            font-weight: 700;
-        }
-
-        .proof-badge-text span {
-            font-size: 10px;
-            color: var(--zinc-500);
-            font-family: var(--font-mono);
-        }
-
-        /* ==========================================================================
-           7. BENTO GRID ASIMÉTRICO (Líneas de Producción Reales)
-           ========================================================================== */
-        .bento-section {
-            padding: 64px 0;
-            border-bottom: var(--border-hairline);
-        }
-
-        .section-headline {
-            margin-bottom: 36px;
-        }
-
-        .section-tag {
-            display: inline-block;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--accent-brand);
-            margin-bottom: 8px;
-        }
-
-        .section-title {
-            font-size: var(--step-3);
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            line-height: 1.15;
-            color: var(--text-title);
-            margin-bottom: 10px;
-        }
-
-        .section-subtitle {
-            font-size: var(--step-0);
-            color: var(--text-muted);
-            max-width: 68ch;
-        }
-
-        .bento-grid {
+        .gamas-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
         }
 
-        .bento-cell {
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            transition: border-color var(--transition-fast);
-        }
-
-        .bento-cell:hover {
-            border-color: var(--zinc-300);
-        }
-
-        .bento-col-8 {
-            grid-column: span 8;
-        }
-
-        .bento-col-4 {
-            grid-column: span 4;
-        }
-
-        .bento-col-6 {
-            grid-column: span 6;
-        }
-
-        .bento-cell-header {
-            margin-bottom: 16px;
-        }
-
-        .bento-line-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 8px;
-            background: var(--zinc-100);
-            border-radius: var(--radius-sm);
-            color: var(--zinc-700);
-            margin-bottom: 8px;
-        }
-
-        .bento-h3 {
-            font-size: var(--step-1);
-            font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: -0.025em;
-            margin-bottom: 8px;
-        }
-
-        .bento-p {
-            font-size: var(--step--1);
-            color: var(--text-body);
-            line-height: 1.5;
-        }
-
-        .bento-media-container {
-            margin-top: 18px;
-            background: var(--zinc-50);
-            border: 1px solid var(--zinc-200);
+        .gama-card {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             padding: 16px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 140px;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            color: inherit;
         }
 
-        .bento-media-container img {
-            max-height: 120px;
-            object-fit: contain;
+        .gama-card:hover {
+            background-color: #ffffff;
+            border-color: var(--brand-primary);
+            box-shadow: var(--shadow-card);
+            transform: translateY(-2px);
         }
 
-        .bento-chips {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin-top: 14px;
-        }
-
-        .bento-chip {
-            font-size: 11px;
+        .gama-tag {
             font-family: var(--font-mono);
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-200);
-            padding: 3px 8px;
-            border-radius: var(--radius-sm);
-            color: var(--zinc-600);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--brand-primary);
+            margin-bottom: 4px;
+        }
+
+        .gama-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-bottom: 6px;
+        }
+
+        .gama-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .gama-count {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-heading);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 8px;
         }
 
         /* ==========================================================================
-           8. CATÁLOGO CON FILTRADO FACETADO REACTIVO & LEY DE TESLER
-              - La complejidad de filtrado de compatibilidad corre en el JS
-              - Interfaz minimalista: Opciones exactas y conteos reales
-              - Fichas abren con target="_blank" en NUEVA PESTAÑA independiente
+           5. CATÁLOGO CON FILTROS EN CASCADA (Estilo CEAM Perú Compras)
+           - Layout de 2 columnas: Sidebar Facetado (280px) + Grid de Fichas
+           - Tarjetas con enlace nativo en pestaña nueva (target="_blank")
            ========================================================================== */
         .catalog-section {
-            padding: 64px 0;
-            background: var(--bg-canvas);
+            padding: 40px 0 60px 0;
+            background-color: var(--bg-page);
         }
 
-        .catalog-layout {
+        .catalog-layout-grid {
             display: grid;
             grid-template-columns: 280px 1fr;
             gap: 28px;
             align-items: start;
         }
 
-        /* Sidebar de Filtros Limpia */
-        .filter-panel {
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-lg);
+        /* Sidebar de Filtros Facetados */
+        .filter-sidebar-box {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             padding: 20px;
+            box-shadow: var(--shadow-subtle);
             position: sticky;
-            top: 88px;
+            top: 76px;
         }
 
-        .filter-panel-header {
+        .filter-sidebar-title-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding-bottom: 14px;
-            border-bottom: 1px solid var(--zinc-200);
+            border-bottom: 1px solid var(--border-subtle);
             margin-bottom: 16px;
         }
 
-        .filter-panel-title {
-            font-size: var(--step--1);
+        .filter-sidebar-title {
+            font-size: 14px;
             font-weight: 700;
-            color: var(--text-title);
-            letter-spacing: -0.01em;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            color: var(--text-heading);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .btn-filter-reset {
-            font-size: 11px;
-            color: var(--accent-brand);
+        .btn-clear-filters {
+            font-size: 12px;
+            color: var(--brand-primary);
             background: none;
             border: none;
-            cursor: pointer;
             font-weight: 600;
-            padding: 2px 4px;
+            cursor: pointer;
         }
 
-        .btn-filter-reset:hover {
+        .btn-clear-filters:hover {
             text-decoration: underline;
         }
 
-        .filter-category {
+        .filter-block {
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--zinc-100);
             padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .filter-category:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
+        .filter-block:last-child {
             margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
-        .filter-category-title {
+        .filter-block-label {
             font-size: 12px;
             font-weight: 700;
-            color: var(--zinc-800);
+            color: var(--text-heading);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.4px;
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            display: block;
         }
 
-        .filter-option {
+        .filter-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 6px 8px;
-            border-radius: var(--radius-md);
+            padding: 6px 4px;
+            border-radius: var(--radius-sm);
             cursor: pointer;
-            transition: background var(--transition-fast);
-            user-select: none;
+            transition: background 0.15s;
         }
 
-        .filter-option:hover {
-            background: var(--zinc-50);
+        .filter-row:hover {
+            background-color: #f8fafc;
         }
 
-        .filter-option.active {
-            background: var(--accent-tint);
+        .filter-row.active {
+            background-color: var(--brand-light);
         }
 
-        .filter-checkbox-label {
+        .filter-checkbox-wrap {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: var(--step--1);
-            color: var(--zinc-700);
+            font-size: 13.5px;
+            color: var(--text-body);
             cursor: pointer;
+            user-select: none;
         }
 
-        .filter-option.active .filter-checkbox-label {
-            color: var(--accent-brand);
+        .filter-row.active .filter-checkbox-wrap {
             font-weight: 600;
+            color: var(--brand-primary);
         }
 
-        .filter-checkbox {
+        .filter-checkbox-custom {
             appearance: none;
             -webkit-appearance: none;
             width: 16px;
             height: 16px;
-            border: 1px solid var(--zinc-300);
-            border-radius: 4px;
-            outline: none;
-            background: var(--bg-surface);
+            border: 1.5px solid var(--border-dark);
+            border-radius: 3px;
+            background-color: #ffffff;
             cursor: pointer;
             position: relative;
             display: grid;
             place-content: center;
-            transition: all var(--transition-fast);
+            transition: var(--transition);
         }
 
-        .filter-checkbox:checked {
-            background: var(--accent-brand);
-            border-color: var(--accent-brand);
+        .filter-checkbox-custom:checked {
+            background-color: var(--brand-primary);
+            border-color: var(--brand-primary);
         }
 
-        .filter-checkbox:checked::after {
+        .filter-checkbox-custom:checked::after {
             content: '';
-            width: 8px;
-            height: 5px;
-            border-left: 2px solid white;
-            border-bottom: 2px solid white;
+            width: 7px;
+            height: 4px;
+            border-left: 2px solid #ffffff;
+            border-bottom: 2px solid #ffffff;
             transform: rotate(-45deg) translate(1px, -1px);
         }
 
-        .filter-count {
+        .filter-item-qty {
             font-family: var(--font-mono);
             font-size: 11px;
-            color: var(--zinc-400);
+            color: var(--text-muted);
         }
 
-        .filter-option.active .filter-count {
-            color: var(--accent-brand);
-            font-weight: 600;
+        .filter-row.active .filter-item-qty {
+            color: var(--brand-primary);
+            font-weight: 700;
         }
 
-        /* Barra de Herramientas de Catálogo */
-        .catalog-toolbar {
+        /* Toolbar del Catálogo */
+        .catalog-header-bar {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
             gap: 16px;
             flex-wrap: wrap;
         }
 
-        .catalog-results-info {
-            font-size: var(--step--1);
-            color: var(--zinc-600);
+        .catalog-count-text {
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
-        .catalog-results-info strong {
-            color: var(--text-title);
+        .catalog-count-text strong {
+            color: var(--text-heading);
             font-family: var(--font-mono);
         }
 
-        .catalog-sort-wrap {
+        .catalog-sort-group {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: var(--step--1);
-            color: var(--zinc-600);
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
         .catalog-sort-select {
-            padding: 6px 10px;
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-md);
-            color: var(--text-title);
+            height: 34px;
+            padding: 0 10px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-heading);
+            font-size: 13px;
             outline: none;
             cursor: pointer;
-            font-size: var(--step--1);
         }
 
-        /* Cuadrícula de Productos */
-        .products-grid {
+        /* Grilla de Tarjetas de Producto */
+        .products-grid-3col {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
 
-        /* Tarjeta de Producto Profesional (Anti-Slop Craft) */
-        .product-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-lg);
+        .product-item-card {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            transition: var(--transition);
             position: relative;
-            transition: border-color var(--transition-fast);
         }
 
-        .product-card:hover {
-            border-color: var(--zinc-300);
+        .product-item-card:hover {
+            border-color: var(--brand-primary);
+            box-shadow: var(--shadow-card);
         }
 
-        .product-card-top {
-            padding: 10px 14px;
-            background: var(--zinc-50);
-            border-bottom: 1px solid var(--zinc-100);
+        .product-card-top-tag {
+            padding: 8px 12px;
+            background-color: #f8fafc;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .stock-tag {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--success-text);
+        .stock-indicator {
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--badge-stock-text);
         }
 
-        .stock-tag::before {
-            content: '';
+        .stock-dot {
             width: 6px;
             height: 6px;
-            background: var(--success-text);
+            background-color: var(--badge-stock-text);
             border-radius: 50%;
         }
 
-        .acuerdo-marco-tag {
+        .convenio-marco-label {
             font-family: var(--font-mono);
             font-size: 10.5px;
-            color: var(--zinc-500);
+            color: var(--text-muted);
         }
 
-        /* Enlace principal que cubre navegación nativa en pestaña nueva */
-        .product-card-link-block {
-            padding: 16px 16px 12px 16px;
+        /* Enlace que envuelve toda la parte superior para permitir apertura en nueva pestaña */
+        .product-card-main-link {
+            padding: 16px 16px 10px 16px;
             display: block;
             text-decoration: none;
             color: inherit;
         }
 
-        .product-image-wrap {
-            height: 160px;
+        .product-card-photo-wrap {
+            height: 155px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 14px;
-            background: var(--zinc-50);
-            border: 1px solid var(--zinc-100);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            padding: 12px;
+            background-color: #f8fafc;
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+            padding: 10px;
+            border: 1px solid var(--border-subtle);
         }
 
-        .product-image-wrap img {
+        .product-card-photo-wrap img {
             max-height: 100%;
             width: auto;
             object-fit: contain;
-            transition: transform var(--transition-normal);
+            transition: transform 0.25s ease;
         }
 
-        .product-card:hover .product-image-wrap img {
-            transform: scale(1.02);
+        .product-item-card:hover .product-card-photo-wrap img {
+            transform: scale(1.03);
         }
 
-        .product-sku-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .product-sku {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--zinc-500);
-        }
-
-        .product-model-label {
+        .product-sku-badge {
+            display: inline-block;
+            background-color: #f1f5f9;
+            color: #0369a1;
+            padding: 2px 7px;
+            border-radius: var(--radius-sm);
             font-family: var(--font-mono);
             font-size: 10.5px;
             font-weight: 600;
-            background: var(--zinc-100);
-            padding: 1px 6px;
-            border-radius: 3px;
-            color: var(--zinc-700);
+            margin-bottom: 6px;
         }
 
-        .product-card-title {
-            font-size: var(--step-0);
+        .product-title-text {
+            font-size: 14.5px;
             font-weight: 700;
-            color: var(--text-title);
-            line-height: 1.25;
-            letter-spacing: -0.02em;
+            color: var(--text-heading);
+            line-height: 1.3;
             margin-bottom: 12px;
+            min-height: 2.6em;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            min-height: 2.5em;
         }
 
-        .product-specs-matrix {
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            margin-bottom: 16px;
-            background: var(--bg-surface);
+        .product-item-card:hover .product-title-text {
+            color: var(--brand-primary);
         }
 
-        .matrix-row {
-            display: grid;
-            grid-template-columns: 88px 1fr;
-            padding: 6px 10px;
-            border-bottom: 1px solid var(--zinc-100);
-            font-size: 11.5px;
+        /* Bloque de Especificaciones Técnicas (Formato exacto de producción) */
+        .product-specs-chips-block {
+            padding: 0 16px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .spec-chip-item {
+            display: flex;
             align-items: center;
+            font-size: 11.5px;
+            color: var(--text-body);
+            background-color: #f8fafc;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
         }
 
-        .matrix-row:last-child {
-            border-bottom: none;
+        .spec-chip-label {
+            font-weight: 700;
+            color: var(--text-heading);
+            margin-right: 6px;
+            font-size: 10.5px;
+            min-width: 72px;
         }
 
-        .matrix-label {
-            font-weight: 600;
-            color: var(--zinc-500);
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 0.04em;
-        }
-
-        .matrix-val {
+        .spec-chip-val {
             font-family: var(--font-mono);
-            color: var(--text-title);
-            font-weight: 500;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .product-card-bottom {
+        /* Footer de Tarjeta con Precios y Botón */
+        .product-card-bottom-bar {
             margin-top: auto;
             padding: 12px 16px;
-            border-top: 1px solid var(--zinc-100);
+            border-top: 1px solid var(--border-subtle);
+            background-color: #f8fafc;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--zinc-50);
             gap: 10px;
         }
 
-        .product-price-box {
+        .prices-container {
             display: flex;
             flex-direction: column;
         }
 
-        .product-price-box .price-main {
+        .price-usd-bold {
             font-family: var(--font-mono);
-            font-size: var(--step-0);
-            font-weight: 700;
-            color: var(--text-title);
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--brand-primary);
             line-height: 1.1;
         }
 
-        .product-price-box .price-sub {
+        .price-pen-note {
             font-family: var(--font-mono);
-            font-size: 10.5px;
-            color: var(--zinc-500);
+            font-size: 11px;
+            color: var(--text-muted);
         }
 
-        /* Botón de apertura con target="_blank" explícito */
-        .btn-card-action {
+        .btn-open-tab {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
+            gap: 5px;
+            height: 32px;
+            padding: 0 10px;
+            background-color: #ffffff;
+            color: var(--text-heading);
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-sm);
             font-size: 12px;
             font-weight: 600;
-            background: var(--bg-surface);
-            color: var(--zinc-800);
-            border: 1px solid var(--zinc-300);
-            border-radius: var(--radius-md);
             text-decoration: none;
             cursor: pointer;
-            transition: all var(--transition-fast);
-            white-space: nowrap;
+            transition: var(--transition);
         }
 
-        .btn-card-action:hover {
-            background: var(--zinc-100);
-            border-color: var(--zinc-400);
-            color: var(--text-title);
+        .btn-open-tab:hover {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background-color: var(--brand-light);
         }
 
-        /* ==========================================================================
-           9. SECCIÓN DE LOS 7 ESTADOS DE UI (Auditoría Técnica Visual)
-           ========================================================================== */
-        .states-section {
-            padding: 64px 0;
-            background: var(--bg-surface);
-            border-top: var(--border-hairline);
-            border-bottom: var(--border-hairline);
-        }
-
-        .states-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .state-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-200);
-            border-radius: var(--radius-lg);
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .state-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .state-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-title);
-        }
-
-        .state-badge {
-            font-family: var(--font-mono);
-            font-size: 10px;
-            padding: 1px 5px;
-            border-radius: 3px;
-            background: var(--zinc-100);
-            color: var(--zinc-600);
-            border: 1px solid var(--zinc-200);
-        }
-
-        .state-card-desc {
-            font-size: 11.5px;
-            color: var(--zinc-500);
-            margin-bottom: 14px;
-            min-height: 34px;
-        }
-
-        /* Skeleton Loading Shimmer */
-        .skeleton {
-            background: linear-gradient(90deg, #f4f4f5 25%, #e4e4e7 50%, #f4f4f5 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: var(--radius-sm);
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-
-        /* Estado Vacío (Sin Emojis, con SVG Estructurado) */
-        .empty-state-container {
-            background: var(--zinc-50);
-            border: 1px dashed var(--zinc-300);
-            border-radius: var(--radius-lg);
-            padding: 40px 24px;
+        /* Estado Vacío de Catálogo */
+        .empty-catalog-alert {
+            background-color: #ffffff;
+            border: 1.5px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 48px 24px;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            margin-top: 20px;
         }
 
-        .empty-state-svg {
-            width: 44px;
-            height: 44px;
-            color: var(--zinc-400);
+        .empty-catalog-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--text-light);
             margin-bottom: 14px;
-            stroke-width: 1.5;
         }
 
-        .empty-state-title {
-            font-size: var(--step-0);
+        .empty-catalog-h4 {
+            font-size: 16px;
             font-weight: 700;
-            color: var(--text-title);
+            color: var(--text-heading);
             margin-bottom: 6px;
         }
 
-        .empty-state-text {
-            font-size: var(--step--1);
-            color: var(--zinc-500);
-            max-width: 50ch;
+        .empty-catalog-p {
+            font-size: 13px;
+            color: var(--text-muted);
+            max-width: 45ch;
             margin-bottom: 16px;
         }
 
         /* ==========================================================================
-           10. COMMAND PALETTE MODAL (Ctrl + K / Cmd + K)
+           6. FOOTER CORPORATIVO B2B (Estructura formal con RUC y datos legales)
            ========================================================================== */
-        .cmd-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(9, 9, 11, 0.55);
-            backdrop-filter: blur(4px);
-            z-index: 100;
-            display: none;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 12vh;
+        .footer-site {
+            background-color: #0f172a;
+            color: #94a3b8;
+            padding: 50px 0 24px 0;
+            border-top: 1px solid #1e293b;
         }
 
-        .cmd-modal-box {
-            background: var(--bg-surface);
-            border: 1px solid var(--zinc-300);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 580px;
-            overflow: hidden;
-            box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.15);
-        }
-
-        .cmd-input-wrap {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--zinc-200);
-        }
-
-        .cmd-input-wrap svg {
-            color: var(--zinc-400);
-            stroke-width: 1.5;
-        }
-
-        .cmd-input {
-            width: 100%;
-            border: none;
-            outline: none;
-            font-size: var(--step-0);
-            color: var(--text-title);
-            background: transparent;
-        }
-
-        .cmd-list {
-            max-height: 320px;
-            overflow-y: auto;
-            padding: 8px;
-        }
-
-        .cmd-entry {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 12px;
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            text-decoration: none;
-            color: inherit;
-            transition: background var(--transition-fast);
-        }
-
-        .cmd-entry:hover, .cmd-entry.active {
-            background: var(--zinc-100);
-        }
-
-        .cmd-entry-title {
-            font-size: var(--step--1);
-            font-weight: 600;
-            color: var(--text-title);
-        }
-
-        .cmd-entry-sub {
-            font-size: 11.5px;
-            color: var(--zinc-500);
-            font-family: var(--font-mono);
-        }
-
-        .cmd-modal-footer {
-            padding: 10px 16px;
-            background: var(--zinc-50);
-            border-top: 1px solid var(--zinc-200);
-            font-size: 11px;
-            color: var(--zinc-500);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        /* ==========================================================================
-           11. FOOTER SOBRIO B2B
-           ========================================================================== */
-        .footer-main {
-            background: var(--zinc-950);
-            color: var(--zinc-400);
-            padding: 56px 0 28px 0;
-            border-top: 1px solid var(--zinc-800);
-        }
-
-        .footer-grid {
+        .footer-cols-grid {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
+            gap: 36px;
+            margin-bottom: 36px;
         }
 
-        .footer-col h4 {
-            color: var(--zinc-200);
-            font-size: var(--step--1);
+        .footer-logo-img {
+            height: 38px;
+            width: auto;
+            margin-bottom: 14px;
+            filter: brightness(0) invert(1);
+        }
+
+        .footer-company-desc {
+            font-size: 13px;
+            line-height: 1.6;
+            max-width: 36ch;
+            margin-bottom: 14px;
+        }
+
+        .footer-legal-tag {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: #64748b;
+        }
+
+        .footer-col-h5 {
+            color: #f1f5f9;
+            font-size: 14px;
             font-weight: 700;
             margin-bottom: 14px;
-            letter-spacing: -0.01em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .footer-links {
+        .footer-links-list {
             list-style: none;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            font-size: var(--step--1);
+            font-size: 13px;
         }
 
-        .footer-links a:hover {
+        .footer-links-list a:hover {
             color: #ffffff;
+            text-decoration: underline;
         }
 
-        .footer-bottom {
-            padding-top: 24px;
-            border-top: 1px solid var(--zinc-800);
+        .footer-bottom-bar {
+            border-top: 1px solid #1e293b;
+            padding-top: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-size: var(--step--2);
-            color: var(--zinc-500);
+            font-size: 12px;
+            color: #64748b;
         }
 
         /* Responsive Breakpoints */
-        @media (max-width: 1024px) {
-            .hero-layout { grid-template-columns: 1fr; }
-            .catalog-layout { grid-template-columns: 1fr; }
-            .filter-panel { position: static; margin-bottom: 24px; }
-            .products-grid { grid-template-columns: repeat(2, 1fr); }
-            .bento-col-8, .bento-col-4, .bento-col-6 { grid-column: span 12; }
-            .states-grid { grid-template-columns: repeat(2, 1fr); }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
+        @media (max-width: 1120px) {
+            .gamas-grid { grid-template-columns: repeat(3, 1fr); }
+            .products-grid-3col { grid-template-columns: repeat(2, 1fr); }
+            .hero-banner-grid { grid-template-columns: 1fr; }
+            .footer-cols-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        @media (max-width: 640px) {
-            .nav-links { display: none; }
-            .products-grid { grid-template-columns: 1fr; }
-            .states-grid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; }
-            .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-            .hero-title { font-size: var(--step-3); }
+        @media (max-width: 860px) {
+            .catalog-layout-grid { grid-template-columns: 1fr; }
+            .filter-sidebar-box { position: static; margin-bottom: 20px; }
+            .utility-left { display: none; }
+            .header-search-container { order: 3; max-width: 100%; margin-top: 10px; }
+            .main-header-inner { flex-wrap: wrap; }
+            .gamas-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 580px) {
+            .products-grid-3col { grid-template-columns: 1fr; }
+            .gamas-grid { grid-template-columns: 1fr; }
+            .footer-cols-grid { grid-template-columns: 1fr; }
+            .hero-main-title { font-size: 26px; }
+            .hero-cta-row { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. Barra de Control del Sistema -->
-    <div class="system-topbar">
-        <div class="container system-topbar-inner">
-            <div class="topbar-pills">
-                <span class="topbar-pill">PROTOTIPO TÉCNICO UX/UI</span>
-                <span class="topbar-pill">ANTI-SLOP ENGINE</span>
-                <span class="topbar-pill">PERÚ COMPRAS HOMOLOGADO</span>
+    <!-- ========================================================================
+         1. TOP UTILITY BAR (Capa 1: Contacto B2B, Garantía QR y Moneda)
+         ======================================================================== -->
+    <div class="top-utility-bar">
+        <div class="container top-utility-inner">
+            <div class="utility-left">
+                <span class="utility-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    Central: (01) 680-4966
+                </span>
+                <span class="utility-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    ventas@kenya.com.pe
+                </span>
+                <span class="utility-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Lun - Vie: 9:00 AM - 6:00 PM
+                </span>
             </div>
-            <div class="topbar-status">
-                <span class="topbar-status-dot"></span>
-                <span>Enlace a Fichas Técnicas: target="_blank" activo</span>
+
+            <div class="utility-right">
+                <a href="#garantia-qr" class="utility-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    <span>Consultar Garantía QR</span>
+                </a>
+                <span class="currency-switch">
+                    <span>USD ($)</span> | <span style="color:#ffffff; font-weight:700;">PEN (S/)</span>
+                </span>
+                <a href="#login" class="utility-item">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <span>Acceso Entidades / Registro B2B</span>
+                </a>
             </div>
         </div>
     </div>
 
-    <!-- 2. Navbar Principal -->
-    <header class="navbar">
-        <div class="container navbar-inner">
-            <a href="#inicio" class="brand-link" aria-label="Inicio Kenya Technology">
-                <!-- Logotipo Real Kenya -->
-                <img src="theme/images/kenya.png" alt="Kenya Technology" class="brand-logo-img" onerror="this.onerror=null; this.src='theme/images/logo.png';">
-                <div class="brand-tagline">
-                    <span>Technology OEM</span>
-                    <span>Fabricante Nacional</span>
-                </div>
+    <!-- ========================================================================
+         2. MAIN BRAND HEADER (Capa 2: Logotipo Oficial 45px + Buscador Central)
+         ======================================================================== -->
+    <header class="main-header">
+        <div class="container main-header-inner">
+            <!-- Logo oficial de Kenya Technology -->
+            <a href="#inicio" class="brand-logo-wrap" title="KENYA Technology - Fabricante Nacional">
+                <img src="theme/images/kenya.png" alt="KENYA" class="brand-logo-img" onerror="this.onerror=null; this.src='theme/images/logo.png';">
             </a>
 
-            <!-- Navegación acotada (Ley de Hick: <= 5 ítems) -->
-            <nav aria-label="Navegación principal">
-                <ul class="nav-links">
-                    <li><a href="#catalogo" class="nav-link active">Catálogo de Fichas</a></li>
-                    <li><a href="#lineas" class="nav-link">Líneas de Producción</a></li>
-                    <li><a href="#acuerdo-marco" class="nav-link">Acuerdo Marco</a></li>
-                    <li><a href="#garantia" class="nav-link">Garantía On-Site</a></li>
-                    <li><a href="#estados-ui" class="nav-link">Auditoría UI</a></li>
-                </ul>
-            </nav>
+            <!-- Buscador Central Integrado con Dropdown Predictivo (Patrón Real de E-commerce) -->
+            <div class="header-search-container">
+                <div class="header-search-form">
+                    <input type="text" id="siteSearchInput" class="header-search-input" placeholder="Buscar por modelo, procesador, SKU o ficha técnica (ej. i7, EZENT, OFISZU)..." autocomplete="off">
+                    <button type="button" class="header-search-btn" id="searchSubmitBtn" aria-label="Buscar">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                </div>
 
-            <div class="nav-actions">
-                <button class="btn-search-trigger" id="cmdOpenBtn" aria-label="Buscar fichas técnicas o componentes">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <span>Buscar SKU o CPU...</span>
-                    <span class="kbd-pill">Ctrl K</span>
-                </button>
-                <a href="#catalogo" class="btn-cta btn-cta-primary">
-                    Explorar Catálogo
+                <!-- Dropdown en vivo de resultados de búsqueda -->
+                <div class="search-results-dropdown" id="searchResultsDropdown">
+                    <a href="#ficha-detalle-3061" target="_blank" rel="noopener noreferrer" class="search-result-item">
+                        <div>
+                            <div class="search-result-title">COMPUTADORA KENYA EZENT T700</div>
+                            <div class="search-result-meta">SKU: E7CT6OWNHPXO3B5PV6 · Core i7 13700 · 16GB DDR4 · 1TB SSD</div>
+                        </div>
+                        <div class="search-result-price">$ 645.00</div>
+                    </a>
+                    <a href="#ficha-detalle-3062" target="_blank" rel="noopener noreferrer" class="search-result-item">
+                        <div>
+                            <div class="search-result-title">COMPUTADORA KENYA GENWORK PRO</div>
+                            <div class="search-result-meta">SKU: GW-I5-13400-SSD512 · Core i5 13400 · 16GB DDR4 · 512GB SSD</div>
+                        </div>
+                        <div class="search-result-price">$ 515.00</div>
+                    </a>
+                    <a href="#ficha-detalle-3063" target="_blank" rel="noopener noreferrer" class="search-result-item">
+                        <div>
+                            <div class="search-result-title">COMPUTADORA KENYA OFISZU SFF Compact</div>
+                            <div class="search-result-meta">SKU: OFZ-SFF-I7-1TB · Core i7 13700 · 16GB DDR4 · 1TB SSD</div>
+                        </div>
+                        <div class="search-result-price">$ 680.00</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Acciones B2B del Header: Cotizador y Perfil -->
+            <div class="header-actions-group">
+                <a href="#mis-cotizaciones" class="btn-cotizaciones-cart" title="Ver cotizaciones de Acuerdo Marco">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>Mis Cotizaciones</span>
+                    <span class="cart-count-badge" id="quoteBadgeCount">1</span>
                 </a>
+
+                <div class="user-auth-btn" title="Perfil de Comprador / Entidad">
+                    <div class="user-avatar-circle">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                    <span style="font-size: 13px; font-weight: 600;">Entidad / Cliente</span>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- 3. Hero Section Asimétrico (Split 7 / 5) -->
-    <section class="hero-section" id="inicio">
-        <div class="container hero-layout">
-            <!-- Columna Izquierda: Editorial Headings & Value Prop -->
+    <!-- ========================================================================
+         3. NAVIGATION BAR (Capa 3: Menú de Categorías con Logo Perú Compras)
+         ======================================================================== -->
+    <nav class="navigation-bar" aria-label="Menú principal de navegación">
+        <div class="container">
+            <ul class="nav-list">
+                <li class="nav-item active"><a href="#inicio" class="nav-link">Inicio</a></li>
+                <li class="nav-item"><a href="#quienes-somos" class="nav-link">Quiénes Somos</a></li>
+                
+                <!-- Ítem Clave del Negocio: Logo de Perú Compras destacado -->
+                <li class="nav-item">
+                    <a href="#catalogo" class="nav-link nav-link-perucompras" title="Catálogo Oficial Perú Compras">
+                        <img src="theme/images/logo_PeruCompras.svg" alt="Perú Compras" class="nav-perucompras-logo" onerror="this.src='logo_PeruCompras.svg';">
+                        <span>Catálogo Perú Compras</span>
+                    </a>
+                </li>
+
+                <li class="nav-item"><a href="#catalogo" class="nav-link" data-filter-nav="EZENT">PCs EZENT</a></li>
+                <li class="nav-item"><a href="#catalogo" class="nav-link" data-filter-nav="GENWORK">PCs GENWORK</a></li>
+                <li class="nav-item"><a href="#catalogo" class="nav-link" data-filter-nav="OFISZU">Mini PC OFISZU</a></li>
+                <li class="nav-item"><a href="#catalogo" class="nav-link" data-filter-nav="PROWORK">Workstations</a></li>
+                <li class="nav-item"><a href="#catalogo" class="nav-link" data-filter-nav="RAITO">Monitores RAITO</a></li>
+                <li class="nav-item"><a href="#soporte-garantia" class="nav-link">Soporte & Garantía</a></li>
+                <li class="nav-item"><a href="#contacto" class="nav-link">Contáctenos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- ========================================================================
+         4. HERO BANNER COMERCIAL B2B (Propuesta de Valor + Hardware Homologado)
+         ======================================================================== -->
+    <section class="hero-banner-section" id="inicio">
+        <div class="container hero-banner-grid">
             <div>
-                <div class="hero-tagline">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                    <span>Catálogos Electrónicos Perú Compras IM-CE-2020-5</span>
+                <div class="hero-badge-convenio">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Acuerdos Marco Vigentes: IM-CE-2020-5 & EXT-CE-2021-1</span>
                 </div>
-                <h1 class="hero-title">
-                    Hardware de cómputo para el <strong>Estado Peruano</strong> y Sector Corporativo
+                <h1 class="hero-main-title">
+                    Fabricante Nacional de Cómputo para el <span>Estado Peruano</span> y Empresas
                 </h1>
-                <p class="hero-desc measure-text">
-                    Computadoras de escritorio, estaciones de trabajo y monitores configurados bajo estándares ISO 9001:2015 e ISO 37001, con garantía de fábrica On-Site de 36 meses con cobertura nacional.
+                <p class="hero-main-desc">
+                    Equipos de alto desempeño ensamblados bajo normativas ISO 9001:2015 e ISO 37001 Antisoborno, con soporte técnico y garantía de fábrica On-Site de 36 meses a nivel nacional.
                 </p>
 
-                <div class="hero-cta-group">
-                    <a href="#catalogo" class="btn-cta btn-cta-primary">
-                        <span>Ver Fichas Homologadas</span>
+                <div class="hero-cta-row">
+                    <a href="#catalogo" class="btn-primary">
+                        <span>Explorar Fichas en Catálogo</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </a>
-                    <a href="#lineas" class="btn-cta btn-cta-secondary">
-                        Líneas de Producción
+                    <a href="#garantia-qr" class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        <span>Validar Serie / Garantía QR</span>
                     </a>
                 </div>
 
-                <div class="hero-kpis">
-                    <div class="kpi-item">
-                        <span class="kpi-value tabular-nums">+250</span>
-                        <span class="kpi-label">Fichas Homologadas</span>
+                <div class="hero-trust-badges">
+                    <div class="trust-badge-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+                        <span>ISO 9001 Calidad Certificada</span>
                     </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value tabular-nums">36 Meses</span>
-                        <span class="kpi-label">Garantía On-Site</span>
+                    <div class="trust-badge-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                        <span>ISO 37001 Antisoborno</span>
                     </div>
-                    <div class="kpi-item">
-                        <span class="kpi-value tabular-nums">100% OEM</span>
-                        <span class="kpi-label">Componentes Certificados</span>
+                    <div class="trust-badge-item">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        <span>Garantía 36 Meses On-Site</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Columna Derecha: Tarjeta de Hardware Real con Recursos del Proyecto -->
-            <div class="hero-card-product">
-                <div class="hero-card-badge-row">
-                    <span class="badge-perucompras">
-                        <img src="theme/images/logo_PeruCompras.svg" alt="Perú Compras" style="height: 14px; width: auto;" onerror="this.src='logo_PeruCompras.svg'">
-                        Ficha Vigente
-                    </span>
-                    <span class="hero-card-sku">SKU: E7CT6OWNHPXO3B</span>
+            <!-- Tarjeta de Hardware Real: KENYA EZENT T700 -->
+            <div class="hero-hardware-card">
+                <div class="hardware-card-header">
+                    <span class="convenio-tag">Perú Compras IM-CE-2020-5</span>
+                    <span class="hardware-sku">SKU: E7CT6OWNHPXO3B5PV6</span>
                 </div>
 
-                <div class="hero-card-media">
-                    <img src="producto.jpg" alt="Computadora Kenya EZENT T700" onerror="this.src='pord.jpg'">
+                <div class="hardware-visual">
+                    <img src="producto.jpg" alt="KENYA EZENT T700" onerror="this.src='pord.jpg';">
                 </div>
 
-                <div class="hero-card-body">
-                    <div class="hero-card-meta">
-                        <span style="font-size: 11px; font-weight: 700; color: var(--accent-brand); text-transform: uppercase;">Línea EZENT Mid-Tower</span>
-                        <span class="stock-tag">Stock ≥ 20 unid.</span>
+                <div class="hardware-info">
+                    <div style="font-size: 11px; font-weight:700; color:var(--brand-primary); text-transform:uppercase; margin-bottom:4px;">
+                        Línea Mid-Tower Corporativa
                     </div>
-                    <h3 class="hero-card-title">KENYA EZENT T700 Core i7</h3>
+                    <h3 class="hardware-title">COMPUTADORA KENYA EZENT T700 Core i7</h3>
 
-                    <div class="specs-hairline-table">
-                        <div class="spec-cell">
-                            <span class="spec-cell-k">Procesador</span>
-                            <span class="spec-cell-v">i7 13700 (16C/24T)</span>
+                    <div class="hardware-specs-list">
+                        <div class="hw-spec-row">
+                            <span class="hw-spec-label">Procesador</span>
+                            <span class="hw-spec-val">i7 13700 (16 Cores)</span>
                         </div>
-                        <div class="spec-cell">
-                            <span class="spec-cell-k">Memoria</span>
-                            <span class="spec-cell-v">16 GB DDR4 3200</span>
+                        <div class="hw-spec-row">
+                            <span class="hw-spec-label">Memoria RAM</span>
+                            <span class="hw-spec-val">16 GB DDR4 3200MHz</span>
                         </div>
-                        <div class="spec-cell">
-                            <span class="spec-cell-k">Almacenamiento</span>
-                            <span class="spec-cell-v">1 TB SSD NVMe M.2</span>
+                        <div class="hw-spec-row">
+                            <span class="hw-spec-label">Almacenamiento</span>
+                            <span class="hw-spec-val">1 TB SSD NVMe M.2</span>
                         </div>
-                        <div class="spec-cell">
-                            <span class="spec-cell-k">Garantía</span>
-                            <span class="spec-cell-v">36 Meses On-Site</span>
+                        <div class="hw-spec-row">
+                            <span class="hw-spec-label">Garantía</span>
+                            <span class="hw-spec-val">36 Meses On-Site</span>
                         </div>
                     </div>
 
-                    <div class="hero-card-footer">
-                        <div class="price-dual">
-                            <span class="price-usd">$ 645.00</span>
-                            <span class="price-pen">S/ 2,425.20 incl. IGV</span>
+                    <div class="hardware-footer">
+                        <div class="hw-price-box">
+                            <span class="hw-price-usd">$ 645.00</span>
+                            <span class="hw-price-pen">S/ 2,425.20 + IGV</span>
                         </div>
-                        <!-- Enlace con target="_blank" para abrir en nueva pestaña -->
-                        <a href="#catalogo" target="_blank" rel="noopener noreferrer" class="btn-card-action">
-                            <span>Abrir Ficha Técnica</span>
+                        <!-- Enlace con target="_blank" para abrir ficha técnica en nueva pestaña -->
+                        <a href="#ficha-detalle-3061" target="_blank" rel="noopener noreferrer" class="btn-primary" style="height:36px; padding:0 14px; font-size:13px;">
+                            <span>Ver Ficha Técnica</span>
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         </a>
                     </div>
@@ -1649,264 +1560,221 @@
         </div>
     </section>
 
-    <!-- 4. Barra de Acreditaciones Oficiales (Monocromático, 1.5px stroke) -->
-    <div class="proof-bar" id="acuerdo-marco">
-        <div class="container proof-bar-inner">
-            <div class="proof-label">Acreditaciones & Normativa de Fabricación:</div>
-            <div class="proof-logos">
-                <div class="proof-badge">
-                    <img src="theme/images/logo_PeruCompras.svg" alt="Perú Compras" onerror="this.src='logo_PeruCompras.svg'">
-                    <div class="proof-badge-text">
-                        <strong>Perú Compras</strong>
-                        <span>Catálogo Electrónico</span>
-                    </div>
-                </div>
-
-                <div class="proof-badge">
-                    <img src="iso-37001.png" alt="ISO 37001 Anti-Soborno">
-                    <div class="proof-badge-text">
-                        <strong>ISO 37001:2016</strong>
-                        <span>Gestión Antisoborno</span>
-                    </div>
-                </div>
-
-                <div class="proof-badge">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
-                    <div class="proof-badge-text">
-                        <strong>ISO 9001:2015</strong>
-                        <span>Gestión de Calidad</span>
-                    </div>
-                </div>
-
-                <div class="proof-badge">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-                    <div class="proof-badge-text">
-                        <strong>Sistema RAEE</strong>
-                        <span>Colectivo Ecológico</span>
-                    </div>
-                </div>
-
-                <div class="proof-badge">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                    <div class="proof-badge-text">
-                        <strong>TPM 2.0 Hardened</strong>
-                        <span>Seguridad Institucional</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 5. Bento Grid Asimétrico: Líneas de Hardware Reales -->
-    <section class="bento-section" id="lineas">
+    <!-- ========================================================================
+         5. LÍNEAS DE HARDWARE REALES (Selectores Rápidos de Gama Kenya)
+         ======================================================================== -->
+    <section class="gamas-section">
         <div class="container">
-            <div class="section-headline">
-                <span class="section-tag">Ingeniería de Producto</span>
-                <h2 class="section-title">Líneas de Producción Homologadas</h2>
-                <p class="section-subtitle">
-                    Configuraciones optimizadas para contratación pública con fuentes certificadas 80 Plus, compatibilidad modular y trazabilidad por número de serie.
-                </p>
+            <div class="section-header-row">
+                <div>
+                    <h2 class="section-title-clean">Gamas de Computadoras <span>KENYA</span></h2>
+                    <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 4px;">Selecciona una línea de hardware para filtrar las fichas homologadas.</p>
+                </div>
+                <a href="#catalogo" style="font-size: 13px; font-weight:600; color:var(--brand-primary);">Ver todas las fichas &rarr;</a>
             </div>
 
-            <div class="bento-grid">
-                <!-- Bento 1: EZENT & GENWORK (Span 8) -->
-                <div class="bento-cell bento-col-8">
+            <div class="gamas-grid">
+                <!-- Gama 1: EZENT -->
+                <div class="gama-card" onclick="filterByGama('EZENT')">
                     <div>
-                        <div class="bento-cell-header">
-                            <span class="bento-line-pill">Línea Principal Desktop</span>
-                            <h3 class="bento-h3">EZENT & GENWORK Mid-Tower</h3>
-                            <p class="bento-p measure-text">
-                                Diseñadas para alta exigencia operativa en entidades del Estado y corporaciones. Chasis de acero electrogalvanizado de 0.6mm con flujo de aire canalizado, fuentes 80 Plus Bronze/Gold de alta eficiencia y puertos frontales de acceso veloz.
-                            </p>
-                        </div>
-                        <div class="bento-chips">
-                            <span class="bento-chip">Intel Core 12va, 13va y 14va Gen</span>
-                            <span class="bento-chip">Hasta 64 GB DDR4/DDR5</span>
-                            <span class="bento-chip">HDMI + DisplayPort dual</span>
-                            <span class="bento-chip">Garantía On-Site 36M</span>
-                        </div>
+                        <div class="gama-tag">Desktop Mid-Tower</div>
+                        <div class="gama-name">EZENT Series</div>
+                        <div class="gama-desc">Equipos de alto rendimiento para labores intensivas de oficina y laboratorios de cómputo.</div>
                     </div>
-                    <div class="bento-media-container" style="background:#ffffff; margin-top:20px;">
-                        <img src="producto.jpg" alt="Línea EZENT Kenya" style="max-height: 110px;">
+                    <div class="gama-count">
+                        <span>142 Fichas</span>
+                        <span style="color:var(--brand-primary);">&rarr;</span>
                     </div>
                 </div>
 
-                <!-- Bento 2: OFISZU SFF (Span 4) -->
-                <div class="bento-cell bento-col-4">
+                <!-- Gama 2: GENWORK -->
+                <div class="gama-card" onclick="filterByGama('GENWORK')">
                     <div>
-                        <div class="bento-cell-header">
-                            <span class="bento-line-pill">Formato Compacto SFF</span>
-                            <h3 class="bento-h3">OFISZU Small Form Factor</h3>
-                            <p class="bento-p">
-                                Chasis reducido para estaciones de trabajo con espacio limitado. Mantiene conectividad completa y expansión interna sin pérdida térmica.
-                            </p>
-                        </div>
-                        <div class="bento-chips">
-                            <span class="bento-chip">Volumen ultra reducido</span>
-                            <span class="bento-chip">Bajo consumo energético</span>
-                        </div>
+                        <div class="gama-tag">Corporate Pro</div>
+                        <div class="gama-name">GENWORK Series</div>
+                        <div class="gama-desc">Configuraciones optimizadas para adquisiciones masivas y soporte corporativo continuo.</div>
                     </div>
-                    <div class="bento-media-container" style="background:#ffffff; margin-top:20px;">
-                        <!-- Imagen real de ofiszusff en el proyecto -->
-                        <img src="ofiszusff.webp" alt="Kenya OFISZU SFF" style="max-height: 110px;" onerror="this.src='ofiszusff.png';">
+                    <div class="gama-count">
+                        <span>86 Fichas</span>
+                        <span style="color:var(--brand-primary);">&rarr;</span>
                     </div>
                 </div>
 
-                <!-- Bento 3: PROWORK Workstation (Span 6) -->
-                <div class="bento-cell bento-col-6">
+                <!-- Gama 3: OFISZU -->
+                <div class="gama-card" onclick="filterByGama('OFISZU')">
                     <div>
-                        <div class="bento-cell-header">
-                            <span class="bento-line-pill">Alta Potencia Gráfica</span>
-                            <h3 class="bento-h3">PROWORK WS Series</h3>
-                            <p class="bento-p">
-                                Equipadas con procesadores de alta frecuencia y aceleración gráfica NVIDIA GeForce RTX / Quadro para modelado BIM, CAD, GIS y renderizado pesado.
-                            </p>
-                        </div>
-                        <div class="bento-chips">
-                            <span class="bento-chip">NVIDIA RTX 4060 / 4070</span>
-                            <span class="bento-chip">Fuentes 750W 80+ Gold</span>
-                            <span class="bento-chip">Almacenamiento PCIe Gen 4x4</span>
-                        </div>
+                        <div class="gama-tag">Small Form Factor</div>
+                        <div class="gama-name">OFISZU SFF</div>
+                        <div class="gama-desc">Chasis ultracompacto para optimización de espacio en puestos de atención al público.</div>
+                    </div>
+                    <div class="gama-count">
+                        <span>48 Fichas</span>
+                        <span style="color:var(--brand-primary);">&rarr;</span>
                     </div>
                 </div>
 
-                <!-- Bento 4: RAITO Monitores (Span 6) -->
-                <div class="bento-cell bento-col-6">
+                <!-- Gama 4: PROWORK -->
+                <div class="gama-card" onclick="filterByGama('PROWORK')">
                     <div>
-                        <div class="bento-cell-header">
-                            <span class="bento-line-pill">Monitores Profesionales</span>
-                            <h3 class="bento-h3">RAITO Display Series</h3>
-                            <p class="bento-p">
-                                Paneles IPS con resolución Full HD y QHD, calibración de color precisa, marcos ultradelgados para configuraciones multi-monitor y soporte VESA estándar.
-                            </p>
-                        </div>
-                        <div class="bento-chips">
-                            <span class="bento-chip">23.8" y 27" IPS Anti-glare</span>
-                            <span class="bento-chip">Low Blue Light / Flicker-Free</span>
-                            <span class="bento-chip">Entradas HDMI + DP + VGA</span>
-                        </div>
+                        <div class="gama-tag">Workstation</div>
+                        <div class="gama-name">PROWORK WS</div>
+                        <div class="gama-desc">Potencia gráfica NVIDIA RTX y procesadores multicore para ingeniería, CAD y render.</div>
+                    </div>
+                    <div class="gama-count">
+                        <span>24 Fichas</span>
+                        <span style="color:var(--brand-primary);">&rarr;</span>
+                    </div>
+                </div>
+
+                <!-- Gama 5: RAITO -->
+                <div class="gama-card" onclick="filterByGama('RAITO')">
+                    <div>
+                        <div class="gama-tag">Monitores IPS</div>
+                        <div class="gama-name">RAITO Displays</div>
+                        <div class="gama-desc">Paneles Full HD IPS antirreflejo de 23.8" y 27" con cuidado visual Low Blue Light.</div>
+                    </div>
+                    <div class="gama-count">
+                        <span>16 Modelos</span>
+                        <span style="color:var(--brand-primary);">&rarr;</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 6. CATÁLOGO INTERACTIVO CON FILTRADO FACETADO DINÁMICO (Leyes de Hick y Fitts) -->
+    <!-- ========================================================================
+         6. EXPLORADOR DE FICHAS TÉCNICAS (Filtros en Cascada + Target Blank)
+         ======================================================================== -->
     <section class="catalog-section" id="catalogo">
         <div class="container">
-            <div class="section-headline">
-                <span class="section-tag">Explorador de Fichas de Catálogo</span>
-                <h2 class="section-title">Fichas Técnicas Homologadas</h2>
-                <p class="section-subtitle">
-                    Filtra por procesador, memoria o modelo. Todas las fichas cuentan con botón de acceso y enlace nativo para abrir en <strong>nueva pestaña</strong>.
-                </p>
-            </div>
-
-            <div class="catalog-layout">
-                <!-- Sidebar de Filtros Facetados (Ley de Tesler: Lógica en backend/JS, UI simple) -->
-                <aside class="filter-panel" aria-label="Filtros del catálogo">
-                    <div class="filter-panel-header">
-                        <span class="filter-panel-title">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
-                            Filtros de Búsqueda
-                        </span>
-                        <button class="btn-filter-reset" id="filterResetBtn">Limpiar filtros</button>
+            <div class="catalog-layout-grid">
+                
+                <!-- Sidebar de Filtros Facetados (Ley de Tesler: lógica dinámica en JS) -->
+                <aside class="filter-sidebar-box" aria-label="Filtros del catálogo">
+                    <div class="filter-sidebar-title-row">
+                        <span class="filter-sidebar-title">Filtros Facetados</span>
+                        <button class="btn-clear-filters" id="resetFiltersLink">Limpiar todo</button>
                     </div>
 
-                    <!-- Grupo: Modelo -->
-                    <div class="filter-category">
-                        <div class="filter-category-title">
-                            <span>Línea / Modelo</span>
-                        </div>
-                        <div class="filter-option active" data-filter-type="linea" data-filter-val="EZENT">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" checked data-type="linea" value="EZENT">
+                    <!-- Filtro: Modelo / Línea -->
+                    <div class="filter-block">
+                        <span class="filter-block-label">Línea de Equipo</span>
+                        
+                        <div class="filter-row active" data-type="linea" data-val="EZENT">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" checked value="EZENT" data-filter="linea">
                                 <span>EZENT (Mid-Tower)</span>
                             </label>
-                            <span class="filter-count">142</span>
+                            <span class="filter-item-qty">142</span>
                         </div>
-                        <div class="filter-option" data-filter-type="linea" data-filter-val="GENWORK">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="linea" value="GENWORK">
-                                <span>GENWORK (Pro Desktop)</span>
+
+                        <div class="filter-row" data-type="linea" data-val="GENWORK">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="GENWORK" data-filter="linea">
+                                <span>GENWORK (Oficina)</span>
                             </label>
-                            <span class="filter-count">86</span>
+                            <span class="filter-item-qty">86</span>
                         </div>
-                        <div class="filter-option" data-filter-type="linea" data-filter-val="OFISZU">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="linea" value="OFISZU">
+
+                        <div class="filter-row" data-type="linea" data-val="OFISZU">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="OFISZU" data-filter="linea">
                                 <span>OFISZU (Mini SFF)</span>
                             </label>
-                            <span class="filter-count">48</span>
+                            <span class="filter-item-qty">48</span>
                         </div>
-                        <div class="filter-option" data-filter-type="linea" data-filter-val="PROWORK">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="linea" value="PROWORK">
+
+                        <div class="filter-row" data-type="linea" data-val="PROWORK">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="PROWORK" data-filter="linea">
                                 <span>PROWORK (Workstation)</span>
                             </label>
-                            <span class="filter-count">24</span>
+                            <span class="filter-item-qty">24</span>
                         </div>
                     </div>
 
-                    <!-- Grupo: Procesador -->
-                    <div class="filter-category">
-                        <div class="filter-category-title">
-                            <span>Procesador</span>
-                        </div>
-                        <div class="filter-option" data-filter-type="cpu" data-filter-val="i7-13700">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="cpu" value="i7-13700">
+                    <!-- Filtro: Procesador -->
+                    <div class="filter-block">
+                        <span class="filter-block-label">Procesador</span>
+
+                        <div class="filter-row" data-type="cpu" data-val="i7-13700">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="i7-13700" data-filter="cpu">
                                 <span>Intel Core i7 13700</span>
                             </label>
-                            <span class="filter-count">68</span>
+                            <span class="filter-item-qty">68</span>
                         </div>
-                        <div class="filter-option" data-filter-type="cpu" data-filter-val="i5-13400">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="cpu" value="i5-13400">
+
+                        <div class="filter-row" data-type="cpu" data-val="i5-13400">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="i5-13400" data-filter="cpu">
                                 <span>Intel Core i5 13400</span>
                             </label>
-                            <span class="filter-count">54</span>
+                            <span class="filter-item-qty">54</span>
                         </div>
-                        <div class="filter-option" data-filter-type="cpu" data-filter-val="i7-14700">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="cpu" value="i7-14700">
+
+                        <div class="filter-row" data-type="cpu" data-val="i7-14700">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="i7-14700" data-filter="cpu">
                                 <span>Intel Core i7 14700</span>
                             </label>
-                            <span class="filter-count">22</span>
+                            <span class="filter-item-qty">22</span>
                         </div>
                     </div>
 
-                    <!-- Grupo: Memoria RAM -->
-                    <div class="filter-category">
-                        <div class="filter-category-title">
-                            <span>Memoria RAM</span>
-                        </div>
-                        <div class="filter-option" data-filter-type="ram" data-filter-val="16gb">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="ram" value="16gb">
+                    <!-- Filtro: Memoria RAM -->
+                    <div class="filter-block">
+                        <span class="filter-block-label">Memoria RAM</span>
+
+                        <div class="filter-row" data-type="ram" data-val="16gb">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="16gb" data-filter="ram">
                                 <span>16 GB DDR4/DDR5</span>
                             </label>
-                            <span class="filter-count">112</span>
+                            <span class="filter-item-qty">112</span>
                         </div>
-                        <div class="filter-option" data-filter-type="ram" data-filter-val="32gb">
-                            <label class="filter-checkbox-label">
-                                <input type="checkbox" class="filter-checkbox" data-type="ram" value="32gb">
+
+                        <div class="filter-row" data-type="ram" data-val="32gb">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="32gb" data-filter="ram">
                                 <span>32 GB DDR4/DDR5</span>
                             </label>
-                            <span class="filter-count">42</span>
+                            <span class="filter-item-qty">42</span>
+                        </div>
+                    </div>
+
+                    <!-- Filtro: Acuerdo Marco -->
+                    <div class="filter-block">
+                        <span class="filter-block-label">Catálogo Acuerdo Marco</span>
+
+                        <div class="filter-row" data-type="acuerdo" data-val="IM-CE-2020-5">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="IM-CE-2020-5" data-filter="acuerdo">
+                                <span>IM-CE-2020-5</span>
+                            </label>
+                            <span class="filter-item-qty">180</span>
+                        </div>
+
+                        <div class="filter-row" data-type="acuerdo" data-val="EXT-CE-2021-1">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" class="filter-checkbox-custom" value="EXT-CE-2021-1" data-filter="acuerdo">
+                                <span>EXT-CE-2021-1</span>
+                            </label>
+                            <span class="filter-item-qty">94</span>
                         </div>
                     </div>
                 </aside>
 
-                <!-- Cuadrícula Principal de Fichas -->
+                <!-- Área Central de Fichas Técnicas -->
                 <main>
-                    <div class="catalog-toolbar">
-                        <div class="catalog-results-info">
-                            Mostrando <strong id="productCountLabel">3</strong> fichas homologadas vigentes
+                    <div class="catalog-header-bar">
+                        <div class="catalog-count-text">
+                            Mostrando <strong id="visibleProductsCount">3</strong> fichas técnicas homologadas
                         </div>
-                        <div class="catalog-sort-wrap">
-                            <label for="catalogSort">Ordenar por:</label>
-                            <select id="catalogSort" class="catalog-sort-select">
+
+                        <div class="catalog-sort-group">
+                            <label for="catalogSorter">Ordenar:</label>
+                            <select id="catalogSorter" class="catalog-sort-select">
                                 <option value="relevancia">Relevancia en Acuerdo Marco</option>
                                 <option value="precio-asc">Menor Precio</option>
                                 <option value="precio-desc">Mayor Precio</option>
@@ -1914,169 +1782,167 @@
                         </div>
                     </div>
 
-                    <div class="products-grid" id="productsCatalogGrid">
-                        <!-- Tarjeta 1: Kenya EZENT T700 -->
-                        <article class="product-card" data-linea="EZENT" data-cpu="i7-13700" data-ram="16gb">
-                            <div class="product-card-top">
-                                <span class="stock-tag">Disponible (≥ 20)</span>
-                                <span class="acuerdo-marco-tag">IM-CE-2020-5</span>
+                    <!-- Grilla de Tarjetas de Producto con Target Blank Nativo -->
+                    <div class="products-grid-3col" id="catalogProductsContainer">
+                        
+                        <!-- Tarjeta 1: KENYA EZENT T700 -->
+                        <article class="product-item-card" data-linea="EZENT" data-cpu="i7-13700" data-ram="16gb" data-acuerdo="IM-CE-2020-5">
+                            <div class="product-card-top-tag">
+                                <span class="stock-indicator">
+                                    <span class="stock-dot"></span>
+                                    <span>Stock ≥ 20 unid.</span>
+                                </span>
+                                <span class="convenio-marco-label">IM-CE-2020-5</span>
                             </div>
 
-                            <!-- Enlace que abre en nueva pestaña nativa -->
-                            <a href="#ficha-detalle-3786" target="_blank" rel="noopener noreferrer" class="product-card-link-block">
-                                <div class="product-image-wrap">
-                                    <img src="producto.jpg" alt="KENYA EZENT T700" onerror="this.src='pord.jpg'">
+                            <!-- Enlace principal con target="_blank" para abrir en nueva pestaña -->
+                            <a href="#ficha-detalle-3061" target="_blank" rel="noopener noreferrer" class="product-card-main-link">
+                                <div class="product-card-photo-wrap">
+                                    <img src="producto.jpg" alt="COMPUTADORA KENYA EZENT T700" onerror="this.src='pord.jpg';">
                                 </div>
-                                <div class="product-sku-row">
-                                    <span class="product-sku">SKU: E7CT6OWNHPXO3B</span>
-                                    <span class="product-model-label">EZENT</span>
-                                </div>
-                                <h3 class="product-card-title">COMPUTADORA KENYA EZENT T700 Core i7</h3>
+                                <span class="product-sku-badge">SKU: E7CT6OWNHPXO3B5PV6</span>
+                                <h3 class="product-title-text" title="COMPUTADORA KENYA EZENT T700">COMPUTADORA KENYA EZENT T700</h3>
                             </a>
 
-                            <div style="padding: 0 16px;">
-                                <div class="product-specs-matrix">
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">CPU:</span>
-                                        <span class="matrix-val">Intel Core i7 13700</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">RAM:</span>
-                                        <span class="matrix-val">16 GB DDR4 3200MHz</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">SSD:</span>
-                                        <span class="matrix-val">1 TB SSD NVMe M.2</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">Garantía:</span>
-                                        <span class="matrix-val">36 Meses On-Site</span>
-                                    </div>
+                            <div class="product-specs-chips-block">
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">PROCESADOR:</span>
+                                    <span class="spec-chip-val">Intel Core i7 13700</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">RAM:</span>
+                                    <span class="spec-chip-val">16 GB DDR4 3200MHz</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">DISCO:</span>
+                                    <span class="spec-chip-val">1 TB SSD NVMe M.2</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">GARANTÍA:</span>
+                                    <span class="spec-chip-val">36 Meses On-Site</span>
                                 </div>
                             </div>
 
-                            <div class="product-card-bottom">
-                                <div class="product-price-box">
-                                    <span class="price-main">$ 645.00</span>
-                                    <span class="price-sub">S/ 2,425.20 con IGV</span>
+                            <div class="product-card-bottom-bar">
+                                <div class="prices-container">
+                                    <span class="price-usd-bold">$ 645.00</span>
+                                    <span class="price-pen-note">S/ 2,425.20 + IGV</span>
                                 </div>
-                                <a href="#ficha-detalle-3786" target="_blank" rel="noopener noreferrer" class="btn-card-action">
+                                <!-- Botón con target="_blank" explícito -->
+                                <a href="#ficha-detalle-3061" target="_blank" rel="noopener noreferrer" class="btn-open-tab" title="Abrir ficha técnica en una nueva pestaña">
                                     <span>Ver Ficha</span>
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                             </div>
                         </article>
 
-                        <!-- Tarjeta 2: Kenya GENWORK PRO -->
-                        <article class="product-card" data-linea="GENWORK" data-cpu="i5-13400" data-ram="16gb">
-                            <div class="product-card-top">
-                                <span class="stock-tag">Disponible (≥ 20)</span>
-                                <span class="acuerdo-marco-tag">EXT-CE-2021-1</span>
+                        <!-- Tarjeta 2: KENYA GENWORK PRO -->
+                        <article class="product-item-card" data-linea="GENWORK" data-cpu="i5-13400" data-ram="16gb" data-acuerdo="EXT-CE-2021-1">
+                            <div class="product-card-top-tag">
+                                <span class="stock-indicator">
+                                    <span class="stock-dot"></span>
+                                    <span>Stock ≥ 20 unid.</span>
+                                </span>
+                                <span class="convenio-marco-label">EXT-CE-2021-1</span>
                             </div>
 
-                            <a href="#ficha-detalle-3787" target="_blank" rel="noopener noreferrer" class="product-card-link-block">
-                                <div class="product-image-wrap">
-                                    <img src="producto.jpg" alt="KENYA GENWORK PRO" onerror="this.src='pord.jpg'">
+                            <a href="#ficha-detalle-3062" target="_blank" rel="noopener noreferrer" class="product-card-main-link">
+                                <div class="product-card-photo-wrap">
+                                    <img src="producto.jpg" alt="COMPUTADORA KENYA GENWORK PRO" onerror="this.src='pord.jpg';">
                                 </div>
-                                <div class="product-sku-row">
-                                    <span class="product-sku">SKU: GW-I5-13400-SSD512</span>
-                                    <span class="product-model-label">GENWORK</span>
-                                </div>
-                                <h3 class="product-card-title">COMPUTADORA KENYA GENWORK PRO Core i5</h3>
+                                <span class="product-sku-badge">SKU: GW-I5-13400-SSD512</span>
+                                <h3 class="product-title-text" title="COMPUTADORA KENYA GENWORK PRO">COMPUTADORA KENYA GENWORK PRO</h3>
                             </a>
 
-                            <div style="padding: 0 16px;">
-                                <div class="product-specs-matrix">
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">CPU:</span>
-                                        <span class="matrix-val">Intel Core i5 13400</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">RAM:</span>
-                                        <span class="matrix-val">16 GB DDR4 3200MHz</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">SSD:</span>
-                                        <span class="matrix-val">512 GB SSD NVMe M.2</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">Garantía:</span>
-                                        <span class="matrix-val">36 Meses On-Site</span>
-                                    </div>
+                            <div class="product-specs-chips-block">
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">PROCESADOR:</span>
+                                    <span class="spec-chip-val">Intel Core i5 13400</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">RAM:</span>
+                                    <span class="spec-chip-val">16 GB DDR4 3200MHz</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">DISCO:</span>
+                                    <span class="spec-chip-val">512 GB SSD NVMe M.2</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">GARANTÍA:</span>
+                                    <span class="spec-chip-val">36 Meses On-Site</span>
                                 </div>
                             </div>
 
-                            <div class="product-card-bottom">
-                                <div class="product-price-box">
-                                    <span class="price-main">$ 515.00</span>
-                                    <span class="price-sub">S/ 1,936.40 con IGV</span>
+                            <div class="product-card-bottom-bar">
+                                <div class="prices-container">
+                                    <span class="price-usd-bold">$ 515.00</span>
+                                    <span class="price-pen-note">S/ 1,936.40 + IGV</span>
                                 </div>
-                                <a href="#ficha-detalle-3787" target="_blank" rel="noopener noreferrer" class="btn-card-action">
+                                <a href="#ficha-detalle-3062" target="_blank" rel="noopener noreferrer" class="btn-open-tab" title="Abrir ficha técnica en una nueva pestaña">
                                     <span>Ver Ficha</span>
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                             </div>
                         </article>
 
-                        <!-- Tarjeta 3: Kenya OFISZU SFF -->
-                        <article class="product-card" data-linea="OFISZU" data-cpu="i7-13700" data-ram="16gb">
-                            <div class="product-card-top">
-                                <span class="stock-tag">Disponible (≥ 20)</span>
-                                <span class="acuerdo-marco-tag">IM-CE-2020-5</span>
+                        <!-- Tarjeta 3: KENYA OFISZU SFF -->
+                        <article class="product-item-card" data-linea="OFISZU" data-cpu="i7-13700" data-ram="16gb" data-acuerdo="IM-CE-2020-5">
+                            <div class="product-card-top-tag">
+                                <span class="stock-indicator">
+                                    <span class="stock-dot"></span>
+                                    <span>Stock ≥ 20 unid.</span>
+                                </span>
+                                <span class="convenio-marco-label">IM-CE-2020-5</span>
                             </div>
 
-                            <a href="#ficha-detalle-3788" target="_blank" rel="noopener noreferrer" class="product-card-link-block">
-                                <div class="product-image-wrap">
-                                    <img src="ofiszusff.webp" alt="KENYA OFISZU SFF" onerror="this.src='ofiszusff.png';">
+                            <a href="#ficha-detalle-3063" target="_blank" rel="noopener noreferrer" class="product-card-main-link">
+                                <div class="product-card-photo-wrap">
+                                    <img src="ofiszusff.webp" alt="COMPUTADORA KENYA OFISZU SFF" onerror="this.src='ofiszusff.png';">
                                 </div>
-                                <div class="product-sku-row">
-                                    <span class="product-sku">SKU: OFZ-SFF-I7-1TB</span>
-                                    <span class="product-model-label">OFISZU</span>
-                                </div>
-                                <h3 class="product-card-title">COMPUTADORA KENYA OFISZU SFF Compact</h3>
+                                <span class="product-sku-badge">SKU: OFZ-SFF-I7-1TB</span>
+                                <h3 class="product-title-text" title="COMPUTADORA KENYA OFISZU SFF Compact">COMPUTADORA KENYA OFISZU SFF Compact</h3>
                             </a>
 
-                            <div style="padding: 0 16px;">
-                                <div class="product-specs-matrix">
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">CPU:</span>
-                                        <span class="matrix-val">Intel Core i7 13700</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">RAM:</span>
-                                        <span class="matrix-val">16 GB DDR4</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">SSD:</span>
-                                        <span class="matrix-val">1 TB SSD NVMe M.2</span>
-                                    </div>
-                                    <div class="matrix-row">
-                                        <span class="matrix-label">Garantía:</span>
-                                        <span class="matrix-val">36 Meses On-Site</span>
-                                    </div>
+                            <div class="product-specs-chips-block">
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">PROCESADOR:</span>
+                                    <span class="spec-chip-val">Intel Core i7 13700</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">RAM:</span>
+                                    <span class="spec-chip-val">16 GB DDR4</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">DISCO:</span>
+                                    <span class="spec-chip-val">1 TB SSD NVMe M.2</span>
+                                </div>
+                                <div class="spec-chip-item">
+                                    <span class="spec-chip-label">GARANTÍA:</span>
+                                    <span class="spec-chip-val">36 Meses On-Site</span>
                                 </div>
                             </div>
 
-                            <div class="product-card-bottom">
-                                <div class="product-price-box">
-                                    <span class="price-main">$ 680.00</span>
-                                    <span class="price-sub">S/ 2,556.80 con IGV</span>
+                            <div class="product-card-bottom-bar">
+                                <div class="prices-container">
+                                    <span class="price-usd-bold">$ 680.00</span>
+                                    <span class="price-pen-note">S/ 2,556.80 + IGV</span>
                                 </div>
-                                <a href="#ficha-detalle-3788" target="_blank" rel="noopener noreferrer" class="btn-card-action">
+                                <a href="#ficha-detalle-3063" target="_blank" rel="noopener noreferrer" class="btn-open-tab" title="Abrir ficha técnica en una nueva pestaña">
                                     <span>Ver Ficha</span>
                                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                             </div>
                         </article>
+
                     </div>
 
-                    <!-- Estado Vacío Dinámico (Oculto si hay resultados) -->
-                    <div id="catalogEmptyState" class="empty-state-container" style="display: none; margin-top: 24px;">
-                        <svg class="empty-state-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-                        <h4 class="empty-state-title">No existen fichas con la combinación seleccionada</h4>
-                        <p class="empty-state-text">Prueba quitando filtros de memoria o seleccionando otra línea de procesador compatible.</p>
-                        <button class="btn-cta btn-cta-secondary" id="emptyStateResetBtn">
-                            Restablecer Filtros
+                    <!-- Estado Vacío Cuando Ningún Filtro Coincide -->
+                    <div id="emptyCatalogState" class="empty-catalog-alert" style="display: none;">
+                        <svg class="empty-catalog-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+                        <h4 class="empty-catalog-h4">No se encontraron fichas con los filtros seleccionados</h4>
+                        <p class="empty-catalog-p">Intenta seleccionando otra línea de equipo o restablece los filtros para ver el catálogo completo disponible.</p>
+                        <button type="button" class="btn-secondary" id="emptyResetBtn" style="height:36px; font-size:13px;">
+                            Restablecer todos los filtros
                         </button>
                     </div>
                 </main>
@@ -2084,273 +1950,186 @@
         </div>
     </section>
 
-    <!-- 7. Auditoría de los 7 Estados de UI (Protocolo 3: Verificación Técnica Rigurosa) -->
-    <section class="states-section" id="estados-ui">
+    <!-- ========================================================================
+         7. FOOTER CORPORATIVO B2B (Estructura formal con RUC y datos reales)
+         ======================================================================== -->
+    <footer class="footer-site" id="contacto">
         <div class="container">
-            <div class="section-headline">
-                <span class="section-tag">Gobernanza de Componentes</span>
-                <h3 class="section-title">Los 7 Estados Obligatorios de UI</h3>
-                <p class="section-subtitle">
-                    Validación exhaustiva de estados interactivos para cumplimiento de accesibilidad WCAG 2.2 AA y ergonomía visual.
-                </p>
-            </div>
-
-            <div class="states-grid">
-                <!-- 1. Default & 2. Hover -->
-                <div class="state-card">
-                    <div class="state-card-header">
-                        <span class="state-name">1. Default / 2. Hover</span>
-                        <span class="state-badge">:hover</span>
-                    </div>
-                    <p class="state-card-desc">Contraste de superficie probado y desaceleración fluida.</p>
-                    <button class="btn-cta btn-cta-primary" style="width: 100%;">
-                        Botón Primario
-                    </button>
-                </div>
-
-                <!-- 3. Focus Visible -->
-                <div class="state-card">
-                    <div class="state-card-header">
-                        <span class="state-name">3. Focus Visible</span>
-                        <span class="state-badge">:focus-visible</span>
-                    </div>
-                    <p class="state-card-desc">Anillo de 3px exterior que no rompe el flujo de caja.</p>
-                    <button class="btn-cta btn-cta-primary" style="width: 100%; box-shadow: 0 0 0 3px var(--accent-ring);">
-                        Enfoque Activo
-                    </button>
-                </div>
-
-                <!-- 4. Active & 5. Disabled -->
-                <div class="state-card">
-                    <div class="state-card-header">
-                        <span class="state-name">4. Active / 5. Disabled</span>
-                        <span class="state-badge">:disabled</span>
-                    </div>
-                    <p class="state-card-desc">Feedback de presión física y opacidad en desactivado.</p>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn-cta btn-cta-primary" style="flex:1; transform: scale(0.98); background: var(--accent-active);">Pulsado</button>
-                        <button class="btn-cta btn-cta-secondary" disabled style="flex:1; opacity: 0.5; cursor: not-allowed;">Inactivo</button>
-                    </div>
-                </div>
-
-                <!-- 6. Skeleton Loading -->
-                <div class="state-card">
-                    <div class="state-card-header">
-                        <span class="state-name">6. Loading State</span>
-                        <span class="state-badge">Skeleton</span>
-                    </div>
-                    <p class="state-card-desc">Shimmer arquitectónico sin parpadeo de layout.</p>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <div class="skeleton" style="height: 14px; width: 60%;"></div>
-                        <div class="skeleton" style="height: 12px; width: 90%;"></div>
-                        <div class="skeleton" style="height: 32px; width: 100%; border-radius: var(--radius-md);"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 8. Modal Command Palette (Ctrl + K / Cmd + K) -->
-    <div class="cmd-overlay" id="cmdOverlay" role="dialog" aria-modal="true" aria-label="Buscador rápido de fichas">
-        <div class="cmd-modal-box">
-            <div class="cmd-input-wrap">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" class="cmd-input" id="cmdSearchInput" placeholder="Buscar por modelo (EZENT, GENWORK), procesador (i7, i5) o SKU..." autofocus>
-            </div>
-            <div class="cmd-list" id="cmdList">
-                <a href="#catalogo" class="cmd-entry active">
-                    <div>
-                        <div class="cmd-entry-title">COMPUTADORA KENYA EZENT T700 Core i7</div>
-                        <div class="cmd-entry-sub">SKU: E7CT6OWNHPXO3B · Intel Core i7 13700 · 16GB DDR4</div>
-                    </div>
-                    <span class="kbd-pill">Enter</span>
-                </a>
-                <a href="#catalogo" class="cmd-entry">
-                    <div>
-                        <div class="cmd-entry-title">COMPUTADORA KENYA GENWORK PRO Core i5</div>
-                        <div class="cmd-entry-sub">SKU: GW-I5-13400-SSD512 · Intel Core i5 13400 · 16GB DDR4</div>
-                    </div>
-                    <span class="kbd-pill">Ver</span>
-                </a>
-                <a href="#catalogo" class="cmd-entry">
-                    <div>
-                        <div class="cmd-entry-title">COMPUTADORA KENYA OFISZU SFF Compact</div>
-                        <div class="cmd-entry-sub">SKU: OFZ-SFF-I7-1TB · Intel Core i7 13700 · 16GB DDR4</div>
-                    </div>
-                    <span class="kbd-pill">Ver</span>
-                </a>
-            </div>
-            <div class="cmd-modal-footer">
-                <span>Navega con flechas ↑ ↓ y Enter</span>
-                <span>ESC para cerrar</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- 9. Footer Sobrio B2B -->
-    <footer class="footer-main">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <img src="theme/images/kenya.png" alt="Kenya Technology" style="height: 32px; width: auto; margin-bottom: 14px; filter: brightness(0) invert(1);" onerror="this.src='theme/images/logo.png'">
-                    <p style="font-size: 13px; line-height: 1.6; max-width: 38ch; margin-bottom: 16px;">
-                        Fabricante nacional de hardware de alto rendimiento. Homologado en el Catálogo Electrónico de Acuerdos Marco de Perú Compras.
+            <div class="footer-cols-grid">
+                <div>
+                    <img src="theme/images/kenya.png" alt="KENYA Technology" class="footer-logo-img" onerror="this.src='theme/images/logo.png';">
+                    <p class="footer-company-desc">
+                        Fabricante nacional de hardware de alto desempeño, homologado en los Catálogos Electrónicos de Acuerdos Marco de Perú Compras.
                     </p>
-                    <div style="font-family: var(--font-mono); font-size: 11.5px; color: var(--zinc-500);">
-                        RUC: 20556811431 · R.T.H. KENYA S.A.C.
+                    <div class="footer-legal-tag">
+                        RUC: 20556811431 · R.T.H. KENYA S.A.C.<br>
+                        Lima - Perú
                     </div>
                 </div>
 
-                <div class="footer-col">
-                    <h4>Catálogos de Compra</h4>
-                    <ul class="footer-links">
+                <div>
+                    <h5 class="footer-col-h5">Catálogos</h5>
+                    <ul class="footer-links-list">
                         <li><a href="#catalogo">Acuerdo Marco IM-CE-2020-5</a></li>
                         <li><a href="#catalogo">Acuerdo Marco EXT-CE-2021-1</a></li>
-                        <li><a href="#catalogo">Computadoras de Escritorio</a></li>
-                        <li><a href="#catalogo">Estaciones Workstation</a></li>
-                        <li><a href="#catalogo">Monitores Raito IPS</a></li>
+                        <li><a href="#catalogo">Computadoras EZENT Mid-Tower</a></li>
+                        <li><a href="#catalogo">Línea GENWORK Corporativa</a></li>
+                        <li><a href="#catalogo">Mini PC OFISZU SFF</a></li>
+                        <li><a href="#catalogo">Workstations PROWORK</a></li>
                     </ul>
                 </div>
 
-                <div class="footer-col">
-                    <h4>Soporte & Garantía</h4>
-                    <ul class="footer-links">
-                        <li><a href="#garantia">Consulta por Código QR</a></li>
-                        <li><a href="#garantia">Términos de Garantía 36 Meses</a></li>
-                        <li><a href="#soporte">Centros de Servicio Autorizados</a></li>
+                <div>
+                    <h5 class="footer-col-h5">Soporte & Garantía</h5>
+                    <ul class="footer-links-list">
+                        <li><a href="#garantia-qr">Consulta por Código QR / Serie</a></li>
+                        <li><a href="#terminos">Términos de Garantía 36 Meses</a></li>
+                        <li><a href="#drivers">Centro de Descarga de Drivers</a></li>
                         <li><a href="#raee">Compromiso Ambiental RAEE</a></li>
+                        <li><a href="#centros">Centros de Servicio Autorizados</a></li>
                     </ul>
                 </div>
 
-                <div class="footer-col">
-                    <h4>Certificaciones</h4>
-                    <ul class="footer-links">
-                        <li><a href="#iso">Certificado ISO 9001:2015</a></li>
-                        <li><a href="#iso">Certificado ISO 37001:2016</a></li>
-                        <li><a href="#politica">Política Antisoborno</a></li>
+                <div>
+                    <h5 class="footer-col-h5">Certificaciones</h5>
+                    <ul class="footer-links-list">
+                        <li><a href="#iso9001">Certificado ISO 9001:2015</a></li>
+                        <li><a href="#iso37001">Certificado ISO 37001:2016</a></li>
+                        <li><a href="#politica">Política Antisoborno Oficial</a></li>
                         <li><a href="#homologacion">Fichas de Homologación</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div class="footer-bottom">
-                <div>© 2026 R.T.H. KENYA S.A.C. Todos los derechos reservados.</div>
-                <div style="font-family: var(--font-mono); font-size: 11px;">
-                    Diseño UX/UI bajo Anti-Slop Discipline & Ley de Tesler
-                </div>
+            <div class="footer-bottom-bar">
+                <div>&copy; 2026 R.T.H. KENYA S.A.C. Todos los derechos reservados.</div>
+                <div>Soluciones de Cómputo Homologadas para Entidades del Estado y Sector Privado</div>
             </div>
         </div>
     </footer>
 
-    <!-- 10. Script Liviano de Interactividad Facetada & Command Palette -->
+    <!-- ========================================================================
+         8. SCRIPT NATIVO DE INTERACCIÓN B2B (Sin librerías pesadas)
+         ======================================================================== -->
     <script>
         (function() {
-            // Elementos del DOM
-            const cmdOverlay = document.getElementById('cmdOverlay');
-            const cmdOpenBtn = document.getElementById('cmdOpenBtn');
-            const cmdSearchInput = document.getElementById('cmdSearchInput');
-            const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
-            const filterResetBtn = document.getElementById('filterResetBtn');
-            const emptyStateResetBtn = document.getElementById('emptyStateResetBtn');
-            const catalogCards = document.querySelectorAll('#productsCatalogGrid .product-card');
-            const countLabel = document.getElementById('productCountLabel');
-            const emptyState = document.getElementById('catalogEmptyState');
+            // Buscador Central y Dropdown Predictivo
+            const searchInput = document.getElementById('siteSearchInput');
+            const searchDropdown = document.getElementById('searchResultsDropdown');
+            const searchBtn = document.getElementById('searchSubmitBtn');
 
-            // 1. Manejo del Buscador Command Palette (Ctrl + K)
-            function openCommand() {
-                cmdOverlay.style.display = 'flex';
-                cmdSearchInput.value = '';
-                cmdSearchInput.focus();
+            if (searchInput && searchDropdown) {
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.toLowerCase().trim();
+                    if (query.length >= 2) {
+                        searchDropdown.style.display = 'block';
+                        const items = searchDropdown.querySelectorAll('.search-result-item');
+                        let anyVisible = false;
+                        items.forEach(item => {
+                            const match = item.textContent.toLowerCase().includes(query);
+                            item.style.display = match ? 'flex' : 'none';
+                            if (match) anyVisible = true;
+                        });
+                        if (!anyVisible) {
+                            searchDropdown.style.display = 'none';
+                        }
+                    } else {
+                        searchDropdown.style.display = 'none';
+                    }
+                });
+
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !searchDropdown.contains(e.target)) {
+                        searchDropdown.style.display = 'none';
+                    }
+                });
             }
 
-            function closeCommand() {
-                cmdOverlay.style.display = 'none';
-            }
+            // Filtros Facetados Dinámicos (Leyes de Gestalt y Tesler)
+            const checkboxes = document.querySelectorAll('.filter-checkbox-custom');
+            const resetBtn = document.getElementById('resetFiltersLink');
+            const emptyResetBtn = document.getElementById('emptyResetBtn');
+            const products = document.querySelectorAll('#catalogProductsContainer .product-item-card');
+            const countLabel = document.getElementById('visibleProductsCount');
+            const emptyAlert = document.getElementById('emptyCatalogState');
 
-            if (cmdOpenBtn) cmdOpenBtn.addEventListener('click', openCommand);
-
-            window.addEventListener('keydown', (e) => {
-                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-                    e.preventDefault();
-                    if (cmdOverlay.style.display === 'flex') closeCommand();
-                    else openCommand();
-                }
-                if (e.key === 'Escape' && cmdOverlay.style.display === 'flex') {
-                    closeCommand();
-                }
-            });
-
-            cmdOverlay.addEventListener('click', (e) => {
-                if (e.target === cmdOverlay) closeCommand();
-            });
-
-            // 2. Filtrado Facetado Dinámico (Ley de Tesler: toda la lógica en background)
-            function applyFilters() {
-                const activeFilters = {
+            function applyDynamicFilters() {
+                const active = {
                     linea: [],
                     cpu: [],
-                    ram: []
+                    ram: [],
+                    acuerdo: []
                 };
 
-                filterCheckboxes.forEach(cb => {
-                    const optionWrap = cb.closest('.filter-option');
+                checkboxes.forEach(cb => {
+                    const row = cb.closest('.filter-row');
                     if (cb.checked) {
-                        activeFilters[cb.dataset.type].push(cb.value);
-                        optionWrap.classList.add('active');
+                        active[cb.dataset.filter].push(cb.value);
+                        if (row) row.classList.add('active');
                     } else {
-                        optionWrap.classList.remove('active');
+                        if (row) row.classList.remove('active');
                     }
                 });
 
-                let visibleCount = 0;
+                let count = 0;
 
-                catalogCards.forEach(card => {
-                    const cardLinea = card.dataset.linea;
-                    const cardCpu = card.dataset.cpu;
-                    const cardRam = card.dataset.ram;
+                products.forEach(p => {
+                    const pLinea = p.dataset.linea;
+                    const pCpu = p.dataset.cpu;
+                    const pRam = p.dataset.ram;
+                    const pAcuerdo = p.dataset.acuerdo;
 
-                    const matchLinea = activeFilters.linea.length === 0 || activeFilters.linea.includes(cardLinea);
-                    const matchCpu = activeFilters.cpu.length === 0 || activeFilters.cpu.includes(cardCpu);
-                    const matchRam = activeFilters.ram.length === 0 || activeFilters.ram.includes(cardRam);
+                    const matchLinea = active.linea.length === 0 || active.linea.includes(pLinea);
+                    const matchCpu = active.cpu.length === 0 || active.cpu.includes(pCpu);
+                    const matchRam = active.ram.length === 0 || active.ram.includes(pRam);
+                    const matchAcuerdo = active.acuerdo.length === 0 || active.acuerdo.includes(pAcuerdo);
 
-                    if (matchLinea && matchCpu && matchRam) {
-                        card.style.display = 'flex';
-                        visibleCount++;
+                    if (matchLinea && matchCpu && matchRam && matchAcuerdo) {
+                        p.style.display = 'flex';
+                        count++;
                     } else {
-                        card.style.display = 'none';
+                        p.style.display = 'none';
                     }
                 });
 
-                // Actualizar contador y estado vacío
-                if (countLabel) countLabel.textContent = visibleCount;
-                if (emptyState) {
-                    emptyState.style.display = visibleCount === 0 ? 'flex' : 'none';
-                }
+                if (countLabel) countLabel.textContent = count;
+                if (emptyAlert) emptyAlert.style.display = count === 0 ? 'flex' : 'none';
             }
 
-            filterCheckboxes.forEach(cb => {
-                cb.addEventListener('change', applyFilters);
+            checkboxes.forEach(cb => {
+                cb.addEventListener('change', applyDynamicFilters);
             });
 
-            function resetAllFilters() {
-                filterCheckboxes.forEach(cb => cb.checked = false);
-                applyFilters();
+            function resetFilters() {
+                checkboxes.forEach(cb => cb.checked = false);
+                applyDynamicFilters();
             }
 
-            if (filterResetBtn) filterResetBtn.addEventListener('click', resetAllFilters);
-            if (emptyStateResetBtn) emptyStateResetBtn.addEventListener('click', resetAllFilters);
+            if (resetBtn) resetBtn.addEventListener('click', resetFilters);
+            if (emptyResetBtn) emptyResetBtn.addEventListener('click', resetFilters);
 
-            // Búsqueda en vivo en Command Palette
-            if (cmdSearchInput) {
-                cmdSearchInput.addEventListener('input', (e) => {
-                    const query = e.target.value.toLowerCase().trim();
-                    const entries = document.querySelectorAll('#cmdList .cmd-entry');
-                    entries.forEach(entry => {
-                        const text = entry.textContent.toLowerCase();
-                        entry.style.display = text.includes(query) ? 'flex' : 'none';
-                    });
+            // Filtro rápido desde tarjetas de gama o navegación
+            window.filterByGama = function(gamaName) {
+                checkboxes.forEach(cb => {
+                    if (cb.dataset.filter === 'linea') {
+                        cb.checked = (cb.value === gamaName);
+                    } else {
+                        cb.checked = false;
+                    }
                 });
-            }
+                applyDynamicFilters();
+                const catalogEl = document.getElementById('catalogo');
+                if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
+            };
+
+            document.querySelectorAll('[data-filter-nav]').forEach(el => {
+                el.addEventListener('click', function(e) {
+                    const gama = this.dataset.filterNav;
+                    if (gama) {
+                        filterByGama(gama);
+                    }
+                });
+            });
         })();
     </script>
 </body>
