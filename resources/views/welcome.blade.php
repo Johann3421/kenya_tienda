@@ -90,6 +90,19 @@
             display: flex !important;
             align-items: center !important;
             z-index: 1 !important;
+            cursor: pointer !important;
+        }
+
+        #main-welcome-container .hero-slide-overlay-link {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: 2 !important;
+            display: block !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
         }
 
         #main-welcome-container .hero-slide.active {
@@ -105,6 +118,13 @@
             margin: 0 auto !important;
             padding: 0 15px !important;
             color: #fff !important;
+            pointer-events: none !important;
+        }
+
+        #main-welcome-container .hero-slide-content a,
+        #main-welcome-container .hero-slide-content button,
+        #main-welcome-container .hero-btn {
+            pointer-events: auto !important;
         }
 
         #main-welcome-container .hero-slide h1 {
@@ -1293,11 +1313,17 @@
                     }
                 @endphp
                 <div class="hero-slide {{ $brandClass }} @if($index == 0) active @endif"
+                     data-href="{{ $bannerUrl }}"
+                     role="link"
+                     tabindex="0"
+                     aria-label="{{ $banner->link_nombre ?? 'Ver Catálogo' }} - {{ $banner->titulo }}"
                      @if($index == 0)
-                         style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover;"
+                         style="background: url('{{ asset('storage/' . $banner->imagen) }}') center/cover; cursor: pointer;"
                      @else
                          data-bg="url('{{ asset('storage/' . $banner->imagen) }}') center/cover"
+                         style="cursor: pointer;"
                      @endif>
+                    <a class="hero-slide-overlay-link" href="{{ $bannerUrl }}" aria-label="{{ $banner->link_nombre ?? 'Ver Catálogo' }}" tabindex="-1"></a>
                     <div class="hero-slide-content">
                         <h1>{{ $brandClass === 'brand-raito' ? preg_replace('/RAITO/i', 'Raito', $banner->titulo) : $banner->titulo }}</h1>
                         <h2>{{ $banner->descripcion }}</h2>
@@ -1733,19 +1759,47 @@
                 heroNext?.addEventListener('click', () => { nextSlide(); resetInterval(); });
                 heroPrev?.addEventListener('click', () => { prevSlide(); resetInterval(); });
 
-                // Touch swipe
+                // Touch swipe y prevención de click durante arrastre
                 let touchStartX = 0;
+                let isDraggingSwipe = false;
                 const heroSection = container.querySelector('.hero-slider-section');
                 heroSection?.addEventListener('touchstart', (e) => {
+                    isDraggingSwipe = false;
                     touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+                heroSection?.addEventListener('touchmove', (e) => {
+                    const diff = Math.abs(touchStartX - e.changedTouches[0].screenX);
+                    if (diff > 15) {
+                        isDraggingSwipe = true;
+                    }
                 }, { passive: true });
                 heroSection?.addEventListener('touchend', (e) => {
                     const diff = touchStartX - e.changedTouches[0].screenX;
                     if (Math.abs(diff) > 50) {
+                        isDraggingSwipe = true;
                         if (diff > 0) { nextSlide(); resetInterval(); }
                         else { prevSlide(); resetInterval(); }
                     }
                 }, { passive: true });
+
+                // Clic en el slide completo (cubre apartado 'Disponible en Perú Compras' y fondo del banner)
+                slides.forEach(slide => {
+                    slide.addEventListener('click', (e) => {
+                        if (isDraggingSwipe) return;
+                        // Si se clickeó en flechas, pausar o dots, omitir redirección
+                        if (e.target.closest('.hero-controls, .hero-bottom-controls, .hero-prev, .hero-next, .hero-play-btn, .hero-dots')) {
+                            return;
+                        }
+                        // Si se clickeó en el botón hero-btn, él mismo navega
+                        if (e.target.closest('.hero-btn')) {
+                            return;
+                        }
+                        const targetUrl = slide.dataset.href;
+                        if (targetUrl) {
+                            window.location.href = targetUrl;
+                        }
+                    });
+                });
 
                 playPauseBtn?.addEventListener('click', () => {
                     isPlaying = !isPlaying;
