@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KENYA Technology — Prototipo UI/UX de Nueva Generación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. SISTEMA DE TOKENS DE DISEÑO (Escala 4/8pt, 60-30-10, Type Scale 1.25)
+           ========================================================================== */
+        :root {
+            /* Regla 60-30-10: Color */
+            --bg-canvas: #f8fafc;         /* 60% Neutro Dominante (Canvas blanco roto) */
+            --bg-surface: #ffffff;        /* 30% Superficie Secundaria (Cards / Modales) */
+            --bg-subtle: #f1f5f9;         /* Superficie sutil */
+            --border-subtle: #e2e8f0;     /* Bordes sutiles de separación */
+            --border-focus: #ea580c;      /* Foco accesible */
+            
+            --text-primary: #0f172a;      /* Carbón oscuro 900 (NO negro puro #000) */
+            --text-secondary: #475569;    /* Carbón atenuado 600 */
+            --text-tertiary: #94a3b8;     /* Carbón tenue 400 */
+            --text-inverse: #ffffff;
+            
+            /* 10% Acento Vibrante (CTA dominante y estados activos) */
+            --accent-primary: #ea580c;    /* Naranja Kenya Vibrante */
+            --accent-hover: #c2410c;      /* Naranja oscurecido para hover */
+            --accent-active: #9a3412;     /* Naranja presionado */
+            --accent-subtle: #ffedd5;     /* Tinte de fondo para chips/badges */
+            --accent-ring: rgba(234, 88, 12, 0.25);
+            
+            /* Estados Semánticos */
+            --state-success: #16a34a;
+            --state-success-bg: #dcfce7;
+            --state-warning: #d97706;
+            --state-warning-bg: #fef3c7;
+            --state-danger: #dc2626;
+
+            /* Tipografía: Escala Modular Major Third (1.25) base 16px */
+            --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+            --text-xs: 0.8rem;            /* 12.8px */
+            --text-sm: 0.875rem;          /* 14px */
+            --text-base: 1rem;            /* 16px - Base */
+            --text-md: 1.25rem;           /* 20px - Major Third x1 */
+            --text-lg: 1.5625rem;         /* 25px - Major Third x2 */
+            --text-xl: 1.953rem;          /* 31.25px - Major Third x3 */
+            --text-2xl: 2.441rem;         /* 39px - Major Third x4 */
+            --text-3xl: 3.052rem;         /* 48.8px - Major Third x5 */
+
+            /* Escala Espacial (Múltiplos de 4pt y 8pt) */
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+            --space-16: 64px;
+            --space-20: 80px;
+
+            /* Retícula y Contenedores */
+            --container-max: 1280px;
+            --gutter: 24px;
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-pill: 9999px;
+
+            /* Sombras Funcionales (No decorativas genéricas) */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+            --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+        }
+
+        /* ==========================================================================
+           2. RESET ACCESIBLE Y REGLAS DE MEASURE (65ch)
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            font-size: var(--text-base);
+            line-height: 1.5;
+            color: var(--text-primary);
+            background-color: var(--bg-canvas);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Ley de Fitts & Accesibilidad: Tap targets mínimos de 44px */
+        button, a, input, select {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Ancho óptimo de lectura (Measure de 65ch a 75ch) */
+        p, .measure-text {
+            max-width: 68ch;
+            color: var(--text-secondary);
+        }
+
+        /* 12-Column Mathematical Grid Container */
+        .container {
+            width: 100%;
+            max-width: var(--container-max);
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: var(--gutter);
+            padding-right: var(--gutter);
+        }
+
+        /* Indicador de Modo Prototipo */
+        .prototype-banner {
+            background-color: var(--text-primary);
+            color: var(--text-inverse);
+            font-size: var(--text-xs);
+            padding: var(--space-2) var(--space-4);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prototype-banner span strong {
+            color: var(--accent-primary);
+        }
+
+        /* ==========================================================================
+           3. NAVBAR + COMMAND MENU (Jakob's Law + Hick's Law <= 5 enlaces)
+           ========================================================================== */
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .navbar-container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-6);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-weight: 700;
+            font-size: var(--text-md);
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+        }
+
+        .brand-badge {
+            background: var(--accent-subtle);
+            color: var(--accent-primary);
+            font-size: var(--text-xs);
+            font-family: var(--font-mono);
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* Hick's Law: Solo 5 enlaces claros */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: var(--space-6);
+            list-style: none;
+        }
+
+        .nav-link {
+            font-size: var(--text-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: var(--space-2) 0;
+            position: relative;
+            transition: color 0.15s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-primary);
+        }
+
+        .nav-link.active {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--accent-primary);
+            border-radius: var(--radius-pill);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        /* Command Menu Trigger (Jakob's Law: Patrón habitual Cmd+K) */
+        .command-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-3);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--text-xs);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            min-height: 40px;
+        }
+
+        .command-trigger:hover {
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+            background: var(--bg-surface);
+        }
+
+        .kbd-shortcut {
+            font-family: var(--font-mono);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+
+        /* ==========================================================================
+           4. LOS 7 ESTADOS OBLIGATORIOS (Botones y Componentes Interactivos)
+           ========================================================================== */
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            font-weight: 600;
+            font-size: var(--text-sm);
+            padding: var(--space-3) var(--space-5);
+            min-height: 44px; /* Ley de Fitts: min 44px área interactiva */
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+            text-align: center;
+        }
+
+        /* Estado 1: Default */
+        .btn-cta-primary {
+            background-color: var(--accent-primary);
+            color: var(--text-inverse);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Estado 2: Hover */
+        .btn-cta-primary:hover:not(:disabled) {
+            background-color: var(--accent-hover);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Estado 3: Focus-Visible (Accesibilidad teclado estricta) */
+        .btn-cta-primary:focus-visible, .interactive-el:focus-visible {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px var(--accent-ring);
+        }
+
+        /* Estado 4: Active (Pulsado / Feedback táctil) */
+        .btn-cta-primary:active:not(:disabled) {
+            background-color: var(--accent-active);
+            transform: scale(0.98);
+        }
+
+        /* Estado 5: Disabled */
+        .btn-cta-primary:disabled, .btn-cta-secondary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: none;
+        }
+
+        /* Estado 6: Loading Skeleton (Definido más adelante) */
+
+        .btn-cta-secondary {
+            background-color: var(--bg-surface);
+            color: var(--text-primary);
+            border-color: var(--border-subtle);
+        }
+
+        .btn-cta-secondary:hover:not(:disabled) {
+            background-color: var(--bg-subtle);
+            border-color: var(--text-secondary);
+        }
+
+        /* ==========================================================================
+           5. HERO SECTION (Z-Pattern Scan + < 5s Value Proposition)
+           ========================================================================== */
+        .hero-section {
+            padding: var(--space-16) 0 var(--space-12) 0;
+            background: linear-gradient(180deg, #ffffff 0%, var(--bg-canvas) 100%);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--gutter);
+            align-items: center;
+        }
+
+        .hero-copy {
+            grid-column: span 7;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: var(--accent-subtle);
+            color: var(--accent-primary);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-pill);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+            margin-bottom: var(--space-4);
+        }
+
+        .hero-title strong {
+            color: var(--accent-primary);
+            font-weight: 700;
+        }
+
+        .hero-description {
+            font-size: var(--text-md);
+            line-height: 1.6;
+            margin-bottom: var(--space-8);
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .hero-visual {
+            grid-column: span 5;
+            position: relative;
+        }
+
+        .hero-card-preview {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-floating);
+            position: relative;
+        }
+
+        .hero-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .hero-spec-tag {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+
+        /* ==========================================================================
+           6. SOCIAL PROOF MONOCROMÁTICA (Logos en escala de grises al 60%)
+           ========================================================================== */
+        .social-proof-section {
+            padding: var(--space-8) 0;
+            border-bottom: 1px solid var(--border-subtle);
+            background: var(--bg-surface);
+        }
+
+        .social-proof-title {
+            font-size: var(--text-xs);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            margin-bottom: var(--space-5);
+        }
+
+        .social-proof-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-10);
+            flex-wrap: wrap;
+            opacity: 0.65;
+            filter: grayscale(100%);
+            transition: opacity 0.2s ease, filter 0.2s ease;
+        }
+
+        .social-proof-grid:hover {
+            opacity: 0.9;
+            filter: grayscale(40%);
+        }
+
+        .proof-item {
+            font-weight: 700;
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        /* ==========================================================================
+           7. BENTO GRID MODULAR (Linear Standard / Refactoring UI)
+           ========================================================================== */
+        .bento-section {
+            padding: var(--space-16) 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-12);
+        }
+
+        .section-tag {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            color: var(--accent-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: var(--space-2);
+            display: inline-block;
+        }
+
+        .section-title {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--gutter);
+        }
+
+        .bento-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-3px);
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .bento-col-8 { grid-column: span 8; }
+        .bento-col-4 { grid-column: span 4; }
+        .bento-col-6 { grid-column: span 6; }
+
+        .bento-card h4 {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+            color: var(--text-primary);
+        }
+
+        .bento-card p {
+            font-size: var(--text-sm);
+            line-height: 1.5;
+            margin-bottom: var(--space-4);
+        }
+
+        .bento-badge-group {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .tech-pill {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-subtle);
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+        }
+
+        /* ==========================================================================
+           8. CATÁLOGO CON RETÍCULA F-PATTERN Y FILTROS FACETADOS (CEAM Style)
+           ========================================================================== */
+        .catalog-section {
+            padding: var(--space-12) 0 var(--space-20) 0;
+            background: var(--bg-surface);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .catalog-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--space-8);
+            align-items: start;
+        }
+
+        /* Sidebar de Filtros (Gestalt: Proximidad limpia sin cajas toscas) */
+        .filter-sidebar {
+            position: sticky;
+            top: 84px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-5);
+            padding-bottom: var(--space-3);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .filter-header h3 {
+            font-size: var(--text-base);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .filter-reset-btn {
+            font-size: var(--text-xs);
+            color: var(--accent-primary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .filter-reset-btn:hover {
+            text-decoration: underline;
+        }
+
+        .filter-group {
+            margin-bottom: var(--space-6);
+        }
+
+        .filter-group-title {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-2) 0;
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.15s ease;
+        }
+
+        .filter-item:hover {
+            color: var(--text-primary);
+        }
+
+        .filter-checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .filter-count {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            background: var(--bg-subtle);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .filter-item.active-filter {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .filter-item.active-filter .filter-count {
+            background: var(--accent-subtle);
+            color: var(--accent-primary);
+        }
+
+        /* Grilla de Productos (3 Columnas con espaciado 24px) */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-6);
+        }
+
+        .product-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .product-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .product-badge-stock {
+            position: absolute;
+            top: var(--space-4);
+            left: var(--space-4);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: var(--radius-pill);
+            background: var(--state-success-bg);
+            color: var(--state-success);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .product-badge-stock::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--state-success);
+        }
+
+        .product-thumb-container {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+            margin-top: var(--space-3);
+        }
+
+        .product-thumb-placeholder {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            font-size: var(--text-xs);
+            font-weight: 600;
+            border: 1px dashed var(--border-subtle);
+        }
+
+        .product-card-sku {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--text-tertiary);
+            margin-bottom: var(--space-1);
+        }
+
+        .product-card-title {
+            font-size: var(--text-base);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.35;
+            margin-bottom: var(--space-3);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: color 0.15s ease;
+        }
+
+        .product-card:hover .product-card-title {
+            color: var(--accent-primary);
+        }
+
+        .product-specs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: var(--space-5);
+            font-size: var(--text-xs);
+        }
+
+        .spec-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--text-secondary);
+        }
+
+        .spec-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 80px;
+        }
+
+        .product-card-footer {
+            margin-top: auto;
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-3);
+        }
+
+        .product-card-price {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+        }
+
+        .product-card-price strong {
+            display: block;
+            font-size: var(--text-md);
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+        }
+
+        /* ==========================================================================
+           9. SECCIÓN DEMOSTRATIVA DE LOS 7 ESTADOS DE COMPONENTE (Protocolo 3)
+           ========================================================================== */
+        .states-inspector-section {
+            padding: var(--space-12) 0;
+            background: var(--bg-canvas);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .states-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-6);
+        }
+
+        .state-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+        }
+
+        .state-box-title {
+            font-size: var(--text-xs);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .state-tag {
+            background: var(--bg-subtle);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+        }
+
+        /* Estado 6: Skeleton Loading */
+        .skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: var(--radius-sm);
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 14px;
+            margin-bottom: 8px;
+            width: 100%;
+        }
+
+        .skeleton-title {
+            height: 20px;
+            margin-bottom: 12px;
+            width: 70%;
+        }
+
+        .skeleton-thumb {
+            height: 120px;
+            margin-bottom: 12px;
+            width: 100%;
+        }
+
+        .skeleton-btn {
+            height: 40px;
+            width: 100%;
+        }
+
+        /* Estado 7: Empty State */
+        .empty-state-box {
+            text-align: center;
+            padding: var(--space-8) var(--space-4);
+            background: var(--bg-surface);
+            border: 1px dashed var(--border-subtle);
+            border-radius: var(--radius-lg);
+        }
+
+        .empty-icon {
+            font-size: 32px;
+            margin-bottom: var(--space-2);
+            color: var(--text-tertiary);
+        }
+
+        /* ==========================================================================
+           10. COMMAND PALETTE MODAL (Cmd + K Modal Accesible)
+           ========================================================================== */
+        .cmd-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 10vh;
+        }
+
+        .cmd-modal {
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-floating);
+            border: 1px solid var(--border-subtle);
+            overflow: hidden;
+            animation: modal-pop 0.15s ease-out;
+        }
+
+        @keyframes modal-pop {
+            from { transform: scale(0.96); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .cmd-search-input {
+            width: 100%;
+            padding: var(--space-4) var(--space-5);
+            font-size: var(--text-base);
+            border: none;
+            border-bottom: 1px solid var(--border-subtle);
+            outline: none;
+            background: transparent;
+            color: var(--text-primary);
+        }
+
+        .cmd-results-list {
+            max-height: 320px;
+            overflow-y: auto;
+            padding: var(--space-2);
+        }
+
+        .cmd-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: var(--text-sm);
+            cursor: pointer;
+            transition: background 0.1s ease;
+        }
+
+        .cmd-item:hover, .cmd-item.selected {
+            background: var(--bg-subtle);
+            color: var(--accent-primary);
+        }
+
+        .cmd-footer {
+            padding: var(--space-3) var(--space-5);
+            background: var(--bg-canvas);
+            border-top: 1px solid var(--border-subtle);
+            font-size: var(--text-xs);
+            color: var(--text-tertiary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* ==========================================================================
+           11. RESPONSIVE BREAKPOINTS (Mobile first fluid grid)
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .hero-copy { grid-column: span 12; }
+            .hero-visual { grid-column: span 12; }
+            .catalog-layout { grid-template-columns: 1fr; }
+            .filter-sidebar { position: static; margin-bottom: var(--space-6); }
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+            .states-grid { grid-template-columns: repeat(2, 1fr); }
+            .bento-col-8, .bento-col-4, .bento-col-6 { grid-column: span 12; }
+        }
+
+        @media (max-width: 640px) {
+            .products-grid { grid-template-columns: 1fr; }
+            .states-grid { grid-template-columns: 1fr; }
+            .nav-menu { display: none; }
+            .hero-title { font-size: var(--text-2xl); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Banner Informativo del Prototipo -->
+    <div class="prototype-banner">
+        <span><strong>PROTOTIPO UX/UI EXPERIMENTAL:</strong> Cumple con Leyes de UX (Fitts, Hick, Jakob, Gestalt), Escala Modular Major Third 1.25, Retícula de 12 Columnas y los 7 Estados de UI.</span>
+        <span>Modo Prueba</span>
+    </div>
+
+    <!-- 1. NAVBAR + COMMAND MENU (Jakob's Law + Hick's Law <= 5 enlaces) -->
+    <header class="navbar-sticky">
+        <div class="container navbar-container">
+            <!-- Logo a la izquierda (Jakob's Law) -->
+            <a href="#inicio" class="nav-brand interactive-el" aria-label="Inicio Kenya Technology">
+                <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="6" fill="#EA580C"/>
+                    <path d="M9 7H14V14.5L19.5 7H25L17.5 16L25.5 25H19.5L14 17.5V25H9V7Z" fill="white"/>
+                </svg>
+                <span>KENYA</span>
+                <span class="brand-badge">OEM PERÚ</span>
+            </a>
+
+            <!-- Menú central con máx 5 enlaces (Hick's Law: minimizar sobrecarga cognitiva) -->
+            <nav aria-label="Navegación principal">
+                <ul class="nav-menu">
+                    <li><a href="#catalogo" class="nav-link active interactive-el">Catálogo</a></li>
+                    <li><a href="#modelos" class="nav-link interactive-el">Modelos</a></li>
+                    <li><a href="#acuerdo-marco" class="nav-link interactive-el">Acuerdo Marco</a></li>
+                    <li><a href="#garantia" class="nav-link interactive-el">Garantía QR</a></li>
+                    <li><a href="#empresa" class="nav-link interactive-el">Empresa</a></li>
+                </ul>
+            </nav>
+
+            <!-- Acciones a la derecha: Command Menu (Cmd + K) y CTA principal -->
+            <div class="nav-actions">
+                <button class="command-trigger interactive-el" id="openCmdBtn" aria-label="Abrir buscador rápido">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <span>Buscar ficha o SKU...</span>
+                    <span class="kbd-shortcut">Ctrl K</span>
+                </button>
+                <a href="#contacto" class="btn-cta btn-cta-primary interactive-el">
+                    Cotizar B2B
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. HERO SECTION (Z-Pattern Scan + < 5s Value Proposition) -->
+    <section class="hero-section" id="inicio">
+        <div class="container hero-grid">
+            <div class="hero-copy">
+                <div class="hero-tag">Fabricante Homologado Perú Compras</div>
+                <h1 class="hero-title">
+                    Hardware de alto rendimiento para el <strong>Estado y Sector Corporativo</strong>
+                </h1>
+                <p class="hero-description measure-text">
+                    Computadoras de escritorio, workstations y monitores ensamblados bajo estrictos estándares ISO 9001 y 37001, con garantía de fábrica On-Site a nivel nacional.
+                </p>
+                <div class="hero-actions">
+                    <!-- CTA dominante (Ley de Fitts: tamaño generoso, color 10% vibrante) -->
+                    <a href="#catalogo" class="btn-cta btn-cta-primary interactive-el">
+                        Explorar Catálogo de Fichas
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </a>
+                    <a href="#garantia" class="btn-cta btn-cta-secondary interactive-el">
+                        Consultar Garantía por Serie
+                    </a>
+                </div>
+            </div>
+
+            <!-- Previsualización interactiva de producto real -->
+            <div class="hero-visual">
+                <div class="hero-card-preview">
+                    <div class="hero-card-header">
+                        <div>
+                            <span class="product-badge-stock">Disponible en Acuerdo Marco</span>
+                            <h3 style="font-size: var(--text-md); font-weight:700; margin-top: 6px;">KENYA EZENT T700</h3>
+                        </div>
+                        <span class="hero-spec-tag">SKU: E7CT6OWNHP</span>
+                    </div>
+                    <div class="product-thumb-container" style="height: 160px;">
+                        <div class="product-thumb-placeholder" style="width: 100%; height: 100%;">
+                            [ Ilustración Chasis Mid-Tower Kenya ]
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: var(--text-xs); margin-bottom: 16px;">
+                        <div class="tech-pill">CPU: Intel Core i7 13700</div>
+                        <div class="tech-pill">RAM: 16 GB DDR4 3200</div>
+                        <div class="tech-pill">Disco: 1 TB SSD NVMe</div>
+                        <div class="tech-pill">Garantía: 36 Meses On-Site</div>
+                    </div>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-secondary interactive-el" style="width: 100%;">
+                        Ver Ficha Técnica Oficial (PDF)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. SOCIAL PROOF (Logos monocromáticos en escala de grises con opacidad controlada) -->
+    <section class="social-proof-section" aria-label="Certificaciones y homologaciones">
+        <div class="container">
+            <div class="social-proof-title">Acreditaciones oficiales, acuerdos marco y normativas vigentes</div>
+            <div class="social-proof-grid">
+                <div class="proof-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>PERÚ COMPRAS</span>
+                </div>
+                <div class="proof-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+                    <span>ISO 9001:2015 CALIDAD</span>
+                </div>
+                <div class="proof-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <span>ISO 37001 ANTI-SOBORNO</span>
+                </div>
+                <div class="proof-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                    <span>SISTEMA RAEE COLECTIVO</span>
+                </div>
+                <div class="proof-item">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                    <span>CERTIFICACIÓN FCC / CE / RoHS</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. BENTO GRID (Arquitectura modular estilo Linear / Stripe) -->
+    <section class="bento-section" id="modelos">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Líneas de Producción</span>
+                <h2 class="section-title">Hardware Diseñado para Rendir sin Cuellos de Botella</h2>
+                <p class="measure-text" style="margin: 0 auto;">Configuraciones homologadas para el Catálogo Electrónico de Acuerdos Marco con componentes de grado industrial.</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- Bento Card 1: 8 Columnas -->
+                <div class="bento-card bento-col-8">
+                    <div>
+                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">PC ESCRITORIO</span>
+                        <h4>Línea EZENT & GENWORK</h4>
+                        <p class="measure-text">Diseñadas para jornadas intensivas de oficina pública y corporativa. Formatos Mid-Tower con refrigeración optimizada, fuentes 80 Plus certificadas y TPM 2.0 integrado para seguridad de datos institucionales.</p>
+                    </div>
+                    <div class="bento-badge-group">
+                        <span class="tech-pill">Procesadores Intel 12va a 14va Gen</span>
+                        <span class="tech-pill">Hasta 64 GB RAM DDR4/DDR5</span>
+                        <span class="tech-pill">Puertos USB 3.2 + HDMI + DisplayPort</span>
+                        <span class="tech-pill">Formato Mid Tower</span>
+                    </div>
+                </div>
+
+                <!-- Bento Card 2: 4 Columnas -->
+                <div class="bento-card bento-col-4">
+                    <div>
+                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">WORKSTATION</span>
+                        <h4>Línea PROWORK</h4>
+                        <p>Gráficos profesionales NVIDIA RTX y procesadores de alto conteo de núcleos para diseño CAD, render y analítica de datos pesada.</p>
+                    </div>
+                    <div class="bento-badge-group">
+                        <span class="tech-pill">NVIDIA RTX</span>
+                        <span class="tech-pill">Fuentes 750W 80+ Gold</span>
+                    </div>
+                </div>
+
+                <!-- Bento Card 3: 6 Columnas -->
+                <div class="bento-card bento-col-6">
+                    <div>
+                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">COMPACT SFF</span>
+                        <h4>Línea OFISZU (Small Form Factor)</h4>
+                        <p>Máximo ahorro de espacio de trabajo sin sacrificar capacidad de expansión ni conectividad frontal de alta velocidad.</p>
+                    </div>
+                    <div class="bento-badge-group">
+                        <span class="tech-pill">Chasis SFF Ultracompacto</span>
+                        <span class="tech-pill">Bajo Consumo Energético</span>
+                    </div>
+                </div>
+
+                <!-- Bento Card 4: 6 Columnas -->
+                <div class="bento-card bento-col-6">
+                    <div>
+                        <span class="brand-badge" style="margin-bottom: 8px; display: inline-block;">VISUALIZACIÓN</span>
+                        <h4>Línea RAITO (Monitores Profesionales)</h4>
+                        <p>Paneles IPS antirreflejo, resolución Full HD y 2K, frecuencia de actualización suave y cuidado ocular Low Blue Light certificado.</p>
+                    </div>
+                    <div class="bento-badge-group">
+                        <span class="tech-pill">23.8" / 27" IPS</span>
+                        <span class="tech-pill">HDMI + VGA / DP</span>
+                        <span class="tech-pill">Montaje VESA 100x100</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. CATÁLOGO CON RETÍCULA F-PATTERN Y FILTROS FACETADOS (Leyes de Gestalt + Hick) -->
+    <section class="catalog-section" id="catalogo">
+        <div class="container">
+            <div class="section-header" style="text-align: left; margin-bottom: var(--space-8);">
+                <span class="section-tag">Explorador de Fichas Técnicas</span>
+                <h2 class="section-title">Catálogo Interactivo con Filtros Facetados</h2>
+                <p>Navega entre fichas compatibles. Cada tarjeta permite abrir el detalle en una <strong>nueva pestaña independiente</strong> con clic derecho o botón directo.</p>
+            </div>
+
+            <div class="catalog-layout">
+                <!-- Sidebar de Filtros (F-Pattern: Escaneo vertical en margen izquierdo) -->
+                <aside class="filter-sidebar" aria-label="Filtros de búsqueda">
+                    <div class="filter-header">
+                        <h3>Filtros Activos</h3>
+                        <button class="filter-reset-btn" id="resetFiltersBtn">Limpiar todo</button>
+                    </div>
+
+                    <!-- Grupo 1: Modelo -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">
+                            <span>Modelo de Equipo</span>
+                        </div>
+                        <div class="filter-item active-filter">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox" checked>
+                                <span>EZENT (PC Escritorio)</span>
+                            </label>
+                            <span class="filter-count">142</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>GENWORK (PC Pro)</span>
+                            </label>
+                            <span class="filter-count">88</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>OFISZU SFF (Mini PC)</span>
+                            </label>
+                            <span class="filter-count">45</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>PROWORK (Workstation)</span>
+                            </label>
+                            <span class="filter-count">24</span>
+                        </div>
+                    </div>
+
+                    <!-- Grupo 2: Procesador -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">
+                            <span>Procesador</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>Intel Core i7 13700</span>
+                            </label>
+                            <span class="filter-count">64</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>Intel Core i5 13400</span>
+                            </label>
+                            <span class="filter-count">52</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>Intel Core i7 14700</span>
+                            </label>
+                            <span class="filter-count">18</span>
+                        </div>
+                    </div>
+
+                    <!-- Grupo 3: Memoria RAM -->
+                    <div class="filter-group">
+                        <div class="filter-group-title">
+                            <span>Memoria RAM</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>16 GB DDR4/DDR5</span>
+                            </label>
+                            <span class="filter-count">92</span>
+                        </div>
+                        <div class="filter-item">
+                            <label class="filter-checkbox-wrap">
+                                <input type="checkbox">
+                                <span>32 GB DDR4/DDR5</span>
+                            </label>
+                            <span class="filter-count">38</span>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Grid de Productos (3 Columnas con soporte real para apertura en pestaña nueva) -->
+                <main class="products-container" id="productsGrid">
+                    <div class="products-grid">
+                        
+                        <!-- Tarjeta Producto 1 -->
+                        <article class="product-card">
+                            <span class="product-badge-stock">Disponible (≥ 20)</span>
+                            
+                            <a href="#detalle-ezent-1" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                                <div class="product-thumb-container">
+                                    <div class="product-thumb-placeholder">
+                                        [ Foto EZENT T700 ]
+                                    </div>
+                                </div>
+                                <div class="product-card-sku">SKU: E7CT6OWNHPXO3B5PV6</div>
+                                <h3 class="product-card-title">COMPUTADORA KENYA EZENT T700</h3>
+                            </a>
+
+                            <div class="product-specs-list">
+                                <div class="spec-item">
+                                    <span class="spec-label">PROCESADOR:</span>
+                                    <span>Intel Core i7-13700</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">RAM:</span>
+                                    <span>16 GB DDR4</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">DISCO:</span>
+                                    <span>1 TB SSD NVMe M.2</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">GARANTÍA:</span>
+                                    <span>36 Meses On-Site</span>
+                                </div>
+                            </div>
+
+                            <div class="product-card-footer">
+                                <div class="product-card-price">
+                                    <span>Sector Acuerdo Marco</span>
+                                    <strong>Homologado</strong>
+                                </div>
+                                <!-- Enlace nativo con target="_blank" y soporte de clic derecho -->
+                                <a href="#detalle-ezent-1" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-primary interactive-el">
+                                    Más información
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Tarjeta Producto 2 -->
+                        <article class="product-card">
+                            <span class="product-badge-stock">Disponible (≥ 20)</span>
+                            
+                            <a href="#detalle-genwork-1" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                                <div class="product-thumb-container">
+                                    <div class="product-thumb-placeholder">
+                                        [ Foto GENWORK PRO ]
+                                    </div>
+                                </div>
+                                <div class="product-card-sku">SKU: GW-I5-13400-SSD</div>
+                                <h3 class="product-card-title">COMPUTADORA KENYA GENWORK PRO</h3>
+                            </a>
+
+                            <div class="product-specs-list">
+                                <div class="spec-item">
+                                    <span class="spec-label">PROCESADOR:</span>
+                                    <span>Intel Core i5-13400</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">RAM:</span>
+                                    <span>16 GB DDR4</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">DISCO:</span>
+                                    <span>512 GB SSD NVMe</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">GARANTÍA:</span>
+                                    <span>36 Meses On-Site</span>
+                                </div>
+                            </div>
+
+                            <div class="product-card-footer">
+                                <div class="product-card-price">
+                                    <span>Sector Acuerdo Marco</span>
+                                    <strong>Homologado</strong>
+                                </div>
+                                <a href="#detalle-genwork-1" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-primary interactive-el">
+                                    Más información
+                                </a>
+                            </div>
+                        </article>
+
+                        <!-- Tarjeta Producto 3 -->
+                        <article class="product-card">
+                            <span class="product-badge-stock" style="background:#fef3c7; color:#b45309;">A pedido</span>
+                            
+                            <a href="#detalle-prowork-1" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+                                <div class="product-thumb-container">
+                                    <div class="product-thumb-placeholder">
+                                        [ Foto PROWORK WS90 ]
+                                    </div>
+                                </div>
+                                <div class="product-card-sku">SKU: PW-I7-RTX4060</div>
+                                <h3 class="product-card-title">WORKSTATION KENYA PROWORK WS90</h3>
+                            </a>
+
+                            <div class="product-specs-list">
+                                <div class="spec-item">
+                                    <span class="spec-label">PROCESADOR:</span>
+                                    <span>Intel Core i7-14700</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">RAM:</span>
+                                    <span>32 GB DDR5 5600</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">GRÁFICOS:</span>
+                                    <span>NVIDIA RTX 4060 8GB</span>
+                                </div>
+                                <div class="spec-item">
+                                    <span class="spec-label">GARANTÍA:</span>
+                                    <span>36 Meses On-Site</span>
+                                </div>
+                            </div>
+
+                            <div class="product-card-footer">
+                                <div class="product-card-price">
+                                    <span>Sector Acuerdo Marco</span>
+                                    <strong>Alta Potencia</strong>
+                                </div>
+                                <a href="#detalle-prowork-1" target="_blank" rel="noopener noreferrer" class="btn-cta btn-cta-primary interactive-el">
+                                    Más información
+                                </a>
+                            </div>
+                        </article>
+
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. INSPECTOR DE LOS 7 ESTADOS OBLIGATORIOS (Protocolo 3: Demostración Técnica) -->
+    <section class="states-inspector-section">
+        <div class="container">
+            <div class="section-header" style="text-align: left; margin-bottom: var(--space-6);">
+                <span class="section-tag">Auditoría de Componentes UI</span>
+                <h3 style="font-size: var(--text-xl); font-weight:700;">Los 7 Estados Obligatorios Implementados</h3>
+                <p>Ningún componente se entrega únicamente en estado normal. Cada botón y tarjeta cuenta con sus 7 estados definidos matemáticamente.</p>
+            </div>
+
+            <div class="states-grid">
+                <!-- Estado 1 & 2: Default / Hover -->
+                <div class="state-box">
+                    <div class="state-box-title">
+                        <span>1. Default / 2. Hover</span>
+                        <span class="state-tag">:hover</span>
+                    </div>
+                    <p style="font-size: var(--text-xs); margin-bottom: 12px;">Transición fluida a color de sombra y contraste de 4.5:1.</p>
+                    <button class="btn-cta btn-cta-primary" style="width: 100%;">Botón Primario</button>
+                </div>
+
+                <!-- Estado 3: Focus Visible -->
+                <div class="state-box">
+                    <div class="state-box-title">
+                        <span>3. Focus Visible</span>
+                        <span class="state-tag">:focus-visible</span>
+                    </div>
+                    <p style="font-size: var(--text-xs); margin-bottom: 12px;">Anillo accesible de 3px sin romper el layout (Navegación por Tab).</p>
+                    <button class="btn-cta btn-cta-primary" style="width: 100%; box-shadow: 0 0 0 3px var(--accent-ring); border-color: var(--accent-primary);">En Foco de Teclado</button>
+                </div>
+
+                <!-- Estado 4 & 5: Active / Disabled -->
+                <div class="state-box">
+                    <div class="state-box-title">
+                        <span>4. Active / 5. Disabled</span>
+                        <span class="state-tag">:disabled</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-cta btn-cta-primary" style="flex:1; transform: scale(0.98); background: var(--accent-active);">Pulsado</button>
+                        <button class="btn-cta btn-cta-primary" disabled style="flex:1;">Inactivo</button>
+                    </div>
+                </div>
+
+                <!-- Estado 6: Loading (Skeleton) -->
+                <div class="state-box">
+                    <div class="state-box-title">
+                        <span>6. Loading (Skeleton)</span>
+                        <span class="state-tag">Loading</span>
+                    </div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-text"></div>
+                    <div class="skeleton skeleton-btn"></div>
+                </div>
+            </div>
+
+            <!-- Estado 7: Empty State (Estado vacío / Sin resultados) -->
+            <div style="margin-top: var(--space-6);">
+                <div class="empty-state-box">
+                    <div class="empty-icon">🔍</div>
+                    <h4 style="font-size: var(--text-base); font-weight: 700; margin-bottom: 4px;">No se encontraron fichas con los filtros actuales</h4>
+                    <p style="font-size: var(--text-sm); margin: 0 auto 16px auto;">Intenta seleccionando otra variante de procesador o restablece los filtros para ver todo el catálogo disponible.</p>
+                    <button class="btn-cta btn-cta-secondary" onclick="alert('Filtros restablecidos');">
+                        Restablecer todos los filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. COMMAND PALETTE MODAL INTERACTIVO (Atajo Ctrl + K / Cmd + K) -->
+    <div class="cmd-backdrop" id="cmdModal" role="dialog" aria-modal="true" aria-label="Búsqueda rápida">
+        <div class="cmd-modal">
+            <input type="text" class="cmd-search-input" id="cmdInput" placeholder="Escribe un modelo, SKU o procesador (ej. i7, EZENT, 16GB)..." autofocus>
+            <div class="cmd-results-list" id="cmdResults">
+                <div class="cmd-item selected">
+                    <div>
+                        <strong>COMPUTADORA KENYA EZENT T700</strong>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Intel Core i7 13700 · 16GB · 1TB SSD</div>
+                    </div>
+                    <span class="kbd-shortcut">Enter</span>
+                </div>
+                <div class="cmd-item">
+                    <div>
+                        <strong>COMPUTADORA KENYA GENWORK PRO</strong>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Intel Core i5 13400 · 16GB · 512GB SSD</div>
+                    </div>
+                    <span class="kbd-shortcut">Ver</span>
+                </div>
+                <div class="cmd-item">
+                    <div>
+                        <strong>WORKSTATION KENYA PROWORK WS90</strong>
+                        <div style="font-size: 12px; color: var(--text-secondary);">Intel Core i7 14700 · RTX 4060 · 32GB</div>
+                    </div>
+                    <span class="kbd-shortcut">Ver</span>
+                </div>
+            </div>
+            <div class="cmd-footer">
+                <span>Navega con ↑ ↓ y selecciona con Enter</span>
+                <span>ESC para cerrar</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LIVIANO PARA INTERACCIONES DE PROTOTIPO -->
+    <script>
+        (function() {
+            const cmdModal = document.getElementById('cmdModal');
+            const openCmdBtn = document.getElementById('openCmdBtn');
+            const cmdInput = document.getElementById('cmdInput');
+            const resetFiltersBtn = document.getElementById('resetFiltersBtn');
+
+            function openModal() {
+                cmdModal.style.display = 'flex';
+                cmdInput.focus();
+            }
+
+            function closeModal() {
+                cmdModal.style.display = 'none';
+            }
+
+            if (openCmdBtn) openCmdBtn.addEventListener('click', openModal);
+
+            // Escuchar Ctrl+K o Cmd+K
+            window.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    if (cmdModal.style.display === 'flex') closeModal();
+                    else openModal();
+                }
+                if (e.key === 'Escape' && cmdModal.style.display === 'flex') {
+                    closeModal();
+                }
+            });
+
+            // Cerrar al dar click fuera del modal
+            cmdModal.addEventListener('click', (e) => {
+                if (e.target === cmdModal) closeModal();
+            });
+
+            // Feedback visual en botón Limpiar Todo
+            if (resetFiltersBtn) {
+                resetFiltersBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-item input[type="checkbox"]').forEach(cb => cb.checked = false);
+                    document.querySelectorAll('.filter-item').forEach(fi => fi.classList.remove('active-filter'));
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
