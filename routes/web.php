@@ -194,6 +194,8 @@ Route::group(['middleware' => ['auth', 'can:productos']], function () {
 
 Route::view('/quienes-somos', 'quienes-somos')->name('quienes.somos');
 Route::view('/codigo-conducta', 'codigo-conducta')->name('codigo.conducta');
+Route::get('/norma-iso-9001', [\App\Http\Controllers\NormaIsoController::class, 'iso9001'])->name('iso.9001');
+Route::get('/norma-iso-14001', [\App\Http\Controllers\NormaIsoController::class, 'iso14001'])->name('iso.14001');
 Route::view('/reciclaje', 'reciclaje')->name('reciclaje');
 Route::view('/reciclar', 'reciclar')->name('reciclar');
 Route::view('/Catalogo', 'Catalogo')->name('catalogo.static');

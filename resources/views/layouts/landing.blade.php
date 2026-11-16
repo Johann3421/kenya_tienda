@@ -807,7 +807,10 @@ body {
                     <h3 class="kenya-footer-heading">Nuestra Empresa</h3>
                     <ul class="kenya-footer-list">
                         <li><a href="{{ route('quienes.somos') }}">Quienes Somos</a></li>
-                        <li><a href="{{ route('codigo.conducta') }}">Codigo Conducta</a></li>
+                        {{-- Codigo Conducta oculto en footer; ruta /codigo-conducta preservada --}}
+                        {{-- <li><a href="{{ route('codigo.conducta') }}">Codigo Conducta</a></li> --}}
+                        <li><a href="{{ route('iso.9001') }}">Norma ISO 9001:2015</a></li>
+                        <li><a href="{{ route('iso.14001') }}">Norma ISO 14001:2015</a></li>
                         <li><a href="{{ route('reciclaje') }}">Reciclaje</a></li>
                     </ul>
                 </div>

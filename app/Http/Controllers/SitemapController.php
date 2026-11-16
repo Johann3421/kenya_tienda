@@ -31,6 +31,8 @@ class SitemapController extends Controller
                 ['loc' => $baseUrl . '/', 'priority' => '1.0', 'changefreq' => 'daily'],
                 ['loc' => $baseUrl . '/catalogo', 'priority' => '0.9', 'changefreq' => 'daily'],
                 ['loc' => $baseUrl . '/quienes-somos', 'priority' => '0.6', 'changefreq' => 'monthly'],
+                ['loc' => $baseUrl . '/norma-iso-9001', 'priority' => '0.6', 'changefreq' => 'monthly'],
+                ['loc' => $baseUrl . '/norma-iso-14001', 'priority' => '0.6', 'changefreq' => 'monthly'],
                 ['loc' => $baseUrl . '/novedades', 'priority' => '0.7', 'changefreq' => 'weekly'],
                 ['loc' => $baseUrl . '/consultar/garantia', 'priority' => '0.7', 'changefreq' => 'weekly'],
                 ['loc' => $baseUrl . '/contactenos', 'priority' => '0.6', 'changefreq' => 'monthly'],
