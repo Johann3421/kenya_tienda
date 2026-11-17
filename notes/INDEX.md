@@ -1,6 +1,7 @@
 # Índice de la Bóveda de Notas - Kenya Tienda
 
 ## Historial de Cambios y Sesiones
+- [[2026-11-17-maquetas-normas-iso-9001-14001|2026-11-17: Integración de Maqueta Oficial para Normas ISO 9001:2015 e ISO 14001:2015 (Hero Banners y Split Ejecutivo)]]
 - [[2026-11-15-normas-iso-9001-14001-footer|2026-11-15: Implementación de Normas ISO 9001:2015 e ISO 14001:2015 y Actualización del Footer Nuestra Empresa]]
 - [[2026-11-12-hero-carrusel-slide-clickeable-peru-compras|2026-11-12: Navegación Clickeable en Banners del Hero Carrusel (Apartado 'Disponible en Perú Compras')]]
 - [[2026-11-12-prototipo-ux-ui-patrones-diseno|2026-11-12: Rediseño Estructural del Header B2B en 3 Capas, Erradicación de Patrones Cliché de IA y Catálogo Facetado]]

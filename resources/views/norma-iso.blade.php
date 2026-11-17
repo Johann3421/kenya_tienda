@@ -9,317 +9,521 @@
 
 @section('content')
     <style>
-        #iso-page {
-            --iso-accent: #f26522;
-            --iso-navy: #1b2633;
-            --iso-ink: #111827;
-            --iso-text: #374151;
-            --iso-muted: #6b7280;
-            --iso-rule: #e5e7eb;
-            background: #fff;
-            color: var(--iso-text);
-            line-height: 1.7;
+        :root {
+            --iso-orange-primary: #ef5a24;
+            --iso-text-dark: #0f172a;
+            --iso-border-light: #e2e8f0;
+            --iso-font-heading: 'Gilroy-Bold', 'Inter', sans-serif;
+            --iso-layout-max-width: 1320px;
         }
 
-        #iso-page .iso-hero {
-            background-image: linear-gradient(rgba(255,255,255,.7), rgba(255,255,255,.7)), url('{{ asset("banersomos.png?v=2") }}');
-            background-size: cover;
-            background-position: right;
-            padding: 64px 15px;
-            border-bottom: 1px solid var(--iso-rule);
+        .iso-view {
+            background-color: #ffffff;
+            color: var(--iso-text-dark);
+            -webkit-font-smoothing: antialiased;
         }
-        #iso-page .iso-hero-inner { max-width: 1400px; margin: 0 auto; padding: 0 10px; }
-        #iso-page .iso-hero h1 {
-            margin: 0 0 6px;
-            font-size: 2.6rem;
+
+        /* ==================== BANNER SUPERIOR ISO ==================== */
+        .iso-hero-banner {
+            position: relative;
+            width: 100%;
+            min-height: 220px;
+            background-image:
+                linear-gradient(
+                    90deg,
+                    rgba(248, 250, 252, 0.98) 0%,
+                    rgba(248, 250, 252, 0.93) 40%,
+                    rgba(241, 245, 249, 0.65) 68%,
+                    rgba(226, 232, 240, 0.35) 100%
+                ),
+                url('{{ asset($norma['hero_bg']) }}');
+            background-size: cover;
+            background-position: center 45%;
+            border-bottom: 1px solid var(--iso-border-light);
+            display: flex;
+            align-items: center;
+            padding: 44px 24px;
+        }
+
+        .iso-hero-banner.iso-14001-banner {
+            background-position: center 50%;
+        }
+
+        .iso-hero-container {
+            width: 100%;
+            max-width: var(--iso-layout-max-width);
+            margin: 0 auto;
+        }
+
+        .iso-hero-text {
+            max-width: 680px;
+        }
+
+        .iso-hero-text h1 {
+            font-family: var(--iso-font-heading);
+            font-size: 34px;
             font-weight: 800;
+            color: #0b0f19;
+            letter-spacing: -0.4px;
+            margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--iso-ink);
             line-height: 1.15;
         }
-        #iso-page .iso-hero p { margin: 0; font-size: 1.1rem; color: var(--iso-muted); }
 
-        #iso-page .iso-wrap { max-width: 1400px; margin: 0 auto; padding: 28px 20px 96px; }
-
-        #iso-page .iso-crumbs { font-size: .85rem; color: var(--iso-muted); margin-bottom: 36px; }
-        #iso-page .iso-crumbs a { color: var(--iso-muted); text-decoration: none; }
-        #iso-page .iso-crumbs a:hover { color: var(--iso-accent); }
-        #iso-page .iso-crumbs span { margin: 0 6px; color: #d1d5db; }
-
-        #iso-page .iso-head {
-            padding-bottom: 28px;
-            border-bottom: 2px solid var(--iso-ink);
-        }
-        #iso-page .iso-kicker {
-            display: block;
-            font-size: .78rem;
-            font-weight: 700;
-            letter-spacing: .14em;
-            text-transform: uppercase;
-            color: var(--iso-accent);
-            margin-bottom: 12px;
-        }
-        #iso-page .iso-head h2 {
-            margin: 0 0 14px;
-            font-size: 2.3rem;
-            line-height: 1.2;
-            font-weight: 800;
-            color: var(--iso-ink);
-            letter-spacing: -.02em;
-        }
-        #iso-page .iso-head .iso-lead {
-            margin: 0;
-            font-size: 1.1rem;
-            line-height: 1.7;
-            max-width: 72ch;
-            color: #4b5563;
-        }
-
-        #iso-page .iso-meta {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 320px));
-            margin: 0 0 54px;
-            border-bottom: 1px solid var(--iso-rule);
-        }
-        #iso-page .iso-meta div { padding: 18px 28px 18px 0; }
-        #iso-page .iso-meta div + div { padding-left: 28px; border-left: 1px solid var(--iso-rule); }
-        #iso-page .iso-meta dt {
-            font-size: .72rem;
-            font-weight: 700;
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            color: var(--iso-muted);
-            margin-bottom: 4px;
-        }
-        #iso-page .iso-meta dd { margin: 0; font-weight: 600; color: var(--iso-ink); font-size: .95rem; }
-
-        #iso-page .iso-body {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) 380px;
-            gap: 56px;
-            align-items: start;
-        }
-
-        #iso-page .iso-content { min-width: 0; }
-
-        #iso-page .iso-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        #iso-page .iso-item {
-            display: flex;
-            align-items: baseline;
-            gap: 20px;
-            padding: 18px 0;
-            border-bottom: 1px solid var(--iso-rule);
-        }
-        #iso-page .iso-item:first-child { padding-top: 0; }
-        #iso-page .iso-num {
-            font-size: 1.15rem;
-            font-weight: 700;
-            line-height: 1;
-            color: #9ca3af;
-            font-variant-numeric: tabular-nums;
-            min-width: 28px;
-            flex-shrink: 0;
-        }
-        #iso-page .iso-item-text {
-            margin: 0;
-            font-size: 1.06rem;
+        .iso-hero-text p {
+            font-size: 15px;
+            color: #475569;
             font-weight: 400;
-            color: var(--iso-text);
-            line-height: 1.5;
-        }
-        #iso-page .iso-item-text strong {
-            font-weight: 700;
-            color: var(--iso-ink);
-        }
-
-        #iso-page .iso-btn {
-            display: inline-block;
-            background: var(--iso-navy);
-            color: #fff;
-            padding: 13px 24px;
-            font-weight: 600;
-            font-size: .95rem;
-            text-decoration: none;
-            border-radius: 2px;
-            transition: background .15s ease;
-        }
-        #iso-page .iso-btn:hover { background: var(--iso-accent); color: #fff; }
-
-        #iso-page .iso-sidebar {
-            position: sticky;
-            top: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        #iso-page .iso-card {
             margin: 0;
-            background: #ffffff;
-            border: 1px solid var(--iso-rule);
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px -10px rgba(17, 24, 39, 0.08);
-        }
-        #iso-page .iso-card-media {
-            background: #fafaf9;
-        }
-        #iso-page .iso-card-media img {
-            display: block;
-            width: 100%;
-            height: auto;
-            padding: 18px;
-            box-sizing: border-box;
-        }
-        #iso-page .iso-card figcaption {
-            background: var(--iso-navy);
-            color: #f3f4f6;
-            padding: 14px 18px;
-            font-size: .84rem;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        #iso-page .iso-card figcaption strong {
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: .02em;
-            font-size: .92rem;
-        }
-        #iso-page .iso-card figcaption span.iso-subtitle {
-            color: #9ca3af;
-            font-size: .8rem;
-        }
-
-        #iso-page .iso-sidebar-box {
-            background: #fafaf9;
-            border: 1px solid var(--iso-rule);
-            border-left: 3px solid var(--iso-accent);
-            border-radius: 4px;
-            padding: 20px;
-        }
-        #iso-page .iso-sidebar-box-title {
-            margin: 0 0 6px;
-            font-size: .95rem;
-            font-weight: 700;
-            color: var(--iso-ink);
-        }
-        #iso-page .iso-sidebar-box-desc {
-            margin: 0 0 14px;
-            font-size: .85rem;
-            color: var(--iso-muted);
             line-height: 1.5;
         }
-        #iso-page .iso-sidebar-contacts {
+
+        /* ==================== DISEÑO CORPORATIVO ARQUITECTÓNICO ==================== */
+        .iso-main-content {
+            padding: 76px 24px 116px;
+            background-color: #ffffff;
+        }
+
+        .iso-container {
+            width: 100%;
+            max-width: var(--iso-layout-max-width);
+            margin: 0 auto;
+        }
+
+        .iso-executive-split {
+            display: grid;
+            grid-template-columns: 460px minmax(0, 1fr);
+            gap: 56px;
+            align-items: stretch;
+        }
+
+        /* --- COLUMNA IZQUIERDA CON DIVISOR VERTICAL --- */
+        .iso-left-panel {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            justify-content: space-between;
+            gap: 24px;
+            padding-right: 48px;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .iso-intro-box {
+            padding: 0;
+            border: none;
+        }
+
+        .iso-overline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--iso-font-heading);
+            font-size: 10.5px;
+            font-weight: 800;
+            color: var(--iso-orange-primary);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
             margin-bottom: 14px;
         }
-        #iso-page .iso-sidebar-contacts a {
-            font-size: .84rem;
-            color: var(--iso-ink);
+
+        .iso-overline::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 1px;
+            background-color: var(--iso-orange-primary);
+            flex-shrink: 0;
+        }
+
+        .iso-description {
+            font-size: 15px;
+            line-height: 1.76;
+            color: #334155;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        /* Metadatos en 2 Tarjetas Gemelas Independientes */
+        .iso-meta-bar {
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+            gap: 12px;
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        .iso-meta-col {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .iso-meta-label {
+            font-size: 9.5px;
+            font-weight: 700;
+            color: #64748b;
+            letter-spacing: 0.9px;
+            text-transform: uppercase;
+        }
+
+        .iso-meta-value {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 7px;
+            font-family: var(--iso-font-heading);
+            font-size: 14.5px;
+            color: #0f172a;
+        }
+
+        .badge-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background-color: #ffffff;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 7px;
+            border-radius: 4px;
+        }
+
+        /* Credencial Ejecutiva Oscura Refinada */
+        .iso-accreditation-card {
+            background-color: #0f172a;
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            border: 1px solid #1e293b;
+            box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.12);
+        }
+
+        .accreditation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .iso-accreditation-card h4 {
+            font-family: var(--iso-font-heading);
+            font-size: 15.5px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+            margin: 0 0 3px;
+        }
+
+        .iso-accreditation-card p {
+            font-size: 12px;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        .accreditation-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(239, 90, 36, 0.14);
+            color: var(--iso-orange-primary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+
+        .iaf-verify-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 11px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #f8fafc;
             text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .iaf-verify-btn:hover {
+            border-color: #10b981;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #ffffff;
+        }
+
+        .iaf-left {
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
-        #iso-page .iso-sidebar-contacts a:hover { color: var(--iso-accent); }
-        #iso-page .iso-sidebar-contacts a i {
-            color: var(--iso-accent);
-            font-size: .8rem;
-            width: 14px;
-        }
-        #iso-page .iso-btn-sm {
-            display: block;
-            text-align: center;
-            padding: 10px 14px;
-            font-size: .86rem;
-            width: 100%;
-            box-sizing: border-box;
+
+        .iaf-left i {
+            color: #10b981;
+            font-size: 13.5px;
         }
 
-        @media (max-width: 991px) {
-            #iso-page .iso-hero h1 { font-size: 2rem; }
-            #iso-page .iso-head h2 { font-size: 1.9rem; }
-            #iso-page .iso-meta { grid-template-columns: 1fr 1fr; }
-            #iso-page .iso-body { grid-template-columns: 1fr; gap: 40px; }
-            #iso-page .iso-sidebar { position: static; max-width: 480px; margin: 0 auto; width: 100%; }
+        .iaf-ext {
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        /* --- COLUMNA DERECHA: Módulos con Contraste Suave y Elevación Activa --- */
+        .iso-right-panel {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .iso-list {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .iso-list-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background-color: #f8fafc;
+            border: 1px solid #edf2f7;
+            border-left: 3px solid transparent;
+            border-radius: 8px;
+            padding: 16px 24px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.22s ease;
+        }
+
+        .iso-list-item::after {
+            content: "\f054";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 11px;
+            color: #cbd5e1;
+            margin-left: auto;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .iso-list-item:hover {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+            border-left-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+        }
+
+        .iso-list-item.active {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+            border-left: 3px solid var(--iso-orange-primary);
+            box-shadow: 0 8px 22px -4px rgba(15, 23, 42, 0.06);
+        }
+
+        .iso-list-item.active::after,
+        .iso-list-item:hover::after {
+            color: var(--iso-orange-primary);
+            transform: translateX(2px);
+        }
+
+        .iso-item-num {
+            font-family: var(--iso-font-heading);
+            font-size: 12.5px;
+            font-weight: 800;
+            color: #64748b;
+            width: 34px;
+            height: 34px;
+            border-radius: 6px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .iso-list-item:hover .iso-item-num {
+            color: var(--iso-orange-primary);
+            border-color: rgba(239, 90, 36, 0.3);
+        }
+
+        .iso-list-item.active .iso-item-num {
+            background-color: var(--iso-orange-primary);
+            border-color: var(--iso-orange-primary);
+            color: #ffffff;
+        }
+
+        .iso-item-content {
+            flex: 1;
+            padding-right: 12px;
+        }
+
+        .iso-item-title {
+            font-size: 14.5px;
+            font-weight: 400;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .iso-item-title strong {
+            font-weight: 700;
+            color: #0f172a;
+            margin-right: 4px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 992px) {
+            .iso-executive-split {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .iso-left-panel {
+                padding-right: 0;
+                padding-bottom: 36px;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .iso-hero-banner {
+                min-height: 180px;
+                padding: 32px 18px;
+            }
+            .iso-hero-text h1 {
+                font-size: 26px;
+            }
+            .iso-main-content {
+                padding: 44px 18px 72px;
+            }
+            .iso-meta-bar {
+                grid-template-columns: 1fr;
+            }
+            .iso-list-item {
+                padding: 14px 16px;
+                gap: 12px;
+            }
         }
     </style>
 
-    <div id="iso-page">
-        <section class="iso-hero">
-            <div class="iso-hero-inner">
-                <h1>{{ $norma['hero_title'] }}</h1>
-                <p>{{ $norma['hero_subtitle'] }}</p>
+    <main class="iso-view">
+        <!-- Banner Superior con Imagen Corporativa ISO -->
+        <section class="iso-hero-banner @if(isset($norma['code']) && str_contains($norma['code'], '14001')) iso-14001-banner @endif">
+            <div class="iso-hero-container">
+                <div class="iso-hero-text">
+                    <h1>{{ $norma['hero_title'] }}</h1>
+                    <p>{{ $norma['hero_subtitle'] }}</p>
+                </div>
             </div>
         </section>
 
-        <main class="iso-wrap">
-            <nav class="iso-crumbs" aria-label="Ruta de navegación">
-                <a href="{{ url('/') }}">Inicio</a><span>/</span>Nuestra Empresa<span>/</span><strong>{{ $norma['breadcrumb'] }}</strong>
-            </nav>
+        <!-- Apartado Principal: Misma Composición de 2 Columnas de la Maqueta -->
+        <section class="iso-main-content">
+            <div class="iso-container">
+                <div class="iso-executive-split">
 
-            <header class="iso-head">
-                <span class="iso-kicker">{{ $norma['kicker'] }}</span>
-                <h2>{{ $norma['heading'] }}</h2>
-                <p class="iso-lead">{{ $norma['lead'] }}</p>
-            </header>
-
-            <dl class="iso-meta">
-                <div>
-                    <dt>{{ $norma['meta_label'] }}</dt>
-                    <dd>{{ $norma['code'] }}</dd>
-                </div>
-                <div>
-                    <dt>{{ $norma['lineamientos_label'] }}</dt>
-                    <dd>{{ $norma['lineamientos_count'] }}</dd>
-                </div>
-            </dl>
-
-            <div class="iso-body">
-                <div class="iso-content">
-                    <ol class="iso-list">
-                        @foreach ($norma['items'] as $i => $item)
-                            <li class="iso-item" id="lineamiento-{{ $i + 1 }}">
-                                <span class="iso-num">{{ str_pad($i + 1, 2, '0', STR_PAD_LEFT) }}</span>
-                                <h3 class="iso-item-text">
-                                    <strong>{{ $item['titulo'] }}</strong>@if(!empty($item['detalle'])) {{ $item['detalle'] }}@endif
-                                </h3>
-                            </li>
-                        @endforeach
-                    </ol>
-                </div>
-
-                <aside class="iso-sidebar">
-                    <figure class="iso-card">
-                        <div class="iso-card-media">
-                            <img src="{{ asset($norma['image']) }}" alt="{{ $norma['image_alt'] }}" loading="lazy">
+                    <!-- COLUMNA IZQUIERDA: Introducción + Metadatos + Acreditación IAF -->
+                    <div class="iso-left-panel">
+                        <div class="iso-intro-box">
+                            <span class="iso-overline">{{ $norma['kicker'] }}</span>
+                            <p class="iso-description">{{ $norma['lead'] }}</p>
                         </div>
-                        <figcaption>
-                            <strong>{{ $norma['card_title'] }}</strong>
-                            <span class="iso-subtitle">{{ $norma['card_subtitle'] }}</span>
-                        </figcaption>
-                    </figure>
 
-                    <div class="iso-sidebar-box">
-                        <p class="iso-sidebar-box-title">{{ $norma['contact_title'] }}</p>
-                        <p class="iso-sidebar-box-desc">{{ $norma['contact_desc'] }}</p>
-                        <div class="iso-sidebar-contacts">
-                            <a href="mailto:acuerdos.marco@kenya.com.pe"><i class="fa-solid fa-envelope"></i> acuerdos.marco@kenya.com.pe</a>
-                            <a href="tel:+51958021778"><i class="fa-solid fa-phone"></i> 958 021 778</a>
+                        <!-- Bloque de Certificado y Estructura con Bordes Compartidos -->
+                        <div class="iso-meta-bar">
+                            <div class="iso-meta-col first">
+                                <span class="iso-meta-label">{{ $norma['meta_label'] }}</span>
+                                <div class="iso-meta-value">
+                                    <strong>{{ $norma['code'] }}</strong>
+                                    <span class="badge-verified">
+                                        <i class="fa-solid fa-shield-halved"></i> Verificado
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="iso-meta-col">
+                                <span class="iso-meta-label">{{ $norma['lineamientos_label'] }}</span>
+                                <div class="iso-meta-value">
+                                    <strong>{{ $norma['lineamientos_count'] }}</strong>
+                                </div>
+                            </div>
                         </div>
-                        <a class="iso-btn iso-btn-sm" href="{{ route($norma['contact_cta_route']) }}">{{ $norma['contact_cta_label'] }}</a>
+
+                        <!-- Tarjeta Oscura Corporativa de Acreditación con Enlace IAF -->
+                        <aside class="iso-accreditation-card">
+                            <div class="accreditation-header">
+                                <div>
+                                    <h4>{{ $norma['card_title'] }}</h4>
+                                    <p>{{ $norma['card_subtitle'] }}</p>
+                                </div>
+                                <span class="accreditation-badge">
+                                    <i class="fa-solid {{ $norma['badge_icon'] }}"></i>
+                                </span>
+                            </div>
+
+                            <a href="https://www.iafcertsearch.org/" target="_blank" rel="noopener" class="iaf-verify-btn" aria-label="Verificar acreditación en IAF CertSearch">
+                                <span class="iaf-left">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                    Verificado en IAF CertSearch
+                                </span>
+                                <i class="fa-solid fa-arrow-up-right-from-square iaf-ext"></i>
+                            </a>
+                        </aside>
                     </div>
-                </aside>
+
+                    <!-- COLUMNA DERECHA: Las Cláusulas en Matriz Interactiva -->
+                    <div class="iso-right-panel">
+                        <div class="iso-list" id="isoList">
+                            @foreach ($norma['items'] as $index => $item)
+                                <div class="iso-list-item @if($index === 0) active @endif" role="button" tabindex="0">
+                                    <span class="iso-item-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                                    <div class="iso-item-content">
+                                        <span class="iso-item-title">
+                                            <strong>{{ $item['titulo'] }}</strong>@if(!empty($item['detalle'])) {{ $item['detalle'] }}@endif
+                                        </span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </main>
-    </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isoItems = document.querySelectorAll('.iso-list-item');
+            isoItems.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    isoItems.forEach(function(el) { el.classList.remove('active'); });
+                    item.classList.add('active');
+                });
+                item.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        isoItems.forEach(function(el) { el.classList.remove('active'); });
+                        item.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
