@@ -18,7 +18,7 @@ class Categoria extends Model
     }
     public function getModelo()
     {
-        return $this->hasMany(Modelo::class,'id','categoria_id')->where('activo', 'SI');
+        return $this->hasMany(Modelo::class, 'categoria_id', 'id')->whereRaw("UPPER(activo) = 'SI'");
     }
 
     public function getImgUrlAttribute()

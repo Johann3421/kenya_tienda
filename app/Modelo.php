@@ -18,9 +18,28 @@ class Modelo extends Model
     {
         return $this->hasMany(Producto::class, 'modelo_id', 'id')->where('pagina_web', 'SI');
     }
+    public function categoria()
+    {
+        return $this->belongsTo(\App\Models\Categoria::class, 'categoria_id', 'id');
+    }
+
+    public function getCategoriaNombreAttribute()
+    {
+        if ($this->relationLoaded('categoria') && $this->categoria) {
+            return $this->categoria->nombre;
+        }
+        $cat = $this->getCat->first();
+        if ($cat) return $cat->nombre;
+        if ($this->categoria_id) {
+            $c = \App\Models\Categoria::find($this->categoria_id);
+            return $c ? $c->nombre : null;
+        }
+        return null;
+    }
+
     public function getCat()
     {
-        return $this->hasMany(Categoria::class,'id','categoria_id')->where('activo', 'SI');
+        return $this->hasMany(Categoria::class,'id','categoria_id')->whereRaw("UPPER(activo) = 'SI'");
     }
     public function getProducto()
     {

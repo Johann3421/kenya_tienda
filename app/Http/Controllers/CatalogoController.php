@@ -15,9 +15,6 @@ class CatalogoController extends Controller
     public function index(Request $request)
     {
         $modelos = \App\Modelo::whereRaw("UPPER(activo) = 'SI'")
-            ->whereHas('getProducto', function ($q) {
-                $q->where('pagina_web', 'SI')->noSuspendido();
-            })
             ->orderBy('descripcion')
             ->get();
 
@@ -282,9 +279,6 @@ class CatalogoController extends Controller
         $modelo = \App\Modelo::findOrFail($id);
 
         $modelos = \App\Modelo::whereRaw("UPPER(activo) = 'SI'")
-            ->whereHas('getProducto', function ($q) {
-                $q->where('pagina_web', 'SI')->noSuspendido();
-            })
             ->orderBy('descripcion')
             ->get();
 

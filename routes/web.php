@@ -51,15 +51,13 @@ Route::get('/health', function () {
 });
 Route::get('/', function () {
     $categorias = App\Models\Categoria::with('getModelo')->whereIn('activo', ['SI', 'Si'])->whereNotIn('id', [4, 5])->orderBy('nombre', 'ASC')->get();
-    $modelo = App\Modelo::with('getCat')
-        ->whereIn('activo', ['SI', 'Si'])
+    $modelo = App\Modelo::with(['getCat', 'categoria'])
+        ->whereRaw("UPPER(activo) = 'SI'")
         ->whereNotIn('categoria_id', [4, 5])
         ->whereNotIn('id', [8])
-        ->whereHas('getProducto', function ($q) {
-            $q->where('pagina_web', 'SI')->noSuspendido();
-        })
         ->withMax('getProducto', 'created_at')
         ->orderByDesc('get_producto_max_created_at')
+        ->orderByDesc('id')
         ->get();
     // $productos = App\Producto::orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->get();
     $productos = App\Producto::with('getModelo')->orderBy('nombre', 'ASC')->where('pagina_web', 'SI')->get();

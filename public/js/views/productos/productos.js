@@ -900,7 +900,7 @@ eliminarArchivoExcel(index) {
                 'especificaciones': '',
                 'especificaciones_raw': [],
                 'ficha_editada_localmente': false,
-                'pagina_web': 'NO',
+                'pagina_web': 'SI',
                 'precio_especial': '',
                 'modelo_id': '',
                 //'unidad': 'UNIDADES',

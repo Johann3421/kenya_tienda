@@ -145,9 +145,6 @@
 
     // Obtener modelos activos para el dropdown
     $modelos = Modelo::whereRaw("UPPER(activo) = 'SI'")
-        ->whereHas('getProducto', function ($q) {
-            $q->where('pagina_web', 'SI')->noSuspendido();
-        })
         ->orderBy('descripcion')
         ->get();
 

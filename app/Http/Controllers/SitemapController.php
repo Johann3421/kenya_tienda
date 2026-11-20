@@ -40,9 +40,6 @@ class SitemapController extends Controller
 
             // Modelos de catálogo activos
             $modelos = Modelo::whereRaw("UPPER(activo) = 'SI'")
-                ->whereHas('getProducto', function ($q) {
-                    $q->where('pagina_web', 'SI')->noSuspendido();
-                })
                 ->get(['id', 'updated_at']);
 
             // Productos individuales activos en web
